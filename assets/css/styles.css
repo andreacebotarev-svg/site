@@ -1,8 +1,8 @@
-/* =========================================================
-   Premium Liquid Glass — Tutor Landing (Mobile-First)
+﻿/* =========================================================
+   Premium Liquid Glass вЂ” Tutor Landing (Mobile-First)
    File: /docs/assets/css/styles.css
    Senior-level mobile optimization:
-   - Touch targets ≥44×44px (Apple HIG)
+   - Touch targets в‰Ґ44Г—44px (Apple HIG)
    - Safe-area-inset for notched devices
    - Performance optimizations
    - Reduced motion support
@@ -122,7 +122,7 @@
   --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
-  /* Desktop: усиливаем эффекты для "дорогого" вида */
+  /* Desktop: СѓСЃРёР»РёРІР°РµРј СЌС„С„РµРєС‚С‹ РґР»СЏ "РґРѕСЂРѕРіРѕРіРѕ" РІРёРґР° */
 @media (min-width: 768px) {
   :root {
     --blur-sm: 16px;
@@ -158,27 +158,27 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  /* Убираем синюю подсветку при tap */
+  /* РЈР±РёСЂР°РµРј СЃРёРЅСЋСЋ РїРѕРґСЃРІРµС‚РєСѓ РїСЂРё tap */
   -webkit-tap-highlight-color: transparent;
 }
 
 html {
   scroll-behavior: smooth;
-  /* Предотвращаем горизонтальный скролл */
+  /* РџСЂРµРґРѕС‚РІСЂР°С‰Р°РµРј РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Р№ СЃРєСЂРѕР»Р» */
   overflow-x: hidden;
   height: 100%;
-  /* Оптимизация рендеринга на мобильных */
+  /* РћРїС‚РёРјРёР·Р°С†РёСЏ СЂРµРЅРґРµСЂРёРЅРіР° РЅР° РјРѕР±РёР»СЊРЅС‹С… */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Предотвращаем iOS font scaling */
+  /* РџСЂРµРґРѕС‚РІСЂР°С‰Р°РµРј iOS font scaling */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  /* Учитываем safe areas для notch */
+  /* РЈС‡РёС‚С‹РІР°РµРј safe areas РґР»СЏ notch */
   padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
 
   font-family: var(--font-sans);
@@ -191,7 +191,7 @@ body {
   background: var(--bg);
 }
 
-/* Фиксированный фон вынесен отдельно для Edge/Chrome performance */
+/* Р¤РёРєСЃРёСЂРѕРІР°РЅРЅС‹Р№ С„РѕРЅ РІС‹РЅРµСЃРµРЅ РѕС‚РґРµР»СЊРЅРѕ РґР»СЏ Edge/Chrome performance */
 body::before {
   content: "";
   position: fixed;
@@ -225,9 +225,9 @@ img {
 a {
   color: inherit;
   text-decoration: none;
-  /* Улучшаем область клика на touch-устройствах */
+  /* РЈР»СѓС‡С€Р°РµРј РѕР±Р»Р°СЃС‚СЊ РєР»РёРєР° РЅР° touch-СѓСЃС‚СЂРѕР№СЃС‚РІР°С… */
   -webkit-tap-highlight-color: rgba(122, 167, 255, 0.15);
-  /* Запрещаем callout на iOS */
+  /* Р—Р°РїСЂРµС‰Р°РµРј callout РЅР° iOS */
   -webkit-touch-callout: none;
 }
 
@@ -330,7 +330,7 @@ a:hover {
   grid-template-columns: 1fr;
 }
 
-/* Tablet: 2 колонки */
+/* Tablet: 2 РєРѕР»РѕРЅРєРё */
 @media (min-width: 640px) {
   .grid-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -341,7 +341,7 @@ a:hover {
   }
 }
 
-/* Desktop: 3 колонки */
+/* Desktop: 3 РєРѕР»РѕРЅРєРё */
 @media (min-width: 900px) {
   .grid-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -367,10 +367,10 @@ a:hover {
 
 /* =============================================
    METHOD SECTION LAYOUT
-   Новая компоновка: 40% слева (4 карточки) + 60% справа (платформа)
+   РќРѕРІР°СЏ РєРѕРјРїРѕРЅРѕРІРєР°: 40% СЃР»РµРІР° (4 РєР°СЂС‚РѕС‡РєРё) + 60% СЃРїСЂР°РІР° (РїР»Р°С‚С„РѕСЂРјР°)
    ============================================= */
 
-/* Mobile: стеком */
+/* Mobile: СЃС‚РµРєРѕРј */
 .grid-method-split {
   display: grid;
   grid-template-columns: 1fr;
@@ -385,7 +385,7 @@ a:hover {
   }
 }
 
-/* Левая колонка: стек 4 компактных карточек */
+/* Р›РµРІР°СЏ РєРѕР»РѕРЅРєР°: СЃС‚РµРє 4 РєРѕРјРїР°РєС‚РЅС‹С… РєР°СЂС‚РѕС‡РµРє */
 .method-steps {
   display: flex;
   flex-direction: column;
@@ -398,7 +398,7 @@ a:hover {
   }
 }
 
-/* Компактные карточки (уменьшенный padding) */
+/* РљРѕРјРїР°РєС‚РЅС‹Рµ РєР°СЂС‚РѕС‡РєРё (СѓРјРµРЅСЊС€РµРЅРЅС‹Р№ padding) */
 .card.compact {
   padding: var(--space-3);
 }
@@ -409,7 +409,7 @@ a:hover {
   }
 }
 
-/* Правая колонка: акцентная карточка платформы */
+/* РџСЂР°РІР°СЏ РєРѕР»РѕРЅРєР°: Р°РєС†РµРЅС‚РЅР°СЏ РєР°СЂС‚РѕС‡РєР° РїР»Р°С‚С„РѕСЂРјС‹ */
 .method-platform {
   display: flex;
 }
@@ -420,7 +420,7 @@ a:hover {
   gap: var(--space-4);
   height: 100%;
   padding: var(--space-4);
-  /* Слабый акцентный фон */
+  /* РЎР»Р°Р±С‹Р№ Р°РєС†РµРЅС‚РЅС‹Р№ С„РѕРЅ */
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.05) 100%);
   border: 1px solid rgba(102, 126, 234, 0.25);
 }
@@ -431,7 +431,7 @@ a:hover {
   }
 }
 
-/* Превью платформы: градиент + иконка */
+/* РџСЂРµРІСЊСЋ РїР»Р°С‚С„РѕСЂРјС‹: РіСЂР°РґРёРµРЅС‚ + РёРєРѕРЅРєР° */
 .platform-preview {
   width: 100%;
   height: clamp(140px, 20vw, 220px);
@@ -540,7 +540,7 @@ a:hover {
   }
 }
 
-/* Бейдж DEMO */
+/* Р‘РµР№РґР¶ DEMO */
 .platform-badge {
   position: absolute;
   bottom: var(--space-2);
@@ -576,7 +576,7 @@ a:hover {
   }
 }
 
-/* Контент платформы */
+/* РљРѕРЅС‚РµРЅС‚ РїР»Р°С‚С„РѕСЂРјС‹ */
 .platform-content {
   flex: 1;
   display: flex;
@@ -584,7 +584,7 @@ a:hover {
   gap: var(--space-3);
 }
 
-/* Кнопка в платформе (полная ширина на мобиле) */
+/* РљРЅРѕРїРєР° РІ РїР»Р°С‚С„РѕСЂРјРµ (РїРѕР»РЅР°СЏ С€РёСЂРёРЅР° РЅР° РјРѕР±РёР»Рµ) */
 .platform-card .btn {
   width: 100%;
   justify-content: center;
@@ -705,15 +705,15 @@ a:hover {
   position: relative;
   overflow: hidden;
   /* Fix: Paint Containment & Isolation
-     1. contain: paint -> гарантирует обрезку
-     2. isolation: isolate -> создает новый контекст стекинга
-     3. mask-image -> WebKit фикс для border-radius + overflow */
+     1. contain: paint -> РіР°СЂР°РЅС‚РёСЂСѓРµС‚ РѕР±СЂРµР·РєСѓ
+     2. isolation: isolate -> СЃРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РєРѕРЅС‚РµРєСЃС‚ СЃС‚РµРєРёРЅРіР°
+     3. mask-image -> WebKit С„РёРєСЃ РґР»СЏ border-radius + overflow */
   transform: translateZ(0);
   contain: paint style layout;
   isolation: isolate;
   -webkit-mask-image: -webkit-radial-gradient(white, black);
   mask-image: radial-gradient(white, black);
-  /* Самый мощный способ обрезки: clip-path */
+  /* РЎР°РјС‹Р№ РјРѕС‰РЅС‹Р№ СЃРїРѕСЃРѕР± РѕР±СЂРµР·РєРё: clip-path */
   clip-path: inset(0 round var(--r-lg));
   transition: transform var(--dur-2) var(--easing), box-shadow var(--dur-2) var(--easing), border-color var(--dur-2) var(--easing), z-index 0s;
   z-index: 1;
@@ -771,8 +771,8 @@ a:hover {
   opacity: 0;
   transform: translateX(-100%) skewX(-15deg);
   /* Fix: Reset Logic
-     При уходе мыши: сначала быстро исчезаем (0.2s),
-     затем мгновенно (0s) телепортируемся в начало c задержкой (0.2s) */
+     РџСЂРё СѓС…РѕРґРµ РјС‹С€Рё: СЃРЅР°С‡Р°Р»Р° Р±С‹СЃС‚СЂРѕ РёСЃС‡РµР·Р°РµРј (0.2s),
+     Р·Р°С‚РµРј РјРіРЅРѕРІРµРЅРЅРѕ (0s) С‚РµР»РµРїРѕСЂС‚РёСЂСѓРµРјСЃСЏ РІ РЅР°С‡Р°Р»Рѕ c Р·Р°РґРµСЂР¶РєРѕР№ (0.2s) */
   transition: opacity 0.2s ease-out, transform 0s 0.2s;
   pointer-events: none;
   z-index: 2;
@@ -788,7 +788,9 @@ a:hover {
   }
 }
 
-/* Прогрессивное улучшение: backdrop-filter только на поддерживающих устройствах */
+
+
+/* РџСЂРѕРіСЂРµСЃСЃРёРІРЅРѕРµ СѓР»СѓС‡С€РµРЅРёРµ: backdrop-filter С‚РѕР»СЊРєРѕ РЅР° РїРѕРґРґРµСЂР¶РёРІР°СЋС‰РёС… СѓСЃС‚СЂРѕР№СЃС‚РІР°С… */
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   @media (min-width: 768px) {
     .glass {
@@ -797,7 +799,7 @@ a:hover {
     }
   }
 
-  /* На мобильных: легче */
+  /* РќР° РјРѕР±РёР»СЊРЅС‹С…: Р»РµРіС‡Рµ */
   @media (max-width: 767px) {
     .glass {
       backdrop-filter: blur(var(--blur-sm)) saturate(1.1);
@@ -806,12 +808,12 @@ a:hover {
   }
 }
 
-/* Highlight только на desktop */
+/* Highlight С‚РѕР»СЊРєРѕ РЅР° desktop */
 @media (min-width: 768px) {
   .glass::after {
     content: "";
     position: absolute;
-    inset: 0; /* Убрал -2px, чтобы не было 'протечек' */
+    inset: 0; /* РЈР±СЂР°Р» -2px, С‡С‚РѕР±С‹ РЅРµ Р±С‹Р»Рѕ 'РїСЂРѕС‚РµС‡РµРє' */
     pointer-events: none;
     background:
       radial-gradient(800px 220px at 20% 10%, rgba(255, 255, 255, 0.14), transparent 60%),
@@ -824,7 +826,7 @@ a:hover {
   padding: clamp(1rem, 4vw, 1.5rem);
 }
 
-/* Hover только на устройствах с мышью */
+/* Hover С‚РѕР»СЊРєРѕ РЅР° СѓСЃС‚СЂРѕР№СЃС‚РІР°С… СЃ РјС‹С€СЊСЋ */
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
     transform: translateY(-2px);
@@ -839,12 +841,12 @@ a:hover {
 .textarea,
 .nav a {
   transition:
-    transform var(--dur-2) var(--easing),
-    box-shadow var(--dur-2) var(--easing),
-    background-color var(--dur-2) var(--easing),
-    border-color var(--dur-2) var(--easing),
-    opacity var(--dur-2) var(--easing),
-    filter var(--dur-2) var(--easing);
+    transform 500ms var(--easing),
+    box-shadow 500ms var(--easing),
+    background-color 500ms var(--easing),
+    border-color 500ms var(--easing),
+    opacity 500ms var(--easing),
+    filter 500ms var(--easing);
 }
 
 /* -----------------------------
@@ -903,7 +905,7 @@ a:hover {
   transition: transform var(--dur-2) var(--easing), opacity var(--dur-2) var(--easing);
 }
 
-/* Анимация X */
+/* РђРЅРёРјР°С†РёСЏ X */
 .nav-toggle.is-active span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
@@ -966,7 +968,7 @@ a:hover {
   text-decoration: none;
 }
 
-/* Desktop: горизонтальное меню */
+/* Desktop: РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕРµ РјРµРЅСЋ */
 @media (min-width: 768px) {
   .nav-toggle {
     display: none;
@@ -1050,7 +1052,7 @@ a:hover {
   justify-content: center;
   gap: 0.5rem;
 
-  /* Минимум 44x44px для touch */
+  /* РњРёРЅРёРјСѓРј 44x44px РґР»СЏ touch */
   min-height: var(--touch-min);
   padding: 0.875rem 1.25rem;
   border-radius: 999px;
@@ -1064,21 +1066,27 @@ a:hover {
   color: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.14);
 
-  /* Предотвращаем double-tap zoom на iOS */
+  /* РџСЂРµРґРѕС‚РІСЂР°С‰Р°РµРј double-tap zoom РЅР° iOS */
   touch-action: manipulation;
 }
 
-/* Hover только на устройствах с мышью */
 @media (hover: hover) and (pointer: fine) {
   .btn:hover {
     text-decoration: none;
-    transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.11);
-    border-color: rgba(255, 255, 255, 0.20);
+    transform: translateY(-2px) scale(1.02);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+    /* РЎРѕР»РЅРµС‡РЅРѕРµ СЃРёСЏРЅРёРµ - РјСЏРіРєРёР№ glow СЌС„С„РµРєС‚ */
+    box-shadow: 
+      0 0 15px rgba(255, 255, 255, 0.25),
+      0 0 30px rgba(255, 255, 255, 0.15),
+      0 0 50px rgba(79, 142, 255, 0.2),
+      0 0 80px rgba(168, 85, 247, 0.1),
+      0 4px 20px rgba(0, 0, 0, 0.2);
   }
 }
 
-/* Active state для touch */
+/* Active state РґР»СЏ touch */
 .btn:active {
   transform: scale(0.98);
   background: rgba(255, 255, 255, 0.12);
@@ -1095,10 +1103,17 @@ a:hover {
 
 @media (hover: hover) and (pointer: fine) {
   .btn-primary:hover {
-    filter: brightness(1.04) saturate(1.03);
+    transform: translateY(-3px) scale(1.03);
+    /* РЇРІРЅРѕ РѕСЃРІРµС‚Р»СЏРµРј С„РѕРЅ */
+    background: linear-gradient(135deg, #5A9CFF 0%, #A06CF7 100%);
+    border-color: rgba(255, 255, 255, 0.5);
+    /* РЎРѕР»РЅРµС‡РЅРѕРµ СЃРёСЏРЅРёРµ - СЏСЂРєРёР№ glow СЌС„С„РµРєС‚ */
     box-shadow:
-      0 14px 48px rgba(122, 167, 255, 0.26),
-      0 2px 0 rgba(255, 255, 255, 0.18) inset;
+      0 0 20px rgba(79, 142, 255, 0.6),
+      0 0 40px rgba(79, 142, 255, 0.4),
+      0 0 60px rgba(168, 85, 247, 0.3),
+      0 0 100px rgba(168, 85, 247, 0.15),
+      0 2px 0 rgba(255, 255, 255, 0.4) inset;
   }
 }
 
@@ -1183,7 +1198,7 @@ a:hover {
 .input,
 .textarea {
   width: 100%;
-  /* Минимум 44px для touch */
+  /* РњРёРЅРёРјСѓРј 44px РґР»СЏ touch */
   min-height: var(--touch-min);
   padding: 0.875rem 1rem;
   border-radius: var(--r-md);
@@ -1192,13 +1207,13 @@ a:hover {
   color: var(--text);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
-  /* Улучшаем читаемость на мобильных */
+  /* РЈР»СѓС‡С€Р°РµРј С‡РёС‚Р°РµРјРѕСЃС‚СЊ РЅР° РјРѕР±РёР»СЊРЅС‹С… */
   font-size: max(16px, var(--fs-1));
-  /* Предотвращает zoom на iOS */
+  /* РџСЂРµРґРѕС‚РІСЂР°С‰Р°РµС‚ zoom РЅР° iOS */
   line-height: 1.5;
   font-family: inherit;
 
-  /* Лучшее UX на мобильных */
+  /* Р›СѓС‡С€РµРµ UX РЅР° РјРѕР±РёР»СЊРЅС‹С… */
   touch-action: manipulation;
   -webkit-appearance: none;
   appearance: none;
@@ -1335,7 +1350,7 @@ a:hover {
   animation: fadeUp var(--dur-3) var(--easing) both;
 }
 
-/* Sheen только на desktop */
+/* Sheen С‚РѕР»СЊРєРѕ РЅР° desktop */
 @media (min-width: 768px) and (hover: hover) {
   .glass.is-sheen::before {
     content: "";
@@ -1408,10 +1423,10 @@ a:hover {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  /* Учитываем safe areas */
+  /* РЈС‡РёС‚С‹РІР°РµРј safe areas */
   padding: max(var(--space-3), env(safe-area-inset-top, 16px)) max(var(--space-2), env(safe-area-inset-right, 16px)) max(var(--space-3), env(safe-area-inset-bottom, 16px)) max(var(--space-2), env(safe-area-inset-left, 16px));
   animation: fadeIn 0.25s ease;
-  /* Блокируем скролл body при открытом lightbox */
+  /* Р‘Р»РѕРєРёСЂСѓРµРј СЃРєСЂРѕР»Р» body РїСЂРё РѕС‚РєСЂС‹С‚РѕРј lightbox */
   overscroll-behavior: contain;
 }
 
@@ -1432,7 +1447,7 @@ a:hover {
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.9);
   border-radius: var(--r-md);
   animation: zoomIn 0.25s ease;
-  /* Запрещаем перетаскивание изображения */
+  /* Р—Р°РїСЂРµС‰Р°РµРј РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ */
   user-select: none;
   -webkit-user-drag: none;
   -webkit-user-select: none;
@@ -1530,7 +1545,7 @@ a:hover {
   transform: scale(0.95);
 }
 
-/* Стрелки навигации - адаптивные */
+/* РЎС‚СЂРµР»РєРё РЅР°РІРёРіР°С†РёРё - Р°РґР°РїС‚РёРІРЅС‹Рµ */
 .lightbox-prev,
 .lightbox-next {
   position: absolute;
@@ -1597,12 +1612,12 @@ a:hover {
   }
 }
 
-/* Стили для thumbnail-карточек */
+/* РЎС‚РёР»Рё РґР»СЏ thumbnail-РєР°СЂС‚РѕС‡РµРє */
 .cert-thumbnail {
   cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   overflow: hidden;
-  /* Улучшаем область клика */
+  /* РЈР»СѓС‡С€Р°РµРј РѕР±Р»Р°СЃС‚СЊ РєР»РёРєР° */
   -webkit-tap-highlight-color: rgba(122, 167, 255, 0.15);
   touch-action: manipulation;
 }
@@ -1618,7 +1633,7 @@ a:hover {
   }
 }
 
-/* На touch-устройствах: легкое нажатие */
+/* РќР° touch-СѓСЃС‚СЂРѕР№СЃС‚РІР°С…: Р»РµРіРєРѕРµ РЅР°Р¶Р°С‚РёРµ */
 @media (hover: none) {
   .cert-thumbnail:active {
     transform: scale(0.97);
@@ -1648,24 +1663,24 @@ a:hover {
 }
 
 /* ============================================
-   CERT-GALLERY специфичные стили
+   CERT-GALLERY СЃРїРµС†РёС„РёС‡РЅС‹Рµ СЃС‚РёР»Рё
    ============================================ */
 
 .cert-gallery {
-  /* Mobile: 1 колонка для лучшей читаемости */
+  /* Mobile: 1 РєРѕР»РѕРЅРєР° РґР»СЏ Р»СѓС‡С€РµР№ С‡РёС‚Р°РµРјРѕСЃС‚Рё */
   grid-template-columns: 1fr;
 }
 
 @media (min-width: 640px) {
   .cert-gallery {
-    /* Tablet: 2 колонки */
+    /* Tablet: 2 РєРѕР»РѕРЅРєРё */
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 900px) {
   .cert-gallery {
-    /* Desktop: 3 колонки */
+    /* Desktop: 3 РєРѕР»РѕРЅРєРё */
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
@@ -1791,44 +1806,44 @@ a:hover {
   transform: translateY(-8px) translateZ(0);
 }
 
-/* Отключить hover на мобильных */
+/* РћС‚РєР»СЋС‡РёС‚СЊ hover РЅР° РјРѕР±РёР»СЊРЅС‹С… */
 @media (hover: none) {
   .hover-lift-wrapper:hover .hover-lift {
     transform: none;
   }
 }
 
-/* Оптимизированный glassmorphism */
+/* РћРїС‚РёРјРёР·РёСЂРѕРІР°РЅРЅС‹Р№ glassmorphism */
 .glass {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
-  /* Снижено с 16px для performance */
+  /* РЎРЅРёР¶РµРЅРѕ СЃ 16px РґР»СЏ performance */
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transform: translateZ(0);
   /* GPU acceleration */
   will-change: transform;
-  /* НЕ backdrop-filter! */
+  /* РќР• backdrop-filter! */
 }
 
-/* Убрать blur на больших экранах для производительности */
+/* РЈР±СЂР°С‚СЊ blur РЅР° Р±РѕР»СЊС€РёС… СЌРєСЂР°РЅР°С… РґР»СЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё */
 @media (min-width: 1400px) {
   .glass {
     backdrop-filter: blur(4px);
-    /* Минимум */
+    /* РњРёРЅРёРјСѓРј */
     background: rgba(255, 255, 255, 0.15);
-    /* Более непрозрачный */
+    /* Р‘РѕР»РµРµ РЅРµРїСЂРѕР·СЂР°С‡РЅС‹Р№ */
   }
 }
 
-/* Убрать blur в модальных окнах */
+/* РЈР±СЂР°С‚СЊ blur РІ РјРѕРґР°Р»СЊРЅС‹С… РѕРєРЅР°С… */
 .modal-overlay,
 .lightbox {
   backdrop-filter: none;
   background: rgba(0, 0, 0, 0.8);
 }
 
-/* Исправленный hover для Bento cards */
+/* РСЃРїСЂР°РІР»РµРЅРЅС‹Р№ hover РґР»СЏ Bento cards */
 .bento-card {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -1846,21 +1861,21 @@ a:hover {
 .bento-card:hover {
   text-decoration: none;
   z-index: 10;
-  /* Поднять над соседями */
+  /* РџРѕРґРЅСЏС‚СЊ РЅР°Рґ СЃРѕСЃРµРґСЏРјРё */
   transform: translateY(-6px) translateZ(0);
 }
 
-/* Расширенная hover area для стабильности */
+/* Р Р°СЃС€РёСЂРµРЅРЅР°СЏ hover area РґР»СЏ СЃС‚Р°Р±РёР»СЊРЅРѕСЃС‚Рё */
 .bento-card::before {
   content: '';
   position: absolute;
   inset: -8px;
-  /* Расширяет hover area */
+  /* Р Р°СЃС€РёСЂСЏРµС‚ hover area */
   pointer-events: auto;
   z-index: -1;
 }
 
-/* Исправления для сертификатов */
+/* РСЃРїСЂР°РІР»РµРЅРёСЏ РґР»СЏ СЃРµСЂС‚РёС„РёРєР°С‚РѕРІ */
 .cert-thumbnail {
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   transform: translateZ(0);
@@ -1874,7 +1889,7 @@ a:hover {
   transform: scale(1.04);
 }
 
-/* Предотвращение анимаций при загрузке страницы */
+/* РџСЂРµРґРѕС‚РІСЂР°С‰РµРЅРёРµ Р°РЅРёРјР°С†РёР№ РїСЂРё Р·Р°РіСЂСѓР·РєРµ СЃС‚СЂР°РЅРёС†С‹ */
 .card,
 .bento-card,
 .cert-thumbnail,
@@ -1893,3 +1908,211 @@ a:hover {
 }
 
 /* Animation debugging is active but visual indicators are hidden for production */
+
+/* -----------------------------
+   Reviews / Testimonials Section
+----------------------------- */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+@media (min-width: 650px) {
+  .reviews-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .reviews-grid {
+    /* 6-column grid trick for centered 3-to-2 layout */
+    grid-template-columns: repeat(6, 1fr);
+  }
+  
+  .review-card {
+    grid-column: span 2; /* 3 items per row (6/2=3) */
+  }
+
+  /* Make last 2 cards span 3 columns each (centered row of 2) */
+  .review-card:nth-child(4),
+  .review-card:nth-child(5) {
+    grid-column: span 3;
+  }
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  
+  /* Reset strict containment to allow shadows but clip sheen */
+  contain: layout style !important; 
+  overflow: hidden !important;
+  isolation: isolate;
+  
+  /* Premium Glass Effect */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-md);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+  
+  /* Ensure single backdrop filter */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  transition: transform 0.4s var(--easing), box-shadow 0.4s var(--easing), border-color 0.4s var(--easing);
+  
+  /* GPU stability */
+  transform: translateZ(0);
+  will-change: transform;
+  position: relative;
+  min-height: 260px;
+}
+
+/* Enable sheen effect - clipped by overflow: hidden */
+.review-card::before {
+  display: block !important;
+}
+
+.review-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.4);
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.06);
+  z-index: 5;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.review-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #38bdf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+}
+
+.review-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.review-date {
+  font-size: 0.85rem;
+  color: var(--subtle);
+  margin-top: 2px;
+}
+
+.review-external-link {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--subtle);
+  transition: color 0.2s, transform 0.2s;
+  padding: 4px;
+}
+
+.review-external-link:hover {
+  color: var(--primary);
+  transform: translate(2px, -2px);
+}
+
+.review-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(79, 142, 255, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(79, 142, 255, 0.2);
+}
+
+.review-text {
+  font-size: 1rem;
+  color: #cad4e0;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.review-rating {
+  display: flex;
+  gap: 4px;
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.review-rating .star {
+  color: #FBBF24;
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.3));
+}
+
+/* Profi.ru Link Style */
+.profi-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+}
+
+.profi-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -5px rgba(79, 142, 255, 0.3);
+  text-decoration: none;
+  color: white;
+}
+
+.profi-link svg {
+  color: var(--subtle);
+  transition: 0.3s;
+}
+
+.profi-link:hover svg {
+  color: var(--primary);
+  transform: translate(3px, -3px);
+}
+
+/* Utility */
+.mt-4 { margin-top: var(--space-4); }
+.pricing-desc { flex: 1; }
+
+
+

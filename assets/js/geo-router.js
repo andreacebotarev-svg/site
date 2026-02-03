@@ -151,6 +151,13 @@ class GeoRouter {
             this.getApiKey()
         ]);
         
+        console.log('🌍 GeoRouter Config:', { 
+            provider: provider.name, 
+            endpoint: provider.endpoint,
+            model: provider.model,
+            keyLength: apiKey ? apiKey.length : 0
+        });
+        
         return {
             endpoint: provider.endpoint,
             model: provider.model,

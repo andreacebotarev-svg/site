@@ -45,7 +45,7 @@ class EnglishAssistant {
     const widget = document.createElement("div");
     widget.className = "ai-chat-widget sales-mode";
     widget.innerHTML = `
-            <div class="chat-badge" id="chatBadge">Запишись на бесплатный урок! ✨🚀</div>
+            <div class="chat-badge" id="chatBadge">Задай мне вопрос!</div>
             <button class="chat-toggle" id="chatToggle">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
@@ -127,6 +127,36 @@ class EnglishAssistant {
         this.toggleChat(false);
       }
     });
+
+    // Handle mobile keyboard and visual viewport
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", () => {
+        if (
+          window.innerWidth <= 600 &&
+          this.elements.window.classList.contains("active")
+        ) {
+          const height = window.visualViewport.height;
+          // Set window height to exactly what's visible
+          this.elements.window.style.height = `${height}px`;
+          // Extra padding for the input area when keyboard is up
+          if (height < window.innerHeight * 0.8) {
+            this.elements.window.classList.add("keyboard-open");
+          } else {
+            this.elements.window.classList.remove("keyboard-open");
+          }
+          this.elements.messages.scrollTop = this.elements.messages.scrollHeight;
+        }
+      });
+    }
+
+    this.elements.input.addEventListener("focus", () => {
+      if (window.innerWidth <= 600) {
+        setTimeout(() => {
+          this.elements.messages.scrollTop =
+            this.elements.messages.scrollHeight;
+        }, 300);
+      }
+    });
   }
 
   toggleChat(forceState = null) {
@@ -139,12 +169,20 @@ class EnglishAssistant {
       if (this.elements.badge) this.elements.badge.style.display = "none";
       // Lock body scroll for mobile full screen experience
       if (window.innerWidth <= 600) {
-        document.body.style.overflow = "hidden";
+        document.body.style.position = "fixed";
+        document.body.style.width = "100%";
+        document.body.style.height = "100%";
+        if (window.visualViewport) {
+          this.elements.window.style.height = `${window.visualViewport.height}px`;
+        }
       }
     } else {
       this.elements.window.classList.remove("active");
       // Restore body scroll
-      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
+      this.elements.window.style.height = "";
     }
   }
 
@@ -255,6 +293,8 @@ class EnglishAssistant {
       this.messages.push({ role: "assistant", content: aiMessage });
       this.renderSuggestions(this.suggestions.pricing);
     } catch (error) {
+      console.error('🔴 Chat API Error:', error);
+      console.error('🔴 Error details:', error.message, error.stack);
       this.addMessage("Произошла ошибка. Попробуй позже! 🛠️", "ai");
     } finally {
       this.elements.typing.style.display = "none";
