@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f0f14">
+    <title>AI Tutor — Intelligence Meets Education</title>
+    <meta name="description" content="Персональный AI-наставник для изучения английского языка. Vision-анализ, методика Сократа.">
+    
+    <!-- Preload Critical Assets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="ai-helper.css">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════
+           PAGE FOUNDATION
+           ═══════════════════════════════════════════════════════════ */
+        
+        :root {
+            --bg-dark: #0f0f14;
+            --accent-purple: #8b5cf6;
+            --accent-violet: #a78bfa;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: #f4f4f5;
+        }
+        
+        /* Animated Background Mesh */
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 30% at 50% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 40%);
+            pointer-events: none;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════
+           LAYOUT
+           ═══════════════════════════════════════════════════════════ */
+        
+        .app {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: rgba(15, 15, 20, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+        }
+        
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #3b82f6 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .logo-text {
+            line-height: 1.2;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        
+        .logo-text span {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--accent-violet);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #a1a1aa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #f4f4f5;
+            border-color: var(--accent-purple);
+        }
+        
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .nav-btn--close:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            padding: 24px;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        #chatPanel {
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════
+           INFO DRAWER
+           ═══════════════════════════════════════════════════════════ */
+        
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .info-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: #16161d;
+            border-left: 1px solid rgba(255,255,255,0.08);
+            z-index: 101;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-drawer.active {
+            transform: translateX(0);
+        }
+        
+        .drawer-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .drawer-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .drawer-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: #a1a1aa;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .drawer-close:hover {
+            background: rgba(239,68,68,0.15);
+            color: #ef4444;
+        }
+        
+        .drawer-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+        
+        .info-block {
+            margin-bottom: 28px;
+        }
+        
+        .info-block h3 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-violet);
+            margin-bottom: 12px;
+        }
+        
+        .info-block p {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #a1a1aa;
+        }
+        
+        .feature-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .chip {
+            padding: 8px 14px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent-violet);
+            font-weight: 500;
+        }
+        
+        .tip-list {
+            list-style: none;
+        }
+        
+        .tip-list li {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 0.85rem;
+            color: #a1a1aa;
+            line-height: 1.5;
+        }
+        
+        .tip-list li span {
+            flex-shrink: 0;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════ */
+        
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 12px 16px;
+            }
+            
+            .logo-text h1 { font-size: 1rem; }
+            
+            .main-content {
+                padding: 12px;
+            }
+            
+            .info-drawer {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    
+    <div class="app">
+        <header class="top-bar">
+            <div class="logo-group">
+                <div class="logo-icon">🧠</div>
+                <div class="logo-text">
+                    <h1>AI Tutor</h1>
+                    <span>Llama 4 Scout Vision</span>
+                </div>
+            </div>
+            
+            <nav class="nav-buttons">
+                <button class="nav-btn" id="infoBtn" title="О сервисе">
+                    <span>i</span>
+                </button>
+                <button class="nav-btn nav-btn--close" id="closeBtn" title="Закрыть">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </nav>
+        </header>
+        
+        <main class="main-content">
+            <div id="chatPanel"></div>
+        </main>
+    </div>
+    
+    <!-- Info Drawer -->
+    <aside class="info-drawer" id="infoDrawer">
+        <div class="drawer-header">
+            <h2>О сервисе</h2>
+            <button class="drawer-close" id="drawerClose">&times;</button>
+        </div>
+        <div class="drawer-body">
+            <div class="info-block">
+                <h3>Философия</h3>
+                <p>Я не даю готовых ответов. Моя цель — научить тебя думать на английском через наводящие вопросы и глубокий разбор грамматики.</p>
+            </div>
+            
+            <div class="info-block">
+                <h3>Возможности</h3>
+                <div class="feature-chips">
+                    <span class="chip">📸 Vision-анализ</span>
+                    <span class="chip">🎓 Метод Сократа</span>
+                    <span class="chip">📝 Разбор ошибок</span>
+                    <span class="chip">💬 24/7 доступ</span>
+                </div>
+            </div>
+            
+            <div class="info-block">
+                <h3>Советы</h3>
+                <ul class="tip-list">
+                    <li><span>📷</span> Сфотографируй задание и загрузи через иконку камеры</li>
+                    <li><span>❓</span> Если не понимаешь правило — попроси: «Объясни как для 5-летнего»</li>
+                    <li><span>✍️</span> Пытайся отвечать сам, даже если не уверен</li>
+                </ul>
+            </div>
+            
+            <div style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06); font-size:0.7rem; color:#52525b;">
+                Powered by Llama 4 Scout 17B via Groq<br>
+                © 2026 AI Tutor Platform
+            </div>
+        </div>
+    </aside>
+    
+    
+    <script src="crypto.js"></script>
+    <script src="../../assets/js/geo-router.js"></script>
+    <script src="ai-helper.js"></script>
+    <script>
+        const infoBtn = document.getElementById('infoBtn');
+        const infoDrawer = document.getElementById('infoDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const drawerClose = document.getElementById('drawerClose');
+        const closeBtn = document.getElementById('closeBtn');
+        
+        function toggleDrawer() {
+            infoDrawer.classList.toggle('active');
+            drawerOverlay.classList.toggle('active');
+        }
+        
+        function closePage() {
+            // Try to close the window (works if opened via window.open or in iframe)
+            if (window.opener || window.parent !== window) {
+                window.close();
+            }
+            // If can't close, try to go back
+            if (window.history.length > 1) {
+                window.history.back();
+            }
+            // If still here, post message to parent (for iframe modal)
+            if (window.parent !== window) {
+                window.parent.postMessage('closeModal', '*');
+            }
+        }
+        
+        infoBtn.addEventListener('click', toggleDrawer);
+        drawerOverlay.addEventListener('click', toggleDrawer);
+        drawerClose.addEventListener('click', toggleDrawer);
+        closeBtn.addEventListener('click', closePage);
+        
+        // Escape key closes drawer
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && infoDrawer.classList.contains('active')) {
+                toggleDrawer();
+            }
+        });
+    </script>
+</body>
+</html>

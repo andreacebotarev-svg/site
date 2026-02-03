@@ -1,0 +1,91 @@
+/* =========================================================
+   Landing Standards Overrides
+   Purpose: make buttons consistent with mobile/touch standards
+   - min tap target: 44x44px
+   - single dominant primary CTA (booking)
+   - preview/demo actions use secondary/ghost styling
+   File: /docs/assets/css/landing-standards.css
+   ========================================================= */
+
+:root {
+  --btn-min-h: 44px;
+  --btn-radius: 999px;
+  --btn-pad-y: 0.75rem;
+  --btn-pad-x: 1.125rem;
+  --btn-font: max(16px, var(--fs-1));
+
+  /* Accent (re-use existing tokens if present) */
+  --accent: var(--primary);
+  --accent-weak: rgba(122, 167, 255, 0.14);
+  --accent-mid: rgba(122, 167, 255, 0.28);
+  --accent-strong: rgba(122, 167, 255, 0.42);
+}
+
+/* Base button: consistent sizing + touch target */
+.btn {
+  min-height: var(--btn-min-h);
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  border-radius: var(--btn-radius);
+  font-size: var(--btn-font);
+  line-height: 1.2;
+}
+
+/* Secondary: for Preview/Demo actions */
+.btn-secondary {
+  background: var(--accent-weak);
+  border: 1px solid var(--accent-mid);
+  color: var(--text);
+  box-shadow: 0 10px 30px rgba(122, 167, 255, 0.10);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-secondary:hover {
+    background: rgba(122, 167, 255, 0.20);
+    border-color: var(--accent-strong);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+  background: rgba(122, 167, 255, 0.24);
+}
+
+/* In Bento cards: avoid full-width on desktop; keep full-width on mobile */
+.bento-card .btn,
+.bento-card .pill {
+  margin-top: 0.9rem;
+}
+
+@media (min-width: 641px) {
+  .bento-card .btn {
+    width: auto;
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .bento-card .btn {
+    width: 100%;
+  }
+}
+
+/* Demo block (two buttons): nice spacing and same baseline */
+.bento-demo {
+  align-items: start;
+}
+
+@media (min-width: 641px) {
+  .bento-demo {
+    grid-template-columns: auto auto;
+    justify-content: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .bento-demo {
+    grid-template-columns: 1fr;
+  }
+  .bento-demo .btn { width: 100%; }
+}

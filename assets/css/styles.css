@@ -1,0 +1,1895 @@
+/* =========================================================
+   Premium Liquid Glass — Tutor Landing (Mobile-First)
+   File: /docs/assets/css/styles.css
+   Senior-level mobile optimization:
+   - Touch targets ≥44×44px (Apple HIG)
+   - Safe-area-inset for notched devices
+   - Performance optimizations
+   - Reduced motion support
+   ========================================================= */
+
+/* -----------------------------
+   Design tokens
+----------------------------- */
+:root {
+  color-scheme: light dark;
+
+  /* Typography - Premium 'Outfit' */
+  --font-sans: "Outfit", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* Fluid typography - Tuned for geometric sans */
+  --fs-0: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
+  /* 14-16px */
+  --fs-1: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  /* 16-18px */
+  --fs-2: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  /* 20-24px */
+  --fs-3: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+  /* 28-36px */
+  --fs-4: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  /* 40-56px */
+  --fs-5: clamp(3.5rem, 3rem + 3vw, 5rem);
+  /* 56-80px */
+
+  --lh-tight: 1.1;
+  --lh-normal: 1.5;
+
+  /* Layout */
+  --container: 1200px;
+  /* Slightly wider for modern feel */
+  --pad: max(1.5rem, env(safe-area-inset-left, 1.5rem));
+  --pad-block: clamp(2rem, 5vw, 4rem);
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-6: 6rem;
+  --space-7: 8rem;
+
+  /* Touch targets */
+  --touch-min: 48px;
+  /* Larger for better mobile UX */
+
+  /* Radius - Super Round */
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 32px;
+  --r-xl: 48px;
+
+  /* Motion - Snappy & Smooth */
+  --easing: cubic-bezier(0.16, 1, 0.3, 1);
+  /* "Spring"-like ease out */
+  --dur-1: 200ms;
+  --dur-2: 400ms;
+  --dur-3: 600ms;
+
+  /* Glassmorphism 2.0 - Desktop Optimized */
+  --blur-sm: 12px;
+  --blur-md: 24px;      /* Increased for deep glass look */
+  --blur-lg: 48px;
+
+  /* Colors - Deep Premium Dark Mode */
+  --bg: #030508;
+  /* Almost black, slight navy tint */
+  --bg-2: #0A0F1C;
+  /* Rich dark blue-grey */
+
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --stroke: rgba(255, 255, 255, 0.08);
+  --stroke-strong: rgba(255, 255, 255, 0.15);
+
+  /* Text - Improved Contrast */
+  --text: #FFFFFF;
+  --muted: #CBD5E1;     /* Lighter gray for better readability */
+  --subtle: #94A3B8;    /* Lighter accent text */
+
+  /* Vibrant Accents */
+  --primary: #4F8EFF;
+  /* Bright Electric Blue */
+  --primary-glow: rgba(79, 142, 255, 0.4);
+  --accent: #A855F7;
+  /* Vivid Purple */
+  --accent-glow: rgba(168, 85, 247, 0.4);
+
+  --good: #22C55E;
+  --bad: #EF4444;
+  --warn: #F59E0B;
+
+  /* Shadows - Colored Glows */
+  --shadow-1:
+    0 4px 20px -2px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+
+  --shadow-2:
+    0 24px 48px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+
+  --shadow-glow: 0 0 40px -10px var(--primary-glow);
+
+  --b-1: 1px solid var(--stroke);
+  --focus: var(--primary);
+
+  /* Gradients - Mesh & Cinema */
+  --g-accent: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  --g-glass: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%);
+  --g-sheen: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+
+  /* Noise Texture (Data URL for performance) */
+  --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+  /* Desktop: усиливаем эффекты для "дорогого" вида */
+@media (min-width: 768px) {
+  :root {
+    --blur-sm: 16px;
+    --blur-md: 32px;    /* Strong blur for desktop */
+    --blur-lg: 64px;
+    --shadow-1: 0 10px 40px rgba(0, 0, 0, 0.45);
+    --shadow-2: 0 20px 80px rgba(0, 0, 0, 0.60);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 0ms;
+    --dur-2: 0ms;
+    --dur-3: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -----------------------------
+   Base / reset
+----------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  /* Убираем синюю подсветку при tap */
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Предотвращаем горизонтальный скролл */
+  overflow-x: hidden;
+  height: 100%;
+  /* Оптимизация рендеринга на мобильных */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Предотвращаем iOS font scaling */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  /* Учитываем safe areas для notch */
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+
+  font-family: var(--font-sans);
+  font-size: var(--fs-1);
+  line-height: var(--lh-normal);
+  color: var(--text);
+  min-height: 100%;
+  position: relative;
+  
+  background: var(--bg);
+}
+
+/* Фиксированный фон вынесен отдельно для Edge/Chrome performance */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1200px circle at 10% 10%, rgba(79, 142, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(1000px circle at 90% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 60%),
+    radial-gradient(1400px circle at 50% 60%, rgba(56, 189, 248, 0.03) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  pointer-events: none;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--noise);
+  opacity: 0.07;        /* Ultra-subtle texture */
+  mix-blend-mode: overlay;
+  z-index: 9999;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  /* Улучшаем область клика на touch-устройствах */
+  -webkit-tap-highlight-color: rgba(122, 167, 255, 0.15);
+  /* Запрещаем callout на iOS */
+  -webkit-touch-callout: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+::selection {
+  background: rgba(122, 167, 255, 0.30);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+
+/* -----------------------------
+   Typography helpers
+----------------------------- */
+.kicker {
+  font-size: var(--fs-0);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  font-weight: 600;
+}
+
+.h1 {
+  font-size: var(--fs-5);
+  line-height: var(--lh-tight);
+  margin: 0;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.h2 {
+  font-size: var(--fs-4);
+  line-height: var(--lh-tight);
+  margin: 0;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.h3 {
+  font-size: var(--fs-3);
+  line-height: 1.3;
+  margin: 0;
+  letter-spacing: -0.01em;
+  font-weight: 650;
+}
+
+.h4 {
+  font-size: var(--fs-2);
+  line-height: 1.35;
+  margin: 0;
+  letter-spacing: -0.005em;
+  font-weight: 600;
+}
+
+.p {
+  font-size: var(--fs-2);
+  color: var(--muted);
+  margin: 0;
+}
+
+.small {
+  font-size: var(--fs-0);
+  color: var(--subtle);
+  line-height: 1.5;
+}
+
+/* -----------------------------
+   Layout helpers
+----------------------------- */
+.container {
+  width: min(var(--container), 100% - (var(--pad) * 2));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: clamp(2rem, 8vw, 5rem);
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.center {
+  text-align: center;
+}
+
+/* Mobile-first grid */
+.grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 1fr;
+}
+
+/* Tablet: 2 колонки */
+@media (min-width: 640px) {
+  .grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid {
+    gap: var(--space-4);
+  }
+}
+
+/* Desktop: 3 колонки */
+@media (min-width: 900px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .span-1 { grid-column: span 1; }
+  .span-2 { grid-column: span 2; }
+  .span-3 { grid-column: span 3; }
+}
+
+.divider {
+  height: 1px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.10);
+  margin-block: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .divider {
+    margin-block: var(--space-5);
+  }
+}
+
+/* =============================================
+   METHOD SECTION LAYOUT
+   Новая компоновка: 40% слева (4 карточки) + 60% справа (платформа)
+   ============================================= */
+
+/* Mobile: стеком */
+.grid-method-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+/* Desktop: 40/60 split */
+@media (min-width: 900px) {
+  .grid-method-split {
+    grid-template-columns: 40% 60%;
+    gap: var(--space-5);
+  }
+}
+
+/* Левая колонка: стек 4 компактных карточек */
+.method-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@media (min-width: 900px) {
+  .method-steps {
+    gap: var(--space-2);
+  }
+}
+
+/* Компактные карточки (уменьшенный padding) */
+.card.compact {
+  padding: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .card.compact {
+    padding: var(--space-4);
+  }
+}
+
+/* Правая колонка: акцентная карточка платформы */
+.method-platform {
+  display: flex;
+}
+
+.platform-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  height: 100%;
+  padding: var(--space-4);
+  /* Слабый акцентный фон */
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.25);
+}
+
+@media (min-width: 768px) {
+  .platform-card {
+    padding: var(--space-5);
+  }
+}
+
+/* Превью платформы: градиент + иконка */
+.platform-preview {
+  width: 100%;
+  height: clamp(140px, 20vw, 220px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--space-3);
+  
+  /* Interactivity */
+  cursor: pointer;
+  transition: transform var(--dur-2) var(--easing), box-shadow var(--dur-2) var(--easing), border-color var(--dur-2) var(--easing);
+}
+
+.platform-preview:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(102, 126, 234, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.platform-preview:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
+
+.platform-preview:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
+}
+
+/* -----------------------------
+   Sticky CTA Button
+----------------------------- */
+.sticky-cta {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  
+  /* Inherit btn styles manually or mix */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background: var(--primary);
+  color: var(--bg);
+  font-weight: 700;
+  border-radius: 50px; /* Pill shape */
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  backdrop-filter: blur(10px);
+  
+  /* Transition for visibility */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.sticky-cta:hover {
+  background: var(--text); /* Slightly lighter interaction */
+  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+}
+
+.sticky-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.sticky-cta.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Mobile adjustments: Center bottom */
+@media (max-width: 767px) {
+  .sticky-cta {
+    bottom: 20px;
+    right: auto;
+    left: 15px;  /* Balanced margins */
+    width: calc(100% - 85px); /* Full width minus space for chat button (50px) + gap (15px) + right margin (15px) */
+    transform: translateY(20px) scale(0.95); 
+    white-space: nowrap;
+    font-size: 0.95rem;
+    padding: 12px 0; /* Horizontal padding removed to fit text if needed, or adjust */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .sticky-cta:hover {
+    transform: translateY(-2px);
+  }
+
+  .sticky-cta.is-visible {
+    /* Slide up to 0 from translateY(20px) */
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Бейдж DEMO */
+.platform-badge {
+  position: absolute;
+  bottom: var(--space-2);
+  right: var(--space-2);
+  background: rgba(255, 255, 255, 0.25);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: var(--fs-0);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Arrow in Platform Preview */
+.platform-arrow {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s ease;
+}
+
+.platform-preview:hover .platform-arrow {
+  color: #fff;
+  transform: translate(2px, -2px);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .platform-badge {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* Контент платформы */
+.platform-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Кнопка в платформе (полная ширина на мобиле) */
+.platform-card .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .platform-card .btn {
+    width: auto;
+    align-self: flex-start;
+  }
+}
+
+/* -----------------------------
+   Component: Tool Card (Ecosystem)
+----------------------------- */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--stroke);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all var(--dur-1) var(--easing);
+  text-align: left;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover State */
+.tool-card:hover {
+  background: var(--surface-2);
+  border-color: var(--stroke-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-1);
+}
+
+.tool-card:active {
+  transform: translateY(0);
+}
+
+/* Icons */
+.tool-card__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin-bottom: var(--space-1);
+  color: var(--text);
+  transition: var(--dur-2);
+}
+
+.tool-card:hover .tool-card__icon {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+/* Icon Colors */
+.tool-card--reader .tool-card__icon { color: var(--primary); background: rgba(79, 142, 255, 0.1); }
+.tool-card--reader:hover .tool-card__icon { background: var(--primary); color: #fff; }
+
+.tool-card--trainer .tool-card__icon { color: var(--accent); background: rgba(168, 85, 247, 0.1); }
+.tool-card--trainer:hover .tool-card__icon { background: var(--accent); color: #fff; }
+
+.tool-card--sims .tool-card__icon { color: var(--good); background: rgba(34, 197, 94, 0.1); }
+.tool-card--sims:hover .tool-card__icon { background: var(--good); color: #fff; }
+
+.tool-card__title {
+  font-weight: 600;
+  font-size: var(--fs-1);
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.tool-card__desc {
+  font-size: 0.875rem;
+  color: var(--subtle);
+  line-height: 1.3;
+}
+
+/* Arrow Icon */
+.tool-card__arrow {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: var(--subtle);
+  opacity: 0.4;
+  transition: var(--dur-2);
+}
+
+.tool-card:hover .tool-card__arrow {
+  opacity: 1;
+  color: var(--text);
+  transform: translate(2px, -2px);
+}
+
+/* -----------------------------
+   Glass surfaces
+----------------------------- */
+.glass {
+  background: var(--g-glass);
+  border: 1px solid var(--stroke);
+  border-top: 1px solid var(--stroke-strong);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+  position: relative;
+  overflow: hidden;
+  /* Fix: Paint Containment & Isolation
+     1. contain: paint -> гарантирует обрезку
+     2. isolation: isolate -> создает новый контекст стекинга
+     3. mask-image -> WebKit фикс для border-radius + overflow */
+  transform: translateZ(0);
+  contain: paint style layout;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  /* Самый мощный способ обрезки: clip-path */
+  clip-path: inset(0 round var(--r-lg));
+  transition: transform var(--dur-2) var(--easing), box-shadow var(--dur-2) var(--easing), border-color var(--dur-2) var(--easing), z-index 0s;
+  z-index: 1;
+}
+
+.glass:hover {
+  z-index: 10;
+}
+
+/* -----------------------------
+   Mobile Optimization: List View
+   Make tools look like native app list items on phone
+----------------------------- */
+@media (max-width: 767px) {
+  .tool-grid {
+    grid-template-columns: 1fr; /* Stack vertically */
+    gap: 12px;
+  }
+
+  .tool-card {
+    flex-direction: row; /* Horizontal layout [Icon | Text | Arrow] */
+    align-items: center;
+    padding: 16px;
+    gap: 16px;
+    min-height: auto;
+  }
+
+  .tool-card__icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0; /* Reset desktop margin */
+    flex-shrink: 0;
+  }
+
+  .tool-card__arrow {
+    position: static; /* Flow naturally in flex row */
+    margin-left: auto; /* Push to far right */
+    opacity: 1; /* Always visible on touch */
+    transform: none;
+    color: var(--subtle);
+  }
+  
+  .tool-card:active {
+    background: var(--surface-2);
+    transform: scale(0.98);
+  }
+}
+
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--g-sheen);
+  opacity: 0;
+  transform: translateX(-100%) skewX(-15deg);
+  /* Fix: Reset Logic
+     При уходе мыши: сначала быстро исчезаем (0.2s),
+     затем мгновенно (0s) телепортируемся в начало c задержкой (0.2s) */
+  transition: opacity 0.2s ease-out, transform 0s 0.2s;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (hover: hover) {
+  .glass:hover::before {
+    opacity: 1;
+    transform: translateX(100%) skewX(-15deg);
+    /* Fix: Play Logic
+       При наведении: плывем 0.8s */
+    transition: transform 0.8s ease-in-out, opacity 0.1s;
+  }
+}
+
+/* Прогрессивное улучшение: backdrop-filter только на поддерживающих устройствах */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  @media (min-width: 768px) {
+    .glass {
+      backdrop-filter: blur(var(--blur-md)) saturate(1.25);
+      -webkit-backdrop-filter: blur(var(--blur-md)) saturate(1.25);
+    }
+  }
+
+  /* На мобильных: легче */
+  @media (max-width: 767px) {
+    .glass {
+      backdrop-filter: blur(var(--blur-sm)) saturate(1.1);
+      -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(1.1);
+    }
+  }
+}
+
+/* Highlight только на desktop */
+@media (min-width: 768px) {
+  .glass::after {
+    content: "";
+    position: absolute;
+    inset: 0; /* Убрал -2px, чтобы не было 'протечек' */
+    pointer-events: none;
+    background:
+      radial-gradient(800px 220px at 20% 10%, rgba(255, 255, 255, 0.14), transparent 60%),
+      radial-gradient(700px 220px at 80% 0%, rgba(255, 255, 255, 0.08), transparent 55%);
+    opacity: 0.40;
+  }
+}
+
+.card {
+  padding: clamp(1rem, 4vw, 1.5rem);
+}
+
+/* Hover только на устройствах с мышью */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2);
+  }
+}
+
+/* Transitions */
+.card,
+.btn,
+.input,
+.textarea,
+.nav a {
+  transition:
+    transform var(--dur-2) var(--easing),
+    box-shadow var(--dur-2) var(--easing),
+    background-color var(--dur-2) var(--easing),
+    border-color var(--dur-2) var(--easing),
+    opacity var(--dur-2) var(--easing),
+    filter var(--dur-2) var(--easing);
+}
+
+/* -----------------------------
+   Header / Mobile Navigation
+----------------------------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding-block: 0.75rem;
+  padding-inline: max(var(--pad), env(safe-area-inset-left, 1rem));
+  background: rgba(6, 10, 18, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .header {
+    backdrop-filter: blur(var(--blur-sm)) saturate(1.3);
+    -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(1.3);
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* Mobile: hamburger menu */
+.nav-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-sm);
+}
+
+.nav-toggle:active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform var(--dur-2) var(--easing), opacity var(--dur-2) var(--easing);
+}
+
+/* Анимация X */
+.nav-toggle.is-active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.is-active span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.is-active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile menu */
+.nav-links {
+  display: none;
+  position: fixed;
+  top: calc(60px + env(safe-area-inset-top, 0));
+  left: 0;
+  right: 0;
+  background: rgba(6, 10, 18, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  padding: var(--space-4) var(--pad);
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: calc(100vh - 60px - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav-links {
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  }
+}
+
+.nav-links.is-open {
+  display: flex;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.875rem 1rem;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  min-height: var(--touch-min);
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-2);
+  font-weight: 500;
+}
+
+.nav-links a:hover,
+.nav-links a:active,
+.nav-links a.is-active {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+}
+
+/* Desktop: горизонтальное меню */
+@media (min-width: 768px) {
+  .nav-toggle {
+    display: none;
+  }
+
+  .nav-links {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    max-height: none;
+    overflow: visible;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    padding: 0.625rem 0.875rem;
+    font-size: var(--fs-1);
+    min-height: auto;
+  }
+}
+
+/* -----------------------------
+   Hero
+----------------------------- */
+.hero {
+  padding-block: clamp(2rem, 8vw, 6rem);
+}
+
+.hero .h1 {
+  text-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .hero-actions {
+    margin-top: var(--space-4);
+  }
+}
+
+/* Mobile: full-width buttons */
+@media (max-width: 640px) {
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+}
+
+.hero-badges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+}
+
+/* -----------------------------
+   Buttons - Touch Optimized
+----------------------------- */
+.btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  /* Минимум 44x44px для touch */
+  min-height: var(--touch-min);
+  padding: 0.875rem 1.25rem;
+  border-radius: 999px;
+
+  font-weight: 650;
+  font-size: var(--fs-1);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+
+  /* Предотвращаем double-tap zoom на iOS */
+  touch-action: manipulation;
+}
+
+/* Hover только на устройствах с мышью */
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    text-decoration: none;
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.11);
+    border-color: rgba(255, 255, 255, 0.20);
+  }
+}
+
+/* Active state для touch */
+.btn:active {
+  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-primary {
+  color: rgba(8, 10, 18, 0.95);
+  background: var(--g-accent);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 10px 36px rgba(122, 167, 255, 0.20),
+    0 2px 0 rgba(255, 255, 255, 0.16) inset;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    filter: brightness(1.04) saturate(1.03);
+    box-shadow:
+      0 14px 48px rgba(122, 167, 255, 0.26),
+      0 2px 0 rgba(255, 255, 255, 0.18) inset;
+  }
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-lg {
+  padding: 1rem 1.5rem;
+  font-size: var(--fs-2);
+  min-height: 52px;
+}
+
+.btn[disabled],
+.btn.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+  pointer-events: none;
+}
+
+.btn.is-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.btn.is-loading::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-top-color: rgba(255, 255, 255, 0.0);
+  margin-left: 0.4rem;
+  animation: spin 900ms linear infinite;
+}
+
+/* -----------------------------
+   Pills / badges
+----------------------------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  font-size: var(--fs-0);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  line-height: 1.3;
+}
+
+.pill strong {
+  color: var(--text);
+  font-weight: 650;
+}
+
+/* -----------------------------
+   Forms - Touch Optimized
+----------------------------- */
+.form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .form {
+    gap: var(--space-4);
+  }
+}
+
+.label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: var(--fs-1);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  /* Минимум 44px для touch */
+  min-height: var(--touch-min);
+  padding: 0.875rem 1rem;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* Улучшаем читаемость на мобильных */
+  font-size: max(16px, var(--fs-1));
+  /* Предотвращает zoom на iOS */
+  line-height: 1.5;
+  font-family: inherit;
+
+  /* Лучшее UX на мобильных */
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: rgba(122, 167, 255, 0.65);
+  box-shadow: 0 0 0 4px rgba(122, 167, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.input:invalid,
+.textarea:invalid {
+  border-color: rgba(255, 107, 122, 0.65);
+}
+
+.help {
+  font-size: var(--fs-0);
+  color: var(--subtle);
+  line-height: 1.5;
+}
+
+/* -----------------------------
+   Lists
+----------------------------- */
+.ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+
+.ul li {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+/* -----------------------------
+   Media containers
+----------------------------- */
+.media {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.media--portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.media--landscape {
+  aspect-ratio: 16 / 9;
+}
+
+.media--doc {
+  aspect-ratio: 4 / 3;
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media--padded {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.media--padded img {
+  border-radius: calc(var(--r-lg) - 6px);
+}
+
+/* -----------------------------
+   Animations
+----------------------------- */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sheen {
+  0% {
+    transform: translateX(-120%) rotate(12deg);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.35;
+  }
+
+  55% {
+    opacity: 0.18;
+  }
+
+  100% {
+    transform: translateX(140%) rotate(12deg);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.reveal.is-visible {
+  animation: fadeUp var(--dur-3) var(--easing) both;
+}
+
+/* Sheen только на desktop */
+@media (min-width: 768px) and (hover: hover) {
+  .glass.is-sheen::before {
+    content: "";
+    position: absolute;
+    inset: -40% -40%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.00) 35%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.00) 65%,
+        transparent 100%);
+    pointer-events: none;
+    transform: translateX(-120%) rotate(12deg);
+    animation: sheen 6.2s var(--easing) infinite;
+    opacity: 0.0;
+  }
+}
+
+/* -----------------------------
+   Footer
+----------------------------- */
+.footer {
+  padding-block: 2rem;
+  padding-inline: max(var(--pad), env(safe-area-inset-left, 1rem));
+  color: var(--subtle);
+  font-size: var(--fs-0);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .footer {
+    padding-block: 2.5rem;
+  }
+}
+
+/* -----------------------------
+   Utilities
+----------------------------- */
+.hidden {
+  display: none !important;
+}
+
+.mt-2 {
+  margin-top: var(--space-2);
+}
+
+.mt-3 {
+  margin-top: var(--space-3);
+}
+
+.mt-4 {
+  margin-top: var(--space-4);
+}
+
+.mt-5 {
+  margin-top: var(--space-5);
+}
+
+/* ============================================
+   LIGHTBOX - Mobile Optimized
+   ============================================ */
+
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.96);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  /* Учитываем safe areas */
+  padding: max(var(--space-3), env(safe-area-inset-top, 16px)) max(var(--space-2), env(safe-area-inset-right, 16px)) max(var(--space-3), env(safe-area-inset-bottom, 16px)) max(var(--space-2), env(safe-area-inset-left, 16px));
+  animation: fadeIn 0.25s ease;
+  /* Блокируем скролл body при открытом lightbox */
+  overscroll-behavior: contain;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.lightbox-content {
+  max-width: 94%;
+  max-height: 75vh;
+  object-fit: contain;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.9);
+  border-radius: var(--r-md);
+  animation: zoomIn 0.25s ease;
+  /* Запрещаем перетаскивание изображения */
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}
+
+@media (min-width: 768px) {
+  .lightbox-content {
+    max-width: 90%;
+    max-height: 85vh;
+    border-radius: var(--r-lg);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.lightbox-caption {
+  color: white;
+  font-size: var(--fs-1);
+  text-align: center;
+  margin-top: var(--space-3);
+  max-width: 90%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--r-md);
+  line-height: 1.4;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lightbox-caption {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+@media (min-width: 768px) {
+  .lightbox-caption {
+    font-size: var(--fs-2);
+    max-width: 80%;
+    padding: 1rem 1.25rem;
+  }
+}
+
+.lightbox-close {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top, 12px));
+  right: max(12px, env(safe-area-inset-right, 12px));
+  width: var(--touch-min);
+  height: var(--touch-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 300;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  transition: 0.2s;
+  z-index: 10;
+  touch-action: manipulation;
+}
+
+@media (min-width: 768px) {
+  .lightbox-close {
+    top: max(var(--space-5), env(safe-area-inset-top, 20px));
+    right: max(var(--space-5), env(safe-area-inset-right, 20px));
+    font-size: 42px;
+    width: 52px;
+    height: 52px;
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lightbox-close:hover {
+    color: #ff4444;
+    transform: scale(1.08);
+    background: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.lightbox-close:active {
+  transform: scale(0.95);
+}
+
+/* Стрелки навигации - адаптивные */
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--touch-min);
+  height: var(--touch-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  transition: 0.2s;
+  z-index: 10;
+  touch-action: manipulation;
+}
+
+@media (min-width: 768px) {
+
+  .lightbox-prev,
+  .lightbox-next {
+    font-size: 32px;
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+  .lightbox-prev:hover,
+  .lightbox-next:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-50%) scale(1.08);
+  }
+}
+
+.lightbox-prev:active,
+.lightbox-next:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.lightbox-prev {
+  left: max(8px, env(safe-area-inset-left, 8px));
+}
+
+.lightbox-next {
+  right: max(8px, env(safe-area-inset-right, 8px));
+}
+
+@media (min-width: 768px) {
+  .lightbox-prev {
+    left: max(var(--space-5), env(safe-area-inset-left, 20px));
+  }
+
+  .lightbox-next {
+    right: max(var(--space-5), env(safe-area-inset-right, 20px));
+  }
+}
+
+/* Стили для thumbnail-карточек */
+.cert-thumbnail {
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+  /* Улучшаем область клика */
+  -webkit-tap-highlight-color: rgba(122, 167, 255, 0.15);
+  touch-action: manipulation;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cert-thumbnail:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .cert-thumbnail:hover img {
+    transform: scale(1.04);
+  }
+}
+
+/* На touch-устройствах: легкое нажатие */
+@media (hover: none) {
+  .cert-thumbnail:active {
+    transform: scale(0.97);
+  }
+}
+
+.cert-thumbnail img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.cert-thumbnail figcaption {
+  text-align: center;
+  padding: var(--space-2);
+  font-weight: 500;
+  font-size: var(--fs-0);
+  line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+  .cert-thumbnail figcaption {
+    font-size: var(--fs-1);
+    padding: var(--space-3);
+  }
+}
+
+/* ============================================
+   CERT-GALLERY специфичные стили
+   ============================================ */
+
+.cert-gallery {
+  /* Mobile: 1 колонка для лучшей читаемости */
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .cert-gallery {
+    /* Tablet: 2 колонки */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .cert-gallery {
+    /* Desktop: 3 колонки */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ============================================
+   BENTO HERO (Hub)
+   ============================================ */
+
+.bento {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .bento {
+    grid-template-columns: 1.35fr 1fr;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+}
+
+.bento-hero {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 900px) {
+  .bento-hero {
+    grid-row: 1 / 4;
+    align-content: start;
+  }
+}
+
+.bento-hero__top {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .bento-hero__top {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: var(--space-4);
+  }
+}
+
+.bento-portrait {
+  margin: 0;
+  width: clamp(120px, 18vw, 190px);
+  aspect-ratio: 1 / 1;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: var(--shadow-1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.bento-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bento-mini {
+  padding: clamp(0.9rem, 2.4vw, 1.2rem);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.bento-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+@media (min-width: 900px) {
+  .bento-card {
+    min-height: 0;
+  }
+}
+
+.bento-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 22px;
+}
+
+.bento-demo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+
+@media (min-width: 640px) {
+  .bento-demo {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.bento-card:hover {
+  text-decoration: none;
+}
+
+/* ============================================
+   HOVER ANIMATIONS FIXES
+   ============================================ */
+
+/* Utility классы для безопасных hover-эффектов */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateZ(0);
+  /* GPU acceleration */
+}
+
+.hover-lift-wrapper:hover .hover-lift {
+  transform: translateY(-8px) translateZ(0);
+}
+
+/* Отключить hover на мобильных */
+@media (hover: none) {
+  .hover-lift-wrapper:hover .hover-lift {
+    transform: none;
+  }
+}
+
+/* Оптимизированный glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  /* Снижено с 16px для performance */
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transform: translateZ(0);
+  /* GPU acceleration */
+  will-change: transform;
+  /* НЕ backdrop-filter! */
+}
+
+/* Убрать blur на больших экранах для производительности */
+@media (min-width: 1400px) {
+  .glass {
+    backdrop-filter: blur(4px);
+    /* Минимум */
+    background: rgba(255, 255, 255, 0.15);
+    /* Более непрозрачный */
+  }
+}
+
+/* Убрать blur в модальных окнах */
+.modal-overlay,
+.lightbox {
+  backdrop-filter: none;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Исправленный hover для Bento cards */
+.bento-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  align-content: start;
+  position: relative;
+  padding: var(--space-4);
+  border-radius: 24px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateZ(0);
+  /* GPU acceleration */
+  z-index: 1;
+}
+
+.bento-card:hover {
+  text-decoration: none;
+  z-index: 10;
+  /* Поднять над соседями */
+  transform: translateY(-6px) translateZ(0);
+}
+
+/* Расширенная hover area для стабильности */
+.bento-card::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  /* Расширяет hover area */
+  pointer-events: auto;
+  z-index: -1;
+}
+
+/* Исправления для сертификатов */
+.cert-thumbnail {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateZ(0);
+}
+
+.cert-thumbnail:hover {
+  transform: translateY(-6px) translateZ(0);
+}
+
+.cert-thumbnail:hover img {
+  transform: scale(1.04);
+}
+
+/* Предотвращение анимаций при загрузке страницы */
+.card,
+.bento-card,
+.cert-thumbnail,
+.btn {
+  opacity: 0;
+  transform: translateY(20px) translateZ(0);
+}
+
+.is-loaded .card,
+.is-loaded .bento-card,
+.is-loaded .cert-thumbnail,
+.is-loaded .btn {
+  opacity: 1;
+  transform: translateY(0) translateZ(0);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Animation debugging is active but visual indicators are hidden for production */
