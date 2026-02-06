@@ -39,6 +39,7 @@
       .credentials-box strong { color: var(--primary); }
     </style>
     <script src="assets/js/analytics.js"></script>
+    <script src="assets/js/crypto.js"></script>
   </head>
   <body>
     <div class="privacy-content">
@@ -46,60 +47,36 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
         Вернуться на главную
       </a>
-
-      <h1>Политика в отношении обработки персональных данных</h1>
       
-      <p>Настоящая Политика составлена в соответствии с требованиями Федерального закона от 27.07.2006. №152-ФЗ «О персональных данных» (далее – Закон о персональных данных) и определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных данных, предпринимаемые <strong>Чеботаревым Андреем</strong> (далее — Оператор).</p>
-
-      <h2>1. Общие положения</h2>
-      <p>1.1. Оператор ставит своей важнейшей целью соблюдение прав и свобод человека при обработке его персональных данных, в том числе защиты прав на неприкосновенность частной жизни, личную и семейную тайну.</p>
-      <p>1.2. Настоящая политика применяется ко всей информации, которую Оператор может получить о посетителях веб-сайта https://andreacebotarev-svg.github.io/englishlessons/.</p>
-      <p>1.3. Оператор является физическим лицом, применяющим специальный налоговый режим «Налог на профессиональный доход» (Самозанятый).</p>
-
-      <h2>2. Состав персональных данных</h2>
-      <p>Оператор обрабатывает следующие данные Пользователя:</p>
-      <ul>
-        <li>Фамилия, имя, отчество;</li>
-        <li>Телефонный номер;</li>
-        <li>Адрес электронной почты;</li>
-        <li>Информация о классе обучения ребенка или цели обучения;</li>
-        <li>Данные, которые передаются в автоматическом режиме в зависимости от настроек программного обеспечения Пользователя (файлы cookie, IP-адрес, данные о браузере).</li>
-      </ul>
-
-      <h2>3. Цели и сроки обработки персональных данных</h2>
-      <p>Основанием для обработки данных является согласие Пользователя. Данные обрабатываются для следующих целей:</p>
-      <ul>
-        <li><strong>Консультация и запись на уроки:</strong> ФИО, телефон, email, цель обучения. Срок: до момента достижения цели (завершение обучения) либо до момента отзыва согласия Пользователем (но не более 3 лет с момента последнего контакта).</li>
-        <li><strong>Улучшение работы сайта:</strong> обезличенные данные cookie. Срок: в соответствии с настройками сервисов Яндекс.Метрика/Google Analytics (обычно 12–24 месяцев).</li>
-      </ul>
-
-      <h2>4. Действия с персональными данными</h2>
-      <p>Оператор осуществляет следующие действия с персональными данными Пользователя: сбор, запись, систематизация, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передача (предоставление, доступ), обезличивание, блокирование, удаление, уничтожение персональных данных.</p>
-      <p>Сбор данных осуществляется путем заполнения Пользователем электронных форм на сайте. Первичный сбор данных осуществляется на серверах, расположенных на территории Российской Федерации.</p>
-
-      <h2>5. Права субъекта персональных данных</h2>
-      <p>Пользователь имеет право:</p>
-      <ul>
-        <li>Запрашивать информацию, касающуюся обработки его персональных данных;</li>
-        <li>Требовать уточнения, блокирования или уничтожения своих персональных данных в случае, если они являются неполными, устаревшими или неточными;</li>
-        <li>Отозвать согласие на обработку персональных данных в любой момент путем отправки сообщения на электронную почту Оператора;</li>
-        <li>Обжаловать действия Оператора в уполномоченном органе (Роскомнадзор) или в судебном порядке.</li>
-      </ul>
-
-      <h2>6. Конфиденциальность и безопасность</h2>
-      <p>6.1. Оператор обязуется не раскрывать третьим лицам и не распространять персональные данные без согласия субъекта, за исключением случаев, предусмотренных федеральным законом.</p>
-      <p>6.2. В случае выявления неточностей в персональных данных, Пользователь может актуализировать их самостоятельно через запрос по электронной почте.</p>
-      <p>6.3. Оператор принимает необходимые организационные и технические меры для защиты персональных данных от неправомерного или случайного доступа, уничтожения, изменения, блокирования, копирования, распространения.</p>
-
-      <div class="credentials-box">
-        <h3>Реквизиты оператора:</h3>
-        <p><strong>Оператор:</strong> Чеботарев Андрей Дмитриевич</p>
-        <p><strong>Статус:</strong> Самозанятый (Плательщик НПД)</p>
-        <p><strong>ИНН:</strong> 381901253054</p>
-        <p><strong>Email:</strong> andreychebotarvqw@gmail.com</p>
+      <div id="policy-container">
+        <!-- Encrypted Content -->
+        <p>Загрузка данных...</p>
       </div>
 
-      <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">Последнее обновление: 03.02.2026</p>
+      <script>
+        (function() {
+            try {
+                const encrypted = "eQZWUrnsuOqlz7/K47LijpXUt9xJo9p0pcq+8OKN4oiU5rfZuc647KXMT6KM4IPnxb7XvNij1oX3pNWiihDiiZXbtuy48rjqpcm/wuKL47qV07bnuPZIhMGk36KP4I/nzr/iUEYbWWp/VE9SEhASPGVOR0xJU1QkS6TyooLhs+fHvtm95qLhhMWl4FLir+KIldW31LjxuOylzr/CEuGz5vu/5r3ro9iEx6TUoofgj+b1TrfeSaLphMuk0aOw4IDm8L/lveii6oTHpNeiihDjt2W/5b3po92ExKTRooDggub4vt+95qPUhM1Uv9biheKCldu27LnDuO+k+L/P4o7ihZXQR7zeo9iEz6TRoo/gghaV0LbuSUFfekVDQUACAAQYZYzj+lhGWnml0L/lEvKZ5ttOt9O5xrnUpPW/zOKN4oaV1bbguc6536TxT6KG4ILm+L7aveKi7ZbOVEeihuCC5v6+0rzcU4rU5lS/5eKA4oyV0LfRSaPWdKXLv8fjsOO3ldC30bnDuO+k+L/P47vjs2W+07zZo9WEyKXko7cZEub9TrfSucy51KXBv8biheKNlOG32bjxSITKpNGjsuG95vG+2bzTU7jqpcW+8uKA4oeV0Lbuucm47FWk0KKH4bLnxL7ZvNSj2ITOpeOij+G558BOt9i5w7jppcm++eO1Eub9TrfQuca51KT/T6KN4IwWldC33bnGudWly7/H47fig5XTt9S4/UiExKTaooXgjOb6vte96KPVhMul7qOw4IoWldG32bjzudWlyr/P4oDijZTit9G4+LnRVaTbooLgj+b4v+y97F9IhMql76KH4Ibm+r/nvNGj1YTNpNOiguCH5vm/7LzcU1QnAQYAHFUO4pGV27fduc251qXEvvLiheKElOW30Emj+ITIpNujsuCH5vC+21BGABwmGhoITBIY4oKV3rfXuca44VWW7+YS4Kzm+r7Svemj2IX3pNGjshkcCmoeWWZjU0h0VVRPTloCDAdrTrfyucK53aXMv8cS4I3m+77cvNej3oTApNKiiuG9CmoGVVJjU0h0VVRPTkIOAxh0QEe896PXhMCl76KC4bDm+7/nTLjyudalxL/A4ojjtGW/5rzbo9aEwKTWUuKC4oaV2LfRuca47aT8v8fiiRLnw77SvNKi5IX7VL7z4o7ih5XVtuK5x7jhpcm/yuKFEub6v+e82aPadKXMT6Oz4IDm+77WvNej3HSk87/H4oviiJXct9m5ybjkVaTQo7LgihaV0LfduPO45KXFv8zjsuKMldtHvNyj24TLVL/N4oXjtpTvt9K5zrjkpc++/uKN472U60e83aPYhMik0qO54bcaZb7VTLjxuOqlyE+jteCK58S+3LzcU7jjpcS+++KI47SU5Ue81qLohMWk3VLijeKGZb7avNyj14X1pNeiiOCM58S+2rzXo9qEwKTSoo/gjOfEv+W95VO506XEvvPjsuKLldC31Umj3oTNpNiij+CKGmW+3LzRou+EyKXso7wQ4o5lv+a83KPUhMCk1qKP4bHny0627rnDuO2lyb7xHAwdRntkR0xJU0h0SQRRQxwCHBaV87fcuPK51qXKvv3jueKGlOFHvNaj1oTOpNejsOCK5v++10y5zLnUpcy/zuKF4ouU4bfZuPG51aT7T6KI4IwWldy27bnGuO1VpNeij+G25vu/57zVo9iF86TXooocEub/vtm966PWhfWl7KO8EOKoldG32bjzuOSk9r/M47AS5vm+2bzfo92F91S/zeKO4o2U7bbrucu51qT4T6KMEOKJldC27bnGudalzL7w4oXijZThtulJo9qEwKTeX+Ox4oaV17buucNIPAEAHwEIHx1XKwoVCQgQDTYaAA4AV0YfRTMJSQsABwAhF1oGHR1VXFEpBxQEBRYbJxoaHF0cDB1Ge2RHTElTSHRJBFFDHAMcFpXwt9O5xrnUpcS+8OKO47Zlv+i826PThfqk2qOw4bPnyk626LnLuOOlzL714oXjt5XUt9S5z0iEzqTXo7TgjOb5Qke81qLohM2k06KH4I/nyr/pveCj0ITJVL7z4o/ig5Tot9S5w7jvpPi/z+O74o9lvtq82aPThMuk3KKM4IDnzr7eTLjzuOGlwr/K4owS9O6++rzZo9OEy6TcUuKN4oZlvti96aPWhfGk2qOz4bPm/b7ZvNSj2ITOpeOij+G55vxOt9i5zbnRpcq/xvCLEh6Vz7fcuc+46qXDv8LijeO5lOy257nKQXpJWx9MODoSFmVOR0xVG1pqR1pPopPgjOfEv+W82aPadKXLv8fjsOO3ldC30bnDuO+k+L/P47vjs2W+07zZo9WEyKXko7cMHV53UG1MSVNIdFVIH0ziruKJldu27LnDudalyr7yEuCM5vS/57zZo9mExaXto7nggOb1vtK961O51aXPv8fihOO1lOC25bnLuOFVpNuiguCP5vi/7LzcU7jLpcq/yeO84oGV0LfeucO51qXBv8njvwgKah5ZZklTSHRVVFMHXg44FmVOR0xJU0hoGR1Ropbggub5vt+80qPQhfpYT6KK4I7nykJHvNei6oXypNqjs+Gw5ve+2VdVXAQ9S35PUhIQEhZlTlsAAE249qXBv8niheOyldC30bnOud+lzU+ij+CM5vm+0r3pSFR7GR1ReBIQEhZlTkdMVR8BaqXkv8bjsOKDlO9HveSj04TApNWjsOGy5vu+2rzUo9aEzFS/zeKO47GU7LbnUk9HOBxKZVISEBIWZU5HUAUaVoTtpNKjtuCM58W+27zZou6EzaXgUuKOEub/vty82aLphfSk2lLijuKHlO2267nGuOmlzL79EuGy5vC+1rzco9WEz6TfUuKI4o2V1ke976PdhM6k11LijuKHlO2267nGuOmlzL79CQwdWixQbUxJU0h0VVRPTl5ZDObRvte81KPVhf6k2l4S4Ijm+7/lvNei6IX+pNpS4o/ig5Tut9m5x7jkpPq+8OOx47llvtVMucO45qT2v8zijOKGlOy31Lj0uOGk9b/I4o7iimW/57zco96EzaTToocQ4oRlvtC82aPahM2l7qKK4I7m+7/mveuj0HSlyr7wEuCP5vW/5r3rouiEy6TaoogQ4omU7rfSucC51KXEv87ijOKLldC337nNSITLpN6ih+Gz5vq+0r3uo92EyKTXo70Q4qmV0LfXuP+446XKv8DigOO0ldu317j8SHyk8L/C4onijZTlRw8GHAM9EFhPO2Id4oaV2rbsuca51VlUv8bigOKLldO257nGSITLVL/D47DihpTtt9u5xrnUpcFGXA4fXl97ZEdMSVNIdElbGh4MOjgWZU5HTElPAGZLR0FS4pbig5XVt9RJo9B0pPW+8uKO4oyV1ke816PZhfWk36KD4Iznx77dvNFTuOulwb7y47HiiJXTt9y5yLnYpcm++eO1Eubxvte81KPVhf6l6k4dWAAIT05HTElTSGgFSr/s47Hii5XQt965w7jppcy/x+KMEubxvty95lO46qXFvvLigOKHldC27rnJuOxVpNuiguCP5vi/7L3sU7nbpca/yeO/4oOU7LbtuPxIhfSk0aKB4Inm9b/mvNGj3XSl67/M4ovjupXZt9K5wbjkpPa/x+KL47lrTrf4ucO46aXJvvnihRLm+77Wvemj2ITEpN+jsOG55ve+173nouqF9KXgUuKE4o2U4Ue96KPThMCk26Ox4bznzL7fvexTudKlwb/J4oXij39SSBxXeUh0VVRPUg5FXghPTkdMSVNIdFVIAxsMDEFCNwEJC1ej8oTLpNKjs+Gx5v6/673ro9iF86TXo70Q4o5lvtC82aPXhM2l7qO+EOKLld5Hveqi6ITLpNWiigoOGTYaFQMHFFZ0pdC/6uKuHhaU7LfZuci44aTwv8zijR4WIAMGBQVfSIXzpNqiieG+FpXQt9248LnTpcG/z+KI47lrTrfNuPO46qXOVVLihOKIZb7bvNej1ITApNKjsOCCFpXat9K48rnWpcy/xOKF4ouV1rbjSaLuhMCk1KKKEBrm8r7XvNuj3YX1peeih+CP5v2+0ky5zbjlpPe+9eKF4ouV1rbjQFO476XMv8PijhLm8b7ZTLnPuOqlyL/H4o3jtJXeR7zXouqEwqXkooDgghaU77fSucC476XEvvPiiOO5Zb74vNej04X5pNiijOCA5vW/5bzco9OEwKTTUhrgj+b7TrfRucZIhMSk0aKJ4Ifm8E5UTLnIuOGk9k+jsxDiipXQt9C5xrjppPa/whLgjeb7v+a80qPdhMGk0qKH4IHm+0631rnNuOmk9r/C4orjtJXeTkJVXAQ9S35PUhIQEhZlTlsAAE1UJwEGABxVDuKVldW277j0udylwb/P4ojig2W/57zZo9mEy6Xto7kQ47eV3rfVuPG45E9IQAFGQl1YIlBHvNej2YTApNiiieCK58K+0rzUo9WF/qTaUuKE4oaV07fRuPi44VUXAB1ZWVcYZb7Gvemj1oTPTk+igBDjt5XQt9K48bjmpcG+8OOx47SV3LfUuctIhfRUv8/igOO3lOy27LnNuO2lzr/C4ozijmW/5rzcouiEx6TXo7PgjOb3TrfDuc644KXBv8jjsRzm2b7Sveui6ITNpNWigh91WSoJCwlJMgY1GQ0bG1FDEh6V0LfduPi506XJv8wSAQDUxf1VWEmj1ITApe6jveG05vC+1UVHT0c4HEplUhIQEhZlUkgZBU1iXlVUT1ISEA5ed1BTQkmj/ITApNajs+Gw5ve+373mU7nVVaTQoofhsufEvtm81KPYhM6l46KP4bnm+b7fTLnHuOSlyb/P47viipXWW0MBQVZeVVRPUhIQDkZ7vvm81qPdhfWk36Ow4IznxU630rjyudek/b/H47HjtJXct9e4/LjhpPZPo7PgiebwvtO96qLmhfyk16KHEOKCldu31bjyudalxr/K478S58ROt9O5xrnUpPW/zOKN4oaV1bbguc6536XIv8oS4Ibm9b7avNSi44TJpNdS4q/iiJXVtuC5xLjqpca/wuOy4oOV1bbjU1O51aXFv8zjsB4Wldm33LnMuOyk9b7+HhDjt5XWtu248bjhpci/wuOy4o6V2bfcuPW47KT7Q1LijeKGldS30rnMuO+lwb/P4ojig2lOtum487jkpcm/x+KN4o6V20tMuPC51qXKvvXijeKDldO31LnGSHylyr/D4o3iiJXct9e5xrjppcy/xx4Q4o6V2bfQuca46aXBv8/iiOKDbEJHvNGj34THpNSih+G15vC+2rzRo914VaTXo7Pgjeb7vty95aPfhMuk3aKC4I/m/b7SQEmj14TApe+ih+CG5vW/4LzZU0CEyqXvoofghub7v+a966PYhMek1KKH4I/m/b7SQEmj3ITLpe6jsOGx5vpHS0y5zbjlpcG/xeKL4o6U6bfUucG45KXJv8rihR4Wld+317nNuO6lzL7y4o7ihJXet9G5y7jhWVS+8eKE4oaV1bfZuc647KXBQ1Ljs+KLlda267jxuOqlwr/H4o3ijpXbR7zWo92F9aXuoozgj+b1vty95aPVhf6l6lLihOKGldO30bj4udFbSEACDDoSFmVOR0xVA1aE1KTeoozhshaV2rfcuc646aT/vvcS4IznxL/kveCj3YX0pe2igOCJ58q+0r3roumF+lS/zeOz47SV27fQSaPfhMWk0KKM4Inm+L7SvNSj0IX6VL/t4o7ijZTit9u5zbjmpcS+8OKF4o2V27fQSaLlhM6k2qKI4bDnxb7ZvNSj1YX+pepS47TiiJTut9BJo9WExVS+8+KA4o+U7LfZR1O4y6XBvvLiguKOlOm30bj4uO1Vpe6ig+CM58VOt9i5w7jppcm++eO1Eub7v+a96qLhhMCl7qOw4IDm/r/ovNyi6oX0peBS4o3ihmW/5rzcouiEx6Tao7LggufAQke96aPYhfSk0KKM4Inm+77RvNyj1YTIpeSjtxDii5XeR73ro92F9aXvoorhsOb7v+e80aPQdKXUv8zjseO3lda31bjyuO6lyr/LEuCW5vC+07zcouiExaXpoorgihh5QRdSY3lIdFVUT1IOWAAIcEBHvPai6ITFpN2ighDjt5Ttt924+bjhpc6+8OKAEub6vtK96aLphMuk0qKC4Innyb7aveKi7XSlwL/C4o3ii5TltulVXABmS35PUhIQEhZ5Hlm89qPWhM6l46KF4Izm977Xveuj3YTOpeNS4ojiipXbt9m48UiEyqXvooLggOb7VFtDGU1idFVUT1ISDEdae2RHTElTSHRVVFMeWw7ioZXet9O487jkpPy/yuKC4oaU7LbgSaPQhMil66KM4bLm+b7Xve+j0IX7WE+iiOCC58S+173nouGF9qXho7PhvRaV0LfduPO45KXFv8zjsuKMldZHvNyj24TLVL/N4oXjtpTvt9K5zrjkpc++/uKN472U60e83aPYhMik0qO54bcNeUELBVd5SHRVVE9SEhAOWixQt86487jhpcW/zOKC4oaU7LbgSaLrhfek0aO14I/m8L7avNGi53hVpN6iieCM5v++373po9aEx6Tfoo/giufKTrfUuci47FWl7KKP4Irnwr/lvNej3oTApNKiiuG9FpTvt965zbjspPFPoo3gh+fFv+a816PVhMWk1KO+4I/nzr/iTLnHuOSlyb/P47vjs2W+1Uy48rjvpPe+9eKA4oNpTrfZuPK476XMT6KM4I/m/U6247nBuO+k+77847Ljt5ThR7zUo92EyqTRoongj+fOvtu80V9Ihfal7qOw4ILnxb7SvNui4ITNpNOiihDijpXVt9RJo9WEwKXtoozhteb4v+y81aPQb0lbAxsMOhIWZU5HTElTVDgcSr/s47LiiJXZt965w7nWpPhPo7PgjOb2vty82aLphM2k2lLijeKGZb7ZvNii6ITFpN6ijOGw5v+/5Ey5zLjhpPS+8+KO4ouV3rfXuP+46aT/vvcS4Ibm9b7avNSi44XwVL/AEuCJ58u+1rzXo9F0pci/zOKM4oOV07buSaPXhfal7aKH4I4WldC27rnMudSlxL/A4orijmW/5rzXo9aExKXmoofgj+b9v+hMuc645FWl4qKJ4Ifm/7/lvemj1oTIpNKjseG8FpXRt9K49LnWpPdPoqzgjebwv+e82aLqhMul76KCCw4ZKQdZZklTSHRVVE9SDlxbCJXwt925xbjkpc+/zOKC4oaU7LbgSaPchMCk1qOz4bDm977fveZTuMqly7/H47DihpTst9K487jkVaTdUuOz4omV0LfXuc646qXIv8zjt+KDldO30bnNuOhVpNGjsuCB5vW+2rzcU0CE1aTRo7PgiOb7vtu81KPYhMGk2KKM4bIfZb7fvNKj0HSlxk+js+Gx5vG+0rzYo9WEy6TTUuKP4oiU7rbjuce47qXBQU4dXFsIT05HTElTSGhaAQNMODoSFmVOR0xVG1pqQ1pPoqjgjOb4v+O80aPchMCk0qO04Irm9b7cveWj1YTLpe6jsOG+FpXWR7zYo92EwqTRoo3ggufEvtq816Lphfel404dWAAIT05HTElTSGgFSllcAx4S5tu+2LzcouiExaXtoozhshaV0LfduPy446T3v8fjsuO3lOFHvNSj3XSk9L/C47HijJTutue5wbjkpPa+/hLhsOfFvtK966LkhM2k01Lii+KOlOi33LnPSITNVL/P4oUS58W+173oo9eF9aTRo7PhsOfFvte81KLnhfel41Lij+KDlO627bnNuOmlxL/J47zii5Tlt9lJo9yExaTSoo/huebwTrfduca441Wl7qKM4IHm/r7Xveij0IX6VL7z47Pih5Tkt9m5ybnWpcRDUuKH4oZlvt+96KPShM6l4aO14Ifm+L7fvNyj1HSk9b/J47PjsZXet9m5wUR0pcu+8uKF4oKU7bbtuc+46qT2vvLiheKLldO257j2SIXxpNqihuCH58W+17zSouSEyKXkoo4Q4oGV3rfWuc246aXKv84cDB1Ge2RHTElTSHRJBFFEHAIcFpX8R73oo9OF9qXoooLghxaV3LbnuPy45qXPv8fijeKOlOFHvNSj3YX3pNGjteCP5vu/5r3ro92EzFS/wBLgjebwv+e96KPWhMik36KJ4b7m+L/svexTuOClxL/P4o3jvZTrS0y57Ljqpc++/uKH4oiV3LfcuPG44aXPvv4S4I7m+77RvNyi6nSlxL/I47LjtZXet9e5y7jjpcy+8uKO4oSV3rbuuP9IhM2l6lLjseKGldK30rjyudalyr7947Lig5XVtuC5zrjqVaXooofhsubwvtBMucS45KXLvvLijuO3Zb7YvNdTudmlz7/H4orjtJTut9K5zrjppcq/yxLgjeb7v+C966PdeklbH0w4EBIWZU5HUBlNXnpGWk+irOCN5vC/57zZouqEy6XvUuKP47aV1rfRucu46KXEv8fjshLm+L7SvNej2YXwpNGihuCK5vm/7LzcU7jqpPS/weKA4ouV1rfbucO50qXMv8zijeKLlOW32Umj0HSk9r/H47Xii5XWtuu5xrnVpc6/yuKFEub5vtK96aLjdKXAv8njvxLm8r7XveCj0IX3peRS4o/ig5Tutu25zbjppcS/yeO84ouU5bbpSaPchMWk0qKP4bnnwE630rjxSITIpNqijeGy5vW+1bzXo9SEwKXvoo/gjOb2vtlMucu476XMT6Oz4Innxr/gvNmj0YTIpNGigeCMFpXat9K48rnWpPe/zeKAHhaU7bfRucu506T2v8zihuKDldO31Lj8RHSlzL/F4ozig5XTt9m5zrjspPtDUuKB4o2V0LfWucu51KXKv8DigOKLlda240VTuO6lyr/N4ojjtpXQt965w7jppcy+/R4Q47aV3rbtucy51KXKvvPjsuO2ld630bnGuOmlzL79HAwdRntkbUxJU0h0VUgLG0QQUVokHRRRSxAaMRERAQZbUV5FaAwIFEtNYnRVVE9SEhASCi1dWbzJo92Ez6Tdoorgheb9v+W94lO46qXLv8fjsOKGlOy30rjzuORPSEAaAQ44FmVOR0xJU0hoBUpTAUZCXVgiULfyucy44aT0v8LjsuKIlO5dUEYAHCYaGghMEuCV5vC+1rzXouqExaXvoofggBaV/rfRuce51KXBv8sS4Kbm+b7fveui6ITNpNqigOCK58JSSBxXeUh0VVRPUhIQDkZ7UhQYGxwGM0ukzqOw4ILnx7/kvehJVHsGAB0dXFcMFpXPt9y5z7jqpcO/wuKN47mU7LbnucpIfKXrv8nigOO0ldu317j/ud2lzL/IEuCv5tq+80VVXBhqf1RPUhIQEhZlUhdSVQAcJhoaCEziqOKrlfNdUEYAHCYaGghMEgMKB3xeVl5cQFhhQUhAAgw6EhZlTkdMSVNUJEtIHAZAX1xReysKDQAfUmhaBxsAXV5VCGUPCQgbFhE3HRENHUZRQEA0GScLBBIBOFsXAB8OH0IIT05HTElTSGhaEAYEDDo4FmVOR0xJTxh0BgAWHlcNEFskHAAFB14cOwVOT0BAVV8NZQgIAh1eGz0PEVVSAh4LRCADXEwGAwk3HAAWSBIAHAF+TFm89qPWhfSk1KKH4Ibm+L7SvNxTuOqlxb/P4o7ihJXVt9m5zrjspcFVUgIDHAZ3QFVcW0VUewVK";
+                const obfuscator = new KeyObfuscator();
+                // Decrypt (returns binary string)
+                const binaryString = obfuscator.decrypt(encrypted);
+                
+                // Decode UTF-8
+                // Convert binary string to Uint8Array first
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                const decoder = new TextDecoder('utf-8');
+                const html = decoder.decode(bytes);
+                
+                document.getElementById('policy-container').innerHTML = html;
+            } catch (e) {
+                console.error("Decryption failed", e);
+                document.getElementById('policy-container').innerHTML = "<p>Ошибка загрузки политики.</p>";
+            }
+        })();
+      </script>
     </div>
   </body>
 </html>
