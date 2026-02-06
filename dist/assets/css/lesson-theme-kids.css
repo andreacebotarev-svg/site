@@ -1,0 +1,1050 @@
+/**
+ * KIDS MODE THEME
+ * Bright, playful, and engaging design for children aged 7-12
+ * 
+ * Inspiration: Duolingo Kids, Khan Academy Kids, ABCmouse
+ * Color palette: Pink, Yellow, Green, Blue, Purple
+ * Features: Rounded shapes, gradients, animations, emoji icons
+ * Accessibility: WCAG AA contrast, reduced motion support
+ */
+
+/* ============================================
+   1. CSS VARIABLES & DESIGN TOKENS
+   ============================================ */
+
+:root[data-theme="kids"],
+body[data-theme="kids"] {
+  /* === Backgrounds === */
+  --bg-main: linear-gradient(135deg, #FFE5F1 0%, #FFDDE5 100%);
+  --bg-secondary: #FFF9E6;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FFF4D9;
+  --bg-overlay: rgba(255, 229, 241, 0.95);
+
+  /* === Accent Colors === */
+  --accent-primary: #FF6B9D;
+  --accent-secondary: #FFD93D;
+  --accent-success: #6BCF7F;
+  --accent-info: #4FC3F7;
+  --accent-purple: #B388FF;
+  --accent-danger: #FF6B6B;
+
+  /* === Text Colors === */
+  --text-main: #2D3748;
+  --text-soft: #718096;
+  --text-on-accent: #FFFFFF;
+  --text-muted: #9CA3AF;
+
+  /* === Button Gradients === */
+  --button-primary-bg: linear-gradient(135deg, #FF6B9D 0%, #FF8FAB 100%);
+  --button-secondary-bg: linear-gradient(135deg, #FFD93D 0%, #FFE66D 100%);
+  --button-success-bg: linear-gradient(135deg, #6BCF7F 0%, #8AE99C 100%);
+  --button-info-bg: linear-gradient(135deg, #4FC3F7 0%, #81D4FA 100%);
+
+  /* === Shadows & Effects === */
+  --shadow-soft: 0 4px 16px rgba(255, 107, 157, 0.2);
+  --shadow-medium: 0 6px 20px rgba(255, 107, 157, 0.25);
+  --shadow-strong: 0 8px 32px rgba(255, 107, 157, 0.3);
+  --shadow-lg: 0 10px 40px rgba(255, 107, 157, 0.35);
+  --glow-effect: 0 0 20px rgba(255, 217, 61, 0.6);
+  --glow-pink: 0 0 25px rgba(255, 107, 157, 0.5);
+  --glow-green: 0 0 20px rgba(107, 207, 127, 0.5);
+
+  /* === Border Radius === */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --radius-full: 50%;
+
+  /* === Spacing === */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* === Transitions === */
+  --transition-fast: 0.2s ease-in-out;
+  --transition-base: 0.3s ease-in-out;
+  --transition-slow: 0.5s ease-in-out;
+}
+
+/* ============================================
+   2. TYPOGRAPHY & FONTS
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+body[data-theme="kids"] {
+  font-family: 'Fredoka', 'Nunito', 'Comic Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 18px; /* 120% of base 16px */
+  line-height: 1.7;
+  font-weight: 500;
+  color: var(--text-main);
+  background: var(--bg-main);
+  background-attachment: fixed;
+}
+
+body[data-theme="kids"] h1,
+body[data-theme="kids"] h2,
+body[data-theme="kids"] h3,
+body[data-theme="kids"] h4 {
+  font-weight: 700;
+  color: var(--text-main);
+  text-shadow: 0 2px 4px rgba(255, 107, 157, 0.1);
+}
+
+body[data-theme="kids"] h1 { font-size: 2.5rem; }
+body[data-theme="kids"] h2 { font-size: 2rem; }
+body[data-theme="kids"] h3 { font-size: 1.5rem; }
+body[data-theme="kids"] h4 { font-size: 1.25rem; }
+
+/* ============================================
+   3. LAYOUT & CONTAINERS
+   ============================================ */
+
+body[data-theme="kids"] .app-shell {
+  background: transparent;
+}
+
+body[data-theme="kids"] .card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-medium);
+  border: none;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+body[data-theme="kids"] .card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+body[data-theme="kids"] .card-header {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-purple) 100%);
+  color: var(--text-main);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-lg);
+  border-bottom: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+body[data-theme="kids"] .card-title {
+  color: var(--text-main);
+  font-size: 1.75rem;
+  margin: 0;
+}
+
+/* ============================================
+   4. BUTTONS & CONTROLS
+   ============================================ */
+
+body[data-theme="kids"] .primary-btn,
+body[data-theme="kids"] button.primary-btn {
+  background: var(--button-primary-bg);
+  color: var(--text-main);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+body[data-theme="kids"] .primary-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--shadow-strong);
+  animation: bounce 0.6s ease-in-out;
+}
+
+body[data-theme="kids"] .primary-btn:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+body[data-theme="kids"] .primary-btn.secondary {
+  background: var(--button-secondary-bg);
+  color: var(--text-main);
+}
+
+/* ============================================
+   KIDS AUDIO BUTTONS - WCAG AAA COMPLIANT
+   Contrast ratio: 21:1 (white bg / black text)
+   ============================================ */
+
+/* Container for audio buttons */
+.reading-controls-left {
+  display: flex;
+  gap: 12px; /* 10-14px spacing between buttons */
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Kids theme: High contrast white buttons with dark text */
+:root.theme-kids .kids-audio-btn-play,
+:root.theme-kids .kids-audio-btn-pause,
+body[data-theme="kids"] .kids-audio-btn-play,
+body[data-theme="kids"] .kids-audio-btn-pause {
+  /* Use design tokens for consistency */
+  background: var(--audio-btn-bg) !important; /* #ffffff */
+  color: var(--audio-btn-text) !important; /* #1a1a1a */
+  border-color: var(--audio-btn-border) !important; /* rgba(0, 0, 0, 0.25) */
+  font-weight: 700 !important; /* Bold for clarity */
+  
+  /* Contrast ratio: 21:1 (WCAG AAA) ✅ */
+}
+
+/* Hover state */
+:root.theme-kids .kids-audio-btn-play:hover,
+:root.theme-kids .kids-audio-btn-pause:hover,
+body[data-theme="kids"] .kids-audio-btn-play:hover,
+body[data-theme="kids"] .kids-audio-btn-pause:hover {
+  background: var(--audio-btn-hover-bg) !important; /* #f5f5f5 */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Active state */
+:root.theme-kids .kids-audio-btn-play:active,
+:root.theme-kids .kids-audio-btn-pause:active,
+body[data-theme="kids"] .kids-audio-btn-play:active,
+body[data-theme="kids"] .kids-audio-btn-pause:active {
+  background: var(--audio-btn-active-bg) !important; /* #e5e5e5 */
+  transform: scale(0.96);
+}
+
+/* Focus state for keyboard navigation */
+:root.theme-kids .kids-audio-btn-play:focus-visible,
+:root.theme-kids .kids-audio-btn-pause:focus-visible,
+body[data-theme="kids"] .kids-audio-btn-play:focus-visible,
+body[data-theme="kids"] .kids-audio-btn-pause:focus-visible {
+  outline: 3px solid var(--accent-500) !important;
+  outline-offset: 2px;
+}
+
+/* Ensure buttons are always visible */
+:root.theme-kids .kids-audio-btn-play,
+:root.theme-kids .kids-audio-btn-pause,
+body[data-theme="kids"] .kids-audio-btn-play,
+body[data-theme="kids"] .kids-audio-btn-pause {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 10;
+  position: relative;
+}
+
+/* Mobile responsive - maintain size and spacing */
+@media (max-width: 640px) {
+  :root.theme-kids .kids-audio-btn-play,
+  :root.theme-kids .kids-audio-btn-pause,
+  body[data-theme="kids"] .kids-audio-btn-play,
+  body[data-theme="kids"] .kids-audio-btn-pause {
+    font-size: 16px !important; /* Maintain minimum size */
+    padding: 10px 14px !important; /* Slightly smaller on mobile */
+    gap: 6px;
+  }
+  
+  .reading-controls-left {
+    gap: 10px; /* Minimum spacing on mobile */
+  }
+}
+
+body[data-theme="kids"] .icon-btn {
+  background: var(--bg-card);
+  border: 2px solid var(--accent-primary);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+body[data-theme="kids"] .icon-btn:hover {
+  background: var(--accent-primary);
+  color: var(--text-main);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-soft);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+body[data-theme="kids"] .icon-btn.primary {
+  background: var(--button-info-bg);
+  color: var(--text-main);
+  border: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+body[data-theme="kids"] .icon-btn.danger {
+  border-color: var(--accent-danger);
+}
+
+body[data-theme="kids"] .icon-btn.danger:hover {
+  background: var(--accent-danger);
+}
+
+/* ============================================
+   5. TABS & NAVIGATION
+   ============================================ */
+
+body[data-theme="kids"] .tabs {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  gap: 8px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: var(--space-lg);
+}
+
+body[data-theme="kids"] .tab {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px 24px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+body[data-theme="kids"] .tab:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-main);
+  transform: translateY(-2px);
+}
+
+body[data-theme="kids"] .tab.active {
+  background: linear-gradient(135deg, #FF4D8A 0%, #FF6B9D 100%);
+  color: var(--text-main);
+  box-shadow: var(--glow-pink);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+}
+
+body[data-theme="kids"] .tab-indicator {
+  background: #FF4D8A;
+  height: 4px;
+  border-radius: 2px;
+  box-shadow: var(--glow-pink);
+}
+
+/* Theme Switcher Buttons */
+body[data-theme="kids"] .theme-switcher {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+}
+
+body[data-theme="kids"] .theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-soft);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+body[data-theme="kids"] .theme-btn:hover {
+  background: var(--bg-card-hover);
+  transform: scale(1.05);
+}
+
+body[data-theme="kids"] .theme-btn.active {
+  background: linear-gradient(135deg, #FF4D8A 0%, #FF6B9D 100%);
+  color: var(--text-main);
+  border-color: #FF4D8A;
+  box-shadow: var(--shadow-soft);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+}
+
+/* Apple-style theme switcher for Kids theme */
+body[data-theme="kids"] .theme-btn-apple.active {
+  color: #1a1a1a;
+}
+
+body[data-theme="kids"] .theme-switcher[data-active-theme="kids"] .theme-indicator {
+  background: linear-gradient(135deg, 
+              rgba(255, 77, 138, 0.98) 0%, 
+              rgba(255, 107, 157, 0.95) 100%);
+}
+
+body[data-theme="kids"] .theme-switcher[data-active-theme="kids"] .theme-indicator-glow {
+  background: radial-gradient(circle, rgba(255, 77, 138, 0.5) 0%, transparent 70%);
+  opacity: 0.7;
+}
+
+/* ============================================
+   6. VOCABULARY COMPONENTS
+   ============================================ */
+
+/* Vocabulary Mode Toggle */
+body[data-theme="kids"] .vocab-mode-toggle {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 6px;
+  border-radius: var(--radius-md);
+}
+
+body[data-theme="kids"] .vocab-mode-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+body[data-theme="kids"] .vocab-mode-btn.active {
+  background: white;
+  color: var(--text-main);
+  box-shadow: var(--shadow-soft);
+  font-weight: 700;
+}
+
+/* Vocabulary Cards */
+body[data-theme="kids"] .vocab-item {
+  background: var(--bg-card);
+  border: 3px solid var(--accent-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+body[data-theme="kids"] .vocab-item::before {
+  content: '✨';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  opacity: 0;
+  transform: scale(0);
+  transition: all var(--transition-fast);
+}
+
+body[data-theme="kids"] .vocab-item:hover {
+  transform: translateY(-4px) rotate(-1deg);
+  box-shadow: var(--shadow-strong);
+  border-color: var(--accent-primary);
+}
+
+body[data-theme="kids"] .vocab-item:hover::before {
+  opacity: 1;
+  transform: scale(1);
+  animation: sparkle 1s ease-in-out infinite;
+}
+
+body[data-theme="kids"] .vocab-item.word-saved {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  border-color: var(--accent-success);
+  animation: wiggle 0.5s ease-in-out;
+}
+
+body[data-theme="kids"] .vocab-word {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-shadow: 0 2px 4px rgba(255, 107, 157, 0.2);
+}
+
+body[data-theme="kids"] .vocab-definition {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  margin-top: var(--space-sm);
+}
+
+body[data-theme="kids"] .vocab-example {
+  font-style: italic;
+  color: var(--text-soft);
+  background: var(--bg-secondary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  margin-top: var(--space-sm);
+}
+
+/* ============================================
+   7. KANBAN BOARD
+   ============================================ */
+
+body[data-theme="kids"] .vocab-kanban-container {
+  background: transparent;
+}
+
+body[data-theme="kids"] .kanban-board {
+  gap: var(--space-lg);
+}
+
+body[data-theme="kids"] .kanban-column {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-medium);
+  border: 3px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+body[data-theme="kids"] .kanban-column[data-status="to-learn"] {
+  border-color: #FF6B9D;
+  background: linear-gradient(180deg, #FFE5F1 0%, #FFFFFF 100%);
+}
+
+body[data-theme="kids"] .kanban-column[data-status="learning"] {
+  border-color: #FFD93D;
+  background: linear-gradient(180deg, #FFF9E6 0%, #FFFFFF 100%);
+}
+
+body[data-theme="kids"] .kanban-column[data-status="known"] {
+  border-color: #6BCF7F;
+  background: linear-gradient(180deg, #E8F5E9 0%, #FFFFFF 100%);
+}
+
+body[data-theme="kids"] .kanban-column[data-status="favorites"] {
+  border-color: #B388FF;
+  background: linear-gradient(180deg, #F3E5F5 0%, #FFFFFF 100%);
+}
+
+body[data-theme="kids"] .column-header {
+  background: transparent;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 3px solid currentColor;
+}
+
+body[data-theme="kids"] .kanban-column[data-status="to-learn"] .column-header {
+  color: #FF6B9D;
+}
+
+body[data-theme="kids"] .kanban-column[data-status="learning"] .column-header {
+  color: #FFD93D;
+}
+
+body[data-theme="kids"] .kanban-column[data-status="known"] .column-header {
+  color: #6BCF7F;
+}
+
+body[data-theme="kids"] .kanban-column[data-status="favorites"] .column-header {
+  color: #B388FF;
+}
+
+body[data-theme="kids"] .column-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+body[data-theme="kids"] .column-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+body[data-theme="kids"] .kanban-card {
+  background: white;
+  border: 3px solid rgba(255, 107, 157, 0.3);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  margin: var(--space-sm) var(--space-md);
+  transition: all var(--transition-fast);
+}
+
+body[data-theme="kids"] .kanban-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-strong);
+  border-color: var(--accent-primary);
+}
+
+body[data-theme="kids"] .kanban-card.dragging {
+  opacity: 0.7;
+  transform: rotate(5deg) scale(1.1);
+  box-shadow: var(--shadow-lg), var(--glow-pink);
+}
+
+body[data-theme="kids"] .column-content.drag-over {
+  background: rgba(255, 217, 61, 0.2);
+  border: 3px dashed var(--accent-secondary);
+  border-radius: var(--radius-md);
+  animation: glow 1s ease-in-out infinite;
+}
+
+/* ============================================
+   8. FLASHCARDS
+   ============================================ */
+
+body[data-theme="kids"] .flashcard {
+  border: 5px solid transparent;
+  border-image: linear-gradient(135deg, #FF6B9D, #FFD93D, #6BCF7F, #4FC3F7, #B388FF) 1;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-strong);
+  transition: all var(--transition-base);
+}
+
+body[data-theme="kids"] .flashcard:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg), var(--glow-effect);
+}
+
+body[data-theme="kids"] .flashcard.flipped {
+  transform: rotateY(180deg) scale(1.05);
+}
+
+body[data-theme="kids"] .flashcard-face {
+  background: white;
+  border-radius: var(--radius-lg);
+}
+
+body[data-theme="kids"] .flashcard-front {
+  background: linear-gradient(135deg, #FFE5F1 0%, #FFFFFF 100%);
+}
+
+body[data-theme="kids"] .flashcard-back {
+  background: linear-gradient(135deg, #E8F5E9 0%, #FFFFFF 100%);
+}
+
+body[data-theme="kids"] .flashcard-word {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-shadow: 0 3px 6px rgba(255, 107, 157, 0.3);
+}
+
+body[data-theme="kids"] .flashcard-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-purple);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* ============================================
+   9. PROGRESS BARS
+   ============================================ */
+
+body[data-theme="kids"] .progress-bar {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  height: 12px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="kids"] .progress-bar-fill {
+  background: linear-gradient(90deg, #FF6B9D 0%, #FFD93D 50%, #6BCF7F 100%);
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow);
+  box-shadow: 0 0 10px rgba(255, 217, 61, 0.6);
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Progress Emoji Indicators */
+body[data-theme="kids"] .progress-label::after {
+  content: '';
+  margin-left: 8px;
+}
+
+body[data-theme="kids"] .progress-label[data-progress="low"]::after {
+  content: '🌟';
+}
+
+body[data-theme="kids"] .progress-label[data-progress="medium"]::after {
+  content: '🚀';
+}
+
+body[data-theme="kids"] .progress-label[data-progress="high"]::after {
+  content: '🎉';
+}
+
+body[data-theme="kids"] .progress-label[data-progress="complete"]::after {
+  content: '🏆';
+}
+
+/* ============================================
+   10. QUIZ INTERFACE
+   ============================================ */
+
+body[data-theme="kids"] .quiz-option {
+  background: white;
+  border: 3px solid var(--accent-info);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: var(--space-md);
+}
+
+body[data-theme="kids"] .quiz-option:hover {
+  background: var(--bg-card-hover);
+  transform: translateX(8px) scale(1.02);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--accent-primary);
+}
+
+body[data-theme="kids"] .quiz-option.correct {
+  background: linear-gradient(135deg, #6BCF7F 0%, #8AE99C 100%) !important;
+  color: white !important;
+  border-color: #4CAF50 !important;
+  box-shadow: 0 0 20px rgba(107, 207, 127, 0.5) !important;
+  animation: bounce 0.6s ease-in-out;
+  position: relative;
+}
+
+body[data-theme="kids"] .quiz-option.correct::after {
+  content: '🎉';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  animation: confetti 1s ease-out;
+}
+
+body[data-theme="kids"] .quiz-option.wrong {
+  background: linear-gradient(135deg, #FFE5E5 0%, #FFD6D6 100%) !important;
+  border-color: #FF6B6B !important;
+  color: #C62828 !important;
+  animation: shake 0.5s ease-in-out;
+}
+
+body[data-theme="kids"] .quiz-feedback {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-top: var(--space-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+}
+
+body[data-theme="kids"] .quiz-feedback.correct {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  color: #2E7D32;
+  border: 3px solid var(--accent-success);
+}
+
+body[data-theme="kids"] .quiz-feedback.wrong {
+  background: linear-gradient(135deg, #FFE5E5 0%, #FFD6D6 100%);
+  color: #C62828;
+  border: 3px solid var(--accent-danger);
+}
+
+body[data-theme="kids"] .reading-quiz-results {
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFE66D 100%);
+  border: 5px solid var(--accent-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  box-shadow: var(--shadow-strong), var(--glow-effect);
+}
+
+/* ============================================
+   11. ANIMATIONS & KEYFRAMES
+   ============================================ */
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-10px); }
+  50% { transform: translateY(-5px); }
+  75% { transform: translateY(-8px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(5deg); }
+}
+
+@keyframes sparkle {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.5; 
+    transform: scale(1.2);
+  }
+}
+
+@keyframes confetti {
+  0% { 
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(-100px) rotate(360deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes glow {
+  0%, 100% { 
+    box-shadow: 0 0 10px rgba(255, 217, 61, 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 25px rgba(255, 217, 61, 0.8);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* ============================================
+   12. READING CONTENT
+   ============================================ */
+
+body[data-theme="kids"] .reading-paragraph {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-main);
+  margin-bottom: var(--space-lg);
+}
+
+body[data-theme="kids"] .interactive-word {
+  background: linear-gradient(180deg, transparent 60%, rgba(255, 217, 61, 0.3) 60%);
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-weight: 600;
+}
+
+body[data-theme="kids"] .interactive-word:hover {
+  background: linear-gradient(180deg, transparent 50%, rgba(255, 217, 61, 0.5) 50%);
+  transform: scale(1.05);
+  color: var(--accent-primary);
+}
+
+body[data-theme="kids"] .interactive-word.word-saved {
+  background: linear-gradient(180deg, transparent 60%, rgba(107, 207, 127, 0.4) 60%);
+  border-bottom: 3px solid var(--accent-success);
+}
+
+body[data-theme="kids"] .reading-image {
+  border: 5px solid white;
+  box-shadow: var(--shadow-strong);
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================
+   13. WORD POPUP
+   ============================================ */
+
+body[data-theme="kids"] .word-popup {
+  background: white;
+  border: 4px solid var(--accent-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-strong), var(--glow-pink);
+}
+
+body[data-theme="kids"] .word-popup-header {
+  background: var(--button-primary-bg);
+  color: var(--text-main);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  padding: var(--space-md) var(--space-lg);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+body[data-theme="kids"] .word-popup-word {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+body[data-theme="kids"] .word-popup-btn {
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  padding: 12px 20px;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+body[data-theme="kids"] .word-popup-btn:hover {
+  transform: scale(1.05);
+}
+
+body[data-theme="kids"] .word-popup-btn.primary {
+  background: var(--button-info-bg);
+  color: var(--text-main);
+  border: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+body[data-theme="kids"] .word-popup-btn.saved {
+  background: var(--button-success-bg);
+  color: var(--text-main);
+  border: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   14. NOTIFICATIONS
+   ============================================ */
+
+body[data-theme="kids"] .notification {
+  background: var(--button-primary-bg);
+  color: var(--text-main);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-xl);
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-strong), var(--glow-pink);
+  border: 3px solid white;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   15. RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  body[data-theme="kids"] {
+    font-size: 16px;
+  }
+
+  body[data-theme="kids"] h1 { font-size: 2rem; }
+  body[data-theme="kids"] h2 { font-size: 1.75rem; }
+  body[data-theme="kids"] h3 { font-size: 1.25rem; }
+
+  body[data-theme="kids"] .primary-btn {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+  }
+
+  body[data-theme="kids"] .vocab-word {
+    font-size: 1.25rem;
+  }
+
+  body[data-theme="kids"] .flashcard-word {
+    font-size: 2rem;
+  }
+
+  body[data-theme="kids"] .kanban-board {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-theme="kids"] .theme-switcher {
+    flex-direction: column;
+  }
+}
+
+/* ============================================
+   16. ACCESSIBILITY
+   ============================================ */
+
+/* Focus States */
+body[data-theme="kids"] *:focus-visible {
+  outline: 4px solid var(--accent-secondary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+body[data-theme="kids"] button:focus-visible,
+body[data-theme="kids"] .tab:focus-visible {
+  outline-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.3);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  body[data-theme="kids"] * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  body[data-theme="kids"] .flashcard {
+    transition: none !important;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  body[data-theme="kids"] {
+    --text-main: #000000;
+    --text-soft: #333333;
+  }
+
+  body[data-theme="kids"] .card,
+  body[data-theme="kids"] .vocab-item,
+  body[data-theme="kids"] .kanban-card {
+    border-width: 4px;
+  }
+}
+
+/* ============================================
+   17. SPECIAL EFFECTS & POLISH
+   ============================================ */
+
+/* Sparkle decoration for achievements */
+body[data-theme="kids"] .achievement-sparkle {
+  position: relative;
+}
+
+body[data-theme="kids"] .achievement-sparkle::before,
+body[data-theme="kids"] .achievement-sparkle::after {
+  content: '✨';
+  position: absolute;
+  font-size: 1.5rem;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+body[data-theme="kids"] .achievement-sparkle::before {
+  top: -10px;
+  left: -10px;
+}
+
+body[data-theme="kids"] .achievement-sparkle::after {
+  bottom: -10px;
+  right: -10px;
+  animation-delay: 0.75s;
+}
+
+/* Gradient text effect */
+body[data-theme="kids"] .gradient-text {
+  background: linear-gradient(135deg, #FF6B9D, #FFD93D, #6BCF7F, #4FC3F7, #B388FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Button press effect */
+body[data-theme="kids"] button:active {
+  transform: scale(0.95);
+}
+
+/* Card lift on hover */
+body[data-theme="kids"] .card:hover,
+body[data-theme="kids"] .vocab-item:hover,
+body[data-theme="kids"] .kanban-card:hover {
+  z-index: 10;
+}

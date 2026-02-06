@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>English Tenses Test - B1 Level</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            margin: 30px 0;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .speaker-btn {
+            background: #667eea;
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .speaker-btn:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .speaker-btn:active {
+            transform: scale(0.95);
+        }
+
+        .speaker-btn.playing {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #f5f5f5;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: #e8e8e8;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .option.correct {
+            background: #4caf50;
+            color: white;
+            border-color: #45a049;
+        }
+
+        .option.incorrect {
+            background: #f44336;
+            color: white;
+            border-color: #da190b;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .score {
+            font-size: 48px;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-text {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .reset-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .reset-input {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-right: 10px;
+            width: 150px;
+            text-align: center;
+        }
+
+        .btn-reset {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #da190b;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+
+        .auto-play-toggle {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .auto-play-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>English Tenses Test</h1>
+            <div class="subtitle">Present Simple, Present Continuous, Present Perfect (B1 Level)</div>
+            <div class="auto-play-toggle">
+                <input type="checkbox" id="autoPlayToggle" checked>
+                <label for="autoPlayToggle">Auto-play questions</label>
+            </div>
+        </div>
+
+        <div id="quiz-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number" id="question-number">
+                    <button class="speaker-btn" id="speakerBtn" onclick="speakQuestion()" title="Listen to question">
+                        🔊
+                    </button>
+                </div>
+                <div class="question-text" id="question-text"></div>
+                <div class="options" id="options"></div>
+                <div class="feedback hidden" id="feedback"></div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn-next" id="next-btn" onclick="nextQuestion()">Next Question</button>
+            </div>
+        </div>
+
+        <div id="results-section" class="results hidden">
+            <h2>Test Completed!</h2>
+            <div class="score" id="final-score"></div>
+            <div class="score-text" id="score-text"></div>
+
+            <div class="reset-section">
+                <p style="margin-bottom: 15px; color: #666;">Enter code to reset the test:</p>
+                <input type="text" class="reset-input" id="reset-code" placeholder="Code">
+                <button class="btn-reset" onclick="resetTest()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "She _____ to the gym three times a week.",
+                options: ["go", "goes", "is going", "has gone"],
+                correct: 1,
+                explanation: "Present Simple is used for regular habits and routines. With 'she' (3rd person singular), we add -es to the verb."
+            },
+            {
+                question: "Look! The cat _____ the tree.",
+                options: ["climbs", "is climbing", "has climbed", "climbed"],
+                correct: 1,
+                explanation: "Present Continuous is used for actions happening right now. The word 'Look!' indicates an action in progress."
+            },
+            {
+                question: "I _____ this book yet.",
+                options: ["don't finish", "am not finishing", "haven't finished", "didn't finish"],
+                correct: 2,
+                explanation: "Present Perfect with 'yet' is used to talk about actions that haven't been completed up to now."
+            },
+            {
+                question: "Water _____ at 100 degrees Celsius.",
+                options: ["boils", "is boiling", "has boiled", "boil"],
+                correct: 0,
+                explanation: "Present Simple is used for general truths and scientific facts."
+            },
+            {
+                question: "They _____ in London since 2015.",
+                options: ["live", "are living", "have lived", "lived"],
+                correct: 2,
+                explanation: "Present Perfect with 'since' is used to describe actions that started in the past and continue to the present."
+            },
+            {
+                question: "Why _____ you _____ sunglasses? It's cloudy today.",
+                options: ["do / wear", "are / wearing", "have / worn", "did / wear"],
+                correct: 1,
+                explanation: "Present Continuous is used for temporary situations happening now. The question form uses 'are you wearing'."
+            },
+            {
+                question: "My brother _____ as a doctor in a local hospital.",
+                options: ["work", "works", "is working", "has worked"],
+                correct: 1,
+                explanation: "Present Simple is used for permanent situations and jobs."
+            },
+            {
+                question: "I can't find my keys. I _____ them somewhere.",
+                options: ["lose", "am losing", "have lost", "lost"],
+                correct: 2,
+                explanation: "Present Perfect is used when the exact time is not important, but the result affects the present (can't find keys now)."
+            },
+            {
+                question: "The Earth _____ around the Sun.",
+                options: ["moves", "is moving", "has moved", "move"],
+                correct: 0,
+                explanation: "Present Simple is used for permanent truths and natural phenomena."
+            },
+            {
+                question: "Shh! The baby _____.",
+                options: ["sleeps", "is sleeping", "has slept", "sleep"],
+                correct: 1,
+                explanation: "Present Continuous is used for actions happening at the moment of speaking. 'Shh!' indicates this."
+            },
+            {
+                question: "How long _____ you _____ English?",
+                options: ["do / study", "are / studying", "have / studied", "did / study"],
+                correct: 2,
+                explanation: "Present Perfect with 'How long' asks about the duration of an action from the past until now."
+            },
+            {
+                question: "He _____ coffee, he prefers tea.",
+                options: ["doesn't drink", "isn't drinking", "hasn't drunk", "don't drink"],
+                correct: 0,
+                explanation: "Present Simple (negative) is used to express preferences and general habits."
+            },
+            {
+                question: "We _____ about moving to a bigger apartment.",
+                options: ["think", "are thinking", "have thought", "thinks"],
+                correct: 1,
+                explanation: "Present Continuous with 'think about' is used for temporary considerations and plans in progress."
+            },
+            {
+                question: "She _____ three countries this year.",
+                options: ["visits", "is visiting", "has visited", "visit"],
+                correct: 2,
+                explanation: "Present Perfect is used with time periods that aren't finished yet ('this year')."
+            },
+            {
+                question: "I _____ what you mean.",
+                options: ["don't understand", "am not understanding", "haven't understood", "doesn't understand"],
+                correct: 0,
+                explanation: "Stative verbs like 'understand' are typically used in Present Simple, not Continuous."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+        let speechSynthesis = window.speechSynthesis;
+        let femaleVoice = null;
+
+        // Load female voice
+        function loadVoices() {
+            const voices = speechSynthesis.getVoices();
+            femaleVoice = voices.find(voice => 
+                voice.name.includes('Google US English') && voice.name.includes('Female')
+            ) || voices.find(voice => 
+                voice.lang === 'en-US' && voice.name.toLowerCase().includes('female')
+            ) || voices.find(voice => 
+                voice.lang === 'en-US'
+            ) || voices[0];
+        }
+
+        speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices();
+
+        // Save state to localStorage
+        function saveState() {
+            const state = {
+                currentQuestion,
+                score,
+                answered,
+                completed: false,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('englishTestState', JSON.stringify(state));
+        }
+
+        // Save completion state
+        function saveCompletionState() {
+            const state = {
+                currentQuestion,
+                score,
+                answered: false,
+                completed: true,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('englishTestState', JSON.stringify(state));
+        }
+
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('englishTestState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                // Check if state is less than 24 hours old
+                if (Date.now() - state.timestamp < 24 * 60 * 60 * 1000) {
+                    currentQuestion = state.currentQuestion;
+                    score = state.score;
+                    answered = state.answered;
+                    return state;
+                }
+            }
+            return null;
+        }
+
+        // Clear saved state
+        function clearState() {
+            localStorage.removeItem('englishTestState');
+        }
+
+        function speakQuestion() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                document.getElementById('speakerBtn').classList.remove('playing');
+                return;
+            }
+
+            const q = questions[currentQuestion];
+            const text = q.question.replace(/_____/g, 'blank');
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            
+            const speakerBtn = document.getElementById('speakerBtn');
+            speakerBtn.classList.add('playing');
+            
+            utterance.onend = () => {
+                speakerBtn.classList.remove('playing');
+            };
+            
+            utterance.onerror = () => {
+                speakerBtn.classList.remove('playing');
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question-number').innerHTML = 
+                `<button class="speaker-btn" id="speakerBtn" onclick="speakQuestion()" title="Listen to question">🔊</button>
+                Question ${currentQuestion + 1} of ${questions.length}`;
+            
+            document.getElementById('question-text').textContent = q.question;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').disabled = true;
+            answered = false;
+            updateProgress();
+            saveState();
+
+            // Auto-play if enabled
+            if (document.getElementById('autoPlayToggle').checked) {
+                setTimeout(() => speakQuestion(), 300);
+            }
+        }
+
+        function selectOption(selected) {
+            if (answered) return;
+
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            answered = true;
+            
+            options.forEach((option, index) => {
+                option.classList.add('disabled');
+                if (index === q.correct) {
+                    option.classList.add('correct');
+                }
+                if (index === selected && selected !== q.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
+            feedback.classList.remove('hidden');
+            
+            if (selected === q.correct) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>✓ Correct!</strong><br>${q.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>✗ Incorrect.</strong><br>${q.explanation}`;
+            }
+
+            document.getElementById('next-btn').disabled = false;
+            saveState();
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showResults() {
+            document.getElementById('quiz-section').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('final-score').textContent = `${score}/${questions.length}`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = 'Excellent! You have mastered these tenses!';
+            } else if (percentage >= 70) {
+                message = 'Good job! You have a solid understanding.';
+            } else if (percentage >= 50) {
+                message = 'Not bad, but more practice is needed.';
+            } else {
+                message = 'Keep practicing. You\'ll improve!';
+            }
+            
+            document.getElementById('score-text').textContent = `${percentage}% - ${message}`;
+            saveCompletionState();
+        }
+
+        function resetTest() {
+            const code = document.getElementById('reset-code').value;
+            
+            if (code === '263') {
+                currentQuestion = 0;
+                score = 0;
+                answered = false;
+                
+                document.getElementById('quiz-section').classList.remove('hidden');
+                document.getElementById('results-section').classList.add('hidden');
+                document.getElementById('reset-code').value = '';
+                
+                clearState();
+                loadQuestion();
+            } else {
+                alert('Incorrect code. Please try again.');
+            }
+        }
+
+        // Initialize quiz
+        const savedState = loadState();
+        if (savedState) {
+            if (savedState.completed) {
+                // Show results
+                showResults();
+            } else if (savedState.currentQuestion < questions.length) {
+                // Continue test
+                loadQuestion();
+            } else {
+                // Start over
+                currentQuestion = 0;
+                score = 0;
+                answered = false;
+                clearState();
+                loadQuestion();
+            }
+        } else {
+            // First run
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            clearState();
+            loadQuestion();
+        }
+    </script>
+</body>
+</html>

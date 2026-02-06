@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader Lesson Renderer Test</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/reader.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: var(--text-primary);
+        }
+        .mock-reading-content {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Reader Lesson Renderer Approach Test</h1>
+
+        <div class="test-section">
+            <h3>Testing new structured reading approach</h3>
+            <p>This test simulates the lesson renderer approach applied to reader.</p>
+
+            <div id="reading-content" class="mock-reading-content">
+                <!-- Content will be rendered here -->
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Debug Info:</h3>
+            <div id="debug-panel">
+                Initializing test...<br>
+            </div>
+        </div>
+    </div>
+
+    <!-- WordPopover container -->
+    <div id="word-popover-container"></div>
+
+    <script type="module">
+        // Mock lesson-renderer approach for reader
+        class MockReaderRenderer {
+            constructor(container) {
+                this.container = container;
+            }
+
+            escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            makeWordsInteractive(text) {
+                // Simple word processing for test
+                const wordRegex = /\b([a-zA-Z]+(?:'[a-zA-Z]+)?)\b/g;
+
+                return text.replace(wordRegex, (match, word) => {
+                    if (word.length <= 2) {
+                        return this.escapeHtml(match);
+                    }
+
+                    return `<span class="interactive-word" style="color: blue; cursor: pointer;" onclick="alert('Clicked: ${word}')">${this.escapeHtml(match)}</span>`;
+                });
+            }
+
+            renderReadingContent(content) {
+                const reading = content.content?.reading;
+
+                if (!reading || !Array.isArray(reading) || reading.length === 0) {
+                    return '<p>No structured reading content available.</p>';
+                }
+
+                log('Rendering structured reading content:', reading.length, 'paragraphs');
+
+                const allText = reading.map(para => para.text).join(' ');
+                const wordCount = allText.split(/\s+/).length;
+
+                // Process paragraphs
+                const processedParagraphs = reading.map((para, index) => {
+                    let paraHTML = '';
+
+                    if (para.type === 'list') {
+                        const items = para.text.split('\n').filter(line => line.trim());
+                        paraHTML = `<ul style="padding-left: 20px; margin-bottom: 12px;">${items.map(item => `<li>${this.makeWordsInteractive(item)}</li>`).join('')}</ul>`;
+                    } else if (para.type === 'fact') {
+                        paraHTML = `
+                            <div style="margin: 16px 0; padding: 12px; background: rgba(0, 122, 255, 0.1); border-left: 3px solid #007aff; border-radius: 8px;">
+                                ${para.title ? `<div style="font-weight: 600; font-size: 0.85rem; color: #007aff; margin-bottom: 6px;">${this.escapeHtml(para.title)}</div>` : ''}
+                                <p style="margin: 0; font-size: 0.9rem; line-height: 1.5;">${this.makeWordsInteractive(para.text)}</p>
+                            </div>
+                        `;
+                    } else {
+                        paraHTML = `
+                            ${para.title ? `<h3 style="font-size: 1rem; font-weight: 600; margin: 16px 0 8px 0; color: #333;">${this.escapeHtml(para.title)}</h3>` : ''}
+                            <p class="reading-paragraph">${this.makeWordsInteractive(para.text)}</p>
+                        `;
+                    }
+
+                    return paraHTML;
+                }).join('');
+
+                return `
+                    <div class="card-header">
+                        <h2 class="card-title">📖 Reading</h2>
+                    </div>
+                    <div class="reading-controls">
+                        <div class="reading-controls-left">
+                            <button class="btn btn-secondary" onclick="alert('Audio not implemented')">🔊 Play audio</button>
+                        </div>
+                        <div class="reading-controls-right">
+                            ${wordCount} words
+                        </div>
+                    </div>
+                    <div class="reading-body">
+                        ${processedParagraphs}
+                    </div>
+                `;
+            }
+        }
+
+        function log(message) {
+            const debugPanel = document.getElementById('debug-panel');
+            const timestamp = new Date().toLocaleTimeString();
+            debugPanel.innerHTML += `[${timestamp}] ${message}<br>`;
+            debugPanel.scrollTop = debugPanel.scrollHeight;
+            console.log(message);
+        }
+
+        // Test data simulating book content
+        const mockBookContent = {
+            content: {
+                reading: [
+                    {
+                        text: "This is a regular paragraph with some words that should be interactive. The quick brown fox jumps over the lazy dog.",
+                        type: "regular",
+                        title: ""
+                    },
+                    {
+                        text: "Did you know that English has more words than any other language in the world?",
+                        type: "fact",
+                        title: "Interesting Fact"
+                    },
+                    {
+                        text: "- First item in the list\n- Second item with more words\n- Third item for testing",
+                        type: "list",
+                        title: ""
+                    },
+                    {
+                        text: "Another regular paragraph to test the image insertion after paragraphs. This should have an image after it.",
+                        type: "regular",
+                        title: ""
+                    }
+                ]
+            }
+        };
+
+        // Initialize test
+        async function testLessonRendererApproach() {
+            try {
+                log('Creating MockReaderRenderer...');
+
+                const contentContainer = document.getElementById('reading-content');
+                const renderer = new MockReaderRenderer(contentContainer);
+
+                log('Rendering mock book content...');
+                const html = renderer.renderReadingContent(mockBookContent);
+
+                contentContainer.innerHTML = html;
+
+                log('✅ Test completed successfully!');
+                log('Click on blue words to test interactivity.');
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        // Start test
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', testLessonRendererApproach);
+        } else {
+            testLessonRendererApproach();
+        }
+    </script>
+</body>
+</html>

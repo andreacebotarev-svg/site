@@ -1,0 +1,191 @@
+{
+  "id": "267",
+  "title": "Countries & Grammar",
+  "subtitle": "Where are you from?",
+  "theme": "playful",
+  "colors": ["#FF9800", "#FFF3E0"],
+  "content": [
+    {
+      "type": "block",
+      "title": "1 Hello!",
+      "text": "Hello! My name is Tom. I am from England. This is my friend Anna. She is from Russia."
+    },
+    {
+      "type": "block",
+      "title": "⭐ GRAMMAR 1: Positive (+)",
+      "text": "Remember how to say who you are:\n\n• I am (I'm)\n• You are (You're)\n• He is (He's)\n• She is (She's)\n• It is (It's)\n\nExample: She is from Italy."
+    },
+    {
+      "type": "vocab",
+      "items": [
+        { "en": "England", "ru": "Англия" },
+        { "en": "China", "ru": "Китай" },
+        { "en": "Italy", "ru": "Италия" },
+        { "en": "Russia", "ru": "Россия" },
+        { "en": "Spain", "ru": "Испания" },
+        { "en": "Brazil", "ru": "Бразилия" },
+        { "en": "USA", "ru": "США" }
+      ]
+    },
+    {
+      "type": "block",
+      "title": "⭐ GRAMMAR 2: Negative (-)",
+      "text": "How to say NO:\n\n• I am NOT (I'm not)\n• You are NOT (You aren't)\n• He is NOT (He isn't)\n• She is NOT (She isn't)\n\nExample: He isn't from Spain."
+    },
+    {
+      "type": "phrase",
+      "items": [
+        { "en": "Where are you from?", "ru": "Откуда ты?" },
+        { "en": "I'm from Russia.", "ru": "Я из России." },
+        { "en": "Is he from Italy?", "ru": "Он из Италии?" },
+        { "en": "No, he isn't.", "ru": "Нет (не он)." },
+        { "en": "Yes, she is.", "ru": "Да (она)." }
+      ]
+    },
+    {
+      "type": "block",
+      "title": "⭐ GRAMMAR 3: Questions (?)",
+      "text": "To ask a question, change the order:\n\n• Am I...?\n• Are you...?\n• Is he...?\n• Is she...?\n\nExample: Is she from Brazil? Yes, she is."
+    },
+    {
+      "type": "quiz",
+      "question": "1. I ___ from Russia.",
+      "options": ["is", "am", "are"],
+      "answer": 1,
+      "feedback": "Correct! Always say 'I am'."
+    },
+    {
+      "type": "quiz",
+      "question": "2. She ___ from Italy.",
+      "options": ["am", "are", "is"],
+      "answer": 2,
+      "feedback": "Correct! 'She is'."
+    },
+    {
+      "type": "quiz",
+      "question": "3. He ___ from Spain.",
+      "options": ["is", "am", "are"],
+      "answer": 0,
+      "feedback": "Correct! 'He is'."
+    },
+    {
+      "type": "quiz",
+      "question": "4. You ___ my friend.",
+      "options": ["is", "am", "are"],
+      "answer": 2,
+      "feedback": "Correct! 'You are'."
+    },
+    {
+      "type": "quiz",
+      "question": "5. It ___ a cat.",
+      "options": ["is", "am", "are"],
+      "answer": 0,
+      "feedback": "Correct! 'It is'."
+    },
+    {
+      "type": "quiz",
+      "question": "6. Where ___ you from?",
+      "options": ["is", "am", "are"],
+      "answer": 2,
+      "feedback": "Correct! 'Where are you?'"
+    },
+    {
+      "type": "quiz",
+      "question": "7. ___ he from China?",
+      "options": ["Am", "Is", "Are"],
+      "answer": 1,
+      "feedback": "Correct! 'Is he...?'"
+    },
+    {
+      "type": "quiz",
+      "question": "8. ___ she from Brazil?",
+      "options": ["Is", "Are", "Am"],
+      "answer": 0,
+      "feedback": "Correct! 'Is she...?'"
+    },
+    {
+      "type": "quiz",
+      "question": "9. No, he ___.",
+      "options": ["isn't", "aren't", "not"],
+      "answer": 0,
+      "feedback": "Correct! Negative: 'He isn't'."
+    },
+    {
+      "type": "quiz",
+      "question": "10. No, she ___.",
+      "options": ["isn't", "aren't", "am not"],
+      "answer": 0,
+      "feedback": "Correct! Negative: 'She isn't'."
+    },
+    {
+      "type": "quiz",
+      "question": "11. Anna is a girl. ___ is from Russia.",
+      "options": ["He", "She", "It"],
+      "answer": 1,
+      "feedback": "Correct! Anna = She."
+    },
+    {
+      "type": "quiz",
+      "question": "12. Tom is a boy. ___ is from England.",
+      "options": ["He", "She", "It"],
+      "answer": 0,
+      "feedback": "Correct! Tom = He."
+    },
+    {
+      "type": "quiz",
+      "question": "13. London is a city. ___ is in England.",
+      "options": ["He", "She", "It"],
+      "answer": 2,
+      "feedback": "Correct! A city = It."
+    },
+    {
+      "type": "quiz",
+      "question": "14. I am ___ Brazil.",
+      "options": ["to", "from", "in"],
+      "answer": 1,
+      "feedback": "Correct! 'I am FROM Brazil'."
+    },
+    {
+      "type": "quiz",
+      "question": "15. We ___ happy.",
+      "options": ["am", "is", "are"],
+      "answer": 2,
+      "feedback": "Correct! 'We are'."
+    },
+    {
+      "type": "quiz",
+      "question": "16. They ___ from USA.",
+      "options": ["am", "is", "are"],
+      "answer": 2,
+      "feedback": "Correct! 'They are'."
+    },
+    {
+      "type": "quiz",
+      "question": "17. ___ is he? He is Tom.",
+      "options": ["What", "Where", "Who"],
+      "answer": 2,
+      "feedback": "Correct! 'Who' asks about a person."
+    },
+    {
+      "type": "quiz",
+      "question": "18. ___ is it? It is a dog.",
+      "options": ["Who", "What", "Where"],
+      "answer": 1,
+      "feedback": "Correct! 'What' asks about a thing."
+    },
+    {
+      "type": "quiz",
+      "question": "19. Yes, I ___.",
+      "options": ["am", "is", "are"],
+      "answer": 0,
+      "feedback": "Correct! Short answer: 'Yes, I am'."
+    },
+    {
+      "type": "quiz",
+      "question": "20. You ___ not from China.",
+      "options": ["is", "are", "am"],
+      "answer": 1,
+      "feedback": "Correct! 'You are not'."
+    }
+  ]
+}

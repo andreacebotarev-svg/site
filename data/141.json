@@ -1,0 +1,359 @@
+{
+  "title": "Can you ...?",
+  "subtitle": "Grammar focus",
+  "colors": ["#4CAF50", "#FFF9C4"],
+  "meta": {
+    "level": "A1",
+    "tags": ["grammar", "vocabulary", "sport", "ability"],
+    "theme": "light",
+    "duration": 45
+  },
+  "content": {
+    "reading": [
+      {
+        "type": "paragraph",
+        "text": "NOT JUST SPORTS STARS! It’s no secret. The Brazilian superstar Ronaldinho is a brilliant footballer. And the Russian tennis player Maria Sharapova can play tennis very well. But what other things can they do? Guess the answers.",
+        "highlight": ["footballer", "tennis", "player", "can", "play", "well", "guess", "answers", "superstar", "secret"],
+        "audio_paragraph": true
+      },
+      {
+        "type": "list",
+        "text": "1. Ronaldinho can speak Portuguese very well.\n2. ... can do jazz dancing.\n3. ... can’t speak English very well.\n4. ... can play the drums.\n5. ... can speak English very well.\n6. ... can dance the samba.\n7. ... can speak Spanish.\n8. ... can speak Russian very well.",
+        "highlight": ["speak", "portuguese", "english", "drums", "dance", "samba", "spanish", "russian", "jazz", "well"],
+        "audio_paragraph": true
+      },
+      {
+        "type": "list",
+        "text": "HOW SPORTY ARE YOU? CAN YOU … ?\nTouch your toes.\nRun five kilometres.\nJuggle with three balls.\nSwim underwater.\nStand on your head.\nCatch a ball with one hand.\nRide a horse.\nDive.",
+        "highlight": ["sporty", "touch", "toes", "run", "juggle", "swim", "underwater", "stand", "ride", "dive"],
+        "audio_paragraph": true
+      }
+    ]
+  },
+  "vocabulary": {
+    "words": [
+      {
+        "en": "can",
+        "ru": "уметь / мочь",
+        "transcription": "kən",
+        "example": "I can play tennis quite well.",
+        "part_of_speech": "modal verb"
+      },
+      {
+        "en": "cannot",
+        "ru": "не мочь",
+        "transcription": "ˈkænɒt",
+        "example": "I cannot swim very well.",
+        "part_of_speech": "modal verb"
+      },
+      {
+        "en": "brilliant",
+        "ru": "блестящий / великолепный",
+        "transcription": "ˈbrɪliənt",
+        "example": "He is a brilliant footballer.",
+        "part_of_speech": "adjective"
+      },
+      {
+        "en": "superstar",
+        "ru": "суперзвезда",
+        "transcription": "ˈsuːpəstɑː",
+        "example": "The Brazilian superstar Ronaldinho.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "secret",
+        "ru": "секрет",
+        "transcription": "ˈsiːkrət",
+        "example": "It’s no secret.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "footballer",
+        "ru": "футболист",
+        "transcription": "ˈfʊtbɔːlə",
+        "example": "Ronaldinho is a brilliant footballer.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "tennis",
+        "ru": "теннис",
+        "transcription": "ˈtenɪs",
+        "example": "Maria Sharapova can play tennis.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "drums",
+        "ru": "барабаны",
+        "transcription": "drʌmz",
+        "example": "He can play the drums.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "dance",
+        "ru": "танцевать",
+        "transcription": "dɑːns",
+        "example": "She can dance the samba.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "samba",
+        "ru": "самба (танец)",
+        "transcription": "ˈsæmbə",
+        "example": "They can dance the samba.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "Portuguese",
+        "ru": "португальский язык",
+        "transcription": "ˌpɔːtʃəˈɡiːz",
+        "example": "He can speak Portuguese.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "swim",
+        "ru": "плавать",
+        "transcription": "swɪm",
+        "example": "I can’t swim very well.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "juggle",
+        "ru": "жонглировать",
+        "transcription": "ˈdʒʌɡl",
+        "example": "Can you juggle with three balls?",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "underwater",
+        "ru": "под водой",
+        "transcription": "ˌʌndəˈwɔːtə",
+        "example": "Can you swim underwater?",
+        "part_of_speech": "adverb"
+      },
+      {
+        "en": "catch",
+        "ru": "ловить",
+        "transcription": "kætʃ",
+        "example": "Catch a ball with one hand.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "ride",
+        "ru": "ездить верхом",
+        "transcription": "raɪd",
+        "example": "Can you ride a horse?",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "dive",
+        "ru": "нырять",
+        "transcription": "daɪv",
+        "example": "Can you dive?",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "touch",
+        "ru": "дотрагиваться",
+        "transcription": "tʌtʃ",
+        "example": "Touch your toes.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "toes",
+        "ru": "пальцы ног",
+        "transcription": "təʊz",
+        "example": "Touch your toes.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "stand",
+        "ru": "стоять",
+        "transcription": "stænd",
+        "example": "Stand on your head.",
+        "part_of_speech": "verb"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "can play very well",
+        "ru": "умеет играть очень хорошо",
+        "transcription": "kən pleɪ ˈveri wel",
+        "example": "She can play tennis very well.",
+        "part_of_speech": "phrase"
+      },
+      {
+        "en": "can speak Portuguese",
+        "ru": "умеет говорить по-португальски",
+        "transcription": "kən spiːk ˌpɔːtʃəˈɡiːz",
+        "example": "Ronaldinho can speak Portuguese.",
+        "part_of_speech": "phrase"
+      },
+      {
+        "en": "do jazz dancing",
+        "ru": "заниматься джазовыми танцами",
+        "transcription": "duː dʒæz ˈdɑːnsɪŋ",
+        "example": "Who can do jazz dancing?",
+        "part_of_speech": "phrase"
+      },
+      {
+        "en": "play the drums",
+        "ru": "играть на барабанах",
+        "transcription": "pleɪ ðə drʌmz",
+        "example": "He can play the drums.",
+        "part_of_speech": "phrase"
+      },
+      {
+        "en": "How sporty are you?",
+        "ru": "Насколько ты спортивный?",
+        "transcription": "haʊ ˈspɔːti ə juː",
+        "example": "How sporty are you?",
+        "part_of_speech": "phrase"
+      },
+      {
+        "en": "stand on your head",
+        "ru": "стоять на голове",
+        "transcription": "stænd ɒn jɔː hed",
+        "example": "Can you stand on your head?",
+        "part_of_speech": "phrase"
+      },
+      {
+        "en": "ride a horse",
+        "ru": "ездить на лошади",
+        "transcription": "raɪd ə hɔːs",
+        "example": "I can ride a horse.",
+        "part_of_speech": "phrase"
+      }
+    ]
+  },
+  "grammar": {
+    "title": "Modal verb CAN (Ability)",
+    "explanation": "Мы используем глагол 'can' (мочь, уметь), чтобы говорить о способностях. Он не меняется по лицам (нет окончания -s). После него основной глагол идет без частицы 'to'.",
+    "pattern": "Subject + can / can't + Verb (base form)",
+    "examples": {
+      "affirmative": [
+        "I can dance.",
+        "She can play tennis."
+      ],
+      "negative": [
+        "I can't swim.",
+        "He cannot speak Spanish."
+      ],
+      "questions": [
+        "Can you sing?",
+        "Yes, I can. / No, I can't."
+      ]
+    },
+    "common_mistakes": [
+      "He cans swim. (Неверно: can не меняется)",
+      "I can to dance. (Неверно: без to)",
+      "Do you can sing? (Неверно: вопрос строится самим can)"
+    ]
+  },
+  "quiz": [
+    {
+      "type": "comprehension",
+      "question": "Where is Ronaldinho from?",
+      "options": ["Russia", "Brazil", "Spain", "England"],
+      "correct": 1,
+      "fb": "Correct! The text says he is a 'Brazilian superstar'."
+    },
+    {
+      "type": "comprehension",
+      "question": "What sport does Maria Sharapova play?",
+      "options": ["Football", "Tennis", "Volleyball", "Rugby"],
+      "correct": 1,
+      "fb": "Correct! She is a Russian tennis player."
+    },
+    {
+      "type": "comprehension",
+      "question": "According to the text, is Ronaldinho a good footballer?",
+      "options": ["No, he is bad", "He is okay", "Yes, he is brilliant", "We don't know"],
+      "correct": 2,
+      "fb": "Correct! The text calls him a 'brilliant footballer'."
+    },
+    {
+      "type": "comprehension",
+      "question": "What language can Ronaldinho speak very well?",
+      "options": ["Russian", "English", "Portuguese", "French"],
+      "correct": 2,
+      "fb": "Correct! 'Ronaldinho can speak Portuguese very well'."
+    },
+    {
+      "type": "comprehension",
+      "question": "What does the text ask you to guess?",
+      "options": ["Their age", "Their names", "What other things they can do", "Where they live"],
+      "correct": 2,
+      "fb": "Correct! 'Guess the answers' about what other things they can do."
+    },
+    {
+      "type": "comprehension",
+      "question": "Which musical instrument is mentioned in the list?",
+      "options": ["Guitar", "Piano", "Drums", "Violin"],
+      "correct": 2,
+      "fb": "Correct! Number 4 mentions 'play the drums'."
+    },
+    {
+      "type": "comprehension",
+      "question": "What kind of dancing is mentioned in item 2?",
+      "options": ["Samba", "Jazz dancing", "Ballet", "Hip hop"],
+      "correct": 1,
+      "fb": "Correct! Item 2 says 'do jazz dancing'."
+    },
+    {
+      "type": "comprehension",
+      "question": "Is Maria Sharapova Brazilian?",
+      "options": ["Yes", "No, she is Russian", "No, she is Spanish", "No, she is English"],
+      "correct": 1,
+      "fb": "Correct! The text says 'Russian tennis player'."
+    },
+    {
+      "type": "vocabulary",
+      "question": "What does 'underwater' mean?",
+      "options": ["In the air", "On the ground", "Below the surface of water", "On a mountain"],
+      "correct": 2,
+      "fb": "Correct! Underwater means below the water surface."
+    },
+    {
+      "type": "vocabulary",
+      "question": "If you are 'sporty', you ...",
+      "options": ["Like sleeping", "Like sports and are active", "Don't like games", "Are lazy"],
+      "correct": 1,
+      "fb": "Correct! Sporty people enjoy sports and physical activities."
+    },
+    {
+      "type": "vocabulary",
+      "question": "What do you use to 'touch' something?",
+      "options": ["Your eyes", "Your ears", "Your hands or fingers", "Your voice"],
+      "correct": 2,
+      "fb": "Correct! You usually touch things with your hands or fingers."
+    },
+    {
+      "type": "vocabulary",
+      "question": "What is a 'footballer'?",
+      "options": ["A ball", "A person who plays football", "A stadium", "A referee"],
+      "correct": 1,
+      "fb": "Correct! A footballer is a player of football."
+    },
+    {
+      "type": "vocabulary",
+      "question": "Which verb is used with 'a horse'?",
+      "options": ["Drive", "Ride", "Play", "Go"],
+      "correct": 1,
+      "fb": "Correct! We say 'ride a horse'."
+    },
+    {
+      "type": "grammar",
+      "question": "Choose the correct sentence:",
+      "options": ["I can to swim.", "I can swim.", "I cans swim.", "I can swimming."],
+      "correct": 1,
+      "fb": "Correct! We use 'can' + base verb without 'to'."
+    },
+    {
+      "type": "grammar",
+      "question": "Make this negative: 'She can dance.'",
+      "options": ["She no can dance.", "She doesn't can dance.", "She can't dance.", "She can't dances."],
+      "correct": 2,
+      "fb": "Correct! The negative form is 'can't' or 'cannot'."
+    }
+  ]
+}

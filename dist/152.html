@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta name="referrer" content="no-referrer">
+  <meta charset="UTF-8" />
+  <title>Super Cool Super Cook – Complete Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <style>
+    :root {
+      --primary: #ff6348;
+      --accent: #ffa502;
+      --dark: #2f3542;
+      --light: #f1f2f6;
+      --success: #2ed573;
+      --error: #ff4757;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Скроллбар */
+    ::-webkit-scrollbar { width: 12px; }
+    ::-webkit-scrollbar-track { background: var(--light); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--primary), var(--accent)); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: var(--dark);
+      padding: 10px;
+      font-size: 16px;
+      background-attachment: fixed;
+    }
+
+    .app-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      min-height: 90vh;
+    }
+
+    .app-background {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: url('https://images.unsplash.com/photo-1543339308-4abebd33b5b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') no-repeat center center;
+      background-size: cover;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    header {
+      background: linear-gradient(120deg, var(--primary), #ee5a6f);
+      color: #fff;
+      padding: 25px;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+    h1 { margin: 0; font-size: 2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+    .subtitle { margin-top: 8px; font-size: 1rem; opacity: 0.95; }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .tab {
+      flex: 1 1 100px;
+      padding: 14px;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #7f8fa6;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: #fff8f7;
+    }
+    .tab:hover:not(.active) { background: #f7f8fa; }
+
+    main { padding: 30px; z-index: 10; position: relative; padding-bottom: 100px; }
+    section { display: none; animation: fadeIn 0.3s; }
+    section.active { display: block; }
+
+    h2 {
+      border-left: 5px solid var(--primary);
+      padding-left: 15px;
+      margin-bottom: 25px;
+      font-size: 1.7rem;
+    }
+    h3 { margin: 20px 0 10px; color: var(--dark); font-size: 1.3rem; }
+
+    /* FACTS & TEXT */
+    .fact-box {
+      background: #2f3542;
+      color: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      border: 3px dashed var(--accent);
+    }
+    .fact-box h3 { color: var(--accent); border-bottom: 1px solid #555; padding-bottom: 10px; margin-top: 0; }
+    .fact-row { margin: 8px 0; font-size: 1.05rem; }
+    .label { color: var(--success); font-weight: bold; }
+
+    .text-box {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      line-height: 1.8;
+      font-size: 1.1rem;
+      border: 2px solid #e1e8ed;
+    }
+    
+    /* TOOLTIPS & HIGHLIGHTS */
+    .highlight {
+      background: #fff3cd;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+      border-bottom: 2px dotted #ffa502;
+    }
+    .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2f3542;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #2f3542 transparent transparent transparent;
+    }
+    .highlight:hover .tooltip { visibility: visible; opacity: 1; }
+
+    /* PHRASES */
+    .phrases-box {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+      padding: 25px;
+      border-radius: 15px;
+      border-left: 8px solid var(--primary);
+      margin: 20px 0;
+    }
+    .phrase-item {
+      margin: 12px 0;
+      font-size: 1.05rem;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(0,0,0,0.1);
+    }
+
+    /* VOCABULARY STYLES */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .vocab-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #eee;
+    }
+    .vocab-item {
+      padding: 10px 15px;
+      border-bottom: 1px dashed #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      transition: transform 0.2s;
+    }
+    .vocab-item:hover { transform: translateX(5px); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .vocab-en { font-weight: bold; color: var(--dark); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .vocab-ru { color: #7f8fa6; font-style: italic; }
+
+    /* FLASHCARDS GRID */
+    .flashcard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .flashcard-container {
+      perspective: 1000px;
+      height: 180px;
+      cursor: pointer;
+    }
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border-radius: 16px;
+    }
+    .flashcard-container.flipped .flashcard {
+      transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 15px;
+      border-radius: 16px;
+      border: 2px solid #f1f2f6;
+    }
+    .flashcard-front { background: #fff; font-weight: bold; font-size: 1.2rem; color: var(--dark); }
+    .flashcard-back { background: #e0f7fa; transform: rotateY(180deg); font-size: 1.1rem; color: #006064; }
+    
+    /* GRAMMAR & QUIZ */
+    .grammar-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 6px solid var(--success);
+      margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    .grammar-card.negative { border-left-color: var(--error); }
+    
+    .quiz-item {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #e1e8ed;
+      margin-bottom: 15px;
+    }
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
+    .opt-btn {
+      padding: 12px;
+      background: #fff;
+      border: 2px solid #dfe4ea;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .opt-btn:hover:not(:disabled) { border-color: var(--primary); background: #fff5f5; }
+    .opt-btn.correct { background: var(--success); color: white; border-color: var(--success); }
+    .opt-btn.wrong { background: var(--error); color: white; border-color: var(--error); opacity: 0.8; }
+
+    .btn { padding: 10px 20px; border-radius: 25px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: #fff; }
+
+    /* UTILS */
+    .sticky-progress {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%; max-width: 500px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 15px;
+      z-index: 1000;
+      border: 1px solid #e1e8ed;
+    }
+    .bar-track { flex: 1; height: 10px; background: #dfe4ea; border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.5s; }
+
+    .speaker-icon {
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .speaker-icon:hover { opacity: 1; transform: scale(1.2); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      nav { overflow-x: auto; flex-wrap: nowrap; }
+      .tab { white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <div class="app-background"></div>
+  <header>
+    <h1>🍕 Super Cool Super Cook</h1>
+    <p class="subtitle">Interactive Lesson: Likes & Dislikes + Food</p>
+  </header>
+
+  <nav>
+    <button class="tab active" onclick="switchTab('text')">📖 Text</button>
+    <button class="tab" onclick="switchTab('phrases')">💬 Phrases</button>
+    <button class="tab" onclick="switchTab('vocab')">📚 Vocabulary</button>
+    <button class="tab" onclick="switchTab('grammar')">✏️ Grammar</button>
+    <button class="tab" onclick="switchTab('practice')">⚡ Practice</button>
+  </nav>
+
+  <main>
+    <section id="text" class="active">
+      <h2>Reading: Super Cool Super Cook</h2>
+  
+      <div class="fact-box">
+        <h3>📋 Fact File: Sam Stern</h3>
+        <div class="fact-row"><span class="label">First book:</span> Cooking up a Storm (2005)</div>
+        <div class="fact-row"><span class="label">Loves:</span> roast chicken, Chinese food</div>
+        <div class="fact-row"><span class="label">Hates:</span> bananas and broccoli</div>
+        <div class="fact-row"><span class="label">Interests:</span> football, climbing, music</div>
+      </div>
+
+      <div class="text-box">
+        <p><strong>Sam Stern</strong> is a <span class="highlight" data-ru="знаменитый повар">celebrity chef</span> and a <span class="highlight" data-ru="автор кулинарных книг">cookery book writer</span>.
+        But he's a student, too! His recipes are fast, easy and healthy.
+        He often <span class="highlight" data-ru="носит пироги в школу">takes cakes into school</span> for his classmates.
+        Lucky them!</p>
+
+        <p>Sam <span class="highlight" data-ru="любит экспериментировать">likes experimenting</span> with food and he <span class="highlight" data-ru="изобретает">invents</span> a new recipe each week.
+        He <span class="highlight" data-ru="ненавидит писать">hates writing</span> about the recipes so he and his mum <span class="highlight" data-ru="готовят вместе">cook together</span>.
+        Then she writes the recipes down.</p>
+
+        <p>Cooking is a problem in his house.
+        The problem is, there are seven people in Sam's family – his parents, his brother and his three sisters, and they're all different!
+        One sister is a <span class="highlight" data-ru="вегетарианец">vegetarian</span> but his brother <span class="highlight" data-ru="обожает мясо">loves meat</span> and his dad <span class="highlight" data-ru="не ест">doesn't eat</span> chocolate or cheese.</p>
+
+        <p>Sam is very busy.
+        He writes a <span class="highlight" data-ru="блог">blog</span> on his website and a weekly article in a <span class="highlight" data-ru="подростковая газета">teen newspaper</span>.
+        In the blog, he talks about his life and recipes. He wants teenagers to cook healthy food.
+        Lots of teenagers read Sam's blog and try his recipes.
+        And he's got a brilliant new idea – <span class="highlight" data-ru="загрузки на телефон">phone downloads</span> of his recipes!</p>
+      </div>
+
+      <div style="display: flex; justify-content: center; margin-top: 25px;">
+        <img src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Cooking Friends" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+      </div>
+    </section>
+
+    <section id="phrases">
+      <h2>Phrases to Know 🔊</h2>
+      <div class="phrases-box">
+        <h3 style="margin-top:0; color:var(--primary);">💬 Common Food Expressions</h3>
+        <div class="phrase-item">🍏 <strong>It's healthy.</strong> — Это полезно</div>
+        <div class="phrase-item">🍟 <strong>It's unhealthy.</strong> — Это вредно</div>
+        <div class="phrase-item">🥦 <strong>(Fruit) is good for you.</strong> — (Фрукты) полезны для тебя</div>
+        <div class="phrase-item">🍩 <strong>(Crisps) aren't good for you.</strong> — (Чипсы) не полезны</div>
+        <div class="phrase-item">🍕 <strong>(Crisps) are bad for you.</strong> — (Чипсы) вредны для тебя</div>
+        <div class="phrase-item">🍔 <strong>It's junk food.</strong> — Это вредная еда</div>
+        <div class="phrase-item">☕ <strong>I can't live without (coffee)!</strong> — Жить не могу без (кофе)!</div>
+        <div class="phrase-item">🥤 <strong>I prefer (juice).</strong> — Я предпочитаю (сок)</div>
+      </div>
+    </section>
+
+    <section id="vocab">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2>Key Vocabulary 📖</h2>
+        <button class="btn btn-outline" id="flashcard-toggle" onclick="toggleFlashcards()">🔄 Режим карточек</button>
+      </div>
+      
+      <div id="vocab-container"></div>
+    </section>
+
+    <section id="grammar">
+      <h2>Grammar: like/love/hate + -ing</h2>
+
+      <div class="grammar-card">
+        <h3>✅ Positive Forms</h3>
+        <p><strong>I / You / We / They</strong> <strong style="color:var(--success);">like cooking</strong>.</p>
+        <p><strong>He / She / It</strong> <strong style="color:var(--success);">likes cooking</strong>.</p>
+        <p style="margin-top:12px; font-style:italic; color:#7f8fa6;">Example: I love making pizzas. — Я обожаю готовить пиццу.</p>
+      </div>
+
+      <div class="grammar-card negative">
+        <h3>❌ Negative Forms</h3>
+        <p><strong>I / You / We / They</strong> <strong style="color:var(--error);">don't like eating</strong> vegetables.</p>
+        <p><strong>He / She / It</strong> <strong style="color:var(--error);">doesn't like eating</strong> vegetables.</p>
+        <p style="margin-top:12px; font-style:italic; color:#7f8fa6;">Example: Alex doesn't like studying Maths.</p>
+      </div>
+
+      <div style="background:#fff3cd; padding:20px; border-radius:12px; margin-top:20px; border-left:6px solid var(--accent);">
+        <h3 style="margin-top:0;">💡 Important Rule</h3>
+        <p>После глаголов <strong>like</strong>, <strong>love</strong>, <strong>hate</strong>, <strong>don't like</strong> всегда используется форма <strong>глагол + -ing</strong>.</p>
+        <ul style="margin-left:20px; margin-top:8px;">
+          <li>I love <strong>cooking</strong>. (не "to cook")</li>
+          <li>She hates <strong>washing up</strong>. (не "to wash up")</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="practice">
+      <h2>Practice Quiz 🏆</h2>
+      <div style="margin-bottom:20px;">
+        <button class="btn btn-outline" onclick="resetPractice()">🔄 Перезапустить</button>
+      </div>
+
+      <div id="quiz-container"></div>
+
+      <div class="sticky-progress" id="progress-hud" style="display:none;">
+        <span style="font-size:1.5rem;">🎯</span>
+        <div class="bar-track">
+          <div class="bar-fill" id="p-bar"></div>
+        </div>
+        <strong id="score-display" style="font-size:1.2rem;">0 / 25</strong>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// ========== DATA SOURCE (SINGLE TRUTH) ==========
+const vocabData = [
+  {
+    category: "🍳 Cooking & Food",
+    items: [
+      { en: "roast chicken", ru: "жареная курица" },
+      { en: "Chinese food", ru: "китайская еда" },
+      { en: "recipe", ru: "рецепт" },
+      { en: "healthy food", ru: "здоровая еда" },
+      { en: "vegetarian", ru: "вегетарианец" },
+      { en: "cook together", ru: "готовить вместе" },
+      { en: "invent", ru: "изобретать" }
+    ]
+  },
+  {
+    category: "📝 Activities & Hobbies",
+    items: [
+      { en: "tidying your room", ru: "убирать комнату" },
+      { en: "washing up", ru: "мыть посуду" },
+      { en: "eating salad", ru: "есть салат" },
+      { en: "drinking tea", ru: "пить чай" },
+      { en: "going shopping", ru: "ходить за покупками" },
+      { en: "playing video games", ru: "играть в видеоигры" },
+      { en: "listening to music", ru: "слушать музыку" }
+    ]
+  },
+  {
+    category: "🎤 Sam's Life",
+    items: [
+      { en: "celebrity chef", ru: "знаменитый повар" },
+      { en: "cookery book writer", ru: "автор кулинарных книг" },
+      { en: "blog", ru: "блог" },
+      { en: "teen newspaper", ru: "подростковая газета" },
+      { en: "phone downloads", ru: "загрузки на телефон" },
+      { en: "climbing", ru: "скалолазание" },
+      { en: "going to gigs", ru: "ходить на концерты" }
+    ]
+  },
+  {
+    category: "😊 Feelings",
+    items: [
+      { en: "😍😍 love", ru: "обожать", clean: "love" },
+      { en: "😊 like", ru: "нравится", clean: "like" },
+      { en: "☹️ don't like", ru: "не нравится", clean: "don't like" },
+      { en: "😡😡 hate", ru: "ненавидеть", clean: "hate" }
+    ]
+  }
+];
+
+const quizData = [
+    { q: "1. Alex ___ studying Maths. (☹️)", opts: ["don't like", "doesn't like", "isn't like"], correct: 1, explain: "Alex (he) требует doesn't like." },
+    { q: "2. Sarah ___ dancing. (😍😍)", opts: ["love", "loves", "loving"], correct: 1, explain: "Sarah (she) → loves (с -s)." },
+    { q: "3. I ___ making pizzas. (😍😍)", opts: ["love", "loves", "am loving"], correct: 0, explain: "С I используем love без -s." },
+    { q: "4. They ___ playing video games. (😍😍)", opts: ["loves", "love", "loving"], correct: 1, explain: "They love (без -s)." },
+    { q: "5. We ___ tidying our room. (☹️)", opts: ["doesn't like", "don't like", "not like"], correct: 1, explain: "We don't like." },
+    { q: "6. Sam ___ experimenting with food. (😊)", opts: ["like", "likes", "liking"], correct: 1, explain: "Sam (he) likes." },
+    { q: "7. ___ she like drinking coffee?", opts: ["Do", "Does", "Is"], correct: 1, explain: "Вопрос с she начинается с Does." },
+    { q: "8. Choose correct: (😡)", opts: ["I hate washing up.", "I hate wash up.", "I hating wash up."], correct: 0, explain: "После hate → глагол с -ing." },
+    { q: "9. Choose correct: (😊)", opts: ["Alex like watching sport.", "Alex likes watching sport.", "Alex liking watch sport."], correct: 1, explain: "Alex likes + watching." },
+    { q: "10. Choose correct: (☹️)", opts: ["You doesn't like reading.", "You don't like reading books.", "You not like read."], correct: 1, explain: "You don't like + reading." },
+    { q: "11. What does Sam HATE doing?", opts: ["Cooking", "Writing about recipes", "Eating chicken"], correct: 1, explain: "Текст: 'He hates writing about the recipes'." },
+    { q: "12. Who is the vegetarian in Sam's family?", opts: ["His dad", "His brother", "One of his sisters"], correct: 2, explain: "Текст: 'One sister is a vegetarian'." },
+    { q: "13. What is Sam's brilliant new idea?", opts: ["Phone downloads of recipes", "Opening a restaurant", "A TV show"], correct: 0, explain: "Текст: 'phone downloads of his recipes'." },
+    { q: "14. Sam is also a...", opts: ["Teacher", "Student", "Doctor"], correct: 1, explain: "Текст: 'But he's a student, too!'" },
+    { q: "15. Who writes recipes down for Sam?", opts: ["His teacher", "His mother", "His classmates"], correct: 1, explain: "Текст: 'Then she writes the recipes down.'" },
+    { q: "16. What is 'roast chicken'?", opts: ["Вареная курица", "Жареная/Запеченная курица", "Куриный суп"], correct: 1, explain: "Roast = жареный/запеченный." },
+    { q: "17. Translate: 'It's junk food'", opts: ["Это здоровая еда", "Это вредная еда", "Это вкусная еда"], correct: 1, explain: "Junk food = вредная еда." },
+    { q: "18. Translate: 'I can't live without coffee!'", opts: ["Я не люблю кофе", "Я жить не могу без кофе", "Кофе вреден"], correct: 1, explain: "Can't live without = жить не могу без." },
+    { q: "19. Fruit ___ good for you.", opts: ["is", "are", "isn't"], correct: 0, explain: "Fruit (неисчисляемое) → is good." },
+    { q: "20. Crisps ___ good for you.", opts: ["is", "are", "aren't"], correct: 2, explain: "Crisps (множ. число) aren't good." },
+    { q: "21. He ___ eating vegetables. (☹️)", opts: ["don't like", "doesn't like", "isn't like"], correct: 1, explain: "He doesn't like." },
+    { q: "22. What ___ you like doing?", opts: ["do", "does", "are"], correct: 0, explain: "Вопрос с you → do." },
+    { q: "23. My brother ___ meat. (😍😍)", opts: ["love", "loves", "loving"], correct: 1, explain: "My brother (he) loves." },
+    { q: "24. I ___ to cook healthy food.", opts: ["want", "wants", "wanting"], correct: 0, explain: "После want → инфинитив (to cook), не -ing!" },
+    { q: "25. Sam often ___ cakes to school.", opts: ["take", "takes", "taking"], correct: 1, explain: "Sam (he) takes (Present Simple)." }
+];
+
+let flashcardsEnabled = false;
+let userAnswers = new Array(quizData.length).fill(null);
+
+// ========== CORE FUNCTIONS ==========
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  
+  document.getElementById(id).classList.add('active');
+  // Найдем кнопку с нужным onclick
+  const activeBtn = Array.from(document.querySelectorAll('.tab')).find(b => b.getAttribute('onclick').includes(id));
+  if(activeBtn) activeBtn.classList.add('active');
+
+  const hud = document.getElementById('progress-hud');
+  hud.style.display = (id === 'practice') ? 'flex' : 'none';
+}
+
+function speakWord(text) {
+  // Очищаем текст от эмодзи для озвучки
+  const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim();
+  
+  window.speechSynthesis.cancel(); // Остановить предыдущую речь
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.9;
+  window.speechSynthesis.speak(utterance);
+}
+
+// ========== VOCABULARY RENDERER ==========
+
+function toggleFlashcards() {
+  flashcardsEnabled = !flashcardsEnabled;
+  const btn = document.getElementById('flashcard-toggle');
+  btn.innerText = flashcardsEnabled ? "📋 Режим списка" : "🔄 Режим карточек";
+  btn.classList.toggle('btn-primary');
+  renderVocab();
+}
+
+function renderVocab() {
+  const container = document.getElementById('vocab-container');
+  container.innerHTML = '';
+
+  if (!flashcardsEnabled) {
+    // LIST MODE
+    container.className = 'vocab-grid';
+    
+    vocabData.forEach(section => {
+      const sectionDiv = document.createElement('div');
+      sectionDiv.className = 'vocab-section';
+      
+      const title = document.createElement('h3');
+      title.innerText = section.category;
+      sectionDiv.appendChild(title);
+
+      section.items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'vocab-item';
+        
+        // English part with Audio
+        const enSpan = document.createElement('div');
+        enSpan.className = 'vocab-en';
+        enSpan.innerHTML = `<span>${item.en}</span> <span class="speaker-icon">🔊</span>`;
+        enSpan.onclick = () => speakWord(item.clean || item.en);
+        
+        // Russian part
+        const ruSpan = document.createElement('span');
+        ruSpan.className = 'vocab-ru';
+        ruSpan.innerText = item.ru;
+
+        row.appendChild(enSpan);
+        row.appendChild(ruSpan);
+        sectionDiv.appendChild(row);
+      });
+      container.appendChild(sectionDiv);
+    });
+
+  } else {
+    // FLASHCARD MODE
+    container.className = 'flashcard-grid';
+    
+    // Flatten all items into one list for cards
+    const allItems = [];
+    vocabData.forEach(s => allItems.push(...s.items));
+
+    allItems.forEach(item => {
+      const cardWrap = document.createElement('div');
+      cardWrap.className = 'flashcard-container';
+      cardWrap.onclick = function() { this.classList.toggle('flipped'); };
+
+      const card = document.createElement('div');
+      card.className = 'flashcard';
+
+      const front = document.createElement('div');
+      front.className = 'flashcard-front';
+      front.innerHTML = `<div>${item.en}</div><div style="font-size:0.8rem; margin-top:10px; color:#aaa;">(click to flip)</div>`;
+      // Stop propagation for audio button on card
+      const audioBtn = document.createElement('div');
+      audioBtn.innerHTML = '🔊';
+      audioBtn.className = 'speaker-icon';
+      audioBtn.style.marginTop = '10px';
+      audioBtn.onclick = (e) => { e.stopPropagation(); speakWord(item.clean || item.en); };
+      front.appendChild(audioBtn);
+
+      const back = document.createElement('div');
+      back.className = 'flashcard-back';
+      back.innerText = item.ru;
+
+      card.appendChild(front);
+      card.appendChild(back);
+      cardWrap.appendChild(card);
+      container.appendChild(cardWrap);
+    });
+  }
+}
+
+// ========== TEXT HIGHLIGHTS LOGIC ==========
+function initHighlights() {
+  document.querySelectorAll('.highlight').forEach(el => {
+    const ru = el.getAttribute('data-ru');
+    const en = el.textContent;
+    
+    // Создаем Tooltip
+    const tip = document.createElement('span');
+    tip.className = 'tooltip';
+    tip.innerText = ru;
+    el.appendChild(tip);
+
+    // Добавляем клик для озвучки
+    el.addEventListener('click', () => speakWord(en));
+  });
+  
+  // Phrases audio
+  document.querySelectorAll('.phrase-item').forEach(el => {
+    const text = el.querySelector('strong').innerText;
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => speakWord(text));
+  });
+}
+
+// ========== QUIZ LOGIC ==========
+
+function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    quizData.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'quiz-item';
+
+      const title = document.createElement('div');
+      title.className = 'quiz-q';
+      title.innerText = item.q;
+      card.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'options';
+
+      item.opts.forEach((optText, optIdx) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerText = optText;
+
+        if(userAnswers[idx] !== null) {
+          btn.disabled = true;
+          if(optIdx === item.correct) btn.classList.add('correct');
+          else if(optIdx === userAnswers[idx] && userAnswers[idx] !== item.correct) btn.classList.add('wrong');
+          else btn.style.opacity = '0.5';
+        } else {
+          btn.onclick = () => handleAnswer(idx, optIdx);
+        }
+        grid.appendChild(btn);
+      });
+
+      card.appendChild(grid);
+      if(userAnswers[idx] !== null) {
+        const fb = document.createElement('div');
+        fb.className = 'feedback';
+        fb.style.marginTop = "10px";
+        fb.style.fontWeight = "bold";
+        const isCorrect = userAnswers[idx] === item.correct;
+        fb.innerHTML = isCorrect
+          ? `<span style="color:var(--success)">✅ Correct!</span>`
+          : `<span style="color:var(--error)">❌ Wrong.</span> <small style="color:#555; display:block; margin-top:5px;">${item.explain}</small>`;
+        card.appendChild(fb);
+      }
+      container.appendChild(card);
+    });
+
+    updateScore();
+}
+
+function handleAnswer(qIdx, optIdx) {
+    userAnswers[qIdx] = optIdx;
+    renderQuiz();
+}
+
+function updateScore() {
+    let correct = 0;
+    let answered = 0;
+    userAnswers.forEach((ans, i) => {
+      if(ans !== null) {
+        answered++;
+        if(ans === quizData[i].correct) correct++;
+      }
+    });
+    const total = quizData.length;
+    const pct = (correct / total) * 100;
+
+    document.getElementById('p-bar').style.width = pct + '%';
+    document.getElementById('score-display').innerText = correct + ' / ' + total;
+}
+
+function resetPractice() {
+    userAnswers = new Array(quizData.length).fill(null);
+    renderQuiz();
+    document.getElementById('p-bar').style.width = '0%';
+    document.getElementById('score-display').innerText = '0 / ' + quizData.length;
+}
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded', () => {
+  initHighlights();
+  renderVocab();
+  renderQuiz();
+});
+
+</script>
+
+</body>
+</html>

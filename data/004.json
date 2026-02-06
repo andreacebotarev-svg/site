@@ -1,0 +1,263 @@
+{
+  "id": "tobe_a0_ru_30",
+  "title": "Глагол 'To Be'",
+  "subtitle": "Am, Is, Are для начинающих",
+  "theme": "grammar",
+  "colors": ["#6C5CE7", "#F5F5F7"],
+  "content": [
+    {
+      "type": "block",
+      "title": "1. Утверждение (+)",
+      "text": "В русском языке мы говорим 'Я красивая' или 'Он дома', пропуская глагол. В английском глагол **обязателен**!\n\n• I **am** (Я есть)\n• He/She/It **is** (Он/Она/Оно есть)\n• You/We/They **are** (Ты/Мы/Они есть)\n\nПример: [translate:I am happy.] (Я счастлива.)"
+    },
+    {
+      "type": "fact",
+      "text": "ВАЖНО! Никогда не выкидывайте глагол. Нельзя сказать [translate:She beautiful]. Нужно: [translate:She **is** beautiful]."
+    },
+    {
+      "type": "block",
+      "title": "2. Отрицание (-)",
+      "text": "Чтобы сказать 'нет', просто добавьте **not** после глагола.\n\n• I **am not** (Я не...)\n• He **is not** = He **isn't**\n• We **are not** = We **aren't**\n\nПример: [translate:He isn't sad.] (Ему не грустно.)"
+    },
+    {
+      "type": "block",
+      "title": "3. Вопрос (?)",
+      "text": "В вопросе глагол (Am, Is, Are) убегает на **первое место**.\n\n• **Am** I...?\n• **Is** she...?\n• **Are** you...?\n\nПример: [translate:Are you ready?] (Ты готова?)"
+    },
+    {
+      "type": "vocab",
+      "items": [
+        { "en": "student", "ru": "студентка / ученица" },
+        { "en": "beautiful", "ru": "красивая" },
+        { "en": "busy", "ru": "занятая" },
+        { "en": "free", "ru": "свободная" },
+        { "en": "married", "ru": "замужем / женат" },
+        { "en": "single", "ru": "холост / не замужем" },
+        { "en": "nervous", "ru": "нервная / взволнованная" },
+        { "en": "kind", "ru": "добрая" },
+        { "en": "angry", "ru": "злая" },
+        { "en": "rich", "ru": "богатый" }
+      ]
+    },
+    {
+      "type": "phrase",
+      "items": [
+        { "en": "I'm sorry, I'm late.", "ru": "Извините, я опоздала." },
+        { "en": "Is it far?", "ru": "Это далеко?" },
+        { "en": "Are you sure?", "ru": "Ты уверена?" },
+        { "en": "It isn't funny!", "ru": "Это не смешно!" },
+        { "en": "Who is it?", "ru": "Кто это?" }
+      ]
+    },
+    {
+      "type": "quiz",
+      "question": "I ___ a good student.",
+      "options": ["is", "are", "am"],
+      "answer": 2,
+      "feedback": "Правильно! С местоимением 'I' (Я) всегда используем 'am'."
+    },
+    {
+      "type": "quiz",
+      "question": "She ___ very beautiful.",
+      "options": ["are", "is", "am"],
+      "answer": 1,
+      "feedback": "Верно! 'She' (Она) — единственное число, поэтому 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "They ___ my friends.",
+      "options": ["is", "am", "are"],
+      "answer": 2,
+      "feedback": "Правильно! 'They' (Они) — множественное число, поэтому 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "___ you busy now?",
+      "options": ["Is", "Are", "Am"],
+      "answer": 1,
+      "feedback": "Верно! В вопросе с 'You' (Ты/Вы) ставим 'Are' в начало."
+    },
+    {
+      "type": "quiz",
+      "question": "It ___ a cute cat.",
+      "options": ["am", "are", "is"],
+      "answer": 2,
+      "feedback": "Правильно! Для животных и предметов (It) используем 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "We ___ happy together.",
+      "options": ["are", "is", "am"],
+      "answer": 0,
+      "feedback": "Да! 'We' (Мы) — это множественное число, значит 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "My brother ___ tall.",
+      "options": ["are", "is", "am"],
+      "answer": 1,
+      "feedback": "Верно! Мой брат = Он (He), поэтому 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "You and I ___ partners.",
+      "options": ["am", "are", "is"],
+      "answer": 1,
+      "feedback": "Внимание! 'Ты и Я' вместе — это 'Мы' (We). Поэтому 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "___ he a doctor?",
+      "options": ["Are", "Is", "Am"],
+      "answer": 1,
+      "feedback": "Правильно! Вопрос про него (He), значит начинаем с 'Is'."
+    },
+    {
+      "type": "quiz",
+      "question": "I ___ tired. I have energy!",
+      "options": ["am not", "isn't", "aren't"],
+      "answer": 0,
+      "feedback": "Верно! Отрицание для 'I am' — только 'I am not'."
+    },
+    {
+      "type": "quiz",
+      "question": "The dogs ___ hungry.",
+      "options": ["is", "am", "are"],
+      "answer": 2,
+      "feedback": "Да! Собаки (они) — множественное число, нужен 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "Where ___ you from?",
+      "options": ["is", "are", "am"],
+      "answer": 1,
+      "feedback": "Правильно! С 'you' всегда используем 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "This ___ my book.",
+      "options": ["are", "am", "is"],
+      "answer": 2,
+      "feedback": "Верно! 'This' (Это) — единственное число, как It."
+    },
+    {
+      "type": "quiz",
+      "question": "Anna and Maria ___ sisters.",
+      "options": ["is", "am", "are"],
+      "answer": 2,
+      "feedback": "Правильно! Анна и Мария = Они (They), поэтому 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "___ I late?",
+      "options": ["Is", "Are", "Am"],
+      "answer": 2,
+      "feedback": "Верно! Спрашивая о себе (I), начинаем с 'Am'."
+    },
+    {
+      "type": "quiz",
+      "question": "My mother ___ at work.",
+      "options": ["is", "are", "am"],
+      "answer": 0,
+      "feedback": "Да! Мама = Она (She), значит 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "The weather ___ nice today.",
+      "options": ["are", "is", "am"],
+      "answer": 1,
+      "feedback": "Правильно! Погода = Оно (It), используем 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "You ___ my best friend.",
+      "options": ["is", "are", "am"],
+      "answer": 1,
+      "feedback": "Верно! Даже если друг один, с 'You' всегда 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "Tom ___ playing football.",
+      "options": ["is", "are", "am"],
+      "answer": 0,
+      "feedback": "Да! Том = Он (He), значит 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "___ they from Russia?",
+      "options": ["Is", "Are", "Am"],
+      "answer": 1,
+      "feedback": "Правильно! Вопрос про них (They) начинается с 'Are'."
+    },
+    {
+      "type": "quiz",
+      "question": "My parents ___ kind.",
+      "options": ["is", "are", "am"],
+      "answer": 1,
+      "feedback": "Верно! Родители = Они (They), нужно 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "The apple ___ red.",
+      "options": ["is", "are", "am"],
+      "answer": 0,
+      "feedback": "Да! Яблоко = Оно (It), используем 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "___ she your sister?",
+      "options": ["Are", "Is", "Am"],
+      "answer": 1,
+      "feedback": "Правильно! Вопрос про неё (She) — 'Is'."
+    },
+    {
+      "type": "quiz",
+      "question": "I ___ 25 years old.",
+      "options": ["is", "are", "am"],
+      "answer": 2,
+      "feedback": "Запомните! О возрасте говорим через 'I am', а не 'I have'."
+    },
+    {
+      "type": "quiz",
+      "question": "The car ___ not blue.",
+      "options": ["is", "are", "am"],
+      "answer": 0,
+      "feedback": "Верно! Машина (It) + is."
+    },
+    {
+      "type": "quiz",
+      "question": "Who ___ that man?",
+      "options": ["are", "is", "am"],
+      "answer": 1,
+      "feedback": "Правильно! Мужчина один (He), значит 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "These books ___ interesting.",
+      "options": ["is", "are", "am"],
+      "answer": 1,
+      "feedback": "Да! Книги (Они/These) — множественное число -> 'are'."
+    },
+    {
+      "type": "quiz",
+      "question": "___ we late for the party?",
+      "options": ["Is", "Are", "Am"],
+      "answer": 1,
+      "feedback": "Верно! Вопрос про нас (We) начинаем с 'Are'."
+    },
+    {
+      "type": "quiz",
+      "question": "Your cat ___ very fat!",
+      "options": ["is", "are", "am"],
+      "answer": 0,
+      "feedback": "Да! Твой кот = Он/Оно (It), значит 'is'."
+    },
+    {
+      "type": "quiz",
+      "question": "I ___ not hungry.",
+      "options": ["am", "is", "are"],
+      "answer": 0,
+      "feedback": "Правильно! Отрицание: I am not."
+    }
+  ]
+}

@@ -1,0 +1,283 @@
+/* =========================================================
+   Profi.ru Assets Generator (Square)
+   Target: 1080x1080px (1:1 Aspect Ratio)
+   Theme: Premium Liquid Glass
+   ========================================================= */
+
+:root {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  
+  /* Brand Colors */
+  --bg: #030508;
+  --text: #FFFFFF;
+  --muted: #CBD5E1;     /* Lighter gray for readability */
+  --subtle: #94A3B8;    /* Lighter accent text */
+  --primary: #4F8EFF;   /* Bright Electric Blue */
+  --accent: #A855F7;    /* Vivid Purple */
+  --good: #22C55E;
+  
+  /* Gradients */
+  --g-mesh: 
+    radial-gradient(circle at 10% 10%, rgba(79, 142, 255, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(3, 5, 8, 1) 0%, rgba(3, 5, 8, 0.8) 100%);
+    
+  /* Glass */
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.01) 100%);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shine: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  margin: 0;
+  padding: 60px;
+  background: #0f0f0f;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px; /* Space between cards */
+  max-width: 3400px; /* Huge workspace */
+  margin: 0 auto;
+}
+
+/* Base Card Style */
+.insta-card {
+  width: 1080px;      /* Fixed High-Res Width */
+  height: 1080px;     /* Fixed High-Res Height (Square) */
+  background: #030508;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 64px;      /* Restore original comfortable padding */
+  box-shadow: 0 0 0 1px #333;
+  color: var(--text);
+  box-sizing: border-box;
+  transform-origin: top left; /* Essential for scaling */
+}
+
+/* Wrapper for Responsive Scale Preview */
+.card-wrapper {
+  width: 100%;
+  aspect-ratio: 1/1;
+  position: relative;
+  overflow: hidden; /* Hide the overflow of the scaled card */
+}
+
+.insta-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--g-mesh);
+  z-index: 0;
+}
+
+/* Noise Texture */
+.insta-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Relative content container to sit above background */
+.card-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography */
+h1 {
+  font-size: 64px; /* Fixed PX for export stability */
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px 0;
+}
+
+h2 {
+  font-size: 42px; 
+  line-height: 1.2;
+  margin: 0 0 10px 0;
+}
+
+p.lead {
+  font-size: 28px;
+  line-height: 1.4;
+  color: var(--muted);
+  margin: 0;
+  font-weight: 400;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  backdrop-filter: blur(10px);
+}
+
+/* Glass Panels */
+.glass-box {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-top-color: var(--glass-shine);
+  border-radius: 24px; /* Slightly tighter radius */
+  padding: 32px; /* Reduced from 40px */
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px);
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Specific Component Styles */
+.list-item {
+  display: flex;
+  gap: 20px; /* Reduced spacing */
+  margin-bottom: 20px; /* Reduced from 24px */
+  align-items: flex-start;
+}
+.list-item:last-child { margin-bottom: 0; }
+
+.icon-box {
+  flex-shrink: 0;
+  width: 72px; 
+  height: 72px; 
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.portrait-container {
+  width: 100%;
+  height: 400px; /* Reduced for square format */
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--glass-border);
+  margin-top: 40px;
+}
+
+.portrait-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%; /* Calibrated to show full head and shoulders */
+}
+
+.card-footer {
+  margin-top: auto;
+  padding-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: var(--subtle);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Cert Badge */
+.cert-badge {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.cert-badge img {
+  width: 50px;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Utility to highlight text */
+.text-primary { color: var(--primary); }
+.text-accent { color: var(--accent); }
+.text-good { color: var(--good); }
+.text-gradient {
+  /* Fix: Separate gradient for display and simple color for problematic library capture */
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #FFF 40%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* Use a slight webkit-text-fill override but allow a fallback */
+  -webkit-text-fill-color: transparent;
+}
+
+/* === NEW HERO LAYOUT (Full Bleed) === */
+.insta-card.card-hero {
+  padding: 0;
+  display: block; /* Override flex */
+  height: 1080px;
+}
+
+.insta-card.card-hero::before,
+.insta-card.card-hero::after {
+  display: none; /* Remove noise/mesh to let photo shine */
+}
+
+.card-hero .hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center; /* Stick to top to show hair */
+  z-index: 0;
+  filter: brightness(0.65) contrast(1.1); /* Darken the image itself */
+}
+
+.card-hero .hero-overlay {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  padding: 60px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Text at bottom */
+  background: linear-gradient(to bottom, 
+    rgba(3,5,8,0.5) 0%, 
+    rgba(3,5,8,0.3) 30%,
+    rgba(3,5,8,0.8) 70%, 
+    #030508 100%
+  );
+}
+
+.card-hero h1 {
+  font-size: 82px;
+  margin-bottom: 24px;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.card-hero p {
+  color: #DDD;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  max-width: 90%;
+}

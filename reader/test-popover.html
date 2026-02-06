@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test WordPopover Context Translation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .word {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        .word:hover {
+            color: darkblue;
+        }
+    </style>
+</head>
+<body>
+    <h1>WordPopover Context Translation Test</h1>
+    <p>This is a simple test page to verify that context translation works correctly.</p>
+
+    <div class="reading-content">
+        <p>The <span class="word" data-sentence="The cat sat on the mat peacefully. It was a sunny day outside." data-word="cat">cat</span> sat on the mat peacefully. It was a sunny day outside.</p>
+
+        <p>I need to <span class="word" data-sentence="I need to buy some milk from the store before dinner. The fridge is almost empty." data-word="buy">buy</span> some milk from the store before dinner. The fridge is almost empty.</p>
+
+        <p>She decided to <span class="word" data-sentence="She decided to write a letter to her old friend from college. They hadn't spoken in years." data-word="write">write</span> a letter to her old friend from college. They hadn't spoken in years.</p>
+    </div>
+
+    <script type="module">
+        // Import required modules
+        import { WordPopover } from './assets/js/ui/components/WordPopover.js';
+
+        // Initialize popover
+        const popover = new WordPopover(document.body);
+
+        // Add click handlers to words
+        document.querySelectorAll('.word').forEach(wordElement => {
+            wordElement.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                const rect = wordElement.getBoundingClientRect();
+                const textContent = wordElement.textContent;
+                const sentence = wordElement.dataset.sentence;
+                const word = wordElement.dataset.word;
+
+                const context = {
+                    sentence: sentence,
+                    word: word
+                };
+
+                console.log('Clicking word:', { textContent, context });
+
+                await popover.show(wordElement, rect, textContent, context);
+            });
+        });
+
+        console.log('Test page initialized. Click on any underlined word to test context translation.');
+    </script>
+</body>
+</html>

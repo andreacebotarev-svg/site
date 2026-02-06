@@ -1,0 +1,27 @@
+ИСПРАВЛЕННАЯ ФУНКЦИЯ processText():
+
+function processText(text) {
+  // Используем replace вместо split, чтобы сохранить все пробелы и знаки препинания
+  return text.replace(/\b[\w']+\b/g, (match) => {
+    const normalized = match.toLowerCase().replace(/[.,!?;:()]/g, '');
+    if (vocabMap[normalized]) {
+      const isSaved = myWords.some(w => w.word.toLowerCase() === normalized);
+      const savedClass = isSaved ? ' saved' : '';
+      const item = vocabMap[normalized];
+      return `<span class="word-clickable${savedClass}" 
+                    data-word="${escapeHTML(item.word)}" 
+                    data-definition="${escapeHTML(item.definition)}" 
+                    data-phonetic="${escapeHTML(item.phonetic)}">${escapeHTML(match)}</span>`;
+    }
+    return escapeHTML(match);
+  });
+}
+
+ИЗМЕНЕНИЕ:
+Строка 1109: text.split(/(\b[\w']+\b)/g) → text.replace(/\b[\w']+\b/g, (match) => ...)
+Удалены: .map(...).join('')
+Добавлен комментарий с объяснением
+
+ПРИЧИНА БАГА:
+split() с capturing group разбивает строку, но при join('') теряются элементы между захваченными группами (пробелы).
+replace() с callback сохраняет всё, что не совпало с паттерном.

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple WordPopover Test</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components/word-popover.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .interactive-word {
+            cursor: pointer;
+            color: var(--apple-blue);
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .interactive-word:hover {
+            background-color: rgba(0, 122, 255, 0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: var(--text-primary);
+        }
+        .debug-panel {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Simple WordPopover Test</h1>
+
+        <div class="test-section">
+            <h3>Click on words to test basic WordPopover functionality:</h3>
+            <p>
+                Click on <span class="interactive-word" data-word="hello">hello</span>,
+                <span class="interactive-word" data-word="world">world</span>, or
+                <span class="interactive-word" data-word="test">test</span>.
+            </p>
+        </div>
+
+        <div class="test-section">
+            <h3>Debug Panel:</h3>
+            <div id="debug-panel" class="debug-panel">
+                Initializing test...<br>
+            </div>
+        </div>
+    </div>
+
+    <!-- WordPopover container -->
+    <div id="word-popover-container"></div>
+
+    <script type="module">
+        // Simplified WordPopover test - no API calls
+        class SimpleWordPopover {
+            constructor(container) {
+                this.container = container;
+                this.popover = null;
+                this.activeWord = null;
+                this.init();
+            }
+
+            init() {
+                // Create popover element
+                this.popover = document.createElement('div');
+                this.popover.className = 'word-popover';
+                this.popover.innerHTML = `
+                    <div class="word-popover-content">
+                        <div class="word-header">
+                            <div class="word-text">Test Word</div>
+                            <button class="word-close" aria-label="Close">&times;</button>
+                        </div>
+                        <div class="word-pronunciation">/test/</div>
+                        <div class="word-translation">Тестовый перевод</div>
+                        <div class="word-actions">
+                            <button class="btn-icon" aria-label="Play audio">🔊</button>
+                            <button class="btn-secondary">Добавить в словарь</button>
+                        </div>
+                    </div>
+                    <div class="word-popover-arrow"></div>
+                `;
+
+                this.container.appendChild(this.popover);
+
+                // Attach events
+                this.popover.querySelector('.word-close').addEventListener('click', () => {
+                    this.hide();
+                });
+
+                this.hide();
+                log('SimpleWordPopover initialized');
+            }
+
+            show(wordElement, rect, text) {
+                log(`Showing popover for word: "${text}"`);
+
+                this.activeWord = wordElement;
+
+                // Update content
+                this.popover.querySelector('.word-text').textContent = text;
+                this.popover.querySelector('.word-pronunciation').textContent = `/${text}/`;
+                this.popover.querySelector('.word-translation').textContent = `Перевод для "${text}"`;
+
+                // Position popover
+                this.positionPopover(rect);
+
+                // Show popover
+                this.popover.style.display = 'block';
+                requestAnimationFrame(() => {
+                    this.popover.classList.add('visible');
+                });
+
+                log('Popover shown successfully');
+            }
+
+            hide() {
+                this.popover.classList.remove('visible');
+                setTimeout(() => {
+                    this.popover.style.display = 'none';
+                }, 200);
+                this.activeWord = null;
+                log('Popover hidden');
+            }
+
+            positionPopover(rect) {
+                const popoverRect = this.popover.getBoundingClientRect();
+                const containerRect = this.container.getBoundingClientRect();
+
+                // Position above the word
+                let top = rect.top - popoverRect.height - 10;
+                let left = rect.left + (rect.width / 2) - (popoverRect.width / 2);
+
+                // Adjust if goes off-screen
+                if (top < 10) {
+                    top = rect.bottom + 10;
+                    this.popover.classList.add('below');
+                } else {
+                    this.popover.classList.remove('below');
+                }
+
+                if (left < 10) left = 10;
+                if (left + popoverRect.width > window.innerWidth - 10) {
+                    left = window.innerWidth - popoverRect.width - 10;
+                }
+
+                this.popover.style.top = `${top}px`;
+                this.popover.style.left = `${left}px`;
+
+                log(`Popover positioned at top: ${top}px, left: ${left}px`);
+            }
+        }
+
+        function log(message) {
+            const debugPanel = document.getElementById('debug-panel');
+            const timestamp = new Date().toLocaleTimeString();
+            debugPanel.innerHTML += `[${timestamp}] ${message}<br>`;
+            debugPanel.scrollTop = debugPanel.scrollHeight;
+            console.log(message);
+        }
+
+        // Test initialization
+        async function testSimpleWordPopover() {
+            try {
+                log('Creating SimpleWordPopover...');
+
+                const container = document.getElementById('word-popover-container');
+                const wordPopover = new SimpleWordPopover(container);
+
+                // Add click handlers
+                document.querySelectorAll('.interactive-word').forEach(wordEl => {
+                    wordEl.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const word = wordEl.dataset.word;
+                        const rect = wordEl.getBoundingClientRect();
+
+                        log(`Word clicked: ${word}`);
+                        wordPopover.show(wordEl, rect, word);
+                    });
+                });
+
+                // Global access for debugging
+                window.simpleWordPopover = wordPopover;
+
+                log('Simple test initialized successfully!');
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        // Start test
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', testSimpleWordPopover);
+        } else {
+            testSimpleWordPopover();
+        }
+    </script>
+</body>
+</html>

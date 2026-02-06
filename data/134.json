@@ -1,0 +1,173 @@
+{
+  "title": "Directions & Notes",
+  "subtitle": "Elementary Unit",
+  "colors": [
+    "#FBC02D",
+    "#D32F2F"
+  ],
+  "meta": {
+    "level": "A2",
+    "tags": [
+      "reading",
+      "vocabulary",
+      "speaking",
+      "directions"
+    ],
+    "theme": "light",
+    "duration": 25
+  },
+  "content": {
+    "reading": [
+      {
+        "type": "paragraph",
+        "text": "Lena,\n\nLet's go to the cinema this afternoon. There's a good film on at the Embassy in Oxford Road.\n\nSee you at the cinema at 4.00 p.m.\n\nCan you come? Send me a text!\n\nHere's a map.\n\nJessica",
+        "highlight": [
+          "cinema",
+          "afternoon",
+          "film",
+          "map",
+          "text"
+        ],
+        "audio_paragraph": true
+      },
+      {
+        "type": "dialogue",
+        "text": "Lena: Excuse me. How do I get to the Urbis museum?\nWoman: Um. Let me see. You (1) _______ into Market Street. Then you take (2) _______ into Cross Street. Go (3) _______. Urbis is (4) _______ near Exchange Square. You can't miss it! It's a big glass triangle!\nLena: Thank you very much.",
+        "highlight": [
+          "museum",
+          "street",
+          "square",
+          "miss",
+          "triangle"
+        ],
+        "audio_paragraph": true
+      },
+      {
+        "type": "list",
+        "text": "Phrases to know:\n- Turn left / Turn right\n- Go straight on\n- Take the second left\n- On the left / On the right",
+        "highlight": [
+          "turn",
+          "left",
+          "right",
+          "straight"
+        ],
+        "audio_paragraph": false
+      }
+    ]
+  },
+  "vocabulary": {
+    "words": [
+      {
+        "en": "cinema",
+        "ru": "кинотеатр",
+        "transcription": "ˈsɪnəmə",
+        "example": "Let's go to the cinema this afternoon.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "afternoon",
+        "ru": "день (время после полудня)",
+        "transcription": "ˌɑːftəˈnuːn",
+        "example": "Let's go to the cinema this afternoon.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "film",
+        "ru": "фильм",
+        "transcription": "fɪlm",
+        "example": "There's a good film on at the Embassy.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "map",
+        "ru": "карта",
+        "transcription": "mæp",
+        "example": "Here's a map.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "museum",
+        "ru": "музей",
+        "transcription": "mjuˈziːəm",
+        "example": "How do I get to the Urbis museum?",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "turn",
+        "ru": "поворачивать",
+        "transcription": "tɜːn",
+        "example": "Turn left into Market Street.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "left",
+        "ru": "налево",
+        "transcription": "left",
+        "example": "Turn left.",
+        "part_of_speech": "adverb"
+      },
+      {
+        "en": "right",
+        "ru": "направо",
+        "transcription": "raɪt",
+        "example": "Take the third right.",
+        "part_of_speech": "adverb"
+      },
+      {
+        "en": "straight",
+        "ru": "прямо",
+        "transcription": "streɪt",
+        "example": "Go straight on.",
+        "part_of_speech": "adverb"
+      },
+      {
+        "en": "miss",
+        "ru": "пропустить",
+        "transcription": "mɪs",
+        "example": "You can't miss it!",
+        "part_of_speech": "verb"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "Let's go to",
+        "ru": "Давай пойдем в",
+        "example": "Let's go to the cinema."
+      },
+      {
+        "en": "See you at",
+        "ru": "Увидимся в",
+        "example": "See you at the cinema at 4.00 p.m."
+      },
+      {
+        "en": "Excuse me",
+        "ru": "Извините",
+        "example": "Excuse me. How do I get to the museum?"
+      },
+      {
+        "en": "How do I get to",
+        "ru": "Как мне добраться до",
+        "example": "How do I get to the Urbis museum?"
+      },
+      {
+        "en": "You can't miss it",
+        "ru": "Вы это не пропустите",
+        "example": "It's a big glass triangle! You can't miss it!"
+      }
+    ]
+  },
+  "grammar": {
+    "rule": "Используйте Imperative (повелительное наклонение) для указания направления. Глагол ставится в начале предложения без подлежащего.",
+    "pattern": "Verb + direction/place",
+    "examples": [
+      "+ Turn left. (Поверните налево)",
+      "+ Go straight on. (Идите прямо)",
+      "+ Take the second right. (Сверните на втором повороте направо)"
+    ],
+    "common_mistakes": [
+      "Использование 'You turn' вместо просто 'Turn' (хотя в разговорной речи допустимо, но императив чаще).",
+      "Путаница между 'left' и 'right'.",
+      "Пропуск предлогов (Turn into Market Street)."
+    ]
+  }
+}

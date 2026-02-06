@@ -1,0 +1,358 @@
+/* MIXED TENSES TRAINER STYLES */
+
+.level-info {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+
+.level-info h2 {
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.level-info p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.quota-display {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.start-screen {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.start-content .emoji {
+  margin-bottom: 1rem;
+}
+
+.start-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.level-selector {
+  margin-top: 2rem;
+}
+
+.level-selector h3 {
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.level-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.game-screen {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.question-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.question-text {
+  font-size: 1.2rem;
+  color: var(--text);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.option-btn {
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.option-btn:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.option-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.option-btn.correct {
+  border-color: var(--success);
+  background: rgba(0, 255, 100, 0.1);
+  color: var(--success);
+}
+
+.option-btn.wrong {
+  border-color: var(--error);
+  background: rgba(255, 0, 0, 0.1);
+  color: var(--error);
+}
+
+/* Error finding mode */
+.error-options {
+  text-align: center;
+}
+
+.error-instruction {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.error-words {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.error-word {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.error-word:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.error-word.correct {
+  border-color: var(--success);
+  background: rgba(0, 255, 100, 0.1);
+  color: var(--success);
+}
+
+.error-word.wrong {
+  border-color: var(--error);
+  background: rgba(255, 0, 0, 0.1);
+  color: var(--error);
+}
+
+/* Feedback */
+.feedback {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  margin-top: 1rem;
+}
+
+.feedback.correct {
+  background: rgba(0, 255, 100, 0.1);
+  border: 1px solid var(--success);
+}
+
+.feedback.wrong {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid var(--error);
+}
+
+.feedback-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.feedback-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Game controls */
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Results screen */
+.results-screen {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.results-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2rem;
+  border: 1px solid var(--border);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.results-card h2 {
+  color: var(--text);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  display: block;
+  color: var(--text);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.results-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .level-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .error-words {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .error-word {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .game-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .results-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Animations */
+@keyframes pulse-correct {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake-wrong {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.option-btn.correct {
+  animation: pulse-correct 0.6s ease;
+}
+
+.option-btn.wrong {
+  animation: shake-wrong 0.5s ease;
+}
+
+.error-word.correct {
+  animation: pulse-correct 0.6s ease;
+}
+
+.error-word.wrong {
+  animation: shake-wrong 0.5s ease;
+}
+
+/* Level transition effects */
+.level-info {
+  animation: fadeIn 0.5s ease;
+}
+
+.question-card {
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader Text Rendering Test</title>
+    <link rel="stylesheet" href="assets/css/reader.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reader Text Rendering Test</h1>
+
+    <div class="test-section">
+        <h3>Regular Paragraph</h3>
+        <p id="regular-para">This is a regular paragraph with some words that should be interactive. The quick brown fox jumps over the lazy dog.</p>
+    </div>
+
+    <div class="test-section">
+        <h3>Fact Paragraph</h3>
+        <p id="fact-para">Did you know: The English language has more words than any other language in the world.</p>
+    </div>
+
+    <div class="test-section">
+        <h3>List Paragraph</h3>
+        <p id="list-para">- First item in the list
+- Second item with more words
+- Third item for testing</p>
+    </div>
+
+    <script type="module">
+        import { vocabularyStorage } from './assets/js/vocabulary/vocabulary-storage.enhanced.js';
+
+        // Mock ReaderView for testing
+        class TestReaderView {
+            constructor() {
+                this.vocabularyStorage = vocabularyStorage;
+                window.readerView = this;
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            makeWordsInteractive(text) {
+                // Regex to match words (letters and apostrophes)
+                const wordRegex = /\b([a-zA-Z]+(?:'[a-zA-Z]+)?)\b/g;
+
+                return text.replace(wordRegex, (match, word) => {
+                    // Skip very short words (a, I, is, to, etc.)
+                    if (word.length <= 2) {
+                        return this.escapeHtml(match);
+                    }
+
+                    const normalized = word.toLowerCase();
+                    const isSaved = vocabularyStorage.isWordSaved(normalized);
+                    const savedClass = isSaved ? ' word-saved' : '';
+
+                    // Create interactive word span
+                    return `<span class="interactive-word${savedClass}"
+                                data-word="${this.escapeHtml(normalized)}"
+                                onclick="event.stopPropagation(); window.readerView?.handleWordClick(this)"
+                                onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.readerView?.handleWordClick(this); }"
+                                tabindex="0"
+                                role="button"
+                                aria-label="Click to learn about '${this.escapeHtml(word)}'">
+                            ${this.escapeHtml(match)}
+                          </span>`;
+                });
+            }
+
+            handleWordClick(wordElement) {
+                const word = wordElement.dataset.word || wordElement.textContent.toLowerCase();
+                alert(`Clicked on word: "${word}"`);
+            }
+
+            determineParagraphType(paragraph) {
+                const text = paragraph.textContent.toLowerCase();
+
+                // Check for fact indicators
+                if (text.includes('fact:') || text.includes('did you know') ||
+                    text.includes('интересный факт') || text.includes('знаете ли вы')) {
+                    return 'fact';
+                }
+
+                // Check for list indicators
+                if (text.includes('\n-') || text.includes('\n•') ||
+                    /^\d+\./.test(text.trim()) || text.includes('\n1.')) {
+                    return 'list';
+                }
+
+                return 'regular';
+            }
+
+            renderFactParagraph(paragraph) {
+                const title = this.extractFactTitle(paragraph.textContent);
+                const content = this.extractFactContent(paragraph.textContent);
+
+                return `
+                  <div style="margin: 16px 0; padding: 12px; background: rgba(0, 122, 255, 0.1); border-left: 3px solid #007aff; border-radius: 8px;">
+                    ${title ? `<div style="font-weight: 600; font-size: 0.85rem; color: #007aff; margin-bottom: 6px;">${this.escapeHtml(title)}</div>` : ''}
+                    <p style="margin: 0; font-size: 0.9rem; line-height: 1.5;">${this.makeWordsInteractive(content)}</p>
+                  </div>
+                `;
+            }
+
+            renderListParagraph(paragraph) {
+                const items = paragraph.textContent.split('\n').filter(line => line.trim());
+                const listItems = items.map(item => {
+                    const cleanItem = item.replace(/^[-•]\s*/, '').trim();
+                    return `<li>${this.makeWordsInteractive(cleanItem)}</li>`;
+                }).join('');
+
+                return `<ul style="padding-left: 20px; margin-bottom: 12px;">${listItems}</ul>`;
+            }
+
+            extractFactTitle(text) {
+                const lines = text.split('\n');
+                if (lines.length > 1 && lines[0].includes(':')) {
+                    return lines[0].replace(/:\s*$/, '');
+                }
+                return '';
+            }
+
+            extractFactContent(text) {
+                const lines = text.split('\n');
+                if (lines.length > 1 && lines[0].includes(':')) {
+                    return lines.slice(1).join('\n').trim();
+                }
+                return text;
+            }
+
+            processParagraphs(container) {
+                const paragraphs = container.querySelectorAll('p');
+
+                paragraphs.forEach(paragraph => {
+                    // Skip paragraphs that are already processed or contain special content
+                    if (paragraph.querySelector('.interactive-word') ||
+                        paragraph.closest('.epigraph, .poem, .code')) {
+                        return;
+                    }
+
+                    // Determine paragraph type based on content or styling
+                    const paragraphType = this.determineParagraphType(paragraph);
+
+                    // Process based on type
+                    let processedHTML = '';
+
+                    switch (paragraphType) {
+                        case 'fact':
+                            processedHTML = this.renderFactParagraph(paragraph);
+                            break;
+                        case 'list':
+                            processedHTML = this.renderListParagraph(paragraph);
+                            break;
+                        default:
+                            processedHTML = this.makeWordsInteractive(paragraph.textContent);
+                            paragraph.innerHTML = processedHTML;
+                            return; // Don't replace the paragraph, just update its content
+                    }
+
+                    // Replace the entire paragraph for special types
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = processedHTML;
+                    paragraph.parentNode.replaceChild(wrapper.firstChild, paragraph);
+                });
+            }
+        }
+
+        // Initialize test
+        async function initTest() {
+            const testView = new TestReaderView();
+
+            // Add some test words to vocabulary
+            await vocabularyStorage.addWord({
+                word: 'fox',
+                definition: 'A wild animal similar to a dog',
+                translation: 'лиса'
+            });
+
+            await vocabularyStorage.addWord({
+                word: 'quick',
+                definition: 'Moving or able to move rapidly',
+                translation: 'быстрый'
+            });
+
+            // Process all paragraphs
+            testView.processParagraphs(document.body);
+
+            console.log('Test rendering completed');
+            console.log('Vocabulary contains:', vocabularyStorage.getAllWords().length, 'words');
+        }
+
+        // Run test when DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTest);
+        } else {
+            initTest();
+        }
+    </script>
+</body>
+</html>

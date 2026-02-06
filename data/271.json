@@ -1,0 +1,432 @@
+{
+  "title": "Families2gether",
+  "subtitle": "Family Holiday Destinations",
+  "colors": [
+    "#CBDC36",
+    "#D64731"
+  ],
+  "meta": {
+    "level": "A2",
+    "tags": [
+      "reading",
+      "vocabulary",
+      "grammar",
+      "travel",
+      "holidays"
+    ],
+    "theme": "light",
+    "duration": 45
+  },
+  "content": {
+    "reading": [
+      {
+        "type": "paragraph",
+        "title": "Why not try one of our top three family holidays?",
+        "text": "",
+        "highlight": [],
+        "audio_paragraph": false
+      },
+      {
+        "type": "list",
+        "title": "A",
+        "text": "Comfortable family accommodation with private pool near the beach. Try windsurfing or even paragliding! Close to the lively resort of Faliraki with nightclubs, restaurants and shopping.",
+        "image": "White Cycladic-style buildings overlooking the sea — likely Santorini",
+        "highlight": [
+          "accommodation",
+          "windsurfing",
+          "paragliding",
+          "resort"
+        ],
+        "audio_paragraph": true
+      },
+      {
+        "type": "list",
+        "title": "B",
+        "text": "Week one: Orlando\n• Visit world-class theme parks, like Wet'n'Wild and Disney World.\n• Exciting restaurants and nightlife.\n\nWeek two: Everglades Nature Reserve\n• World-famous wildlife including fish, birds and alligators.\n• Free cycling, fishing and camping.",
+        "image": "People on a roller coaster — likely at a theme park in Orlando",
+        "highlight": [
+          "wildlife",
+          "camping"
+        ],
+        "audio_paragraph": true
+      },
+      {
+        "type": "list",
+        "title": "C",
+        "text": "Top city centre hotel, minutes from Big Ben and other famous sights. Close to world-famous theatres, restaurants, shops, markets, parks, galleries and museums. Includes half-day boat trip along the River Thames.",
+        "image": "London skyline with Tower Bridge and boats on the Thames",
+        "highlight": [
+          "gallery",
+          "sightseeing"
+        ],
+        "audio_paragraph": true
+      },
+      {
+        "type": "dialogue",
+        "title": "Future arrangements",
+        "text": "- So, are you going on holiday with your family this summer?\n- Yeah, we're flying to Florida two days after the end of term.\n- Cool ... who's going?\n- Mum and Dad, obviously ... but my big sister's not coming this year, just my little brother.\n- Oh well, nothing's perfect! What are you doing there?\n- We're spending a week in Orlando, you know, visiting all the theme parks and stuff. Then we're staying in this place called the Everglades.\n- What's that?\n- It's a kind of nature reserve, with alligators and birds and stuff. We're going camping!\n- It sounds really cool! You are so lucky!\n- I know. I can't wait!",
+        "highlight": [],
+        "audio_paragraph": true
+      }
+    ]
+  },
+  "vocabulary": {
+    "words": [
+      {
+        "en": "destination",
+        "ru": "пункт назначения",
+        "transcription": "/ˌdes.tɪˈneɪ.ʃən/",
+        "example": "Try not to spend too long travelling to your holiday destination.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "accommodation",
+        "ru": "жильё",
+        "transcription": "/əˌkɒm.əˈdeɪ.ʃən/",
+        "example": "We stayed in comfortable family accommodation.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "excursion",
+        "ru": "экскурсия",
+        "transcription": "/ɪkˈskɜː.ʃən/",
+        "example": "Plan your excursions together.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "nightlife",
+        "ru": "ночная жизнь",
+        "transcription": "/ˈnaɪt.laɪf/",
+        "example": "The resort is famous for its lively nightlife.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "resort",
+        "ru": "курорт",
+        "transcription": "/rɪˈzɔːt/",
+        "example": "We stayed in a lively resort near the beach.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "windsurfing",
+        "ru": "виндсёрфинг",
+        "transcription": "/ˈwɪndˌsɜː.fɪŋ/",
+        "example": "Try windsurfing or even paragliding!",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "paragliding",
+        "ru": "парапланеризм",
+        "transcription": "/ˈpær.əˌɡlaɪ.dɪŋ/",
+        "example": "Paragliding is a popular activity here.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "wildlife",
+        "ru": "дикая природа",
+        "transcription": "/ˈwaɪld.laɪf/",
+        "example": "You can see world-famous wildlife in the park.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "gallery",
+        "ru": "галерея",
+        "transcription": "/ˈɡæl.ər.i/",
+        "example": "London has many famous galleries and museums.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "sightseeing",
+        "ru": "осмотр достопримечательностей",
+        "transcription": "/ˈsaɪtˌsiː.ɪŋ/",
+        "example": "We went sightseeing in the city centre.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "sunbathing",
+        "ru": "принятие солнечных ванн",
+        "transcription": "/ˈsʌnˌbeɪ.ðɪŋ/",
+        "example": "I love sunbathing on the beach.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "camping",
+        "ru": "кемпинг",
+        "transcription": "/ˈkæm.pɪŋ/",
+        "example": "We are going camping in the nature reserve.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "shopping",
+        "ru": "шопинг",
+        "transcription": "/ˈʃɒp.ɪŋ/",
+        "example": "We can do some late-night shopping in the resort.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "relaxing",
+        "ru": "расслабление",
+        "transcription": "/rɪˈlæk.sɪŋ/",
+        "example": "Sunbathing and relaxing on the beach is perfect for a family holiday.",
+        "part_of_speech": "noun"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "keep in touch",
+        "ru": "поддерживать связь",
+        "example": "Use the internet to keep in touch with friends."
+      },
+      {
+        "en": "theme park",
+        "ru": "парк развлечений",
+        "example": "Orlando is famous for its theme parks."
+      },
+      {
+        "en": "nature reserve",
+        "ru": "природный заповедник",
+        "example": "The Everglades is a kind of nature reserve."
+      },
+      {
+        "en": "long journey",
+        "ru": "долгое путешествие",
+        "example": "Long journeys can be boring for teenagers."
+      },
+      {
+        "en": "end of term",
+        "ru": "конец семестра",
+        "example": "We leave two days after the end of term."
+      },
+      {
+        "en": "going to clubs",
+        "ru": "ходить в клубы",
+        "example": "Teenagers enjoy going to clubs in lively resorts."
+      },
+      {
+        "en": "going to the beach",
+        "ru": "ходить на пляж",
+        "example": "We're going to the beach every day during our holiday."
+      },
+      {
+        "en": "eating out",
+        "ru": "есть вне дома",
+        "example": "Eating out at local restaurants is part of the holiday experience."
+      },
+      {
+        "en": "hanging out with friends",
+        "ru": "тусоваться с друзьями",
+        "example": "Teenagers need internet access for hanging out with friends back home."
+      },
+      {
+        "en": "looking at scenery",
+        "ru": "смотреть на пейзаж",
+        "example": "Looking at scenery is wonderful when visiting nature reserves."
+      }
+    ]
+  },
+  "grammar": {
+    "title": "Future arrangements (Present Continuous)",
+    "explanation": "Мы используем Present Continuous (настоящее продолженное время) для описания точных планов и договорённостей в будущем. Обычно указывается время или дата.",
+    "rules": [
+      {
+        "rule": "Subject + am/is/are + verb-ing (+ time expression)",
+        "examples": [
+          "We're flying to Florida next week.",
+          "My sister is not coming this year.",
+          "Are you going on holiday this summer?"
+        ]
+      },
+      {
+        "rule": "⚠️ Common mistake: Don't use 'will' for arranged personal plans",
+        "examples": [
+          "❌ I will meet you tomorrow. (casual future)",
+          "✅ I'm meeting you tomorrow. (arranged plan)"
+        ]
+      }
+    ],
+    "examples": {
+      "affirmative": [
+        "We're flying to Florida next week.",
+        "I'm visiting my grandparents this weekend.",
+        "They're having a party next Saturday."
+      ],
+      "negative": [
+        "My sister isn't coming this year.",
+        "I'm not going to the concert tomorrow.",
+        "They aren't meeting us at the airport."
+      ],
+      "questions": [
+        "Are you going on holiday this summer?",
+        "Is she coming to the party tonight?",
+        "What time are we leaving tomorrow?"
+      ]
+    }
+  },
+  "quiz": [
+    {
+      "question": "According to the text, why should you avoid long journeys with teenagers?",
+      "options": [
+        "They are expensive.",
+        "They can be boring.",
+        "They are dangerous.",
+        "They take too much time."
+      ],
+      "correct": 1,
+      "fb": "Correct! The text says that long journeys can be boring."
+    },
+    {
+      "question": "Why is it recommended to plan excursions together?",
+      "options": [
+        "To save money.",
+        "To ensure safety.",
+        "So there is something for everyone.",
+        "To finish them quickly."
+      ],
+      "correct": 2,
+      "fb": "Correct! Planning together ensures there is something for everyone to enjoy."
+    },
+    {
+      "question": "What kind of accommodation does the Rhodes holiday offer?",
+      "options": [
+        "A city centre hotel.",
+        "A camping site.",
+        "A family house with a private pool.",
+        "A shared apartment."
+      ],
+      "correct": 2,
+      "fb": "Correct! The Rhodes holiday features comfortable family accommodation with a private pool."
+    },
+    {
+      "question": "Which activity is available in Rhodes?",
+      "options": [
+        "Skiing.",
+        "Paragliding.",
+        "Visiting Disney World.",
+        "River boat trip."
+      ],
+      "correct": 1,
+      "fb": "Correct! You can try windsurfing or paragliding in Rhodes."
+    },
+    {
+      "question": "What can you see in the Everglades Nature Reserve?",
+      "options": [
+        "Big Ben.",
+        "Theme parks.",
+        "Alligators and birds.",
+        "Famous theatres."
+      ],
+      "correct": 2,
+      "fb": "Correct! The Everglades is famous for wildlife including fish, birds, and alligators."
+    },
+    {
+      "question": "What is special about the London holiday package?",
+      "options": [
+        "It includes a boat trip on the Thames.",
+        "It is near a sandy beach.",
+        "It offers free camping.",
+        "It has a private pool."
+      ],
+      "correct": 0,
+      "fb": "Correct! The London holiday includes a half-day boat trip along the River Thames."
+    },
+    {
+      "question": "Who is Sophie going to Florida with?",
+      "options": [
+        "Her friends.",
+        "Her sister and parents.",
+        "Her parents and little brother.",
+        "Alone."
+      ],
+      "correct": 2,
+      "fb": "Correct! Sophie says her sister isn't coming, just her mum, dad, and little brother."
+    },
+    {
+      "question": "Why does the tip suggest finding a hotel with internet access?",
+      "options": [
+        "To work during the holiday.",
+        "To watch movies.",
+        "To keep in touch with friends.",
+        "To book excursions."
+      ],
+      "correct": 2,
+      "fb": "Correct! Internet access allows teenagers to keep in touch with friends at home."
+    },
+    {
+      "question": "What does the word 'accommodation' mean?",
+      "options": [
+        "A mode of transport.",
+        "A place to stay or live.",
+        "A type of food.",
+        "A holiday activity."
+      ],
+      "correct": 1,
+      "fb": "Correct! Accommodation refers to a place where you live or stay, like a hotel."
+    },
+    {
+      "question": "What is an 'excursion'?",
+      "options": [
+        "A short journey or trip.",
+        "A type of boat.",
+        "A medical emergency.",
+        "A flight booking."
+      ],
+      "correct": 0,
+      "fb": "Correct! An excursion is a short journey or trip, especially one taken as a leisure activity."
+    },
+    {
+      "question": "Which activity involves flying through the air?",
+      "options": [
+        "Sunbathing.",
+        "Sightseeing.",
+        "Paragliding.",
+        "Camping."
+      ],
+      "correct": 2,
+      "fb": "Correct! Paragliding involves gliding through the air with a parachute-like wing."
+    },
+    {
+      "question": "If you are 'sightseeing', what are you doing?",
+      "options": [
+        "Sleeping in a hotel.",
+        "Visiting famous places.",
+        "Swimming in the sea.",
+        "Eating at a restaurant."
+      ],
+      "correct": 1,
+      "fb": "Correct! Sightseeing means visiting interesting places and landmarks."
+    },
+    {
+      "question": "What is a 'resort'?",
+      "options": [
+        "A type of animal.",
+        "A place frequented for holidays.",
+        "A document for travel.",
+        "A piece of luggage."
+      ],
+      "correct": 1,
+      "fb": "Correct! A resort is a place where many people go for recreation and holidays."
+    },
+    {
+      "question": "Choose the correct sentence for a future arrangement.",
+      "options": [
+        "I am meet my friends tomorrow.",
+        "I meeting my friends tomorrow.",
+        "I'm meeting my friends tomorrow.",
+        "I met my friends tomorrow."
+      ],
+      "correct": 2,
+      "fb": "Correct! We use the present continuous (am/is/are + -ing) for future arrangements."
+    },
+    {
+      "question": "Complete the question: '_____ you _____ on holiday next week?'",
+      "options": [
+        "Do / go",
+        "Are / going",
+        "Will / going",
+        "Did / go"
+      ],
+      "correct": 1,
+      "fb": "Correct! The correct form is 'Are you going' for a future plan."
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Flip Test</title>
+    <link rel="stylesheet" href="assets/css/flashcards.simple.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-controls {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .test-controls button {
+            margin-right: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #007aff;
+            color: white;
+            cursor: pointer;
+        }
+        .flashcard-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Flashcard Flip Test</h1>
+
+        <div class="test-controls">
+            <h3>Test Controls</h3>
+            <button onclick="testFlip()">Test Flip</button>
+            <button onclick="testContentVisibility()">Check Content Visibility</button>
+            <button onclick="runAutomatedTest()">Run Automated Test</button>
+            <button onclick="resetCard()">Reset Card</button>
+        </div>
+
+        <div class="flashcard-container">
+            <div class="flashcard" id="test-flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <div class="card-content">
+                            <div class="word-text">Hello</div>
+                            <div class="word-phonetic">/həˈloʊ/</div>
+                            <button class="btn-tts" type="button" aria-label="Speak word">🔊</button>
+                            <div class="flip-hint">Click to reveal translation</div>
+                        </div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="card-content">
+                            <div class="word-text">Hello</div>
+                            <div class="word-phonetic">/həˈloʊ/</div>
+                            <button class="btn-tts" type="button" aria-label="Speak word">🔊</button>
+                            <div class="word-translation">Привет</div>
+                            <div class="rating-prompt">How well did you know this?</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rating-buttons" id="rating-buttons">
+                <button class="btn-rating btn-dont-know" type="button" data-rating="dont_know">
+                    Don't Know
+                </button>
+                <button class="btn-rating btn-know" type="button" data-rating="know">
+                    Know
+                </button>
+                <button class="btn-rating btn-mastered" type="button" data-rating="mastered">
+                    Mastered ✓
+                </button>
+            </div>
+        </div>
+
+        <div id="test-results" style="margin-top: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <h3>Test Results:</h3>
+            <pre id="results-content">Tests not run yet...</pre>
+        </div>
+    </div>
+
+    <script>
+        let isFlipped = false;
+
+        function testFlip() {
+            const flashcard = document.getElementById('test-flashcard');
+            const ratingButtons = document.getElementById('rating-buttons');
+
+            if (!isFlipped) {
+                isFlipped = true;
+                flashcard.classList.add('flipped');
+
+                // Show rating buttons
+                ratingButtons.classList.add('visible');
+            } else {
+                isFlipped = false;
+                flashcard.classList.remove('flipped');
+                ratingButtons.classList.remove('visible');
+            }
+        }
+
+        function testContentVisibility() {
+            const front = document.querySelector('.flashcard-front');
+            const back = document.querySelector('.flashcard-back');
+            const frontWord = front.querySelector('.word-text');
+            const backWord = back.querySelector('.word-text');
+
+            const results = {
+                front: {
+                    opacity: getComputedStyle(front).opacity,
+                    visibility: getComputedStyle(front).visibility,
+                    display: getComputedStyle(front).display,
+                    content: frontWord?.textContent
+                },
+                back: {
+                    opacity: getComputedStyle(back).opacity,
+                    visibility: getComputedStyle(back).visibility,
+                    display: getComputedStyle(back).display,
+                    content: backWord?.textContent
+                },
+                isFlipped: document.getElementById('test-flashcard').classList.contains('flipped')
+            };
+
+            document.getElementById('results-content').textContent = JSON.stringify(results, null, 2);
+            console.log('Content visibility test:', results);
+        }
+
+        function runAutomatedTest() {
+            console.log('🧪 Starting automated flip test...');
+
+            // Reset state
+            resetCard();
+
+            // Test initial state
+            setTimeout(() => {
+                console.log('1. Initial state check');
+                testContentVisibility();
+
+                // Flip card
+                setTimeout(() => {
+                    console.log('2. Flipping card...');
+                    testFlip();
+
+                    // Check after flip
+                    setTimeout(() => {
+                        console.log('3. State after flip');
+                        testContentVisibility();
+
+                        // Verify flip worked
+                        setTimeout(() => {
+                            const front = document.querySelector('.flashcard-front');
+                            const back = document.querySelector('.flashcard-back');
+                            const frontVisible = getComputedStyle(front).opacity !== '0';
+                            const backVisible = getComputedStyle(back).opacity !== '0';
+                            const frontContent = front.textContent.trim();
+                            const backContent = back.textContent.trim();
+
+                            const testResults = {
+                                success: !frontVisible && backVisible,
+                                frontContentPresent: frontContent.length > 0,
+                                backContentPresent: backContent.length > 0,
+                                timestamp: new Date().toISOString()
+                            };
+
+                            console.log('4. Test results:', testResults);
+                            document.getElementById('results-content').textContent =
+                                'AUTOMATED TEST RESULTS:\n' + JSON.stringify(testResults, null, 2);
+
+                            if (testResults.success && testResults.frontContentPresent && testResults.backContentPresent) {
+                                console.log('✅ Flip test PASSED');
+                            } else {
+                                console.error('❌ Flip test FAILED');
+                            }
+                        }, 400); // After transition
+                    }, 100);
+                }, 100);
+            }, 100);
+        }
+
+        function resetCard() {
+            isFlipped = false;
+            document.getElementById('test-flashcard').classList.remove('flipped');
+            document.getElementById('rating-buttons').classList.remove('visible');
+        }
+
+        // Auto-run test on page load
+        window.addEventListener('load', () => {
+            console.log('Flashcard flip test page loaded');
+            setTimeout(runAutomatedTest, 500);
+        });
+    </script>
+</body>
+</html>

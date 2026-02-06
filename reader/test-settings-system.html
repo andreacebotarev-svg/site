@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings System Test</title>
+  <style>
+    :root {
+      /* Settings-controlled variables */
+      --app-bg-color: #ffffff;
+      --app-text-color: #111111;
+      --settings-font-size: 18px;
+      --settings-line-height: 1.6;
+    }
+
+    /* Theme variations */
+    [data-theme="sepia"] {
+      --app-bg-color: #f4ecd8;
+      --app-text-color: #5b4636;
+    }
+
+    [data-theme="dark"] {
+      --app-bg-color: #1a1a1a;
+      --app-text-color: #e0e0e0;
+    }
+
+    [data-theme="navy"] {
+      --app-bg-color: #0f1419;
+      --app-text-color: #e6f3ff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--app-bg-color);
+      color: var(--app-text-color);
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: var(--settings-font-size);
+      line-height: var(--settings-line-height);
+    }
+
+    .test-section {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #f5f5f5;
+    }
+
+    .current-settings {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .sample-text {
+      line-height: var(--settings-line-height);
+      font-size: var(--settings-font-size);
+    }
+
+    .sample-text h1 {
+      margin-top: 0;
+      color: var(--app-text-color);
+    }
+
+    .sample-text p {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-section">
+    <h1>🧪 Settings System Test</h1>
+
+    <div class="current-settings">
+      <strong>Current Settings:</strong><br>
+      Theme: <span id="current-theme">light</span><br>
+      Font Size: <span id="current-font-size">18</span>px<br>
+      Line Height: <span id="current-line-height">1.6</span>
+    </div>
+
+    <div class="controls">
+      <button onclick="setTheme('light')">Light Theme</button>
+      <button onclick="setTheme('sepia')">Sepia Theme</button>
+      <button onclick="setTheme('dark')">Dark Theme</button>
+      <button onclick="setTheme('navy')">Navy Theme</button>
+
+      <button onclick="setFontSize(16)">Font 16px</button>
+      <button onclick="setFontSize(18)">Font 18px</button>
+      <button onclick="setFontSize(20)">Font 20px</button>
+
+      <button onclick="setLineHeight(1.4)">Line Height 1.4</button>
+      <button onclick="setLineHeight(1.6)">Line Height 1.6</button>
+      <button onclick="setLineHeight(1.8)">Line Height 1.8</button>
+    </div>
+
+    <div class="sample-text">
+      <h1>Sample Heading</h1>
+      <p>This is a sample paragraph to demonstrate how the settings affect the appearance of the text. The font size and line height should change when you click the buttons above.</p>
+
+      <p>You can see how different themes change the background and text colors. This is the foundation for the reactive settings system that will be used throughout the application.</p>
+
+      <p>The goal is to create a system where changing settings in the state automatically updates the UI without manual DOM manipulation.</p>
+    </div>
+
+    <div style="margin-top: 30px; padding: 15px; background: rgba(0, 0, 0, 0.05); border-radius: 8px;">
+      <h3>Console Testing</h3>
+      <p>Open browser console and try:</p>
+      <code>globalState.setState({settings: {theme: 'dark', fontSize: 20}})</code>
+      <p>This should change both theme and font size reactively.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    // Simple state manager for testing
+    class SimpleStateManager {
+      constructor(initialState = {}) {
+        this.state = { ...initialState };
+        this.listeners = [];
+      }
+
+      getState() {
+        return { ...this.state };
+      }
+
+      setState(updater, action = 'SET_STATE') {
+        const oldState = { ...this.state };
+        const newState = typeof updater === 'function' ? updater(this.state) : { ...this.state, ...updater };
+        this.state = newState;
+
+        // Notify listeners
+        this.listeners.forEach(listener => listener(newState, oldState));
+
+        console.log(`State updated: ${action}`, { old: oldState, new: newState });
+      }
+
+      subscribe(listener) {
+        this.listeners.push(listener);
+        return () => {
+          const index = this.listeners.indexOf(listener);
+          if (index > -1) {
+            this.listeners.splice(index, 1);
+          }
+        };
+      }
+    }
+
+    // Theme controller (simplified version)
+    class TestThemeController {
+      constructor(stateManager) {
+        this.stateManager = stateManager;
+
+        // Subscribe to state changes
+        this.unsubscribe = this.stateManager.subscribe((newState, oldState) => {
+          if (newState.settings?.theme !== oldState.settings?.theme) {
+            this.applyTheme(newState.settings.theme);
+          }
+          if (newState.settings?.fontSize !== oldState.settings?.fontSize) {
+            this.applyFontSize(newState.settings.fontSize);
+          }
+          if (newState.settings?.lineHeight !== oldState.settings?.lineHeight) {
+            this.applyLineHeight(newState.settings.lineHeight);
+          }
+
+          // Update display
+          this.updateDisplay(newState.settings);
+        });
+      }
+
+      applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+
+      applyFontSize(size) {
+        document.documentElement.style.setProperty('--settings-font-size', `${size}px`);
+      }
+
+      applyLineHeight(height) {
+        document.documentElement.style.setProperty('--settings-line-height', height);
+      }
+
+      updateDisplay(settings) {
+        document.getElementById('current-theme').textContent = settings.theme || 'light';
+        document.getElementById('current-font-size').textContent = settings.fontSize || 18;
+        document.getElementById('current-line-height').textContent = settings.lineHeight || 1.6;
+      }
+    }
+
+    // Initialize
+    const initialState = {
+      settings: {
+        theme: 'light',
+        fontSize: 18,
+        lineHeight: 1.6
+      }
+    };
+
+    const globalState = new SimpleStateManager(initialState);
+    const themeController = new TestThemeController(globalState);
+
+    // Make available globally for testing
+    window.globalState = globalState;
+    window.themeController = themeController;
+
+    console.log('Settings system test initialized!');
+    console.log('Try: globalState.setState({settings: {theme: "dark", fontSize: 20}})');
+
+    // Helper functions for buttons
+    window.setTheme = (theme) => {
+      globalState.setState({
+        settings: {
+          ...globalState.getState().settings,
+          theme
+        }
+      }, `SET_THEME_${theme.toUpperCase()}`);
+    };
+
+    window.setFontSize = (size) => {
+      globalState.setState({
+        settings: {
+          ...globalState.getState().settings,
+          fontSize: size
+        }
+      }, `SET_FONT_SIZE_${size}`);
+    };
+
+    window.setLineHeight = (height) => {
+      globalState.setState({
+        settings: {
+          ...globalState.getState().settings,
+          lineHeight: height
+        }
+      }, `SET_LINE_HEIGHT_${height}`);
+    };
+  </script>
+</body>
+</html>

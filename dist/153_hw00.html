@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Lesson: Food & Nutrition</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #f3f4f6;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --success: #10b981;
+            --error: #ef4444;
+            --bg: #ffffff;
+            --sidebar-w: 300px;
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            margin: 0;
+            font-family: var(--font-main);
+            color: var(--text);
+            background: #f9fafb;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Loader */
+        .loader-container {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid var(--secondary);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #app {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: #e5e7eb;
+            padding: 0.25rem;
+            border-radius: var(--radius);
+            width: fit-content;
+        }
+        .tab-btn {
+            border: none;
+            background: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: var(--bg);
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Vocabulary hint box (for quiz tab) */
+        .vocab-hint-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        .vocab-hint-box h3 {
+            margin: 0 0 0.75rem 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .vocab-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .vocab-chip {
+            background: rgba(255,255,255,0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .vocab-chip:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-1px);
+        }
+
+        /* Reading Section */
+        .reading-content {
+            background: var(--bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        .reading-intro {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+        .text-word { cursor: pointer; border-bottom: 1px dotted transparent; transition: all 0.2s; }
+        .text-word:hover { border-bottom-color: var(--primary); color: var(--primary); background: #eff6ff; }
+        .paragraph { 
+            margin-bottom: 1.5rem; 
+            text-align: justify; 
+            line-height: 1.8;
+        }
+        .para-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        /* Comprehension Tasks */
+        .task-section {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 1.5rem;
+        }
+        .task-section h3 {
+            margin: 0 0 1rem 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        .task-instruction {
+            background: #fef3c7;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid #f59e0b;
+        }
+
+        /* Matching Task */
+        .matching-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+        .matching-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 3fr;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+        .para-label {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        .matching-select {
+            padding: 0.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .matching-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .matching-select.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+        .matching-select.incorrect {
+            border-color: var(--error);
+            background: #fef2f2;
+        }
+        .heading-option {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* True/False Task */
+        .tf-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+        .tf-item {
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+        .tf-statement {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .tf-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .tf-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .tf-btn:hover {
+            background: #f3f4f6;
+        }
+        .tf-btn.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+        .tf-btn.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+            color: var(--success);
+        }
+        .tf-btn.incorrect {
+            border-color: var(--error);
+            background: #fef2f2;
+            color: var(--error);
+        }
+        .tf-feedback {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            display: none;
+        }
+        .tf-feedback.show {
+            display: block;
+        }
+        .tf-feedback.correct-fb {
+            background: #ecfdf5;
+            color: var(--success);
+        }
+        .tf-feedback.incorrect-fb {
+            background: #fef2f2;
+            color: var(--error);
+        }
+
+        /* Vocabulary Section */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .vocab-card {
+            background: var(--bg);
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        .vocab-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+        .word-head { display: flex; justify-content: space-between; align-items: center; }
+        .word { font-size: 1.25rem; font-weight: 700; color: var(--text); }
+        .definition { color: var(--text-light); font-size: 0.95rem; line-height: 1.5; }
+        .audio-btn {
+            background: var(--secondary);
+            border: none;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center; justify-content: center;
+            transition: transform 0.2s;
+        }
+        .audio-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Quiz Section */
+        .quiz-item {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
+        }
+        .quiz-q { font-weight: 600; margin-bottom: 1rem; display: block; }
+        .quiz-input {
+            border: 2px solid #e5e7eb;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 400px;
+            transition: border-color 0.2s;
+        }
+        .quiz-input:focus { outline: none; border-color: var(--primary); }
+        .quiz-input.correct { border-color: var(--success); background: #ecfdf5; }
+        .quiz-input.incorrect { border-color: var(--error); background: #fef2f2; }
+        
+        .radio-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .radio-label:hover { background: var(--secondary); }
+        .radio-label input { margin-right: 0.75rem; cursor: pointer; }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--bg);
+            border-left: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9fafb;
+        }
+        .saved-list { flex: 1; overflow-y: auto; padding: 1rem; list-style: none; margin: 0; }
+        .saved-item {
+            background: #f3f4f6;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle-sidebar {
+            position: fixed;
+            bottom: 2rem; right: 2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            z-index: 90;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .toggle-sidebar:hover {
+            transform: scale(1.05);
+        }
+
+        /* Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem; left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+            font-weight: 500;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; }
+            .tabs { width: 100%; justify-content: space-between; }
+            .tab-btn { padding: 0.5rem 0.75rem; flex: 1; text-align: center; font-size: 0.9rem; }
+            .reading-content { padding: 1.25rem; font-size: 1rem; }
+            .matching-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            .vocab-words {
+                font-size: 0.85rem;
+            }
+            .vocab-chip {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-container" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="main-container">
+        <main id="app">
+            <!-- Content rendered here -->
+        </main>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>My Words 📚</h3>
+                <button onclick="toggleSidebar()" style="background:none;border:none;cursor:pointer;font-size:1.5rem">&times;</button>
+            </div>
+            <ul class="saved-list" id="saved-list">
+                <li style="text-align:center; color:#9ca3af; margin-top:2rem;">No words saved yet</li>
+            </ul>
+        </aside>
+    </div>
+
+    <button class="toggle-sidebar" onclick="toggleSidebar()" aria-label="Open Saved Words">
+        📚
+    </button>
+    
+    <div id="toast" class="toast">Notification</div>
+
+    <script>
+        // --- GLOBAL STATE ---
+        const state = {
+            currentTab: 'reading',
+            lessonData: null,
+            savedWords: JSON.parse(localStorage.getItem('myWords_153') || '[]'),
+            audioEnabled: true
+        };
+
+        // --- EMBEDDED DATA (Complete with all paragraphs from images) ---
+        const RAW_DATA = {
+            id: "153",
+            title: "Food and Nutrition",
+            level: "A2 / Pre-Intermediate",
+            duration: "45 min",
+            reading: {
+                intro: "Read about Vera. She has a very important job, she is a dinner lady at St Alban's school in Swindon.",
+                preQuestion: {
+                    question: "Before you read, where do you think Vera works?",
+                    options: ["Restaurant", "School canteen", "Café", "Supermarket"],
+                    answer: 1
+                },
+                text: [
+                    "I love my job. I like working with young people and I love preparing food. I cook lunch every day in the school canteen and I also help to serve the food. Then I clean up – I suppose I am a waitress, chef and cleaner! I work with seven other dinner ladies because there are around 1,400 students at our school and that is a lot of meals!",
+                    "My job is sometimes difficult. We try to cook healthy meals and to teach students to eat healthily but some students don't always listen. They sometimes say they don't like the food. I think it's important that students understand that healthy food is really important.",
+                    "There isn't any junk food in the school canteen and there aren't any ready meals. We use fresh ingredients for all our meals. We sometimes cook traditional British food but we often have foreign food too, especially Italian or Chinese. I think the perfect healthy meal is meat or fish with vegetables and rice or potatoes and fresh fruit for dessert.",
+                    "In the break students often eat crisps or chocolate and fizzy drinks, so now we give the students free fruit and milk so they can have a healthy snack. This is a very popular idea, parents love it and some students love it, too!",
+                    "I think that a lot of students' favourite meal is pizza, and ice-cream for dessert. I like that, too but you can't eat it every day. My favourite meal is lasagne and salad and my favourite dessert is chocolate cake but don't tell the students!"
+                ],
+                matchHeadings: {
+                    instruction: "Match the headings a–e with paragraphs 1–5 of the text.",
+                    headings: [
+                        { id: "a", text: "Favourite food" },
+                        { id: "b", text: "School dinners" },
+                        { id: "c", text: "Snacks" },
+                        { id: "d", text: "My job" },
+                        { id: "e", text: "Problems" }
+                    ],
+                    answers: {
+                        "1": "d",
+                        "2": "e",
+                        "3": "b",
+                        "4": "c",
+                        "5": "a"
+                    }
+                },
+                trueFalse: {
+                    instruction: "Read the text again and tick (✓) true or cross (✗) false.",
+                    statements: [
+                        { id: 1, text: "Vera does not like her job.", answer: false },
+                        { id: 2, text: "There are 1,400 students at St Alban's school.", answer: true },
+                        { id: 3, text: "Not all students love healthy food.", answer: true },
+                        { id: 4, text: "They sometimes cook junk food at the school.", answer: false },
+                        { id: 5, text: "In the break students often have fizzy drinks.", answer: true },
+                        { id: 6, text: "All the students love the idea of free fruit.", answer: false },
+                        { id: 7, text: "Vera doesn't like pizza.", answer: false }
+                    ]
+                }
+            },
+            vocabulary: [
+                { word: "meal", def: "An occasion when food is eaten, or the food that is eaten", type: "noun" },
+                { word: "breakfast", def: "The first meal of the day, eaten in the morning", type: "noun" },
+                { word: "foreign food", def: "Food that comes from other countries", type: "noun phrase" },
+                { word: "lunch", def: "A meal eaten in the middle of the day", type: "noun" },
+                { word: "traditional dish", def: "A food style that has existed for a long time in a culture", type: "noun phrase" },
+                { word: "ready meals", def: "Pre-cooked food bought from a shop that just needs heating", type: "noun plural" },
+                { word: "dessert", def: "Sweet food eaten at the end of a meal", type: "noun" },
+                { word: "junk food", def: "Food that is not healthy because it contains a lot of fat, salt or sugar", type: "noun" },
+                { word: "ingredients", def: "The things that are used to make food", type: "noun plural" },
+                { word: "snack", def: "A small amount of food eaten between meals", type: "noun" }
+            ],
+            quiz: [
+                {
+                    id: 1,
+                    type: "fill_blank",
+                    question: "My mum loves ________, especially Indian and Chinese.",
+                    answer: "foreign food"
+                },
+                {
+                    id: 2,
+                    type: "fill_blank",
+                    question: "Judy always has ________ before she goes to school.",
+                    answer: "breakfast"
+                },
+                {
+                    id: 3,
+                    type: "fill_blank",
+                    question: "Fish and chips is a ________ in Britain.",
+                    answer: "traditional dish"
+                },
+                {
+                    id: 4,
+                    type: "fill_blank",
+                    question: "Supermarkets sell a lot of ________ for people who haven't got much time.",
+                    answer: "ready meals"
+                },
+                {
+                    id: 5,
+                    type: "fill_blank",
+                    question: "At school the ________ break is from 12.30 to 1.30.",
+                    answer: "lunch"
+                },
+                {
+                    id: 6,
+                    type: "fill_blank",
+                    question: "On my birthday I go to a special restaurant for my favourite ________: lasagne and chips!",
+                    answer: "meal"
+                },
+                {
+                    id: 7,
+                    type: "fill_blank",
+                    question: "The children's favourite ________ is ice-cream.",
+                    answer: "dessert"
+                }
+            ]
+        };
+
+        // --- INIT & UTILS ---
+        function initLesson() {
+            try {
+                setTimeout(() => {
+                    state.lessonData = RAW_DATA;
+                    renderInterface();
+                    document.getElementById('loader').style.opacity = '0';
+                    setTimeout(() => document.getElementById('loader').remove(), 500);
+                    renderMyWordsSidebar();
+                }, 600);
+            } catch (e) {
+                console.error("Init error", e);
+                alert("Error loading lesson.");
+            }
+        }
+
+        function renderInterface() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="tabs">
+                    <button class="tab-btn ${state.currentTab === 'reading' ? 'active' : ''}" onclick="switchTab('reading')">📖 Reading</button>
+                    <button class="tab-btn ${state.currentTab === 'vocab' ? 'active' : ''}" onclick="switchTab('vocab')">📚 Vocabulary</button>
+                    <button class="tab-btn ${state.currentTab === 'quiz' ? 'active' : ''}" onclick="switchTab('quiz')">✍️ Quiz</button>
+                </div>
+                <div id="content-area"></div>
+            `;
+            
+            const content = document.getElementById('content-area');
+            if (state.currentTab === 'reading') renderReading(content);
+            else if (state.currentTab === 'vocab') renderVocabulary(content);
+            else if (state.currentTab === 'quiz') renderQuiz(content);
+        }
+
+        function renderReading(container) {
+            const data = state.lessonData.reading;
+            
+            // Pre-question
+            const preHtml = `
+                <div class="reading-intro">
+                    <h3 style="margin-top:0">🤔 Pre-reading Task</h3>
+                    <p>${data.preQuestion.question}</p>
+                    <div class="radio-group">
+                        ${data.preQuestion.options.map((opt, i) => `
+                            <label class="radio-label">
+                                <input type="radio" name="pre-q" value="${i}" onchange="checkPreReading(this, ${data.preQuestion.answer})">
+                                ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <p id="pre-feedback" style="font-weight:bold; margin-top:0.5rem; display:none"></p>
+                </div>
+            `;
+
+            // Process text with numbered paragraphs
+            const processedText = data.text.map((para, idx) => {
+                const words = para.split(' ').map(word => {
+                    const clean = word.replace(/[^a-zA-Z'-]/g, '');
+                    return `<span class="text-word" onclick="handleWordClick('${clean}')">${word}</span>`;
+                }).join(' ');
+                return `<p class="paragraph"><span class="para-number">${idx + 1}</span>${words}</p>`;
+            }).join('');
+
+            // Matching headings task
+            const matchingHtml = `
+                <div class="task-section">
+                    <h3>📋 Task 4: Match headings with paragraphs</h3>
+                    <div class="task-instruction">${data.matchHeadings.instruction}</div>
+                    <div class="matching-grid">
+                        ${Object.keys(data.matchHeadings.answers).map(paraNum => `
+                            <div class="matching-item">
+                                <span class="para-label">Paragraph ${paraNum}</span>
+                                <select class="matching-select" data-para="${paraNum}" onchange="checkMatching(this, '${data.matchHeadings.answers[paraNum]}')">
+                                    <option value="">--</option>
+                                    ${data.matchHeadings.headings.map(h => `
+                                        <option value="${h.id}">${h.id}) ${h.text}</option>
+                                    `).join('')}
+                                </select>
+                                <span class="heading-option"></span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // True/False task
+            const tfHtml = `
+                <div class="task-section">
+                    <h3>✅ Task 5: True or False</h3>
+                    <div class="task-instruction">${data.trueFalse.instruction}</div>
+                    <div class="tf-grid">
+                        ${data.trueFalse.statements.map(stmt => `
+                            <div class="tf-item">
+                                <div class="tf-statement">${stmt.id}. ${stmt.text}</div>
+                                <div class="tf-buttons">
+                                    <button class="tf-btn" onclick="checkTrueFalse(this, ${stmt.id}, true, ${stmt.answer})">
+                                        ✓ True
+                                    </button>
+                                    <button class="tf-btn" onclick="checkTrueFalse(this, ${stmt.id}, false, ${stmt.answer})">
+                                        ✗ False
+                                    </button>
+                                </div>
+                                <div class="tf-feedback" id="tf-feedback-${stmt.id}"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = `
+                <div class="reading-content animate-fade">
+                    ${preHtml}
+                    <div class="text-body" style="margin-top:2rem">
+                        <h3>${data.intro}</h3>
+                        ${processedText}
+                    </div>
+                </div>
+                ${matchingHtml}
+                ${tfHtml}
+            `;
+        }
+
+        function renderVocabulary(container) {
+            const words = state.lessonData.vocabulary;
+            
+            const html = words.map(item => `
+                <div class="vocab-card">
+                    <div class="word-head">
+                        <span class="word">${item.word}</span>
+                        <button class="audio-btn" onclick="speakText('${item.word}')" title="Listen">🔊</button>
+                    </div>
+                    <span style="font-style:italic; color:var(--primary); font-size:0.8rem">${item.type}</span>
+                    <p class="definition">${item.def}</p>
+                    <button onclick="saveWord('${escapeJS(item.word)}')" 
+                        style="margin-top:auto; background:none; border:1px solid #e5e7eb; padding:0.5rem; border-radius:6px; cursor:pointer; color:var(--text-light); transition: all 0.2s">
+                        + Add to My Words
+                    </button>
+                </div>
+            `).join('');
+
+            container.innerHTML = `<div class="vocab-grid animate-fade">${html}</div>`;
+        }
+
+        function renderQuiz(container) {
+            const questions = state.lessonData.quiz;
+            const words = state.lessonData.vocabulary;
+            
+            // Vocabulary hint box
+            const vocabHintHtml = `
+                <div class="vocab-hint-box">
+                    <h3>📚 Available words:</h3>
+                    <div class="vocab-words">
+                        ${words.map(w => `
+                            <span class="vocab-chip" onclick="speakText('${escapeJS(w.word)}')">${w.word}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            const html = questions.map((q, index) => `
+                <div class="quiz-item">
+                    <span style="color:var(--text-light); font-size:0.9rem; font-weight:600">Question ${index + 1}</span>
+                    <label class="quiz-q">${q.question}</label>
+                    <div style="position:relative">
+                        <input type="text" 
+                               class="quiz-input" 
+                               placeholder="Type your answer..." 
+                               onchange="checkQuizAnswer(this, '${escapeJS(q.answer)}')"
+                               autocomplete="off">
+                    </div>
+                    <p class="feedback-text" style="font-size:0.9rem; margin-top:0.5rem; display:none"></p>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="quiz-container animate-fade">
+                    ${vocabHintHtml}
+                    ${html}
+                </div>
+            `;
+        }
+
+        // --- TASK CHECKING FUNCTIONS ---
+        
+        function checkPreReading(input, correctIndex) {
+            const feedback = document.getElementById('pre-feedback');
+            feedback.style.display = 'block';
+            if (parseInt(input.value) === correctIndex) {
+                feedback.textContent = "✅ Correct! Vera works at a school canteen.";
+                feedback.style.color = "var(--success)";
+                speakText("Correct!");
+            } else {
+                feedback.textContent = "❌ Not quite. Read the introduction text again.";
+                feedback.style.color = "var(--error)";
+                vibrate();
+            }
+        }
+
+        function checkMatching(selectElement, correctAnswer) {
+            const userAnswer = selectElement.value;
+            
+            if (userAnswer === correctAnswer) {
+                selectElement.classList.remove('incorrect');
+                selectElement.classList.add('correct');
+                showNotification("✅ Correct match!");
+            } else if (userAnswer === "") {
+                selectElement.classList.remove('correct', 'incorrect');
+            } else {
+                selectElement.classList.remove('correct');
+                selectElement.classList.add('incorrect');
+                vibrate();
+                showNotification("❌ Try again");
+            }
+        }
+
+        function checkTrueFalse(btnElement, stmtId, userAnswer, correctAnswer) {
+            const container = btnElement.parentElement;
+            const allBtns = container.querySelectorAll('.tf-btn');
+            const feedback = document.getElementById(`tf-feedback-${stmtId}`);
+            
+            // Remove previous states
+            allBtns.forEach(btn => btn.classList.remove('selected', 'correct', 'incorrect'));
+            
+            // Mark selected
+            btnElement.classList.add('selected');
+            
+            if (userAnswer === correctAnswer) {
+                btnElement.classList.add('correct');
+                feedback.textContent = "✅ Correct!";
+                feedback.className = "tf-feedback show correct-fb";
+                speakText("Correct");
+            } else {
+                btnElement.classList.add('incorrect');
+                feedback.textContent = "❌ Incorrect. Read the text again carefully.";
+                feedback.className = "tf-feedback show incorrect-fb";
+                vibrate();
+            }
+        }
+
+        function checkQuizAnswer(inputElement, correctAnswer) {
+            const userVal = inputElement.value.trim().toLowerCase();
+            const correctVal = correctAnswer.toLowerCase();
+            const feedbackText = inputElement.parentElement.nextElementSibling;
+            
+            if (userVal === correctVal) {
+                inputElement.classList.remove('incorrect');
+                inputElement.classList.add('correct');
+                feedbackText.style.display = 'block';
+                feedbackText.textContent = "✨ Excellent! Correct answer.";
+                feedbackText.style.color = "var(--success)";
+                speakText("Correct");
+            } else {
+                inputElement.classList.remove('correct');
+                inputElement.classList.add('incorrect');
+                feedbackText.style.display = 'block';
+                feedbackText.textContent = "❌ Try again. Check your spelling and look at the vocabulary above.";
+                feedbackText.style.color = "var(--error)";
+                vibrate();
+            }
+        }
+
+        // --- TEXT TO SPEECH ---
+        function speakText(text) {
+            if (!state.audioEnabled || !text) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-GB';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function handleWordClick(word) {
+            if(!word) return;
+            speakText(word);
+            showNotification(`🔊 ${word}`);
+        }
+
+        // --- LOCAL STORAGE / SIDEBAR ---
+        function saveWord(word) {
+            if (!state.savedWords.includes(word)) {
+                state.savedWords.push(word);
+                localStorage.setItem('myWords_153', JSON.stringify(state.savedWords));
+                renderMyWordsSidebar();
+                showNotification(`✅ Saved "${word}"`);
+            } else {
+                showNotification(`ℹ️ "${word}" is already saved`);
+            }
+        }
+
+        function removeWord(word) {
+            state.savedWords = state.savedWords.filter(w => w !== word);
+            localStorage.setItem('myWords_153', JSON.stringify(state.savedWords));
+            renderMyWordsSidebar();
+            showNotification(`🗑️ Removed "${word}"`);
+        }
+
+        function renderMyWordsSidebar() {
+            const list = document.getElementById('saved-list');
+            if (state.savedWords.length === 0) {
+                list.innerHTML = '<li style="text-align:center; color:#9ca3af; margin-top:2rem; list-style:none">No words saved yet<br>Click "+ Add to My Words" in Vocabulary section</li>';
+                return;
+            }
+            list.innerHTML = state.savedWords.map(w => `
+                <li class="saved-item">
+                    <span onclick="speakText('${escapeJS(w)}')" style="cursor:pointer; flex:1">🔊 ${w}</span>
+                    <button onclick="removeWord('${escapeJS(w)}')" 
+                            style="border:none; background:none; color:var(--error); cursor:pointer; font-size:1.3rem; padding:0.25rem"
+                            title="Remove">×</button>
+                </li>
+            `).join('');
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.classList.toggle('open');
+        }
+
+        // --- NAVIGATION ---
+        function switchTab(tabName) {
+            state.currentTab = tabName;
+            renderInterface();
+        }
+
+        // --- UTILS ---
+        function escapeJS(str) {
+            if(!str) return '';
+            return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
+        function vibrate() {
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+
+        function showNotification(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // --- STARTUP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initLesson();
+        });
+    </script>
+</body>
+</html>

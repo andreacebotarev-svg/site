@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader Delete Book Functionality Test</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/views/library.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: var(--text-primary);
+        }
+        .demo-books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Reader Delete Book Functionality Test</h1>
+
+        <div class="test-section">
+            <h3>Demo Book Cards with Delete Buttons</h3>
+            <p>Hover over book cards to see the delete button. Click the delete button to test the confirmation modal.</p>
+
+            <div class="demo-books-grid" id="demo-books">
+                <!-- Books will be added here by JavaScript -->
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Test Results</h3>
+            <div id="test-results">
+                <p>Click delete buttons above to test functionality.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal overlay placeholder -->
+    <div id="modal-container"></div>
+
+    <script type="module">
+        // Mock modal manager for testing
+        class MockModalManager {
+            constructor() {
+                this.container = document.getElementById('modal-container');
+            }
+
+            show(options) {
+                const { title, content, actions = [] } = options;
+
+                const overlay = document.createElement('div');
+                overlay.className = 'modal-overlay';
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                `;
+
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.cssText = `
+                    background: white;
+                    border-radius: 12px;
+                    padding: 24px;
+                    max-width: 400px;
+                    width: 90%;
+                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+                `;
+
+                modal.innerHTML = `
+                    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h2 style="margin: 0; font-size: 1.25rem; font-weight: 600;">${title}</h2>
+                        <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+                    </div>
+                    <div class="modal-content" style="margin-bottom: 24px;">${content}</div>
+                    <div class="modal-actions" style="display: flex; gap: 12px; justify-content: flex-end;">
+                        ${actions.map(action => `
+                            <button
+                                onclick="this.handleAction ? this.handleAction() : null"
+                                style="
+                                    padding: 8px 16px;
+                                    border: none;
+                                    border-radius: 6px;
+                                    cursor: pointer;
+                                    font-weight: 500;
+                                    background: ${action.type === 'danger' ? '#dc2626' : action.type === 'secondary' ? '#6b7280' : '#3b82f6'};
+                                    color: white;
+                                "
+                                data-action="${action.label}"
+                            >
+                                ${action.label}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+
+                // Attach event handlers
+                const actionButtons = modal.querySelectorAll('button[data-action]');
+                actionButtons.forEach((btn, index) => {
+                    btn.handleAction = actions[index].onClick;
+                    btn.addEventListener('click', () => {
+                        actions[index].onClick();
+                        overlay.remove();
+                    });
+                });
+
+                overlay.appendChild(modal);
+                this.container.appendChild(overlay);
+
+                // Log for testing
+                console.log('Modal shown:', { title, content, actions: actions.map(a => a.label) });
+                document.getElementById('test-results').innerHTML += `<p>✅ Modal shown: "${title}"</p>`;
+            }
+
+            close() {
+                const overlay = this.container.querySelector('.modal-overlay');
+                if (overlay) {
+                    overlay.remove();
+                }
+            }
+        }
+
+        // Create mock modal manager
+        window.modalManager = new MockModalManager();
+
+        // Mock LibraryView for testing delete functionality
+        class TestLibraryView {
+            constructor() {
+                this.books = [
+                    {
+                        id: 'test-book-1',
+                        title: 'Alice in Wonderland',
+                        author: 'Lewis Carroll',
+                        description: 'A classic tale of adventure and wonder in a magical world.',
+                        wordCount: 15432,
+                        format: 'fb2'
+                    },
+                    {
+                        id: 'test-book-2',
+                        title: 'Pride and Prejudice',
+                        author: 'Jane Austen',
+                        description: 'A romantic novel about love, marriage, and social expectations.',
+                        wordCount: 28341,
+                        format: 'epub'
+                    },
+                    {
+                        id: 'test-book-3',
+                        title: 'The Great Gatsby',
+                        author: 'F. Scott Fitzgerald',
+                        description: 'A story of the Jazz Age and the American Dream.',
+                        wordCount: 18924,
+                        format: 'txt'
+                    }
+                ];
+            }
+
+            escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            formatNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+            renderBookCard(book) {
+                const cover = '📖';
+                const wordCount = book.wordCount ? this.formatNumber(book.wordCount) : 'Unknown';
+                const format = book.format ? book.format.toUpperCase() : 'TXT';
+
+                return `
+                    <div class="book-card card-interactive" data-book-id="${book.id}" tabindex="0" role="button" aria-label="Read ${this.escapeHtml(book.title)}">
+                        <div class="book-cover">${cover}</div>
+                        <div class="book-card-header">
+                            <h3 class="book-title" title="${this.escapeHtml(book.title)}">${this.escapeHtml(book.title || 'Untitled')}</h3>
+                            <button class="btn-delete" aria-label="Delete book" title="Delete book" onclick="testView.handleDeleteBook('${book.id}')">
+                                <span>🗑️</span>
+                            </button>
+                        </div>
+                        <p class="book-author">${this.escapeHtml(book.author || 'Unknown Author')}</p>
+                        ${book.description ? `<p class="book-description">${this.escapeHtml(book.description.substring(0, 120))}${book.description.length > 120 ? '...' : ''}</p>` : ''}
+                        <div class="book-meta">
+                            <div class="book-meta-info">
+                                <span class="book-word-count">${wordCount} words</span>
+                            </div>
+                            <span class="book-format">${format}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            async handleDeleteBook(bookId) {
+                event.stopPropagation(); // Prevent card click
+
+                const book = this.books.find(b => b.id === bookId);
+                if (!book) return;
+
+                // Show confirmation modal
+                modalManager.show({
+                    title: 'Delete Book',
+                    content: `
+                        <p>Are you sure you want to delete "<strong>${this.escapeHtml(book.title)}</strong>"?</p>
+                        <p class="text-muted">This action cannot be undone.</p>
+                    `,
+                    actions: [
+                        {
+                            label: 'Cancel',
+                            type: 'secondary',
+                            onClick: () => {
+                                console.log('Delete cancelled');
+                                document.getElementById('test-results').innerHTML += '<p>❌ Delete cancelled</p>';
+                                modalManager.close();
+                            }
+                        },
+                        {
+                            label: 'Delete',
+                            type: 'danger',
+                            onClick: async () => {
+                                console.log('Delete confirmed for:', book.title);
+                                document.getElementById('test-results').innerHTML += `<p>✅ Delete confirmed for: "${book.title}"</p>`;
+
+                                // Simulate deletion
+                                this.books = this.books.filter(b => b.id !== bookId);
+
+                                // Re-render books
+                                this.renderDemoBooks();
+
+                                modalManager.close();
+                            }
+                        }
+                    ]
+                });
+            }
+
+            renderDemoBooks() {
+                const container = document.getElementById('demo-books');
+                container.innerHTML = this.books.map(book => this.renderBookCard(book)).join('');
+            }
+        }
+
+        // Initialize test
+        const testView = new TestLibraryView();
+        window.testView = testView;
+
+        // Render initial books
+        testView.renderDemoBooks();
+
+        console.log('Delete functionality test initialized');
+        document.getElementById('test-results').innerHTML = '<p>✅ Test initialized. Books rendered with delete buttons.</p>';
+    </script>
+</body>
+</html>

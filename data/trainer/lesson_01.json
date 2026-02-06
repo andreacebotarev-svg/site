@@ -1,0 +1,44 @@
+{
+  "id": 1,
+  "title": "Урок 1: Буква E в закрытом слоге",
+  "emoji": "🔟",
+  "rule": "Буква E в закрытом слоге читается как [e]",
+  "description": "Изучаем короткий звук E и простые согласные T, N, P",
+  "phonemesSet": ["t", "e", "n", "p", "s"],
+  "wordCount": 4,
+  "estimatedTime": 5,
+  "words": [
+    {
+      "word": "ten",
+      "phonemes": ["t", "e", "n"],
+      "translation": "десять",
+      "transcription": "[ten]",
+      "emoji": "🔟",
+      "imageUrl": null
+    },
+    {
+      "word": "net",
+      "phonemes": ["n", "e", "t"],
+      "translation": "сачок, сеть",
+      "transcription": "[net]",
+      "emoji": "🥅",
+      "imageUrl": null
+    },
+    {
+      "word": "pen",
+      "phonemes": ["p", "e", "n"],
+      "translation": "ручка",
+      "transcription": "[pen]",
+      "emoji": "🖊️",
+      "imageUrl": null
+    },
+    {
+      "word": "pet",
+      "phonemes": ["p", "e", "t"],
+      "translation": "домашний питомец",
+      "transcription": "[pet]",
+      "emoji": "🐕",
+      "imageUrl": null
+    }
+  ]
+}

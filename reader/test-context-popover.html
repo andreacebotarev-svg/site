@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Popover Test</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components/word-popover.css">
+    <link rel="stylesheet" href="assets/css/views/reader.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .test-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .interactive-word {
+            background: rgba(0, 122, 255, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .interactive-word:hover {
+            background: rgba(0, 122, 255, 0.2);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        button { margin: 10px; }
+    </style>
+</head>
+<body>
+    <div class="test-content">
+        <h1>Context Popover Test</h1>
+
+        <div class="test-section">
+            <h3>Test Content</h3>
+            <p>This is a <span class="interactive-word" data-word="test">test</span> sentence with some words.</p>
+            <p>Another paragraph with <span class="interactive-word" data-word="different">different</span> content here.</p>
+            <p>The quick brown <span class="interactive-word" data-word="fox">fox</span> jumps over the lazy dog.</p>
+        </div>
+
+        <div class="test-section">
+            <h3>Controls</h3>
+            <button onclick="testThemeToggle()">Toggle Dark Theme</button>
+            <button onclick="testPopoverCreation()">Test Popover Creation</button>
+            <button onclick="testContextUpdate()">Test Context Update</button>
+        </div>
+
+        <div class="test-section">
+            <h3>Results</h3>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Mock ContextExtractor
+        window.ContextExtractor = {
+            getSentenceContext(wordEl) {
+                const container = wordEl.closest('p');
+                if (!container) return { sentence: wordEl.textContent, word: wordEl.dataset.word };
+
+                const fullText = container.textContent;
+                const word = wordEl.dataset.word || wordEl.textContent;
+
+                return {
+                    sentence: fullText.trim(),
+                    before: fullText.substring(0, fullText.indexOf(wordEl.textContent)).trim(),
+                    after: fullText.substring(fullText.indexOf(wordEl.textContent) + wordEl.textContent.length).trim(),
+                    word: word,
+                    method: 'test'
+                };
+            },
+            highlightWordInSentence(sentence, word) {
+                return sentence.replace(new RegExp(`\\b${word}\\b`, 'gi'), `<mark class="context-highlight">$&</mark>`);
+            }
+        };
+
+        // Mock contextTranslationService
+        window.contextTranslationService = {
+            translateSentence: async (sentence) => {
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                return `Перевод: ${sentence}`;
+            }
+        };
+
+        // Mock settingsManager
+        window.settingsManager = {
+            get: (key) => key === 'autoPlayAudio' ? true : null
+        };
+
+        // Test theme toggle
+        function testThemeToggle() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            logResult(`Theme changed to: ${newTheme}`);
+        }
+
+        // Test popover creation
+        async function testPopoverCreation() {
+            try {
+                // Import WordPopover dynamically
+                const { WordPopover } = await import('./assets/js/ui/components/WordPopover.js');
+
+                const container = document.body;
+                const popover = new WordPopover(container);
+
+                // Find first word
+                const firstWord = document.querySelector('.interactive-word');
+                if (!firstWord) {
+                    logResult('❌ No interactive words found');
+                    return;
+                }
+
+                // Mock context
+                const context = ContextExtractor.getSentenceContext(firstWord);
+
+                logResult('✅ Popover created, showing word...');
+
+                // Show popover
+                const rect = firstWord.getBoundingClientRect();
+                await popover.show(firstWord, rect, firstWord.dataset.word, context);
+
+                logResult('✅ Popover shown successfully');
+
+                // Test context update
+                setTimeout(() => {
+                    popover.updateContextContent(context, 'Тестовый перевод предложения');
+                    logResult('✅ Context updated');
+                }, 500);
+
+            } catch (error) {
+                logResult(`❌ Error: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        // Test context update directly
+        function testContextUpdate() {
+            const popoverEl = document.querySelector('.word-popover');
+            if (!popoverEl) {
+                logResult('❌ No popover found - create one first');
+                return;
+            }
+
+            const contextEl = popoverEl.querySelector('.word-context');
+            if (!contextEl) {
+                logResult('❌ No context element found in popover');
+                return;
+            }
+
+            // Test manual update
+            contextEl.style.display = 'block';
+            contextEl.querySelector('.context-source').innerHTML = '<em>This is a <mark class="context-highlight">test</mark> sentence.</em>';
+            contextEl.querySelector('.context-translation').textContent = 'Это тестовое предложение.';
+
+            logResult('✅ Context updated manually');
+        }
+
+        function logResult(message) {
+            const results = document.getElementById('results');
+            const time = new Date().toLocaleTimeString();
+            results.innerHTML += `<div>[${time}] ${message}</div>`;
+            console.log(message);
+        }
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            logResult('Page loaded, ready for testing');
+        });
+    </script>
+</body>
+</html>

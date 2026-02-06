@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagination System v4.0 Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .demo-controls {
+            padding: 20px;
+            border-bottom: 1px solid #e1e1e1;
+            background: #f8f9fa;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .stats-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .reader-area {
+            min-height: 600px;
+            position: relative;
+        }
+
+        .page {
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .page-title h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .page-position {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .page-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #666;
+            min-width: 60px;
+        }
+
+        .page-content {
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .reading-paragraph {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .reading-paragraph.current {
+            background: rgba(255, 255, 0, 0.2);
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .fact-box {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .fact-box strong {
+            color: #0066cc;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .page-footer {
+            border-top: 2px solid #e9ecef;
+            padding-top: 20px;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        .page-indicators {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .toc-sidebar {
+            position: fixed;
+            right: 20px;
+            top: 100px;
+            width: 300px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-height: 70vh;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .toc-sidebar.show {
+            display: block;
+        }
+
+        .toc-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .toc-chapter {
+            margin-bottom: 15px;
+        }
+
+        .toc-chapter-title {
+            font-weight: bold;
+            color: #0066cc;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .toc-chapter-title:hover {
+            text-decoration: underline;
+        }
+
+        .toc-page {
+            margin-left: 15px;
+            margin-bottom: 3px;
+            cursor: pointer;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .toc-page:hover {
+            color: #0066cc;
+        }
+
+        .toc-page.current {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* Animations */
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutLeft {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(-100%); opacity: 0; }
+        }
+
+        .page.entering {
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .page.leaving {
+            animation: slideOutLeft 0.3s ease-in;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>📖 Pagination System v4.0 Demo</h1>
+            <p>Mathematical Content Chunking with Hierarchical Structure</p>
+        </div>
+
+        <div class="demo-controls">
+            <div class="control-group">
+                <button id="load-book-btn" class="btn btn-primary">📚 Load Sample Book</button>
+                <button id="prev-page-btn" class="btn btn-secondary" disabled>← Previous</button>
+                <button id="next-page-btn" class="btn btn-secondary" disabled>Next →</button>
+                <button id="toggle-toc-btn" class="btn btn-secondary">📋 Table of Contents</button>
+            </div>
+
+            <div class="control-group">
+                <span>Current Position:</span>
+                <span id="position-display">No book loaded</span>
+            </div>
+
+            <div id="stats-display" class="stats-display">
+                Statistics will appear here after loading a book...
+            </div>
+        </div>
+
+        <div id="reader-area" class="reader-area">
+            <div class="loading" id="loading-state">
+                <div class="spinner"></div>
+                <div>Click "Load Sample Book" to start the demo</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toc-sidebar" class="toc-sidebar">
+        <div class="toc-title">Table of Contents</div>
+        <div id="toc-content">Load a book first...</div>
+    </div>
+
+    <script type="module">
+        // Import new pagination system components
+        import { ContentPager } from './assets/js/reader/pagination/ContentPager.js';
+        import { URLNavigator } from './assets/js/reader/pagination/URLNavigator.js';
+        import { PageRenderer } from './assets/js/reader/pagination/PageRenderer.js';
+        import { WordHighlighter } from './assets/js/reader/WordHighlighter.js';
+        import { WordPopover } from './assets/js/ui/components/WordPopover.js';
+        import { vocabularyStorage } from './assets/js/vocabulary/vocabulary-storage.enhanced.js';
+        import { logger } from './assets/js/utils/logger.js';
+
+        // Demo application class
+        class PaginationDemo {
+            constructor() {
+                this.contentPager = new ContentPager({
+                    logger,
+                    config: {
+                        paragraphsPerPage: { min: 4, max: 6, preferred: 5 },
+                        pagesPerChapter: 5,
+                        wordsPerMinute: 200
+                    }
+                });
+
+                this.readerArea = document.getElementById('reader-area');
+                this.pageRenderer = new PageRenderer(this.readerArea, { logger });
+
+                this.urlNavigator = new URLNavigator(
+                    (state) => this.onStateChange(state),
+                    { logger, updateDelay: 100 }
+                );
+
+                // Initialize word highlighter
+                const overlayRoot = document.getElementById('overlay-root');
+                if (overlayRoot) {
+                    this.wordPopover = new WordPopover(overlayRoot);
+                    this.wordHighlighter = new WordHighlighter({
+                        logger,
+                        vocabularyStorage
+                    });
+                    this.wordHighlighter.initialize(this.readerArea, this.wordPopover);
+                    // Make globally accessible for PageRenderer
+                    window.wordHighlighter = this.wordHighlighter;
+                }
+
+                this.currentBook = null;
+                this.currentChapter = 0;
+                this.currentPage = 0;
+
+                this.setupEventListeners();
+                this.logger.info('Pagination Demo initialized');
+            }
+
+            setupEventListeners() {
+                document.getElementById('load-book-btn').addEventListener('click', () => this.loadSampleBook());
+                document.getElementById('prev-page-btn').addEventListener('click', () => this.navigatePrev());
+                document.getElementById('next-page-btn').addEventListener('click', () => this.navigateNext());
+                document.getElementById('toggle-toc-btn').addEventListener('click', () => this.toggleTOC());
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            this.navigatePrev();
+                            break;
+                        case 'ArrowRight':
+                        case ' ':
+                            e.preventDefault();
+                            this.navigateNext();
+                            break;
+                        case 't':
+                            e.preventDefault();
+                            this.toggleTOC();
+                            break;
+                    }
+                });
+
+                // TOC navigation
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('toc-chapter-title')) {
+                        const chapterIndex = parseInt(e.target.dataset.chapter);
+                        this.navigateToChapter(chapterIndex);
+                    } else if (e.target.classList.contains('toc-page')) {
+                        const chapterIndex = parseInt(e.target.dataset.chapter);
+                        const pageIndex = parseInt(e.target.dataset.page);
+                        this.navigateToPage(chapterIndex, pageIndex);
+                    }
+                });
+            }
+
+            async loadSampleBook() {
+                try {
+                    this.showLoading('Generating sample book content...');
+
+                    // Generate sample content
+                    const paragraphs = this.generateSampleContent(120); // 120 paragraphs
+
+                    this.logger.info('Generated sample content', {
+                        paragraphCount: paragraphs.length,
+                        totalWords: paragraphs.reduce((sum, p) => sum + p.wordCount, 0)
+                    });
+
+                    // Paginate content
+                    this.showLoading('Applying mathematical pagination...');
+                    this.currentBook = await this.contentPager.paginate(paragraphs, 'demo-book');
+
+                    this.logger.info('Book paginated successfully', {
+                        chapters: this.currentBook.totalChapters,
+                        pages: this.currentBook.totalPages,
+                        words: this.currentBook.totalWords
+                    });
+
+                    // Update UI
+                    this.updateStats();
+                    this.pageRenderer.setTotalChapters(this.currentBook.totalChapters);
+
+                    // Navigate to first page
+                    this.navigateToPage(0, 0);
+
+                } catch (error) {
+                    this.logger.error('Failed to load sample book', error);
+                    this.showError('Failed to load book: ' + error.message);
+                }
+            }
+
+            generateSampleContent(paragraphCount) {
+                const paragraphs = [];
+                let chapterCount = 0;
+                let factCount = 0;
+
+                for (let i = 0; i < paragraphCount; i++) {
+                    let type = 'regular';
+                    let title = null;
+                    let wordCount = 25 + Math.floor(Math.random() * 30);
+
+                    // Add chapter titles every ~25 paragraphs
+                    if (i % 25 === 0 && i > 0) {
+                        type = 'title';
+                        chapterCount++;
+                        title = `Chapter ${chapterCount}: ${this.getChapterTitle(chapterCount)}`;
+                        wordCount = 8;
+                    }
+                    // Add facts occasionally
+                    else if (Math.random() < 0.08 && factCount < 8) {
+                        type = 'fact';
+                        factCount++;
+                        title = `Interesting Fact ${factCount}`;
+                        wordCount = 35;
+                    }
+
+                    paragraphs.push({
+                        text: this.generateParagraphText(type, i + 1, wordCount),
+                        type,
+                        title,
+                        wordCount
+                    });
+                }
+
+                return paragraphs;
+            }
+
+            generateParagraphText(type, index, wordCount) {
+                if (type === 'title') {
+                    return `Chapter ${Math.ceil(index / 25)} Title`;
+                }
+
+                const words = [];
+                const sampleWords = [
+                    'language', 'learning', 'vocabulary', 'reading', 'comprehension',
+                    'fluency', 'grammar', 'pronunciation', 'context', 'meaning',
+                    'sentence', 'paragraph', 'chapter', 'book', 'author',
+                    'narrative', 'story', 'character', 'plot', 'theme',
+                    'understanding', 'knowledge', 'skill', 'practice', 'progress'
+                ];
+
+                for (let i = 0; i < wordCount; i++) {
+                    words.push(sampleWords[Math.floor(Math.random() * sampleWords.length)]);
+                }
+
+                return `This is paragraph ${index} containing ${wordCount} words about language learning. ${words.join(' ')}.`;
+            }
+
+            getChapterTitle(chapterNum) {
+                const titles = [
+                    'Introduction to Language Learning',
+                    'Building Vocabulary Foundations',
+                    'Mastering Reading Comprehension',
+                    'Advanced Grammar Structures',
+                    'Cultural Context and Idioms',
+                    'Practical Conversation Skills'
+                ];
+                return titles[(chapterNum - 1) % titles.length];
+            }
+
+            async navigateToPage(chapterIndex, pageIndex, options = {}) {
+                if (!this.currentBook) return;
+
+                const chapter = this.currentBook.chapters[chapterIndex];
+                if (!chapter) return;
+
+                const page = chapter.pages[pageIndex];
+                if (!page) return;
+
+                this.currentChapter = chapterIndex;
+                this.currentPage = pageIndex;
+
+                await this.pageRenderer.renderPage(page, chapter, {
+                    animate: !options.instant,
+                    direction: options.direction || 'forward'
+                });
+
+                this.updateNavigationButtons();
+                this.updateTOC();
+                this.urlNavigator.navigateTo(chapterIndex, pageIndex, options);
+            }
+
+            navigatePrev() {
+                if (!this.currentBook) return;
+
+                if (this.currentPage > 0) {
+                    this.navigateToPage(this.currentChapter, this.currentPage - 1,
+                        { direction: 'backward' });
+                } else if (this.currentChapter > 0) {
+                    const prevChapter = this.currentBook.chapters[this.currentChapter - 1];
+                    this.navigateToPage(this.currentChapter - 1, prevChapter.pages.length - 1,
+                        { direction: 'backward' });
+                }
+            }
+
+            navigateNext() {
+                if (!this.currentBook) return;
+
+                const currentChapter = this.currentBook.chapters[this.currentChapter];
+
+                if (this.currentPage < currentChapter.pages.length - 1) {
+                    this.navigateToPage(this.currentChapter, this.currentPage + 1,
+                        { direction: 'forward' });
+                } else if (this.currentChapter < this.currentBook.chapters.length - 1) {
+                    this.navigateToPage(this.currentChapter + 1, 0,
+                        { direction: 'forward' });
+                }
+            }
+
+            navigateToChapter(chapterIndex) {
+                this.navigateToPage(chapterIndex, 0, { instant: true });
+            }
+
+            onStateChange(state) {
+                // Handle URL state changes (e.g., from browser back/forward)
+                if (state.bookId === 'demo-book' && this.currentBook) {
+                    this.navigateToPage(state.chapter, state.page, { instant: true });
+                }
+            }
+
+            updateNavigationButtons() {
+                if (!this.currentBook) return;
+
+                const navContext = this.urlNavigator.getNavigationContext(this.currentBook);
+
+                document.getElementById('prev-page-btn').disabled = !navContext.navigation.hasPrevPage;
+                document.getElementById('next-page-btn').disabled = !navContext.navigation.hasNextPage;
+
+                document.getElementById('position-display').textContent =
+                    `Chapter ${navContext.current.chapter + 1}/${navContext.total.chapters}, ` +
+                    `Page ${navContext.current.page + 1}/${navContext.current.totalPages}`;
+            }
+
+            updateStats() {
+                if (!this.currentBook) return;
+
+                const stats = this.contentPager.getStats();
+                const cacheStats = stats.cacheStats || {};
+
+                const statsHtml = `
+Book Statistics:
+• Chapters: ${this.currentBook.totalChapters}
+• Pages: ${this.currentBook.totalPages}
+• Paragraphs: ${this.currentBook.totalParagraphs}
+• Words: ${this.currentBook.totalWords.toLocaleString()}
+• Estimated Reading Time: ${this.currentBook.estimatedReadingTime} minutes
+
+Pagination Engine Stats:
+• Total Pages Created: ${stats.totalPages || 0}
+• Avg Paragraphs/Page: ${stats.avgParagraphsPerPage || 0}
+• Page Size Distribution: ${JSON.stringify(stats.pageSizeDistribution || {})}
+
+Cache Performance:
+• Hits: ${cacheStats.hits || 0}
+• Misses: ${cacheStats.misses || 0}
+• Hit Rate: ${cacheStats.hitRate ? (cacheStats.hitRate * 100).toFixed(1) : 0}%
+• Total Entries: ${cacheStats.totalEntries || 0}
+                `;
+
+                document.getElementById('stats-display').innerHTML =
+                    statsHtml.replace(/\n/g, '<br>');
+            }
+
+            updateTOC() {
+                if (!this.currentBook) return;
+
+                const tocHtml = this.currentBook.chapters.map((chapter, chapterIndex) => {
+                    const isCurrentChapter = chapterIndex === this.currentChapter;
+
+                    const chapterHtml = `
+                        <div class="toc-chapter">
+                            <div class="toc-chapter-title" data-chapter="${chapterIndex}">
+                                ${chapter.title}
+                                <small>(${chapter.pageCount} pages, ${chapter.estimatedMinutes} min)</small>
+                            </div>
+                            ${chapter.pages.map((page, pageIndex) => {
+                                const isCurrentPage = isCurrentChapter && pageIndex === this.currentPage;
+                                return `
+                                    <div class="toc-page ${isCurrentPage ? 'current' : ''}"
+                                         data-chapter="${chapterIndex}"
+                                         data-page="${pageIndex}">
+                                        Page ${pageIndex + 1} (${page.paragraphs.length} para, ${page.estimatedMinutes} min)
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+
+                    return chapterHtml;
+                }).join('');
+
+                document.getElementById('toc-content').innerHTML = tocHtml;
+            }
+
+            toggleTOC() {
+                const toc = document.getElementById('toc-sidebar');
+                toc.classList.toggle('show');
+            }
+
+            showLoading(message) {
+                this.readerArea.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div>${message}</div>
+                    </div>
+                `;
+            }
+
+            showError(message) {
+                this.readerArea.innerHTML = `
+                    <div class="loading" style="color: #dc3545;">
+                        <div>⚠️ Error</div>
+                        <div>${message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize demo when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.paginationDemo = new PaginationDemo();
+        });
+    </script>
+
+    <!-- Overlay root for word popovers -->
+    <div id="overlay-root" aria-live="polite"></div>
+</body>
+</html>

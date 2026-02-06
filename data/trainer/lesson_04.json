@@ -1,0 +1,44 @@
+{
+  "id": 4,
+  "title": "Урок 4: Буква O в закрытом слоге",
+  "emoji": "🐕",
+  "rule": "Буква O в закрытом слоге читается как [ɒ]",
+  "description": "Изучаем короткий звук O",
+  "phonemesSet": ["d", "o", "g", "m", "p", "t", "n"],
+  "wordCount": 4,
+  "estimatedTime": 5,
+  "words": [
+    {
+      "word": "dog",
+      "phonemes": ["d", "o", "g"],
+      "translation": "собака",
+      "transcription": "[dɒg]",
+      "emoji": "🐕",
+      "imageUrl": null
+    },
+    {
+      "word": "mop",
+      "phonemes": ["m", "o", "p"],
+      "translation": "швабра",
+      "transcription": "[mɒp]",
+      "emoji": "🧹",
+      "imageUrl": null
+    },
+    {
+      "word": "top",
+      "phonemes": ["t", "o", "p"],
+      "translation": "юла",
+      "transcription": "[tɒp]",
+      "emoji": "🎪",
+      "imageUrl": null
+    },
+    {
+      "word": "pond",
+      "phonemes": ["p", "o", "n", "d"],
+      "translation": "пруд",
+      "transcription": "[pɒnd]",
+      "emoji": "🦆",
+      "imageUrl": null
+    }
+  ]
+}

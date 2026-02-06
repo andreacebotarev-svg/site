@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theme System Demo — English Lessons</title>
+  
+  <!-- NEW Design Token System -->
+  <link rel="stylesheet" href="assets/css/design-tokens.css">
+  
+  <style>
+    /* Demo-specific styles */
+    body {
+      margin: 0;
+      padding: var(--space-8);
+      font-family: var(--font-main);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+    
+    .demo-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .demo-header {
+      text-align: center;
+      margin-bottom: var(--space-12);
+    }
+    
+    .demo-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: var(--space-4);
+      background: linear-gradient(135deg, var(--accent-500), var(--accent-300));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .demo-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-8);
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      gap: var(--space-2);
+      justify-content: center;
+      padding: var(--space-2);
+      background: var(--bg-surface);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-default);
+      width: fit-content;
+      margin: 0 auto var(--space-12);
+    }
+    
+    .theme-btn {
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all var(--duration-fast) var(--easing-standard);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    
+    .theme-btn:hover {
+      background: var(--bg-elevated);
+      transform: translateY(-1px);
+    }
+    
+    .theme-btn.active {
+      background: var(--accent-500);
+      color: white;
+      border-color: var(--accent-500);
+      box-shadow: var(--shadow-accent-sm);
+    }
+    
+    /* Component Showcase */
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: var(--space-6);
+      margin-bottom: var(--space-8);
+    }
+    
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 650;
+      margin-bottom: var(--space-4);
+      color: var(--text-primary);
+    }
+    
+    .card-content {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: var(--space-4);
+    }
+    
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: var(--space-2) var(--space-4);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--easing-standard);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--accent-400), var(--accent-500));
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    
+    .btn-success {
+      background: var(--semantic-success);
+      color: white;
+    }
+    
+    .btn-danger {
+      background: var(--semantic-danger);
+      color: white;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-default);
+      color: var(--text-primary);
+    }
+    
+    .btn-outline:hover {
+      background: var(--bg-elevated);
+    }
+    
+    /* Interactive Word Demo */
+    .interactive-word {
+      color: var(--accent-500);
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: var(--radius-sm);
+      transition: all var(--duration-fast) var(--easing-standard);
+    }
+    
+    .interactive-word:hover {
+      background: var(--accent-500);
+      color: white;
+      box-shadow: var(--shadow-accent-sm);
+    }
+    
+    /* Token Display */
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+    }
+    
+    .token-swatch {
+      aspect-ratio: 3/2;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .swatch-bg-base { background: var(--bg-base); }
+    .swatch-bg-surface { background: var(--bg-surface); }
+    .swatch-bg-elevated { background: var(--bg-elevated); }
+    .swatch-accent { background: var(--accent-500); color: white; }
+    .swatch-success { background: var(--semantic-success); color: white; }
+    .swatch-danger { background: var(--semantic-danger); color: white; }
+    .swatch-warning { background: var(--semantic-warning); color: white; }
+    
+    /* Accessibility Info */
+    .a11y-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-3);
+      background: var(--semantic-success-bg);
+      border: 1px solid var(--semantic-success-border);
+      border-radius: var(--radius-full);
+      color: var(--semantic-success);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: var(--space-4);
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <!-- Header -->
+    <header class="demo-header">
+      <h1 class="demo-title">Design Token System 3.0</h1>
+      <p class="demo-subtitle">WCAG AA Compliant • 3 Themes • Semantic Tokens</p>
+    </header>
+    
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+      <button class="theme-btn active" data-theme="default">
+        <span>🌙</span> Default Dark
+      </button>
+      <button class="theme-btn" data-theme="kids">
+        <span>🎈</span> Kids Playful
+      </button>
+      <button class="theme-btn" data-theme="dark">
+        <span>⭐</span> Pure Dark
+      </button>
+    </div>
+    
+    <!-- Component Showcase -->
+    <div class="showcase">
+      <!-- Card 1: Typography -->
+      <div class="card">
+        <h2 class="card-title">Typography Hierarchy</h2>
+        <div class="card-content">
+          <p style="color: var(--text-primary); font-size: 1.1rem; margin-bottom: var(--space-2);">
+            <strong>Primary Text:</strong> Main content with maximum readability
+          </p>
+          <p style="color: var(--text-secondary); margin-bottom: var(--space-2);">
+            <strong>Secondary Text:</strong> Supporting information
+          </p>
+          <p style="color: var(--text-tertiary); font-size: 0.9rem;">
+            <strong>Tertiary Text:</strong> Captions and labels
+          </p>
+        </div>
+        <div class="a11y-badge">
+          ✅ WCAG AA Compliant
+        </div>
+      </div>
+      
+      <!-- Card 2: Buttons -->
+      <div class="card">
+        <h2 class="card-title">Button States</h2>
+        <div class="card-content">
+          <p style="margin-bottom: var(--space-4);">Interactive components with theme-aware colors</p>
+          <div class="btn-group">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-success">Success</button>
+            <button class="btn btn-danger">Danger</button>
+            <button class="btn btn-outline">Outline</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card 3: Interactive Words -->
+      <div class="card">
+        <h2 class="card-title">Interactive Content</h2>
+        <div class="card-content">
+          <p>
+            Click on any <span class="interactive-word">highlighted word</span> to see 
+            the <span class="interactive-word">theme-aware</span> hover effects. 
+            Each <span class="interactive-word">theme</span> uses different 
+            <span class="interactive-word">accent colors</span> while maintaining 
+            accessibility.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Card 4: Color Palette -->
+      <div class="card">
+        <h2 class="card-title">Color Tokens</h2>
+        <div class="token-grid">
+          <div class="token-swatch swatch-bg-base">bg-base</div>
+          <div class="token-swatch swatch-bg-surface">bg-surface</div>
+          <div class="token-swatch swatch-bg-elevated">bg-elevated</div>
+          <div class="token-swatch swatch-accent">accent-500</div>
+          <div class="token-swatch swatch-success">success</div>
+          <div class="token-swatch swatch-danger">danger</div>
+        </div>
+      </div>
+      
+      <!-- Card 5: Theme Info -->
+      <div class="card" id="theme-info">
+        <h2 class="card-title">Current Theme: <span id="current-theme-name">Default Dark</span></h2>
+        <div class="card-content">
+          <p id="theme-description">Professional dark theme optimized for adult learners. Deep blue palette creates trust and focus.</p>
+          <ul style="margin-top: var(--space-4); padding-left: var(--space-6);">
+            <li style="margin-bottom: var(--space-2);">Accent: <strong id="accent-color">Blue (#4f7fff)</strong></li>
+            <li style="margin-bottom: var(--space-2);">Target: <strong id="target-audience">Adults, Professionals</strong></li>
+            <li>Accessibility: <strong>WCAG AA</strong></li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Card 6: Shadows -->
+      <div class="card" style="box-shadow: var(--shadow-xl);">
+        <h2 class="card-title">Elevation System</h2>
+        <div class="card-content">
+          <p style="margin-bottom: var(--space-4);">This card uses <code>--shadow-xl</code></p>
+          <div style="padding: var(--space-3); background: var(--bg-elevated); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+            Nested element with <code>--shadow-sm</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer style="text-align: center; padding: var(--space-8); color: var(--text-tertiary);">
+      <p>Design System v3.0.0 • Updated December 24, 2025</p>
+      <p style="margin-top: var(--space-2); font-size: 0.85rem;">
+        View <a href="MIGRATION_GUIDE.md" style="color: var(--accent-500); text-decoration: none;">Migration Guide</a>
+      </p>
+    </footer>
+  </div>
+  
+  <script>
+    // Theme Switcher Logic
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    const html = document.documentElement;
+    
+    const themeData = {
+      default: {
+        name: 'Default Dark',
+        description: 'Professional dark theme optimized for adult learners. Deep blue palette creates trust and focus.',
+        accent: 'Blue (#4f7fff)',
+        target: 'Adults, Professionals'
+      },
+      kids: {
+        name: 'Kids Playful',
+        description: 'Warm, inviting theme for children aged 7-12. Orange accent is color-blind safe and dyslexia-friendly.',
+        accent: 'Orange (#ff8c42)',
+        target: 'Children 7-12 years'
+      },
+      dark: {
+        name: 'Pure Dark OLED',
+        description: 'Night-optimized theme with true blacks. Teal accent reduces blue-light emission for bedtime learning.',
+        accent: 'Teal (#14b8a6)',
+        target: 'Night Learners, OLED Users'
+      }
+    };
+    
+    themeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const theme = btn.dataset.theme;
+        
+        // Update active state
+        themeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Apply theme class
+        html.className = theme === 'default' ? '' : `theme-${theme}`;
+        
+        // Update theme info
+        const data = themeData[theme];
+        document.getElementById('current-theme-name').textContent = data.name;
+        document.getElementById('theme-description').textContent = data.description;
+        document.getElementById('accent-color').textContent = data.accent;
+        document.getElementById('target-audience').textContent = data.target;
+        
+        // Save preference
+        localStorage.setItem('preferred-theme', theme);
+      });
+    });
+    
+    // Restore saved theme
+    const savedTheme = localStorage.getItem('preferred-theme');
+    if (savedTheme && savedTheme !== 'default') {
+      const btn = document.querySelector(`[data-theme="${savedTheme}"]`);
+      if (btn) btn.click();
+    }
+  </script>
+</body>
+</html>

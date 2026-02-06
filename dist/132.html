@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="referrer" content="no-referrer">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Life: My Home - Interactive Reader</title>
+    <style>
+        :root {
+            --primary-orange: #D2691E;
+            --primary-red: #C41E3A;
+            --dark-gray: #2C2C2C;
+            --light-beige: #F5F5DC;
+            --blue-accent: #4169E1;
+            --green-success: #28A745;
+            --red-error: #DC3545;
+            --hover-yellow: #FFF8DC;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--light-beige) 0%, #ffffff 100%);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        /* Header */
+        header {
+            background: linear-gradient(90deg, var(--primary-orange) 0%, var(--primary-red) 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-tab {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 20px;
+            background: var(--light-beige);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: var(--dark-gray);
+        }
+        .nav-tab:hover {
+            background: var(--hover-yellow);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .nav-tab.active {
+            background: var(--primary-orange);
+            color: white;
+            border-color: var(--primary-red);
+        }
+        /* Content Area */
+        .content-wrapper {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Reading Tab Styles */
+        .reading-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-red) 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        .reading-header h2 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .reading-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .main-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .main-text p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .highlight:hover {
+            background: linear-gradient(120deg, #fdcb6e 0%, #ffeaa7 100%);
+            transform: scale(1.05);
+        }
+        .highlight::after {
+            content: attr(data-trans);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark-gray);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+        .highlight:hover::after {
+            opacity: 1;
+        }
+        .fact-box {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        .fact-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 2px solid white;
+            padding-bottom: 10px;
+        }
+        .fact-box p {
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+        .fact-box strong {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        /* Reading Check Section */
+        .reading-check {
+            background: var(--light-beige);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 40px;
+            border: 3px solid var(--primary-orange);
+        }
+        .reading-check h3 {
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .check-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .check-statement {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .check-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .check-btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 48px;
+        }
+        .check-btn.true {
+            background: #e8f5e9;
+            color: var(--green-success);
+            border: 2px solid var(--green-success);
+        }
+        .check-btn.false {
+            background: #ffebee;
+            color: var(--red-error);
+            border: 2px solid var(--red-error);
+        }
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .check-btn.correct {
+            background: var(--green-success);
+            color: white;
+        }
+        .check-btn.incorrect {
+            background: var(--red-error);
+            color: white;
+        }
+        .check-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: none;
+        }
+        .feedback.show {
+            display: block;
+        }
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid var(--green-success);
+        }
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid var(--red-error);
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .nav-tabs {
+                flex-direction: column;
+            }
+            .nav-tab {
+                min-width: 100%;
+            }
+            .reading-layout {
+                grid-template-columns: 1fr;
+            }
+            .fact-box {
+                position: relative;
+                top: 0;
+            }
+            .content-wrapper {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏠 Urban Life: My Home</h1>
+            <p>Interactive English Learning Experience</p>
+        </header>
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="reading">📖 Reading</button>
+            <button class="nav-tab" data-tab="phrases">💬 Phrases</button>
+            <button class="nav-tab" data-tab="vocabulary">📚 Vocabulary</button>
+            <button class="nav-tab" data-tab="grammar">✏️ Grammar</button>
+            <button class="nav-tab" data-tab="quiz">⚡ Practice Quiz</button>
+        </nav>
+        <div class="content-wrapper">
+            <!-- READING TAB -->
+            <div id="reading" class="tab-content active">
+                <div class="reading-header">
+                    <h2>🛥️ A Home on the Water</h2>
+                    <p>Read the interview and check your understanding</p>
+                </div>
+                <div class="reading-layout">
+                    <!-- Main Text Column -->
+                    <div class="main-text">
+                        <p><strong>Interviewer:</strong> Tell me about your home, Melanie.</p>
+                        <p><strong>Melanie:</strong> It's a <span class="highlight" data-trans="канальная лодка" onclick="speak('canal boat')">canal boat</span>. It's in Stratford-upon-Avon, Shakespeare's birthplace. But I often travel with the boat. I'm an <span class="highlight" data-trans="художник" onclick="speak('artist')">artist</span> and the boat is a fantastic place for <span class="highlight" data-trans="рисование" onclick="speak('painting')">painting</span>.</p>
+                        <p><strong>Interviewer:</strong> Is it a <span class="highlight" data-trans="тихая жизнь" onclick="speak('quiet life')">quiet life</span>?</p>
+                        <p><strong>Melanie:</strong> Yes, usually there aren't <span class="highlight" data-trans="много (для исчисляемых)" onclick="speak('many')">many</span> boats on the canals. But in the summer, it's often very <span class="highlight" data-trans="занятой/оживленный" onclick="speak('busy')">busy</span> and noisy!</p>
+                        <p><strong>Interviewer:</strong> How <span class="highlight" data-trans="сколько (комнат)" onclick="speak('many')">many</span> rooms are there on your boat?</p>
+                        <p><strong>Melanie:</strong> Not many! The boat is quite small so I haven't got many rooms. There are three. There isn't <span class="highlight" data-trans="много (места)" onclick="speak('much')">much</span> space for my things.</p>
+                        <p><strong>Interviewer:</strong> How many bedrooms are there?</p>
+                        <p><strong>Melanie:</strong> There's one. But it's a living room and a bedroom. And I've got a <span class="highlight" data-trans="кухня" onclick="speak('kitchen')">kitchen</span> and a <span class="highlight" data-trans="ванная комната" onclick="speak('bathroom')">bathroom</span>, too.</p>
+                        <p><strong>Interviewer:</strong> How <span class="highlight" data-trans="сколько (мебели)" onclick="speak('much')">much</span> furniture have you got?</p>
+                        <p><strong>Melanie:</strong> Not <span class="highlight" data-trans="много (неисчисляемое)" onclick="speak('much')">much</span> but I've got a <span class="highlight" data-trans="много (одежды)" onclick="speak('lot of')">lot of</span> clothes! And there are my paintings!</p>
+                        <p><strong>Interviewer:</strong> Have you got a <span class="highlight" data-trans="много" onclick="speak('lot of')">lot of</span> paintings?</p>
+                        <p><strong>Melanie:</strong> Yes, a lot! Hundreds!</p>
+                    </div>
+                    <!-- Fact Box Sidebar -->
+                    <div class="fact-box">
+                        <h3>👤 Character Profile</h3>
+                        <p><strong>Name:</strong> Melanie</p>
+                        <p><strong>Home Type:</strong> Canal Boat 🛥️</p>
+                        <p><strong>Location:</strong> Stratford-upon-Avon 🇬🇧</p>
+                        <p><strong>Job:</strong> Artist 🎨</p>
+                        <p><strong>Problem:</strong> Not much space!</p>
+                        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin: 15px 0;">
+                        <p style="font-size: 0.9rem; font-style: italic;">"The boat is a fantastic place for painting."</p>
+                    </div>
+                </div>
+                <!-- Reading Check Integrated Section -->
+                <div class="reading-check">
+                    <h3>✅ Reading Check</h3>
+                    <div id="quiz-container">
+                        <!-- Question 1 -->
+                        <div class="check-item">
+                            <p class="check-statement">1. Melanie lives in a flat in London.</p>
+                            <div class="check-buttons">
+                                <button class="check-btn true" onclick="checkAnswer(this, false, 'She lives on a canal boat in Stratford-upon-Avon.')">True</button>
+                                <button class="check-btn false" onclick="checkAnswer(this, true, 'Correct! She lives on a canal boat.')">False</button>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                        <!-- Question 2 -->
+                        <div class="check-item">
+                            <p class="check-statement">2. Melanie is an artist.</p>
+                            <div class="check-buttons">
+                                <button class="check-btn true" onclick="checkAnswer(this, true, 'Correct! She says she is an artist.')">True</button>
+                                <button class="check-btn false" onclick="checkAnswer(this, false, 'Incorrect. Look at the text: \'I am an artist\'.')">False</button>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                        <!-- Question 3 -->
+                        <div class="check-item">
+                            <p class="check-statement">3. It is always quiet on the canals.</p>
+                            <div class="check-buttons">
+                                <button class="check-btn true" onclick="checkAnswer(this, false, 'No. In the summer it is often busy and noisy.')">True</button>
+                                <button class="check-btn false" onclick="checkAnswer(this, true, 'Correct! It is noisy in the summer.')">False</button>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                        <!-- Question 4 -->
+                        <div class="check-item">
+                            <p class="check-statement">4. Melanie has got a lot of rooms on her boat.</p>
+                            <div class="check-buttons">
+                                <button class="check-btn true" onclick="checkAnswer(this, false, 'False. She says \'I haven\'t got many rooms\'. Only three.')">True</button>
+                                <button class="check-btn false" onclick="checkAnswer(this, true, 'Correct! She only has three rooms.')">False</button>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                        <!-- Question 5 -->
+                        <div class="check-item">
+                            <p class="check-statement">5. She has got a lot of clothes.</p>
+                            <div class="check-buttons">
+                                <button class="check-btn true" onclick="checkAnswer(this, true, 'Correct! She says \'I\'ve got a lot of clothes!\'')">True</button>
+                                <button class="check-btn false" onclick="checkAnswer(this, false, 'Check the text again. She explicitly mentions having a lot of clothes.')">False</button>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Дополнительные стили для вкладок Phrases и Vocabulary -->
+            <style>
+                /* Phrases */
+                .phrases-section {
+                    max-width: 900px;
+                    margin: 0 auto;
+                }
+                .phrases-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 20px;
+                }
+                .phrases-header h2 {
+                    font-size: 1.8rem;
+                    color: var(--primary-red);
+                }
+                .phrases-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                }
+                .phrase-item {
+                    background: var(--light-beige);
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 15px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+                }
+                .phrase-item:hover {
+                    transform: translateX(4px);
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+                }
+                .phrase-text-block {
+                    flex: 1;
+                }
+                .phrase-en {
+                    font-weight: 700;
+                    font-size: 1.05rem;
+                    margin-bottom: 6px;
+                    display: block;
+                }
+                .phrase-ru {
+                    font-size: 0.95rem;
+                    color: #555;
+                }
+                .play-btn {
+                    min-width: 44px;
+                    min-height: 44px;
+                    border-radius: 50%;
+                    border: none;
+                    background: var(--primary-orange);
+                    color: white;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+                }
+                .play-btn:hover {
+                    background: var(--primary-red);
+                    transform: scale(1.05);
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                }
+                /* Vocabulary */
+                .vocab-section {
+                    max-width: 1000px;
+                    margin: 0 auto;
+                }
+                .vocab-header {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 15px;
+                    margin-bottom: 20px;
+                }
+                .vocab-header h2 {
+                    font-size: 1.8rem;
+                    color: var(--primary-red);
+                }
+                .toggle-wrapper {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-weight: 600;
+                }
+                .toggle-label {
+                    font-size: 0.95rem;
+                }
+                .toggle-switch {
+                    position: relative;
+                    width: 70px;
+                    height: 32px;
+                }
+                .toggle-switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+                .slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    transition: 0.4s;
+                    border-radius: 34px;
+                }
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 24px;
+                    width: 24px;
+                    left: 4px;
+                    bottom: 4px;
+                    background-color: white;
+                    transition: 0.4s;
+                    border-radius: 50%;
+                }
+                .toggle-switch input:checked + .slider {
+                    background-color: var(--primary-orange);
+                }
+                .toggle-switch input:checked + .slider:before {
+                    transform: translateX(36px);
+                }
+                .vocab-mode {
+                    display: none;
+                }
+                .vocab-mode.active {
+                    display: block;
+                }
+                /* List mode */
+                .vocab-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                    gap: 15px;
+                }
+                .vocab-card {
+                    background: var(--light-beige);
+                    border-radius: 10px;
+                    padding: 12px 14px;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    position: relative;
+                    overflow: hidden;
+                }
+                .vocab-card::before {
+                    content: attr(data-category);
+                    position: absolute;
+                    top: 8px;
+                    right: 10px;
+                    font-size: 0.7rem;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    background: rgba(0,0,0,0.1);
+                    padding: 2px 6px;
+                    border-radius: 999px;
+                }
+                .vocab-word {
+                    font-weight: 700;
+                    font-size: 1rem;
+                }
+                .vocab-translation {
+                    font-size: 0.9rem;
+                    color: #555;
+                }
+                .vocab-sound-btn {
+                    margin-top: 6px;
+                    align-self: flex-start;
+                    padding: 6px 10px;
+                    border-radius: 999px;
+                    border: none;
+                    background: var(--blue-accent);
+                    color: white;
+                    font-size: 0.8rem;
+                    cursor: pointer;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    min-height: 32px;
+                }
+                .vocab-sound-btn:hover {
+                    background: #274b9f;
+                }
+                /* Flashcards */
+                .flashcards-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 20px;
+                }
+                .flashcard {
+                    width: 280px;
+                    height: 180px;
+                    perspective: 1000px;
+                }
+                .flashcard-inner {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                    transition: transform 0.6s;
+                    transform-style: preserve-3d;
+                    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+                    border-radius: 14px;
+                    background: linear-gradient(135deg, #ffffff 0%, #ffeaa7 100%);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                }
+                .flashcard.flipped .flashcard-inner {
+                    transform: rotateY(180deg);
+                }
+                .flashcard-face {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    -webkit-backface-visibility: hidden;
+                    backface-visibility: hidden;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                    border-radius: 14px;
+                }
+                .flashcard-front {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: var(--dark-gray);
+                }
+                .flashcard-back {
+                    transform: rotateY(180deg);
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    color: var(--primary-red);
+                }
+                .flashcard-controls {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                .flashcard-btn {
+                    padding: 10px 16px;
+                    border-radius: 999px;
+                    border: none;
+                    cursor: pointer;
+                    font-weight: 600;
+                    min-width: 90px;
+                    min-height: 44px;
+                    transition: background 0.2s ease, transform 0.2s ease;
+                }
+                .flashcard-btn.primary {
+                    background: var(--primary-orange);
+                    color: white;
+                }
+                .flashcard-btn.secondary {
+                    background: var(--light-beige);
+                    color: var(--dark-gray);
+                }
+                .flashcard-btn:hover {
+                    transform: translateY(-2px);
+                }
+                .flashcard-progress {
+                    font-size: 0.95rem;
+                    color: #555;
+                }
+                @media (max-width: 600px) {
+                    .phrases-header,
+                    .vocab-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                    }
+                    .flashcard {
+                        width: 100%;
+                        max-width: 320px;
+                    }
+                }
+            </style>
+            <!-- PHRASES TAB -->
+            <div id="phrases" class="tab-content">
+                <div class="phrases-section">
+                    <div class="phrases-header">
+                        <h2>Phrases to Know 🔊</h2>
+                        <p style="font-size:0.9rem;color:#555;">
+                            Click the speaker to hear the phrase and repeat it.
+                        </p>
+                    </div>
+                    <div class="phrases-list">
+                        <div class="phrase-item">
+                            <div class="phrase-text-block">
+                                <span class="phrase-en">We spend a lot of time in the kitchen.</span>
+                                <span class="phrase-ru">Мы проводим много времени на кухне.</span>
+                            </div>
+                            <button class="play-btn" onclick="speak('We spend a lot of time in the kitchen.')">🔊</button>
+                        </div>
+                        <div class="phrase-item">
+                            <div class="phrase-text-block">
+                                <span class="phrase-en">We chat and eat.</span>
+                                <span class="phrase-ru">Мы разговариваем и едим.</span>
+                            </div>
+                            <button class="play-btn" onclick="speak('We chat and eat.')">🔊</button>
+                        </div>
+                        <div class="phrase-item">
+                            <div class="phrase-text-block">
+                                <span class="phrase-en">I don't live in a flat. I live in a house.</span>
+                                <span class="phrase-ru">Я не живу в квартире. Я живу в доме.</span>
+                            </div>
+                            <button class="play-btn" onclick="speak('I don\'t live in a flat. I live in a house.')">🔊</button>
+                        </div>
+                        <div class="phrase-item">
+                            <div class="phrase-text-block">
+                                <span class="phrase-en">I share my bedroom with my brother. He's very messy! </span>
+                                <span class="phrase-ru">Я делю свою спальню с братом. Он очень неаккуратный!</span>
+                            </div>
+                            <button class="play-btn" onclick="speak('I share my bedroom with my brother. He\'s very messy!')">🔊</button>
+                        </div>
+                        <div class="phrase-item">
+                            <div class="phrase-text-block">
+                                <span class="phrase-en">I've got a big family, so in the morning the bathroom is very busy! </span>
+                                <span class="phrase-ru">У меня большая семья, поэтому утром ванная очень занята!</span>
+                            </div>
+                            <button class="play-btn" onclick="speak('I\'ve got a big family, so in the morning the bathroom is very busy!')">🔊</button>
+                        </div>
+                        <div class="phrase-item">
+                            <div class="phrase-text-block">
+                                <span class="phrase-en">We all watch TV in the living room.</span>
+                                <span class="phrase-ru">Мы все смотрим телевизор в гостиной.</span>
+                            </div>
+                            <button class="play-btn" onclick="speak('We all watch TV in the living room.')">🔊</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- VOCABULARY TAB -->
+            <div id="vocabulary" class="tab-content">
+                <div class="vocab-section">
+                    <div class="vocab-header">
+                        <h2>Vocabulary Builder</h2>
+                        <div class="toggle-wrapper">
+                            <span class="toggle-label">List</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="vocabToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span class="toggle-label">Flashcards</span>
+                        </div>
+                    </div>
+                    <!-- List Mode -->
+                    <div id="vocab-list-mode" class="vocab-mode active">
+                        <div class="vocab-grid">
+                            <!-- Rooms -->
+                            <div class="vocab-card" data-category="Rooms">
+                                <div class="vocab-word">kitchen</div>
+                                <div class="vocab-translation">кухня</div>
+                                <button class="vocab-sound-btn" onclick="speak('kitchen')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Rooms">
+                                <div class="vocab-word">bedroom</div>
+                                <div class="vocab-translation">спальня</div>
+                                <button class="vocab-sound-btn" onclick="speak('bedroom')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Rooms">
+                                <div class="vocab-word">bathroom</div>
+                                <div class="vocab-translation">ванная комната</div>
+                                <button class="vocab-sound-btn" onclick="speak('bathroom')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Rooms">
+                                <div class="vocab-word">living room</div>
+                                <div class="vocab-translation">гостиная</div>
+                                <button class="vocab-sound-btn" onclick="speak('living room')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Rooms">
+                                <div class="vocab-word">flat</div>
+                                <div class="vocab-translation">квартира</div>
+                                <button class="vocab-sound-btn" onclick="speak('flat')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Rooms">
+                                <div class="vocab-word">house</div>
+                                <div class="vocab-translation">дом</div>
+                                <button class="vocab-sound-btn" onclick="speak('house')">🔊 Say it</button>
+                            </div>
+                            <!-- Furniture & Objects -->
+                            <div class="vocab-card" data-category="Furniture">
+                                <div class="vocab-word">sofa</div>
+                                <div class="vocab-translation">диван</div>
+                                <button class="vocab-sound-btn" onclick="speak('sofa')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Furniture">
+                                <div class="vocab-word">armchair</div>
+                                <div class="vocab-translation">кресло</div>
+                                <button class="vocab-sound-btn" onclick="speak('armchair')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Furniture">
+                                <div class="vocab-word">bed</div>
+                                <div class="vocab-translation">кровать</div>
+                                <button class="vocab-sound-btn" onclick="speak('bed')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Furniture">
+                                <div class="vocab-word">wardrobe</div>
+                                <div class="vocab-translation">гардероб, шкаф</div>
+                                <button class="vocab-sound-btn" onclick="speak('wardrobe')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Furniture">
+                                <div class="vocab-word">bookcase</div>
+                                <div class="vocab-translation">книжный шкаф</div>
+                                <button class="vocab-sound-btn" onclick="speak('bookcase')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Furniture">
+                                <div class="vocab-word">carpet</div>
+                                <div class="vocab-translation">ковёр</div>
+                                <button class="vocab-sound-btn" onclick="speak('carpet')">🔊 Say it</button>
+                            </div>
+                            <!-- Bathroom & Kitchen objects -->
+                            <div class="vocab-card" data-category="Bathroom">
+                                <div class="vocab-word">bath</div>
+                                <div class="vocab-translation">ванна</div>
+                                <button class="vocab-sound-btn" onclick="speak('bath')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Bathroom">
+                                <div class="vocab-word">basin</div>
+                                <div class="vocab-translation">раковина (в ванной)</div>
+                                <button class="vocab-sound-btn" onclick="speak('basin')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Bathroom">
+                                <div class="vocab-word">toilet</div>
+                                <div class="vocab-translation">туалет</div>
+                                <button class="vocab-sound-btn" onclick="speak('toilet')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Bathroom">
+                                <div class="vocab-word">washing machine</div>
+                                <div class="vocab-translation">стиральная машина</div>
+                                <button class="vocab-sound-btn" onclick="speak('washing machine')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Kitchen">
+                                <div class="vocab-word">sink</div>
+                                <div class="vocab-translation">раковина (кухонная)</div>
+                                <button class="vocab-sound-btn" onclick="speak('sink')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Kitchen">
+                                <div class="vocab-word">cupboard</div>
+                                <div class="vocab-translation">кухонный шкаф</div>
+                                <button class="vocab-sound-btn" onclick="speak('cupboard')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Kitchen">
+                                <div class="vocab-word">cooker</div>
+                                <div class="vocab-translation">плита</div>
+                                <button class="vocab-sound-btn" onclick="speak('cooker')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Kitchen">
+                                <div class="vocab-word">fridge</div>
+                                <div class="vocab-translation">холодильник</div>
+                                <button class="vocab-sound-btn" onclick="speak('fridge')">🔊 Say it</button>
+                            </div>
+                            <!-- Other -->
+                            <div class="vocab-card" data-category="Media">
+                                <div class="vocab-word">TV</div>
+                                <div class="vocab-translation">телевизор</div>
+                                <button class="vocab-sound-btn" onclick="speak('TV')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Place">
+                                <div class="vocab-word">canal boat</div>
+                                <div class="vocab-translation">канальная лодка</div>
+                                <button class="vocab-sound-btn" onclick="speak('canal boat')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Quantity">
+                                <div class="vocab-word">a lot of</div>
+                                <div class="vocab-translation">много</div>
+                                <button class="vocab-sound-btn" onclick="speak('a lot of')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Quantity">
+                                <div class="vocab-word">many</div>
+                                <div class="vocab-translation">много (исчисляемые)</div>
+                                <button class="vocab-sound-btn" onclick="speak('many')">🔊 Say it</button>
+                            </div>
+                            <div class="vocab-card" data-category="Quantity">
+                                <div class="vocab-word">much</div>
+                                <div class="vocab-translation">много (неисчисляемые)</div>
+                                <button class="vocab-sound-btn" onclick="speak('much')">🔊 Say it</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Flashcards Mode -->
+                    <div id="vocab-flashcards" class="vocab-mode">
+                        <div class="flashcards-wrapper">
+                            <div class="flashcard" id="flashcard">
+                                <div class="flashcard-inner">
+                                    <div class="flashcard-face flashcard-front" id="flashcard-front">
+                                        kitchen
+                                    </div>
+                                    <div class="flashcard-face flashcard-back" id="flashcard-back">
+                                        кухня
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flashcard-controls">
+                                <button class="flashcard-btn secondary" id="prev-card">⏮ Prev</button>
+                                <button class="flashcard-btn primary" id="flip-card">🔁 Flip</button>
+                                <button class="flashcard-btn secondary" id="next-card">⏭ Next</button>
+                                <button class="flashcard-btn secondary" id="shuffle-cards">🎲 Shuffle</button>
+                            </div>
+                            <div class="flashcard-progress" id="flashcard-progress">
+                                Card 1 of 10
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Стили для Grammar и Quiz -->
+            <style>
+                /* Grammar Styles */
+                .grammar-section {
+                    display: grid;
+                    gap: 30px;
+                }
+                .grammar-box {
+                    background: #f0f9f0; /* Light green like textbook */
+                    border: 2px solid #8bc34a;
+                    border-radius: 12px;
+                    padding: 25px;
+                    position: relative;
+                }
+                .grammar-box h3 {
+                    color: #2e7d32;
+                    margin-bottom: 15px;
+                    font-size: 1.4rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                .rule-block {
+                    margin-bottom: 20px;
+                    padding-bottom: 15px;
+                    border-bottom: 1px dashed #a5d6a7;
+                }
+                .rule-block:last-child {
+                    border-bottom: none;
+                }
+                .rule-title {
+                    font-weight: 700;
+                    color: var(--dark-gray);
+                    margin-bottom: 8px;
+                    display: block;
+                }
+                .example-sentence {
+                    background: white;
+                    padding: 10px 15px;
+                    border-radius: 6px;
+                    margin-top: 8px;
+                    cursor: pointer;
+                    border-left: 4px solid var(--primary-orange);
+                    transition: transform 0.2s;
+                    font-style: italic;
+                    color: #555;
+                }
+                .example-sentence:hover {
+                    transform: translateX(5px);
+                    background: var(--hover-yellow);
+                }
+                .grammar-badge {
+                    background: var(--primary-red);
+                    color: white;
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    font-size: 0.8rem;
+                    vertical-align: middle;
+                }
+                /* Quiz Styles */
+                .quiz-container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    text-align: center;
+                }
+                .quiz-header {
+                    margin-bottom: 30px;
+                }
+                .quiz-progress-bar {
+                    width: 100%;
+                    height: 8px;
+                    background: #e0e0e0;
+                    border-radius: 4px;
+                    margin-top: 15px;
+                    overflow: hidden;
+                }
+                .quiz-progress-fill {
+                    height: 100%;
+                    background: var(--green-success);
+                    width: 0%;
+                    transition: width 0.3s ease;
+                }
+                .question-card {
+                    background: var(--light-beige);
+                    padding: 30px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                    margin-bottom: 20px;
+                }
+                .question-text {
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 25px;
+                    color: var(--dark-gray);
+                }
+                .options-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 15px;
+                }
+                .option-btn {
+                    padding: 15px;
+                    border: 2px solid transparent;
+                    background: white;
+                    border-radius: 8px;
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    font-weight: 500;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                }
+                .option-btn:hover:not([disabled]) {
+                    border-color: var(--primary-orange);
+                    background: var(--hover-yellow);
+                }
+                .option-btn.correct {
+                    background: #d4edda;
+                    border-color: #28a745;
+                    color: #155724;
+                }
+                .option-btn.incorrect {
+                    background: #f8d7da;
+                    border-color: #dc3545;
+                    color: #721c24;
+                    opacity: 0.7;
+                }
+                .quiz-feedback {
+                    margin-top: 20px;
+                    padding: 15px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    display: none;
+                }
+                .next-btn {
+                    background: var(--primary-orange);
+                    color: white;
+                    border: none;
+                    padding: 12px 30px;
+                    font-size: 1.1rem;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    margin-top: 20px;
+                    display: none;
+                }
+                .next-btn:hover {
+                    background: #e67e22;
+                }
+                .quiz-results {
+                    display: none;
+                    text-align: center;
+                    padding: 40px;
+                }
+                .score-circle {
+                    width: 150px;
+                    height: 150px;
+                    background: var(--primary-orange);
+                    color: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 3rem;
+                    font-weight: 800;
+                    margin: 0 auto 20px;
+                    box-shadow: 0 5px 15px rgba(210, 105, 30, 0.4);
+                }
+                @media (max-width: 600px) {
+                    .options-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+            <!-- GRAMMAR TAB -->
+            <div id="grammar" class="tab-content">
+                <div class="grammar-section">
+                    <div class="reading-header" style="background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);">
+                        <h2>Grammar Focus ✏️</h2>
+                        <p>Expressing Quantity: much, many, a lot of</p>
+                    </div>
+                    <div class="grammar-box">
+                        <h3>1. Countable Nouns <span style="font-size:0.9rem; color:#666; margin-left:10px; font-weight:400;">(things you can count: boats, rooms, apples)</span></h3>
+                        <div class="rule-block">
+                            <span class="rule-title">Use <span class="grammar-badge">many</span> and <span class="grammar-badge">a lot of</span></span>
+                            <div class="example-sentence" onclick="speak('There are a lot of canal boats in Stratford.')">
+                                🔊 "There are <b>a lot of</b> canal boats in Stratford."
+                            </div>
+                            <div class="example-sentence" onclick="speak('Usually there aren\'t many boats on the canals.')">
+                                🔊 "Usually there aren't <b>many</b> boats on the canals."
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grammar-box">
+                        <h3>2. Uncountable Nouns <span style="font-size:0.9rem; color:#666; margin-left:10px; font-weight:400;">(things you can't count: space, time, water)</span></h3>
+                        <div class="rule-block">
+                            <span class="rule-title">Use <span class="grammar-badge">much</span> and <span class="grammar-badge">a lot of</span></span>
+                            <div class="example-sentence" onclick="speak('There is a lot of space in this room.')">
+                                🔊 "There's <b>a lot of</b> space in this room."
+                            </div>
+                            <div class="example-sentence" onclick="speak('There isn\'t much space for my things.')">
+                                🔊 "There isn't <b>much</b> space for my things."
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grammar-box">
+                        <h3>3. Types of Sentences</h3>
+                        <div class="rule-block">
+                            <span class="rule-title">✅ Positive Sentences</span>
+                            <p>Use <b>a lot of</b>.</p>
+                            <div class="example-sentence" onclick="speak('I have got a lot of clothes.')">
+                                🔊 "I've got <b>a lot of</b> clothes."
+                            </div>
+                        </div>
+                        <div class="rule-block">
+                            <span class="rule-title">❌ Negative Sentences</span>
+                            <p>Use <b>not many</b>, <b>not much</b>, or <b>not a lot of</b>.</p>
+                            <div class="example-sentence" onclick="speak('I haven\'t got many rooms.')">
+                                🔊 "I haven't got <b>many</b> rooms."
+                            </div>
+                        </div>
+                        <div class="rule-block">
+                            <span class="rule-title">❓ Questions</span>
+                            <p>Use <b>How many</b> or <b>How much</b>.</p>
+                            <div class="example-sentence" onclick="speak('How many bedrooms are there?')">
+                                🔊 "<b>How many</b> bedrooms are there?"
+                            </div>
+                            <div class="example-sentence" onclick="speak('How much furniture have you got?')">
+                                🔊 "<b>How much</b> furniture have you got?"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- QUIZ TAB -->
+            <div id="quiz" class="tab-content">
+                <div class="quiz-container">
+                    <!-- Start Screen -->
+                    <div id="quiz-start" style="display:block;">
+                        <div class="reading-header" style="background: linear-gradient(135deg, #673ab7 0%, #512da8 100%);">
+                            <h2>Practice Quiz 🏆</h2>
+                            <p>Test your vocabulary and grammar!</p>
+                        </div>
+                        <p style="font-size: 1.2rem; margin: 30px 0;">Are you ready to check your knowledge?</p>
+                        <button class="next-btn" style="display:inline-block;" onclick="startQuiz()">Start Quiz</button>
+                    </div>
+                    <!-- Active Quiz Area -->
+                    <div id="quiz-active" style="display:none;">
+                        <div class="quiz-header">
+                            <h3>Question <span id="q-current">1</span> of <span id="q-total">10</span></h3>
+                            <div class="quiz-progress-bar">
+                                <div class="quiz-progress-fill" id="progress-fill"></div>
+                            </div>
+                        </div>
+                        <div class="question-card">
+                            <p class="question-text" id="question-text">Loading...</p>
+                            <div class="options-grid" id="options-container">
+                                <!-- Options will be injected here -->
+                            </div>
+                            <div class="quiz-feedback" id="quiz-feedback"></div>
+                            <button class="next-btn" id="next-question-btn" onclick="nextQuestion()">Next Question ➡</button>
+                        </div>
+                    </div>
+                    <!-- Results Screen -->
+                    <div id="quiz-results" class="quiz-results">
+                        <h2>Quiz Complete! 🎉</h2>
+                        <p style="margin-bottom: 20px;">You scored:</p>
+                        <div class="score-circle">
+                            <span id="final-score">0</span>%
+                        </div>
+                        <p id="score-message" style="font-size: 1.2rem; margin-bottom: 30px;">Great job!</p>
+                        <button class="next-btn" style="display:inline-block;" onclick="resetQuiz()">Try Again 🔄</button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End content-wrapper -->
+    </div> <!-- End container -->
+    <script>
+        /* --- TAB NAVIGATION --- */
+        const tabs = document.querySelectorAll('.nav-tab');
+        const contents = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                // Add active class to current
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        /* --- TEXT TO SPEECH USING GOOGLE TTS --- */
+        // This function constructs a Google Translate TTS URL and plays it
+        function speak(text) {
+            if (!text) return;
+            // Clean up text for URL encoding
+            text = text.replace(/\[translate:/g, '').replace(/\]/g, '');
+            const encodedText = encodeURIComponent(text);
+            const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=en&client=tw-ob`;
+            const audio = new Audio(url);
+            audio.play().catch(e => console.error("Playback failed:", e));
+        }
+
+        /* --- READING CHECK LOGIC --- */
+        function checkAnswer(btn, isCorrect, feedbackText) {
+            const parent = btn.closest('.check-item');
+            const feedbackDiv = parent.querySelector('.feedback');
+            const buttons = parent.querySelectorAll('.check-btn');
+            // Disable buttons after choice
+            buttons.forEach(b => b.disabled = true);
+            // Show feedback
+            feedbackDiv.innerText = feedbackText;
+            feedbackDiv.classList.add('show');
+            if (isCorrect) {
+                btn.classList.add('correct');
+                feedbackDiv.classList.add('correct');
+            } else {
+                btn.classList.add('incorrect');
+                feedbackDiv.classList.add('incorrect');
+            }
+        }
+
+        /* --- VOCABULARY TOGGLE & FLASHCARDS --- */
+        const vocabToggle = document.getElementById('vocabToggle');
+        const listMode = document.getElementById('vocab-list-mode');
+        const flashMode = document.getElementById('vocab-flashcards');
+        vocabToggle.addEventListener('change', function() {
+            if(this.checked) {
+                listMode.classList.remove('active');
+                flashMode.classList.add('active');
+            } else {
+                flashMode.classList.remove('active');
+                listMode.classList.add('active');
+            }
+        });
+
+        // Flashcard Data
+        const vocabData = [
+            { en: "kitchen", ru: "Кухня" },
+            { en: "bedroom", ru: "Спальня" },
+            { en: "bathroom", ru: "Ванная комната" },
+            { en: "living room", ru: "Гостиная" },
+            { en: "sofa", ru: "Диван" },
+            { en: "wardrobe", ru: "Шкаф" },
+            { en: "canal boat", ru: "Канальная лодка" },
+            { en: "bookcase", ru: "Книжный шкаф" },
+            { en: "sink", ru: "Раковина (кухня)" },
+            { en: "fridge", ru: "Холодильник" }
+        ];
+        let currentCardIndex = 0;
+        const cardElement = document.getElementById('flashcard');
+        const frontEl = document.getElementById('flashcard-front');
+        const backEl = document.getElementById('flashcard-back');
+        const progressEl = document.getElementById('flashcard-progress');
+
+        function updateCard() {
+            cardElement.classList.remove('flipped');
+            // Small timeout to allow flip back before content change
+            setTimeout(() => {
+                frontEl.innerText = vocabData[currentCardIndex].en;
+                backEl.innerText = vocabData[currentCardIndex].ru;
+                progressEl.innerText = `Card ${currentCardIndex + 1} of ${vocabData.length}`;
+            }, 200);
+        }
+
+        document.getElementById('flip-card').addEventListener('click', () => {
+            cardElement.classList.toggle('flipped');
+            if (!cardElement.classList.contains('flipped')) {
+                speak(vocabData[currentCardIndex].en);
+            }
+        });
+
+        document.getElementById('next-card').addEventListener('click', () => {
+            if (currentCardIndex < vocabData.length - 1) {
+                currentCardIndex++;
+                updateCard();
+            }
+        });
+
+        document.getElementById('prev-card').addEventListener('click', () => {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateCard();
+            }
+        });
+
+        document.getElementById('shuffle-cards').addEventListener('click', () => {
+            // Fisher-Yates Shuffle
+            for (let i = vocabData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [vocabData[i], vocabData[j]] = [vocabData[j], vocabData[i]];
+            }
+            currentCardIndex = 0;
+            updateCard();
+        });
+
+        /* --- QUIZ LOGIC --- */
+        const questions = [
+            {
+                q: "Where does Melanie live?",
+                options: ["In a flat", "In a house", "On a canal boat", "In a hotel"],
+                correct: 2,
+                feedback: "Correct! She lives on a canal boat in Stratford-upon-Avon."
+            },
+            {
+                q: "Choose the correct word: There aren't _____ cafes in this town.",
+                options: ["much", "many", "a lot", "some"],
+                correct: 1,
+                feedback: "Correct! 'Cafes' is countable, so we use MANY in negative sentences."
+            },
+            {
+                q: "Melanie is an ______.",
+                options: ["actor", "artist", "architect", "accountant"],
+                correct: 1,
+                feedback: "Yes! She is an artist and paints on her boat."
+            },
+            {
+                q: "We haven't got _____ time.",
+                options: ["many", "much", "a lot", "some"],
+                correct: 1,
+                feedback: "Correct! 'Time' is uncountable, so we use MUCH."
+            },
+            {
+                q: "Where do they watch TV?",
+                options: ["In the kitchen", "In the bedroom", "In the bathroom", "In the living room"],
+                correct: 3,
+                feedback: "Right! 'We all watch TV in the living room.'"
+            },
+            {
+                q: "Which sentence is correct?",
+                options: ["I've got a lot of clothes.", "I've got much clothes.", "I've got many cloth.", "I no have clothes."],
+                correct: 0,
+                feedback: "Correct! In positive sentences, we usually use 'a lot of'."
+            },
+            {
+                q: "Does Melanie have a lot of paintings?",
+                options: ["No, none.", "Yes, hundreds!", "Only a few.", "She doesn't paint."],
+                correct: 1,
+                feedback: "Exactly! She says she has hundreds of paintings!"
+            },
+            {
+                q: "There isn't _____ space in the boat.",
+                options: ["many", "some", "much", "a lot"],
+                correct: 2,
+                feedback: "Correct! 'Space' is uncountable."
+            }
+        ];
+
+        let quizIndex = 0;
+        let score = 0;
+        let quizRunning = false;
+
+        function startQuiz() {
+            document.getElementById('quiz-start').style.display = 'none';
+            document.getElementById('quiz-active').style.display = 'block';
+            quizIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[quizIndex];
+            document.getElementById('q-current').innerText = quizIndex + 1;
+            document.getElementById('q-total').innerText = questions.length;
+            document.getElementById('question-text').innerText = q.q;
+            // Update Progress Bar
+            const progress = ((quizIndex) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+
+            const optionsHTML = q.options.map((opt, i) => 
+                `<button class="option-btn" onclick="selectOption(${i})">${opt}</button>`
+            ).join('');
+            document.getElementById('options-container').innerHTML = optionsHTML;
+
+            document.getElementById('quiz-feedback').style.display = 'none';
+            document.getElementById('next-question-btn').style.display = 'none';
+        }
+
+        function selectOption(selectedIndex) {
+            const q = questions[quizIndex];
+            const btns = document.querySelectorAll('.option-btn');
+            const feedbackEl = document.getElementById('quiz-feedback');
+
+            btns.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === q.correct) {
+                btns[selectedIndex].classList.add('correct');
+                score++;
+                feedbackEl.innerText = "✅ " + q.feedback;
+                feedbackEl.style.background = "#d4edda";
+                feedbackEl.style.color = "#155724";
+            } else {
+                btns[selectedIndex].classList.add('incorrect');
+                btns[q.correct].classList.add('correct');
+                feedbackEl.innerText = "❌ " + q.feedback;
+                feedbackEl.style.background = "#f8d7da";
+                feedbackEl.style.color = "#721c24";
+            }
+            feedbackEl.style.display = 'block';
+            document.getElementById('next-question-btn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            quizIndex++;
+            if (quizIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-active').style.display = 'none';
+            document.getElementById('quiz-results').style.display = 'block';
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('final-score').innerText = percentage;
+            let msg = "";
+            if (percentage === 100) msg = "Perfect! You are an expert! 🌟";
+            else if (percentage >= 70) msg = "Great job! Keep it up! 👍";
+            else msg = "Good effort! Review the grammar and try again. 📚";
+            document.getElementById('score-message').innerText = msg;
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-results').style.display = 'none';
+            startQuiz();
+        }
+    </script>
+</body>
+</html>

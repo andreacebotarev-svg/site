@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WordPopover Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .word { color: blue; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+        .word:hover { background: rgba(0,0,255,0.1); }
+        .popover {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            min-width: 200px;
+        }
+        .popover.visible { display: block; }
+        .debug { margin-top: 20px; padding: 10px; background: #f0f0f0; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>WordPopover Debug Test</h1>
+
+    <p>Click on these words: <span class="word" data-word="hello">hello</span>, <span class="word" data-word="world">world</span>, <span class="word" data-word="test">test</span></p>
+
+    <div class="debug" id="debug"></div>
+
+    <div class="popover" id="popover">
+        <div><strong id="word-text">Word</strong> <button onclick="hidePopover()">×</button></div>
+        <div id="pronunciation">/word/</div>
+        <div id="translation">Translation</div>
+        <div><button onclick="playAudio()">🔊</button> <button onclick="addToVocab()">Add to vocab</button></div>
+    </div>
+
+    <script>
+        let activeWord = null;
+        const popover = document.getElementById('popover');
+        const debug = document.getElementById('debug');
+
+        function log(message) {
+            debug.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+            console.log(message);
+        }
+
+        function showPopover(wordEl, rect, text) {
+            log('showPopover called with text: ' + text);
+
+            activeWord = wordEl;
+
+            // Update content
+            document.getElementById('word-text').textContent = text;
+            document.getElementById('pronunciation').textContent = '/' + text + '/';
+            document.getElementById('translation').textContent = 'Translation for "' + text + '"';
+
+            // Position
+            const popoverRect = popover.getBoundingClientRect();
+            let top = rect.top - popoverRect.height - 10;
+            let left = rect.left + (rect.width / 2) - (popoverRect.width / 2);
+
+            if (top < 10) top = rect.bottom + 10;
+            if (left < 10) left = 10;
+
+            popover.style.top = top + 'px';
+            popover.style.left = left + 'px';
+
+            // Show
+            popover.classList.add('visible');
+
+            log('Popover positioned and shown at: ' + top + 'px, ' + left + 'px');
+        }
+
+        function hidePopover() {
+            popover.classList.remove('visible');
+            activeWord = null;
+            log('Popover hidden');
+        }
+
+        function playAudio() {
+            const word = document.getElementById('word-text').textContent;
+            log('Playing audio for: ' + word);
+
+            // Simple speech synthesis
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                window.speechSynthesis.speak(utterance);
+                log('Speech synthesis started');
+            } else {
+                log('Speech synthesis not supported');
+            }
+        }
+
+        function addToVocab() {
+            const word = document.getElementById('word-text').textContent;
+            log('Adding to vocabulary: ' + word);
+            alert('Added "' + word + '" to vocabulary!');
+        }
+
+        // Add click handlers
+        document.querySelectorAll('.word').forEach(wordEl => {
+            wordEl.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const word = this.dataset.word;
+                const rect = this.getBoundingClientRect();
+
+                log('Word clicked: ' + word + ', rect: ' + JSON.stringify(rect));
+                showPopover(this, rect, word);
+            });
+        });
+
+        // Hide on click outside
+        document.addEventListener('click', function(e) {
+            if (!popover.contains(e.target) && activeWord && !activeWord.contains(e.target)) {
+                hidePopover();
+            }
+        });
+
+        log('Debug test initialized');
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "books": [
+    {
+      "id": "dragon-epub",
+      "title": "Dragon",
+      "author": "Tutor",
+      "description": "An epic tale of dragons, magic, and adventure in a fantasy world.",
+      "file": "Dragon.epub",
+      "format": "epub",
+      "uploadedAt": 1735324800000,
+      "size": 989438,
+      "wordCount": 25000,
+      "level": "intermediate",
+      "tags": ["fantasy", "adventure", "dragons", "magic"],
+      "isServerBook": true,
+      "source": "server"
+    }
+  ]
+}

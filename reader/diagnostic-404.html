@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Loading Diagnostic</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+    </style>
+</head>
+<body>
+    <h1>Resource Loading Diagnostic</h1>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        const tests = [
+            { name: 'Application.js', url: './assets/js/core/Application.js', type: 'module' },
+            { name: 'WordPopover.js', url: './assets/js/ui/components/WordPopover.js', type: 'module' },
+            { name: 'ContextExtractor.js', url: './assets/js/utils/context-extractor.js', type: 'module' },
+            { name: 'ContextTranslationService.js', url: './assets/js/services/context-translation-service.js', type: 'module' },
+            { name: 'Base CSS', url: './assets/css/base.css', type: 'css' },
+            { name: 'WordPopover CSS', url: './assets/css/components/word-popover.css', type: 'css' },
+            { name: 'Reader CSS', url: './assets/css/views/reader.css', type: 'css' },
+            { name: 'Main index.html', url: './index.html', type: 'html' }
+        ];
+
+        async function testResource(test) {
+            const div = document.createElement('div');
+            div.className = 'test-result';
+
+            try {
+                let response;
+                if (test.type === 'module') {
+                    // Test ES6 module import
+                    const module = await import(test.url);
+                    response = { ok: true, status: 200, message: 'Module loaded successfully' };
+                } else {
+                    // Test regular fetch
+                    response = await fetch(test.url, {
+                        method: 'HEAD',
+                        mode: 'cors'
+                    });
+                }
+
+                if (response.ok) {
+                    div.className += ' success';
+                    div.innerHTML = `✅ ${test.name}: OK (${response.status})`;
+                } else {
+                    div.className += ' error';
+                    div.innerHTML = `❌ ${test.name}: HTTP ${response.status}`;
+                }
+            } catch (error) {
+                div.className += ' error';
+                div.innerHTML = `❌ ${test.name}: ${error.message}`;
+
+                // Additional debugging for modules
+                if (test.type === 'module') {
+                    div.innerHTML += '<br><small>Check if file exists and server supports ES6 modules</small>';
+                }
+            }
+
+            results.appendChild(div);
+        }
+
+        async function runAllTests() {
+            for (const test of tests) {
+                await testResource(test);
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            // Additional server info
+            const serverDiv = document.createElement('div');
+            serverDiv.className = 'test-result warning';
+            serverDiv.innerHTML = `
+                <strong>Server Info:</strong><br>
+                - URL: ${window.location.href}<br>
+                - Protocol: ${window.location.protocol}<br>
+                - Host: ${window.location.host}<br>
+                - Pathname: ${window.location.pathname}<br>
+                <br>
+                <em>If you see 404 errors, make sure the server is running and serving files from the correct directory.</em>
+            `;
+            results.appendChild(serverDiv);
+        }
+
+        // Run tests when page loads
+        window.addEventListener('load', runAllTests);
+
+        // Also run on button click
+        document.addEventListener('DOMContentLoaded', () => {
+            const button = document.createElement('button');
+            button.textContent = 'Run Tests Again';
+            button.onclick = runAllTests;
+            document.body.appendChild(button);
+        });
+    </script>
+</body>
+</html>

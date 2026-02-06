@@ -1,0 +1,133 @@
+{
+  "id": 2,
+  "title": "Уровень 2: Гласные O, I",
+  "rule": "Буквы O и I в закрытом слоге: [ɒ], [ɪ]",
+  "description": "Закрытые слоги с O и I. Слова с буквами R, F, L типа dog, big, red.",
+  "emoji": "🌈",
+  "color": "from-purple-400 to-pink-400",
+  "estimatedTime": 12,
+  "prerequisites": [1],
+  "phonemesSet": ["ɒ", "g", "ɪ", "r", "f", "l", "s", "h"],
+  "words": [
+    {
+      "word": "dog",
+      "phonemes": ["d", "ɒ", "g"],
+      "translation": "собака",
+      "transcription": "[dɒg]",
+      "emoji": "🐶",
+      "difficulty": 1
+    },
+    {
+      "word": "log",
+      "phonemes": ["l", "ɒ", "g"],
+      "translation": "бревно",
+      "transcription": "[lɒg]",
+      "emoji": "🪵",
+      "difficulty": 2
+    },
+    {
+      "word": "hot",
+      "phonemes": ["h", "ɒ", "t"],
+      "translation": "горячий",
+      "transcription": "[hɒt]",
+      "emoji": "🔥",
+      "difficulty": 1
+    },
+    {
+      "word": "pot",
+      "phonemes": ["p", "ɒ", "t"],
+      "translation": "горшок",
+      "transcription": "[pɒt]",
+      "emoji": "🫙",
+      "difficulty": 1
+    },
+    {
+      "word": "big",
+      "phonemes": ["b", "ɪ", "g"],
+      "translation": "большой",
+      "transcription": "[bɪg]",
+      "emoji": "📈",
+      "difficulty": 1
+    },
+    {
+      "word": "pig",
+      "phonemes": ["p", "ɪ", "g"],
+      "translation": "свинья",
+      "transcription": "[pɪg]",
+      "emoji": "🐷",
+      "difficulty": 1
+    },
+    {
+      "word": "sit",
+      "phonemes": ["s", "ɪ", "t"],
+      "translation": "сидеть",
+      "transcription": "[sɪt]",
+      "emoji": "🧘",
+      "difficulty": 1
+    },
+    {
+      "word": "bit",
+      "phonemes": ["b", "ɪ", "t"],
+      "translation": "кусочек",
+      "transcription": "[bɪt]",
+      "emoji": "🪨",
+      "difficulty": 2
+    },
+    {
+      "word": "red",
+      "phonemes": ["r", "e", "d"],
+      "translation": "красный",
+      "transcription": "[red]",
+      "emoji": "🔴",
+      "difficulty": 1
+    },
+    {
+      "word": "run",
+      "phonemes": ["r", "ʌ", "n"],
+      "translation": "бежать",
+      "transcription": "[rʌn]",
+      "emoji": "🏃",
+      "difficulty": 1
+    },
+    {
+      "word": "fan",
+      "phonemes": ["f", "æ", "n"],
+      "translation": "вентилятор",
+      "transcription": "[fæn]",
+      "emoji": "🌬️",
+      "difficulty": 1
+    },
+    {
+      "word": "fun",
+      "phonemes": ["f", "ʌ", "n"],
+      "translation": "веселье",
+      "transcription": "[fʌn]",
+      "emoji": "🎉",
+      "difficulty": 2
+    },
+    {
+      "word": "lip",
+      "phonemes": ["l", "ɪ", "p"],
+      "translation": "губа",
+      "transcription": "[lɪp]",
+      "emoji": "👄",
+      "difficulty": 2
+    },
+    {
+      "word": "leg",
+      "phonemes": ["l", "e", "g"],
+      "translation": "нога",
+      "transcription": "[leg]",
+      "emoji": "🦵",
+      "difficulty": 1
+    },
+    {
+      "word": "sun",
+      "phonemes": ["s", "ʌ", "n"],
+      "translation": "солнце",
+      "transcription": "[sʌn]",
+      "emoji": "☀️",
+      "difficulty": 1
+    }
+  ]
+}

@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta name="referrer" content="no-referrer">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Numbers World</title>
+    <style>
+        :root {
+            --primary-yellow: #FFD700;   /* Желтый с кнопок телефона */
+            --primary-pink: #FF69B4;     /* Розовый из Alphabet */
+            --primary-blue: #4DA6FF;     /* Голубой из Colors */
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --font-main: 'Comic Sans MS', 'Chalkboard SE', sans-serif; /* Игровой шрифт */
+            --shadow-card: 0 10px 20px rgba(0,0,0,0.1);
+            --shadow-btn: 0 5px 0 #d4b106; /* Объем кнопок */
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #444;
+        }
+
+        h1, h2 { text-align: center; color: #333; text-shadow: 2px 2px 0px #fff; }
+
+        /* --- NAVIGATION --- */
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover { transform: translateY(-3px); }
+        .nav-btn.active { transform: scale(1.05); box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+        
+        .btn-yellow { background: #FBC02D; } /* Phone */
+        .btn-pink { background: #FF4081; }   /* Alphabet */
+        .btn-blue { background: #2196F3; }   /* Colors */
+        .btn-green { background: #4CAF50; }  /* Big Numbers */
+
+        .game-section {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-card);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .game-section.active { display: block; }
+
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        /* --- GAME 1: TELEPHONE KEYPAD --- */
+        .phone-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .phone-screen {
+            background: #333;
+            color: #0f0; /* Retro terminal green */
+            font-family: 'Courier New', monospace;
+            width: 300px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            letter-spacing: 5px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            background: #eee;
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid #ddd;
+        }
+
+        .key-btn {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-yellow);
+            border: none;
+            border-radius: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #c49000; /* 3D effect */
+            transition: all 0.1s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .key-btn span {
+            font-size: 0.8rem;
+            font-weight: normal;
+            margin-top: 5px;
+            color: #777;
+        }
+
+        .key-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #c49000;
+        }
+
+        .key-btn:hover { background: #ffee58; }
+
+        /* Game Instructions Box */
+        .instruction-box {
+            background: #E3F2FD;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #2196F3;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .play-btn {
+            background: #FF5722;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(255, 87, 34, 0.4);
+        }
+        .play-btn:hover { background: #F4511E; }
+
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="nav-menu">
+    <button class="nav-btn btn-yellow active" onclick="showGame('phone')">📞 0-9 Keypad</button>
+    <button class="nav-btn btn-green" onclick="showGame('big-numbers')">🔢 1-20 Match</button>
+    <button class="nav-btn btn-blue" onclick="showGame('colors')">🎨 Colors</button>
+    <button class="nav-btn btn-pink" onclick="showGame('alphabet')">🅰️ Alphabet</button>
+</div>
+
+<!-- GAME 1: TELEPHONE -->
+<div id="phone" class="game-section active">
+    <h2>Magic Telephone 📞</h2>
+    
+    <div class="instruction-box">
+        <strong>How to play:</strong>
+        <br>1. Click any number to hear it.
+        <br>2. Press "Start Challenge" to play the dialing game!
+    </div>
+
+    <div class="phone-container">
+        <div class="phone-screen" id="display">_ _ _</div>
+        
+        <div class="keypad-grid">
+            <!-- Row 1 -->
+            <button class="key-btn" onclick="pressKey('1', 'one')">1<span>one</span></button>
+            <button class="key-btn" onclick="pressKey('2', 'two')">2<span>two</span></button>
+            <button class="key-btn" onclick="pressKey('3', 'three')">3<span>three</span></button>
+            
+            <!-- Row 2 -->
+            <button class="key-btn" onclick="pressKey('4', 'four')">4<span>four</span></button>
+            <button class="key-btn" onclick="pressKey('5', 'five')">5<span>five</span></button>
+            <button class="key-btn" onclick="pressKey('6', 'six')">6<span>six</span></button>
+            
+            <!-- Row 3 -->
+            <button class="key-btn" onclick="pressKey('7', 'seven')">7<span>seven</span></button>
+            <button class="key-btn" onclick="pressKey('8', 'eight')">8<span>eight</span></button>
+            <button class="key-btn" onclick="pressKey('9', 'nine')">9<span>nine</span></button>
+            
+            <!-- Row 4 -->
+            <button class="key-btn" onclick="pressKey('*', 'star')">*<span>star</span></button>
+            <button class="key-btn" onclick="pressKey('0', 'zero')">0<span>zero</span></button>
+            <button class="key-btn" onclick="pressKey('#', 'hash')">#<span>hash</span></button>
+        </div>
+
+        <button class="play-btn" onclick="startPhoneGame()">🎮 Start Challenge</button>
+        <div id="phone-feedback" style="font-weight:bold; font-size:1.2rem; min-height:30px;"></div>
+    </div>
+</div>
+<!-- GAME 2: BIG NUMBERS MATCH (1-20) -->
+<div id="big-numbers" class="game-section">
+    <h2>Numbers Connect 🔢</h2>
+
+    <div class="instruction-box">
+        <strong>How to play:</strong>
+        <br>1. Read the numbers on the left and the words on the right.
+        <br>2. Drag each number card onto the correct word card.
+        <br>3. Listen and repeat every time you make a correct match.
+    </div>
+
+    <div class="big-grid">
+        <!-- LEFT: NUMERAL CARDS -->
+        <div class="big-column">
+            <h3>Numbers</h3>
+            <div class="big-card num-card" draggable="true" data-match="1">1</div>
+            <div class="big-card num-card" draggable="true" data-match="2">2</div>
+            <div class="big-card num-card" draggable="true" data-match="3">3</div>
+            <div class="big-card num-card" draggable="true" data-match="4">4</div>
+            <div class="big-card num-card" draggable="true" data-match="5">5</div>
+            <div class="big-card num-card" draggable="true" data-match="6">6</div>
+            <div class="big-card num-card" draggable="true" data-match="7">7</div>
+            <div class="big-card num-card" draggable="true" data-match="8">8</div>
+            <div class="big-card num-card" draggable="true" data-match="9">9</div>
+            <div class="big-card num-card" draggable="true" data-match="10">10</div>
+            <div class="big-card num-card" draggable="true" data-match="11">11</div>
+            <div class="big-card num-card" draggable="true" data-match="12">12</div>
+            <div class="big-card num-card" draggable="true" data-match="13">13</div>
+            <div class="big-card num-card" draggable="true" data-match="14">14</div>
+            <div class="big-card num-card" draggable="true" data-match="15">15</div>
+            <div class="big-card num-card" draggable="true" data-match="16">16</div>
+            <div class="big-card num-card" draggable="true" data-match="17">17</div>
+            <div class="big-card num-card" draggable="true" data-match="18">18</div>
+            <div class="big-card num-card" draggable="true" data-match="19">19</div>
+            <div class="big-card num-card" draggable="true" data-match="20">20</div>
+        </div>
+
+        <!-- RIGHT: WORD CARDS -->
+        <div class="big-column">
+            <h3>Words</h3>
+            <div class="big-card word-card" data-match="1">one</div>
+            <div class="big-card word-card" data-match="2">two</div>
+            <div class="big-card word-card" data-match="3">three</div>
+            <div class="big-card word-card" data-match="4">four</div>
+            <div class="big-card word-card" data-match="5">five</div>
+            <div class="big-card word-card" data-match="6">six</div>
+            <div class="big-card word-card" data-match="7">seven</div>
+            <div class="big-card word-card" data-match="8">eight</div>
+            <div class="big-card word-card" data-match="9">nine</div>
+            <div class="big-card word-card" data-match="10">ten</div>
+            <div class="big-card word-card" data-match="11">eleven</div>
+            <div class="big-card word-card" data-match="12">twelve</div>
+            <div class="big-card word-card" data-match="13">thirteen</div>
+            <div class="big-card word-card" data-match="14">fourteen</div>
+            <div class="big-card word-card" data-match="15">fifteen</div>
+            <div class="big-card word-card" data-match="16">sixteen</div>
+            <div class="big-card word-card" data-match="17">seventeen</div>
+            <div class="big-card word-card" data-match="18">eighteen</div>
+            <div class="big-card word-card" data-match="19">nineteen</div>
+            <div class="big-card word-card" data-match="20">twenty</div>
+        </div>
+    </div>
+
+    <div id="big-feedback" style="margin-top:15px; font-weight:bold; min-height:24px;"></div>
+</div>
+
+<!-- GAME 3: COLOR SPLASH (COLOURS) -->
+<div id="colors" class="game-section">
+    <h2>Color Splash 🎨</h2>
+
+    <div class="instruction-box">
+        <strong>How to play:</strong>
+        <br>1. Choose a colour from the palette.
+        <br>2. Click a number tile to paint it.
+        <br>3. Listen to the colour and repeat after it.
+    </div>
+
+    <div class="color-game-wrapper">
+        <!-- PALETTE -->
+        <div class="palette">
+            <button class="color-dot" data-color="blue" style="background:#2196F3;"></button>
+            <button class="color-dot" data-color="red" style="background:#F44336;"></button>
+            <button class="color-dot" data-color="yellow" style="background:#FFEB3B;"></button>
+            <button class="color-dot" data-color="green" style="background:#4CAF50;"></button>
+            <button class="color-dot" data-color="orange" style="background:#FF9800;"></button>
+            <button class="color-dot" data-color="pink" style="background:#E91E63;"></button>
+            <button class="color-dot" data-color="purple" style="background:#9C27B0;"></button>
+            <button class="color-dot" data-color="brown" style="background:#795548;"></button>
+            <button class="color-dot" data-color="black" style="background:#000000;"></button>
+            <button class="color-dot" data-color="white" style="background:#FFFFFF; border:2px solid #ccc;"></button>
+        </div>
+
+        <!-- PAINTABLE NUMBER TILES -->
+        <div class="paint-area">
+            <div class="paint-tile" data-num="1">1</div>
+            <div class="paint-tile" data-num="2">2</div>
+            <div class="paint-tile" data-num="3">3</div>
+            <div class="paint-tile" data-num="4">4</div>
+            <div class="paint-tile" data-num="5">5</div>
+            <div class="paint-tile" data-num="6">6</div>
+            <div class="paint-tile" data-num="7">7</div>
+            <div class="paint-tile" data-num="8">8</div>
+            <div class="paint-tile" data-num="9">9</div>
+        </div>
+    </div>
+
+    <div id="color-feedback" style="margin-top:15px; font-weight:bold; min-height:24px;"></div>
+</div>
+
+<!-- EXTRA STYLES FOR PART 2 -->
+<style>
+    /* BIG NUMBERS MATCH */
+    .big-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        margin-top: 10px;
+    }
+    .big-column h3 {
+        text-align: center;
+        margin-bottom: 10px;
+        color: #555;
+    }
+    .big-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 10px 15px;
+        margin-bottom: 8px;
+        text-align: center;
+        font-size: 1.2rem;
+        cursor: pointer;
+        border: 2px dashed #ccc;
+        transition: 0.2s;
+    }
+    .num-card { background: #FFFDE7; }
+    .word-card { background: #E3F2FD; }
+    .big-card.drag-over { border-color: #FF9800; background: #FFF3E0; }
+    .big-card.matched { border-color: #4CAF50; background: #E8F5E9; cursor: default; }
+
+    /* COLOR SPLASH */
+    .color-game-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 20px;
+        align-items: center;
+    }
+    .palette {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+    .color-dot {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: transform 0.1s;
+    }
+    .color-dot:active { transform: scale(0.9); }
+    .color-dot.selected { outline: 3px solid #000; }
+
+    .paint-area {
+        display: grid;
+        grid-template-columns: repeat(3, 70px);
+        gap: 15px;
+        justify-content: center;
+    }
+    .paint-tile {
+        width: 70px;
+        height: 70px;
+        background: #f0f0f0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+        font-weight: bold;
+        cursor: pointer;
+        border: 2px solid #ddd;
+        transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .paint-tile:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    @media (max-width: 700px) {
+        .color-game-wrapper {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<!-- GAME 4: ALPHABET CLOUD -->
+<div id="alphabet" class="game-section">
+    <h2>Alphabet Cloud 🅰️</h2>
+
+    <div class="instruction-box">
+        <strong>How to play:</strong>
+        <br>1. Click a letter to hear it.
+        <br>2. Try to repeat the sound.
+        <br>3. In Challenge mode you will hear a letter – click the correct one!
+    </div>
+
+    <div class="alphabet-wrapper">
+        <!-- Speech bubble with letters, как на картинке -->
+        <div class="alphabet-cloud">
+            <!-- Row 1 -->
+            <button class="letter-btn" data-letter="A">Aa</button>
+            <button class="letter-btn" data-letter="B">Bb</button>
+            <button class="letter-btn" data-letter="C">Cc</button>
+            <button class="letter-btn" data-letter="D">Dd</button>
+            <button class="letter-btn" data-letter="E">Ee</button>
+            <button class="letter-btn" data-letter="F">Ff</button>
+
+            <!-- Row 2 -->
+            <button class="letter-btn" data-letter="G">Gg</button>
+            <button class="letter-btn" data-letter="H">Hh</button>
+            <button class="letter-btn" data-letter="I">Ii</button>
+            <button class="letter-btn" data-letter="J">Jj</button>
+            <button class="letter-btn" data-letter="K">Kk</button>
+            <button class="letter-btn" data-letter="L">Ll</button>
+
+            <!-- Row 3 -->
+            <button class="letter-btn" data-letter="M">Mm</button>
+            <button class="letter-btn" data-letter="N">Nn</button>
+            <button class="letter-btn" data-letter="O">Oo</button>
+            <button class="letter-btn" data-letter="P">Pp</button>
+            <button class="letter-btn" data-letter="Q">Qq</button>
+            <button class="letter-btn" data-letter="R">Rr</button>
+
+            <!-- Row 4 -->
+            <button class="letter-btn" data-letter="S">Ss</button>
+            <button class="letter-btn" data-letter="T">Tt</button>
+            <button class="letter-btn" data-letter="U">Uu</button>
+            <button class="letter-btn" data-letter="V">Vv</button>
+            <button class="letter-btn" data-letter="W">Ww</button>
+
+            <!-- Row 5 -->
+            <button class="letter-btn" data-letter="X">Xx</button>
+            <button class="letter-btn" data-letter="Y">Yy</button>
+            <button class="letter-btn" data-letter="Z">Zz</button>
+        </div>
+
+        <!-- Challenge panel -->
+        <div class="alphabet-side">
+            <div class="challenge-display" id="alpha-target">?</div>
+            <button class="play-btn" onclick="startAlphabetChallenge()">🎮 Start Letter Challenge</button>
+            <div id="alpha-feedback" style="margin-top:15px; font-weight:bold; min-height:24px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- EXTRA STYLES FOR ALPHABET CLOUD -->
+<style>
+    .alphabet-wrapper {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+        align-items: center;
+    }
+    .alphabet-cloud {
+        background: #FFF3E0;
+        border-radius: 40px;
+        padding: 25px;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    .alphabet-cloud::before {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        left: 40px;
+        width: 40px;
+        height: 40px;
+        background: #FFF3E0;
+        border-radius: 50%;
+        box-shadow: -10px 10px 0 rgba(0,0,0,0.05);
+    }
+    .letter-btn {
+        border: none;
+        border-radius: 12px;
+        padding: 8px 5px;
+        background: #FFFFFF;
+        font-size: 1.1rem;
+        cursor: pointer;
+        box-shadow: 0 3px 0 #FFB74D;
+        transition: transform 0.1s, box-shadow 0.1s, background 0.2s;
+    }
+    .letter-btn:hover {
+        background: #FFE0B2;
+        transform: translateY(-2px);
+    }
+    .letter-btn:active {
+        transform: translateY(3px);
+        box-shadow: 0 0 0 #FFB74D;
+    }
+
+    .alphabet-side {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    .challenge-display {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, #FFF, #FF80AB);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        font-weight: bold;
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 800px) {
+        .alphabet-wrapper {
+            grid-template-columns: 1fr;
+        }
+        .alphabet-cloud {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+</style>
+<script>
+/* =================================
+   CORE UTILITIES
+================================= */
+// Множество API для озвучки
+const TTS_SERVICES = [
+    // Google Translate API (резерв)
+    (text) => `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=tw-ob`,
+    // Google Text-to-Speech через API
+    (text) => `https://translate.googleapis.com/translate_tts?ie=UTF-8&total=1&idx=0&client=gtx&tl=en&q=${encodeURIComponent(text)}`,
+    // ResponsiveVoice API (через внешний сервис)
+    (text) => {
+        if (typeof responsiveVoice !== 'undefined') {
+            responsiveVoice.speak(text, 'UK English Male');
+            return null;
+        }
+        return null;
+    },
+    // Web Speech API (локальный)
+    (text) => {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9; // Помедленнее для понятности
+            utterance.pitch = 1;
+            speechSynthesis.speak(utterance);
+            return null;
+        }
+        return null;
+    }
+];
+
+let ttsIndex = 0; // Индекс текущего API
+
+function speak(text) {
+    // Попробовать каждый доступный API по очереди
+    for (let i = 0; i < TTS_SERVICES.length; i++) {
+        try {
+            const url = TTS_SERVICES[(ttsIndex + i) % TTS_SERVICES.length](text);
+            if (url) {
+                const audio = new Audio(url);
+                audio.play().catch(e => console.log("Audio play error", e));
+                ttsIndex = (ttsIndex + i) % TTS_SERVICES.length; // Запомнить рабочий API
+                break;
+            }
+        } catch (e) {
+            console.log("TTS API failed:", e);
+            continue;
+        }
+    }
+}
+
+// Tab Switching
+function showGame(gameId) {
+    // 1. Hide all games
+    document.querySelectorAll('.game-section').forEach(el => el.classList.remove('active'));
+    // 2. Deactivate all buttons
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    
+    // 3. Show selected
+    document.getElementById(gameId).classList.add('active');
+    
+    // 4. Activate button logic
+    const targetBtn = [...document.querySelectorAll('.nav-btn')].find(btn => 
+        btn.getAttribute('onclick').includes(gameId)
+    );
+    if(targetBtn) targetBtn.classList.add('active');
+}
+
+/* =================================
+   GAME 1: TELEPHONE LOGIC
+================================= */
+let currentNumber = "";
+let targetPhone = "";
+let phoneGameActive = false;
+
+function pressKey(key, word) {
+    speak(word || key); // Speak number immediately
+    
+    // Visual feedback on screen
+    const display = document.getElementById('display');
+    if (currentNumber.length < 10) {
+        currentNumber += key;
+        display.innerText = currentNumber;
+    }
+
+    // Check Logic if game is active
+    if (phoneGameActive) {
+        if (currentNumber === targetPhone) {
+            document.getElementById('phone-feedback').innerHTML = "<span style='color:green'>Calling... Hello! 🎉</span>";
+            speak("Correct! Calling now.");
+            phoneGameActive = false;
+            display.style.color = "#0f0"; // success green
+        } else if (currentNumber.length >= targetPhone.length) {
+             document.getElementById('phone-feedback').innerHTML = "<span style='color:red'>Wrong number! Try again.</span>";
+             speak("Wrong number.");
+             display.style.color = "red";
+             setTimeout(() => {
+                 currentNumber = "";
+                 display.innerText = "_ _ _";
+                 display.style.color = "#0f0";
+             }, 1500);
+        }
+    }
+}
+
+function startPhoneGame() {
+    // Generate random 3-digit number for kids
+    const n1 = Math.floor(Math.random() * 10);
+    const n2 = Math.floor(Math.random() * 10);
+    const n3 = Math.floor(Math.random() * 10);
+    targetPhone = `${n1}${n2}${n3}`;
+    
+    currentNumber = "";
+    phoneGameActive = true;
+    
+    document.getElementById('display').innerText = "_ _ _";
+    document.getElementById('phone-feedback').innerText = `Dial this number: ${targetPhone}`;
+    
+    // Speak it slowly
+    setTimeout(() => speak(`Dial ${n1}`), 500);
+    setTimeout(() => speak(`${n2}`), 1500);
+    setTimeout(() => speak(`${n3}`), 2500);
+}
+
+/* =================================
+   GAME 2: BIG NUMBERS MATCH (Drag & Drop)
+================================= */
+// Перемешать массив
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// Перемешиваем карточки при загрузке
+const numCards = Array.from(document.querySelectorAll('.num-card'));
+const wordCards = Array.from(document.querySelectorAll('.word-card'));
+
+// Перемешиваем карточки чисел
+const shuffledNumCards = shuffleArray([...numCards]);
+const container = document.querySelector('.big-column:first-child');
+container.innerHTML = '<h3>Numbers</h3>';
+shuffledNumCards.forEach(card => container.appendChild(card));
+
+// Перемешиваем карточки слов
+const shuffledWordCards = shuffleArray([...wordCards]);
+const container2 = document.querySelector('.big-column:last-child');
+container2.innerHTML = '<h3>Words</h3>';
+shuffledWordCards.forEach(card => container2.appendChild(card));
+
+// Получаем перемешанные карточки снова
+const allNumCards = document.querySelectorAll('.num-card');
+const allWordCards = document.querySelectorAll('.word-card');
+const bigFeedback = document.getElementById('big-feedback');
+
+// Setup Drag Events
+allNumCards.forEach(card => {
+    card.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', card.getAttribute('data-match'));
+        card.style.opacity = '0.5';
+    });
+    
+    card.addEventListener('dragend', () => {
+        card.style.opacity = '1';
+    });
+});
+
+// Setup Drop Events
+allWordCards.forEach(card => {
+    card.addEventListener('dragover', (e) => {
+        e.preventDefault(); // Allow drop
+        if (!card.classList.contains('matched')) {
+            card.classList.add('drag-over');
+        }
+    });
+
+    card.addEventListener('dragleave', () => {
+        card.classList.remove('drag-over');
+    });
+
+    card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        card.classList.remove('drag-over');
+        
+        const droppedNum = e.dataTransfer.getData('text/plain');
+        const targetNum = card.getAttribute('data-match');
+
+        if (droppedNum === targetNum) {
+            // CORRECT MATCH
+            card.classList.add('matched');
+            card.innerHTML = `<span style="font-weight:bold; color:#2E7D32;">${droppedNum} = ${card.innerText} ✅</span>`;
+            
+            // Hide original number card
+            const sourceCard = document.querySelector(`.num-card[data-match="${droppedNum}"]`);
+            if(sourceCard) sourceCard.style.visibility = 'hidden';
+
+            speak(`Correct! ${card.innerText}`);
+            bigFeedback.innerHTML = "<span style='color:green'>Good job!</span>";
+        } else {
+            // WRONG MATCH
+            speak("Try again");
+            bigFeedback.innerHTML = "<span style='color:red'>Oops! Not a match.</span>";
+        }
+    });
+    
+    // Simple click to speak
+    card.addEventListener('click', () => {
+        if(!card.classList.contains('matched')) speak(card.innerText);
+    });
+});
+</script>
+<script>
+// NOTE: THIS IS A CONTINUATION of the script from Part 4.
+// Append this code to the end of the previous script block.
+
+/* =================================
+   GAME 3: COLOR SPLASH LOGIC
+================================= */
+let selectedColor = "";
+
+// Event listener for palette buttons
+document.querySelectorAll('.color-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+        // Remove 'selected' from all dots
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+        // Add 'selected' to the clicked dot
+        dot.classList.add('selected');
+        
+        selectedColor = dot.getAttribute('data-color');
+        document.getElementById('color-feedback').innerHTML = `You chose <strong>${selectedColor}</strong>! Now paint a number.`;
+        speak(selectedColor);
+    });
+});
+
+// Event listener for paintable tiles
+document.querySelectorAll('.paint-tile').forEach(tile => {
+    tile.addEventListener('click', () => {
+        if (!selectedColor) {
+            document.getElementById('color-feedback').innerHTML = "<span style='color:red'>First, choose a color from the palette!</span>";
+            return;
+        }
+
+        const colorName = selectedColor;
+        const colorValue = document.querySelector(`.color-dot[data-color="${colorName}"]`).style.backgroundColor;
+
+        // Apply color
+        tile.style.backgroundColor = colorValue;
+        // Adjust text color for readability
+        tile.style.color = (colorName === 'black' || colorName === 'blue' || colorName === 'purple') ? 'white' : 'black';
+        
+        const num = tile.innerText;
+        document.getElementById('color-feedback').innerHTML = `You painted number ${num} <strong>${colorName}</strong>!`;
+        speak(`${num} is now ${colorName}.`);
+    });
+});
+
+/* =================================
+   GAME 4: ALPHABET CHALLENGE LOGIC
+================================= */
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+let targetLetter = "";
+let alphabetGameActive = false;
+
+// Basic click-to-speak
+document.querySelectorAll('.letter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const letter = btn.getAttribute('data-letter');
+
+        if (alphabetGameActive) {
+            // Check if correct
+            if (letter === targetLetter) {
+                document.getElementById('alpha-feedback').innerHTML = "<span style='color:green'>Correct! Well done! 🎉</span>";
+                speak("Correct!");
+                // Visual success on button
+                btn.style.background = "#D4EDDA";
+                alphabetGameActive = false;
+            } else {
+                document.getElementById('alpha-feedback').innerHTML = "<span style='color:red'>Oops! That's not the right letter.</span>";
+                speak("Try again.");
+                // Visual error
+                btn.style.background = "#F8D7DA";
+                setTimeout(() => btn.style.background = "white", 1000);
+            }
+        } else {
+            // Just speak the letter
+            speak(letter);
+        }
+    });
+});
+
+function startAlphabetChallenge() {
+    // Reset any previous styles
+    document.querySelectorAll('.letter-btn').forEach(btn => btn.style.background = "white");
+    
+    // Pick a random letter
+    targetLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+    
+    alphabetGameActive = true;
+    
+    document.getElementById('alpha-target').innerText = '?';
+    document.getElementById('alpha-feedback').innerText = `Listen and click the correct letter...`;
+
+    // Announce the target letter
+    setTimeout(() => {
+        speak(`Find letter ${targetLetter}`);
+    }, 500);
+}
+</script>
+
+</body>
+</html>

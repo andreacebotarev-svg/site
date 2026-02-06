@@ -1,0 +1,86 @@
+/* ============================================================
+   LESSON RESPONSIVE STYLES
+   Mobile, tablet and desktop breakpoints
+   ============================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  body {
+    padding: var(--space-md);
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+    padding: var(--space-lg);
+  }
+
+  .sidebar {
+    order: -1;
+    max-height: 260px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  body {
+    padding: var(--space-sm);
+  }
+
+  .lesson-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lesson-actions {
+    align-items: stretch;
+    min-width: 0;
+  }
+
+  .lesson-progress {
+    margin-top: 4px;
+  }
+
+  .vocab-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .app-shell {
+    padding: var(--space-md);
+    border-radius: 18px;
+  }
+
+  .card {
+    padding: var(--space-md);
+  }
+
+  .lesson-title {
+    font-size: 1.15rem;
+  }
+
+  .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sidebar {
+    padding: var(--space-md);
+  }
+
+  .notification {
+    left: 10px;
+    right: 10px;
+    transform: translateY(140%);
+  }
+
+  .notification.visible {
+    transform: translateY(0);
+  }
+}

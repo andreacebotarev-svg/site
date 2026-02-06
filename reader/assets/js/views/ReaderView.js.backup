@@ -1,0 +1,967 @@
+/**
+ * Reader View - Orchestrates book reading experience
+ * Coordinates between ContentRenderer, WordHighlighter, BookLoader, and PaginationController
+ */
+import { logger } from '../utils/logger.js';
+import { ContentRenderer } from '../reader/ContentRenderer.js';
+import { WordHighlighter } from '../reader/WordHighlighter.js';
+import { BookLoader } from '../reader/BookLoader.js';
+import { PaginationController } from '../reader/PaginationController.js';
+import { ReaderUIController } from '../reader/ReaderUIController.js';
+import { WordPopover } from '../ui/components/WordPopover.js';
+import { vocabularyStorage } from '../vocabulary/vocabulary-storage.enhanced.js';
+
+const readerLogger = logger.createChild('ReaderView');
+
+export class ReaderView {
+  constructor(container, params = []) {
+    this.container = container;
+    this.bookId = params[0] || null;
+
+    // Initialize components
+    this.bookLoader = new BookLoader({ logger: readerLogger });
+    this.contentRenderer = new ContentRenderer({ logger: readerLogger });
+    this.wordHighlighter = new WordHighlighter({
+      logger: readerLogger,
+      vocabularyStorage
+    });
+    this.paginationController = new PaginationController({ logger: readerLogger });
+    this.uiController = new ReaderUIController({ logger: readerLogger });
+
+    // Initialize word popover
+    this.wordPopover = null;
+
+    // Setup components
+    this.uiController.initialize(container);
+    this.paginationController.initialize(container);
+  }
+
+  async render() {
+    // Cleanup previous resources
+    this.destroy();
+
+    if (!this.bookId) {
+      this.uiController.showNoBookSelected();
+      return;
+    }
+
+    try {
+      // Initialize word popover
+      if (!this.wordPopover) {
+        const overlayRoot = document.getElementById('overlay-root');
+        this.wordPopover = new WordPopover(overlayRoot);
+      }
+
+      // Setup word highlighter
+      this.wordHighlighter.initialize(this.container, this.wordPopover);
+
+      // Make globally accessible for debugging
+      window.readerView = this;
+
+      // Show loading state
+      this.uiController.showLoading('Loading book...');
+
+      // Load book data
+      const bookData = await this.bookLoader.loadCompleteBook(this.bookId);
+
+      // Hide loading
+      this.uiController.hideLoading();
+
+      // Render content
+      await this.renderBookContent(bookData);
+
+    } catch (error) {
+      readerLogger.error('Failed to render book', error);
+      this.uiController.showError(error, {
+        showRetry: true,
+        retryAction: () => this.render()
+      });
+    }
+  }
+
+  /**
+   * Render book content using new component architecture
+   */
+  async renderBookContent(bookData) {
+    try {
+      // Render content using ContentRenderer
+      const contentHtml = await this.contentRenderer.renderBookContent(
+        bookData.content,
+        this.bookId
+      );
+
+      // Render in UI
+      this.uiController.renderBookContent(bookData, contentHtml);
+
+      // Setup interactive elements
+      const readingContent = this.container.querySelector('#reading-content');
+      if (readingContent) {
+        // Make words interactive
+        this.wordHighlighter.makeElementInteractive(readingContent);
+
+        // Setup pagination
+        await this.paginationController.setupPagination(readingContent, this.bookId);
+      }
+
+      readerLogger.info('Book content rendered successfully', {
+        bookId: this.bookId,
+        sections: bookData.content.sections?.length || 0
+      });
+
+    } catch (error) {
+      readerLogger.error('Failed to render book content', error);
+      this.uiController.showError(error);
+    }
+  }
+
+  /**
+   * Destroy view and cleanup all resources
+   */
+  destroy() {
+    // Destroy all components
+    this.contentRenderer?.destroy();
+    this.wordHighlighter?.destroy();
+    this.paginationController?.destroy();
+    this.bookLoader?.clear();
+
+    // Clear references
+    this.wordPopover = null;
+    this.container = null;
+
+    readerLogger.info('ReaderView destroyed');
+  }
+
+  /**
+   * Get reading statistics
+   */
+  getStats() {
+    return {
+      bookId: this.bookId,
+      pagination: this.paginationController?.getStats(),
+      content: this.bookLoader?.getContentStats(),
+      ui: this.uiController?.getState()
+    };
+  }
+}
+
+    if (block.type === 'list') {
+      const items = block.text.split('\n').filter(line => line.trim());
+      blockHTML = `<ul style="padding-left: 20px; margin-bottom: 12px;">${items.map(item => `<li>${this.escapeHtml(item)}</li>`).join('')}</ul>`;
+    } else if (block.type === 'fact') {
+      // Special styling for fact boxes
+      blockHTML = `
+        <div style="margin: 16px 0; padding: 12px; background: rgba(0, 122, 255, 0.1); border-left: 3px solid var(--apple-blue); border-radius: 8px;">
+          ${block.title ? `<div style="font-weight: 600; font-size: 0.85rem; color: var(--apple-blue); margin-bottom: 6px;">${this.escapeHtml(block.title)}</div>` : ''}
+          <div style="margin: 0; font-size: 0.9rem; line-height: 1.5;">${html}</div>
+        </div>
+      `;
+    } else {
+      // Regular paragraph
+      blockHTML = `
+        ${block.title ? `<h3 style="font-size: 1rem; font-weight: 600; margin: 16px 0 8px 0; color: var(--text-primary);">${this.escapeHtml(block.title)}</h3>` : ''}
+        <p class="reading-paragraph" style="--block-index: ${index};">${html}</p>
+      `;
+    }
+
+    return blockHTML;
+  }
+
+  /**
+   * Render an image block
+   */
+  async renderImageBlock(block, index) {
+    // Use originalSrc (resolved ZIP path) for IndexedDB lookup
+    // Ignore src if it's a blob URL (data: or blob:)
+    let imagePath = block.originalSrc || '';
+    if (!imagePath && block.src) {
+      // Fallback to src only if it's not a blob/data URL
+      const src = block.src;
+      if (!src.startsWith('blob:') && !src.startsWith('data:')) {
+        imagePath = src;
+      }
+    }
+
+    const alt = block.alt || 'EPUB Image';
+    const className = block.className || 'epub-image';
+
+    if (!imagePath) {
+      return `<div class="image-placeholder" style="--block-index: ${index};">[Image not available]</div>`;
+    }
+
+    try {
+      // Get blob from BookService
+      const { bookService } = await import('../services/book-service.js');
+      const blob = await bookService.getImageBlob(this.bookId, imagePath);
+
+      if (!blob) {
+        return `<div class="image-placeholder" style="--block-index: ${index};">[Image not found: ${this.escapeHtml(imagePath)}]</div>`;
+      }
+
+      // Generate blob URL
+      const blobUrl = URL.createObjectURL(blob);
+      this.blobUrls.add(blobUrl);
+
+      return `
+        <div class="image-container" style="--block-index: ${index};">
+          <img src="${blobUrl}" alt="${this.escapeHtml(alt)}" class="${className}" loading="lazy" />
+          ${block.originalSrc ? `<div class="image-caption">${this.escapeHtml(block.originalSrc)}</div>` : ''}
+        </div>
+      `;
+    } catch (error) {
+      console.error('Error rendering image block:', error);
+      return `<div class="image-placeholder" style="--block-index: ${index};">[Error loading image]</div>`;
+    }
+  }
+
+  /**
+   * Legacy method for fallback HTML processing
+   * Now uses enhanceContent approach instead of DOM manipulation
+   */
+  processBookContent(html) {
+    console.log('Processing legacy HTML content');
+
+    // Insert HTML into container first
+    this.container.innerHTML = html;
+
+    // Then enhance with interactions
+    this.enhanceContent();
+
+    // Return the enhanced HTML
+    return this.container.innerHTML;
+  }
+
+
+
+  /**
+   * Безопасно делает слова интерактивными, не ломая HTML-структуру
+   * Использует TreeWalker для точечной замены текстовых узлов
+   */
+  makeElementInteractive(rootElement) {
+    console.time('Interaction');
+
+    // 0. НОРМАЛИЗАЦИЯ: Склеиваем соседние текстовые узлы.
+    // Это критично для EPUB, где текст может быть разбит на куски типа "Ali" + "ce".
+    rootElement.normalize();
+
+    // 1. Сбор узлов (Snapshot)
+    const textNodes = [];
+    const walker = document.createTreeWalker(
+        rootElement,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: (node) => {
+                // Базовые проверки
+                if (!node.textContent || !node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+
+                const parent = node.parentElement;
+                if (!parent) return NodeFilter.FILTER_REJECT;
+
+                // Если уже обработано - пропускаем
+                if (parent.classList.contains('interactive-word')) return NodeFilter.FILTER_REJECT;
+
+                // Пропускаем технические теги
+                const tag = parent.tagName.toLowerCase();
+                if (['script', 'style', 'noscript', 'textarea', 'svg', 'image'].includes(tag)) return NodeFilter.FILTER_REJECT;
+
+                // ВАЖНО: Разрешаем всё остальное (div, p, span, section, article...)
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+
+    while (walker.nextNode()) {
+        textNodes.push(walker.currentNode);
+    }
+
+    console.log(`[Interaction] Processing ${textNodes.length} text nodes.`);
+
+    // 2. Обработка
+    let processedCount = 0;
+
+    textNodes.forEach(textNode => {
+        const text = textNode.textContent;
+
+        // Улучшенная регулярка:
+        // 1. \w - база
+        // 2. \u00C0-\u00FF - Latin-1 Supplement (акценты)
+        // 3. \u0400-\u04FF - Кириллица
+        // 4. Поддержка апострофов внутри слова (don't, l'amour)
+        const parts = text.split(/([a-zA-Z\u00C0-\u00FF\u0400-\u04FF]+(?:['’`][a-zA-Z\u00C0-\u00FF\u0400-\u04FF]+)?)/g);
+
+        if (parts.length <= 1) return;
+
+        const fragment = document.createDocumentFragment();
+        let hasWords = false;
+
+        parts.forEach(part => {
+            if (!part) return;
+
+            // Проверка: начинается ли с буквы?
+            if (/^[a-zA-Z\u00C0-\u00FF\u0400-\u04FF]/.test(part)) {
+                const span = document.createElement('span');
+                span.className = 'interactive-word';
+                span.dataset.word = part.toLowerCase().replace(/['’`]/g, '');
+                span.textContent = part;
+                span.tabIndex = 0;
+
+                // Опционально: проверка сохраненных слов
+                if (this.vocabularyStorage?.isWordSaved(span.dataset.word)) {
+                    span.classList.add('word-saved');
+                }
+
+                fragment.appendChild(span);
+                hasWords = true;
+            } else {
+                // Возвращаем пробелы и знаки препинания как текст
+                fragment.appendChild(document.createTextNode(part));
+            }
+        });
+
+        if (hasWords) {
+            textNode.parentNode.replaceChild(fragment, textNode);
+            processedCount++;
+        }
+    });
+
+    console.timeEnd('Interaction');
+    console.log(`[Interaction] Done. Processed nodes: ${processedCount}`);
+  }
+
+  /**
+   * Legacy method for backward compatibility
+   * @deprecated Use makeElementInteractive instead
+   */
+  makeWordsInteractive(text) {
+    // Regex to match words (letters and apostrophes)
+    const wordRegex = /\b([a-zA-Z]+(?:'[a-zA-Z]+)?)\b/g;
+
+    return text.replace(wordRegex, (match, word) => {
+      // Skip very short words (a, I, is, to, etc.)
+      if (word.length <= 2) {
+        return this.escapeHtml(match);
+      }
+
+      const normalized = word.toLowerCase();
+      const isSaved = this.vocabularyStorage?.isWordSaved(normalized);
+      const savedClass = isSaved ? ' word-saved' : '';
+
+      // Create interactive word span (no inline handlers - using event delegation)
+      return `<span class="interactive-word${savedClass}"
+                    data-word="${this.escapeHtml(normalized)}"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Click to learn about '${this.escapeHtml(word)}'">
+                ${this.escapeHtml(match)}
+              </span>`;
+    });
+  }
+
+
+  /**
+   * Check if element is a book word (not navigation/button)
+   */
+  isBookWordElement(wordElement) {
+    // Check if element is inside book content
+    const bookContent = wordElement.closest('.book-content, .reader-content, [data-book-content]');
+    if (!bookContent) {
+      return false;
+    }
+
+    // Check if it's not a button or link
+    const tagName = wordElement.tagName.toLowerCase();
+    if (tagName === 'button' || tagName === 'a') {
+      return false;
+    }
+
+    // Check parent elements
+    let parent = wordElement.parentElement;
+    while (parent) {
+      const parentTag = parent.tagName.toLowerCase();
+      const parentClass = parent.className || '';
+
+      // Skip if inside navigation or buttons
+      if (parentTag === 'nav' ||
+          parentClass.includes('nav') ||
+          parentClass.includes('button') ||
+          parentClass.includes('btn') ||
+          parentTag === 'header' ||
+          parentTag === 'footer') {
+        return false;
+      }
+
+      // Stop at book content container
+      if (parentClass.includes('book-content') ||
+          parentClass.includes('reader-content') ||
+          parent === this.container) {
+        break;
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return true;
+  }
+
+  /**
+   * Handle word click - updated for new interactive word format
+   */
+  handleWordClick(wordElement) {
+    if (!this.wordPopover) {
+      console.error('WordPopover not initialized');
+      return;
+    }
+
+    const rect = wordElement.getBoundingClientRect();
+    const text = wordElement.textContent.trim();
+    const word = wordElement.dataset.word || text.toLowerCase();
+
+    // Store for diagnostic purposes
+    if (typeof window !== 'undefined') {
+      window.lastClickedWord = wordElement;
+      window.lastClickedWordData = { text, word, rect, wordElement };
+    }
+
+    // Extract sentence context for better translation
+    const context = ContextExtractor.getSentenceContext(wordElement);
+
+    console.log('Word clicked:', { text, word, rect, wordElement });
+    console.log('Extracted context:', context);
+
+    // WordPopover.show now accepts optional context parameter
+    this.wordPopover.show(wordElement, rect, word, context);
+  }
+
+  /**
+   * Enhance content with interactions (single contract: render → enhance)
+   * This method should be called after any content render
+   */
+  enhanceContent() {
+    console.log('Enhancing content with interactions...');
+
+    // Step 1: Setup event delegation (survives DOM changes)
+    this.setupEventDelegation();
+
+    // Step 2: Enhance images for proper loading and display
+    this.enhanceImages();
+
+    // Step 3: Process words if needed (only for legacy HTML fallback)
+    // Note: Structured content already has interactive words from makeWordsInteractive()
+    this.enhanceWordsIfNeeded();
+
+    console.log('Content enhancement complete');
+  }
+
+  /**
+   * Process words to make them interactive if not already done
+   */
+  enhanceWordsIfNeeded() {
+    // Use TreeWalker-based word-level processing instead of legacy text-node processing
+    // This removes the 10-word limit that was breaking 91% of EPUB paragraphs
+    console.log('[Legacy] Using TreeWalker for word-level processing');
+    this.makeElementInteractive(this.container);
+  }
+
+  /**
+   * Enhance images for proper loading and display
+   */
+  enhanceImages() {
+    const images = this.container.querySelectorAll('.epub-image');
+
+    images.forEach(img => {
+      // Handle image load
+      if (img.complete) {
+        // Image already loaded
+        img.classList.add('loaded');
+      } else {
+        // Image is loading
+        img.addEventListener('load', () => {
+          img.classList.add('loaded');
+          console.log('Image loaded:', img.src);
+        });
+
+        img.addEventListener('error', () => {
+          console.warn('Image failed to load:', img.src);
+          img.style.opacity = '0.5';
+          img.style.filter = 'grayscale(100%)';
+          img.title = 'Image failed to load';
+        });
+
+        // Set a timeout for images that take too long to load
+        setTimeout(() => {
+          if (!img.classList.contains('loaded')) {
+            console.warn('Image loading timeout:', img.src);
+            img.classList.add('loaded'); // Show anyway to prevent layout issues
+          }
+        }, 10000); // 10 second timeout
+      }
+    });
+
+    console.log(`Enhanced ${images.length} images`);
+  }
+
+  /**
+   * Setup event delegation for interactive elements
+   * Uses document.body to survive container re-renders
+   */
+  setupEventDelegation() {
+    // Remove existing delegation listeners if any (from document.body)
+    // Note: Handlers are created once in constructor to prevent memory leaks
+    if (this.wordClickHandler) {
+      document.body.removeEventListener('click', this.wordClickHandler, { capture: true });
+    }
+    if (this.wordKeyHandler) {
+      document.body.removeEventListener('keydown', this.wordKeyHandler);
+    }
+
+    // Add delegation listeners to document.body (survives any DOM changes)
+    document.body.addEventListener('click', this.wordClickHandler, { capture: true });
+    document.body.addEventListener('keydown', this.wordKeyHandler);
+
+    console.log('Event delegation setup on document.body');
+  }
+
+  /**
+   * Find text nodes that should be processed
+   */
+  findProcessableTextNodes(container) {
+    const textNodes = [];
+    const walker = document.createTreeWalker(
+      container,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    let node;
+    while (node = walker.nextNode()) {
+      // Skip if already processed or in special containers
+      if (node.parentNode.closest('.interactive-word, .epigraph, .poem, .code')) {
+        continue;
+      }
+
+      const text = node.textContent.trim();
+      if (text && this.shouldProcessText(text)) {
+        textNodes.push(node);
+      }
+    }
+
+    return textNodes;
+  }
+
+  /**
+   * Check if text should be made interactive
+   */
+  shouldProcessText(text) {
+    // Skip very short words, numbers, punctuation, etc.
+    // Removed 10-word limit that was breaking 91% of EPUB paragraphs
+    return text.length > 2 &&
+           !/^\d+$/.test(text) &&
+           !/^[^a-zA-Z]*$/.test(text) &&
+           !text.includes('\n');
+  }
+
+  /**
+   * Create interactive text element
+   */
+  createInteractiveText(text) {
+    const span = document.createElement('span');
+    span.className = 'interactive-word';
+    span.textContent = text;
+    span.setAttribute('tabindex', '0');
+    span.setAttribute('role', 'button');
+
+    // Set data-word attribute for the first word
+    const firstWord = text.split(/\s+/)[0].toLowerCase().replace(/[^a-z]/g, '');
+    if (firstWord) {
+      span.setAttribute('data-word', firstWord);
+      span.setAttribute('aria-label', `Click to learn about "${firstWord}"`);
+    }
+
+    return span;
+  }
+
+  /**
+   * Render audio buttons (simplified version)
+   */
+  renderAudioButtons() {
+    return `
+      <button class="btn btn-secondary" onclick="alert('Audio playback not implemented yet')">
+        🔊 Play audio
+      </button>
+    `;
+  }
+
+  /**
+   * Render no book selected state
+   */
+  renderNoBookSelected() {
+    this.container.innerHTML = `
+      <div style="padding: var(--space-6); max-width: 1200px; margin: 0 auto;">
+        <h1 style="font-size: var(--fs-h1); margin-bottom: var(--space-4); color: var(--text-primary);">
+          Reader
+        </h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-5);">
+          Select a book from the library to start reading.
+        </p>
+        <div style="text-align: center; padding: var(--space-8); background: var(--bg-secondary); border-radius: 20px;">
+          <div style="font-size: 64px; margin-bottom: var(--space-3);">📖</div>
+          <p style="color: var(--text-secondary);">No book selected</p>
+          <a href="#/library" class="btn btn-primary" style="margin-top: var(--space-4); display: inline-block;">
+            Go to Library
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render book not found state
+   */
+  renderBookNotFound() {
+    this.container.innerHTML = `
+      <div style="padding: var(--space-6); max-width: 1200px; margin: 0 auto; text-align: center;">
+        <h1 style="font-size: var(--fs-h1); margin-bottom: var(--space-4); color: var(--danger-color);">
+          Book Not Found
+        </h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-5);">
+          The book you're looking for doesn't exist or has been removed.
+        </p>
+        <a href="#/library" class="btn btn-primary">
+          Go to Library
+        </a>
+      </div>
+    `;
+  }
+
+  /**
+   * Render loading state
+   */
+  renderLoading() {
+    this.container.innerHTML = `
+      <div style="padding: var(--space-6); max-width: 1200px; margin: 0 auto; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: var(--space-3);">📖</div>
+        <p style="color: var(--text-secondary);">Loading book...</p>
+      </div>
+    `;
+  }
+
+
+  /**
+   * Render error state
+   */
+  renderError(error) {
+    this.container.innerHTML = `
+      <div style="padding: var(--space-6); max-width: 1200px; margin: 0 auto; text-align: center;">
+        <h1 style="font-size: var(--fs-h1); margin-bottom: var(--space-4); color: var(--danger-color);">
+          Error Loading Book
+        </h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-5);">
+          ${this.escapeHtml(error.message || 'An error occurred while loading the book')}
+        </p>
+        <a href="#/library" class="btn btn-primary">
+          Go to Library
+        </a>
+      </div>
+    `;
+  }
+
+  /**
+   * Initialize reading mode switcher
+   */
+  initModeSwitcher() {
+    const buttons = this.container.querySelectorAll('.mode-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const snapType = e.target.dataset.snap;
+        if (snapType) {
+          this.switchSnapType(snapType);
+        }
+      });
+    });
+
+    // Update active button
+    this.updateModeSwitcher();
+  }
+
+  /**
+   * Initialize pagination system
+   */
+  async initializePagination() {
+    // Add fallback restoration on window load
+    const handleWindowLoad = () => {
+      try {
+        const restorePage = sessionStorage.getItem('reader-restore-page');
+        if (restorePage && !this.paginationEngine.isRestoring) {
+          const pageIndex = parseInt(restorePage, 10);
+          if (!isNaN(pageIndex) && this.paginationEngine.pageElements[pageIndex]) {
+            console.log('Applying fallback restoration:', pageIndex);
+            this.paginationEngine.goToPage(pageIndex, { instant: true });
+          }
+          sessionStorage.removeItem('reader-restore-page');
+        }
+      } catch (error) {
+        console.warn('Fallback restoration failed:', error);
+      }
+    };
+
+    if (document.readyState === 'complete') {
+      handleWindowLoad();
+    } else {
+      window.addEventListener('load', handleWindowLoad, { once: true });
+    }
+    const readingContent = this.container.querySelector('#reading-content');
+    if (!readingContent) return;
+
+    // Import pagination engine
+    const { PaginationEngine } = await import('../reader/pagination-engine.js');
+
+    // Create pagination engine
+    this.paginationEngine = new PaginationEngine();
+    this.paginationEngine.setBookId(this.bookId);
+
+    // Mount with scroll-snap system
+    const readerViewer = this.container.querySelector('.reader-viewer');
+    this.paginationEngine.mount({ readerViewerEl: readerViewer });
+
+    // Paginate content
+    const totalPages = await this.paginationEngine.paginate(readingContent);
+
+    if (totalPages > 0) {
+      // Render the vertical page stack
+      this.paginationEngine.renderPagesStack();
+
+      // Apply saved snap preference
+      const savedSnapType = this.loadSnapPreference();
+      this.paginationEngine.setSnapType(savedSnapType);
+
+      // Load saved progress and navigate to it with snap-toggle pattern
+      const savedPage = await this.paginationEngine.loadProgress();
+
+      // Store in sessionStorage as backup
+      try {
+        sessionStorage.setItem('reader-restore-page', savedPage.toString());
+      } catch (error) {
+        console.warn('Failed to store restore page in sessionStorage:', error);
+      }
+
+      // Mark as restoring to prevent IntersectionObserver interference
+      this.paginationEngine.startProgressRestoration();
+
+      // Triple-timing: layout + paint + snap-cache clear
+      await new Promise(resolve => requestAnimationFrame(resolve)); // 1st rAF: layout
+      await new Promise(resolve => setTimeout(resolve, 50));        // 2nd: paint + snap-cache
+
+      // Temporarily disable snap to bypass Safari/iOS cache issues
+      const viewer = this.paginationEngine.readerViewer;
+      const originalSnapType = viewer.style.scrollSnapType;
+      viewer.style.scrollSnapType = 'none';
+
+      // Instant restoration (no animation)
+      this.paginationEngine.goToPage(savedPage, { instant: true });
+
+      // Wait for scroll to complete and force snap recalculation
+      const onScrollEnd = () => {
+        // Re-enable snap
+        viewer.style.scrollSnapType = originalSnapType;
+
+        // Force snap recalculation (scrollBy hack for Safari/iOS)
+        viewer.scrollBy(0, 1);
+        viewer.scrollBy(0, -1);
+
+        // Re-enable normal tracking
+        setTimeout(() => {
+          this.paginationEngine.endProgressRestoration();
+        }, 100);
+
+        viewer.removeEventListener('scrollend', onScrollEnd);
+      };
+
+      viewer.addEventListener('scrollend', onScrollEnd, { once: true });
+    }
+
+    // Setup auto-save
+    this.paginationEngine.setupAutoSave();
+
+    console.log(`Pagination initialized: ${totalPages} pages`);
+  }
+
+  /**
+   * Switch snap type (reading experience)
+   */
+  async switchSnapType(snapType) {
+    if (!this.paginationEngine) return;
+
+    console.log(`Switching snap type: ${this.getCurrentSnapType()} → ${snapType}`);
+
+    // Just change the snap type - no DOM rebuild needed
+    this.paginationEngine.setSnapType(snapType);
+
+    // Update UI
+    this.updateModeSwitcher();
+
+    // Save preference
+    this.saveSnapPreference(snapType);
+  }
+
+  /**
+   * Initialize pages mode
+   * FIXED: Lazy pagination without pre-processing
+   */
+
+  /**
+   * Update mode switcher UI
+   */
+  updateModeSwitcher() {
+    const buttons = this.container.querySelectorAll('.mode-btn');
+    const currentSnapType = this.getCurrentSnapType();
+
+    buttons.forEach(btn => {
+      const snapType = btn.dataset.snap;
+      const isActive = snapType === currentSnapType;
+
+      if (isActive) {
+        btn.style.backgroundColor = 'var(--apple-blue)';
+        btn.style.color = 'white';
+        btn.style.borderColor = 'var(--apple-blue)';
+      } else {
+        btn.style.backgroundColor = 'var(--bg-secondary)';
+        btn.style.color = 'var(--text-primary)';
+        btn.style.borderColor = 'var(--border-color)';
+      }
+    });
+  }
+
+  /**
+   * Get current snap type
+   */
+  getCurrentSnapType() {
+    if (!this.paginationEngine) return 'mandatory';
+    return this.paginationEngine.getCurrentSnapType();
+  }
+
+  /**
+   * Save snap type preference
+   */
+  saveSnapPreference(snapType) {
+    try {
+      localStorage.setItem('reader-snap-preference', snapType);
+    } catch (error) {
+      console.warn('Failed to save snap preference:', error);
+    }
+  }
+
+  /**
+   * Load snap type preference
+   */
+  loadSnapPreference() {
+    try {
+      return localStorage.getItem('reader-snap-preference') || 'mandatory';
+    } catch (error) {
+      return 'mandatory';
+    }
+  }
+
+  /**
+   * Find current scroll position for mode synchronization
+   */
+  findCurrentScrollPosition() {
+    const readingContent = this.container.querySelector('#reading-content');
+    if (!readingContent) return null;
+
+    // Find element at center of viewport (approximately)
+    const viewportCenter = window.innerHeight / 2;
+    const centerElement = document.elementFromPoint(window.innerWidth / 2, viewportCenter);
+
+    if (!centerElement || !readingContent.contains(centerElement)) return null;
+
+    // Find nearest paragraph or meaningful element
+    let targetElement = centerElement;
+    while (targetElement && targetElement !== readingContent) {
+      if (targetElement.matches('p, h1, h2, h3, h4, h5, h6, .reading-paragraph')) {
+        break;
+      }
+      targetElement = targetElement.parentElement;
+    }
+
+    if (!targetElement || targetElement === readingContent) return null;
+
+    return {
+      element: targetElement,
+      id: targetElement.id || null,
+      text: targetElement.textContent?.substring(0, 100) || '',
+      tagName: targetElement.tagName.toLowerCase(),
+      scrollTop: readingContent.scrollTop
+    };
+  }
+
+  /**
+   * Find page index for scroll position
+   */
+  findPageForScrollPosition(scrollPosition) {
+    if (!this.paginationEngine || !scrollPosition) return null;
+
+    const readingContent = this.container.querySelector('#reading-content');
+    if (!readingContent) return null;
+
+    // Get all paragraphs/elements in order
+    const elements = Array.from(readingContent.querySelectorAll('p, h1, h2, h3, h4, h5, h6, .reading-paragraph'));
+
+    // Find the element that matches our scroll position
+    const targetIndex = elements.findIndex(el =>
+      el === scrollPosition.element ||
+      (el.id && el.id === scrollPosition.id) ||
+      (el.textContent?.substring(0, 100) === scrollPosition.text)
+    );
+
+    if (targetIndex === -1) return null;
+
+    // Calculate which page this element would be on
+    // This is a simplified approximation - in real implementation,
+    // you'd need to correlate with pagination logic
+    const totalElements = elements.length;
+    const progressRatio = targetIndex / totalElements;
+    const pageIndex = Math.floor(progressRatio * this.paginationEngine.pages.length);
+
+    return Math.min(pageIndex, this.paginationEngine.pages.length - 1);
+  }
+
+  /**
+   * Restore scroll position from pages mode
+   */
+  restoreScrollPositionFromPages() {
+    if (!this.paginationEngine) return;
+
+    const pagePosition = this.paginationEngine.findCurrentReadingPosition();
+    if (!pagePosition) return;
+
+    const readingContent = this.container.querySelector('#reading-content');
+    if (!readingContent) return;
+
+    // Find corresponding element in scroll content
+    const elements = readingContent.querySelectorAll('p, h1, h2, h3, h4, h5, h6, .reading-paragraph');
+    let targetElement = null;
+
+    for (const el of elements) {
+      if (el === pagePosition.element ||
+          (el.id && el.id === pagePosition.id) ||
+          (el.textContent?.substring(0, 100) === pagePosition.text)) {
+        targetElement = el;
+        break;
+      }
+    }
+
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      console.log('Restored scroll position from pages mode');
+    }
+  }
+
+  /**
+   * Escape HTML
+   */
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+}

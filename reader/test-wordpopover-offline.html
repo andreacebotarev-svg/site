@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPopover Offline Test</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components/word-popover.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .interactive-word {
+            cursor: pointer;
+            color: var(--apple-blue);
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .interactive-word:hover {
+            background-color: rgba(0, 122, 255, 0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: var(--text-primary);
+        }
+        .debug-panel {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>WordPopover Offline Test</h1>
+
+        <div class="test-section">
+            <h3>Test WordPopover without API calls:</h3>
+            <p>This test uses offline mode to check basic functionality.</p>
+            <p>
+                Click on <span class="interactive-word" data-word="hello">hello</span>,
+                <span class="interactive-word" data-word="world">world</span>, or
+                <span class="interactive-word" data-word="test">test</span>.
+            </p>
+        </div>
+
+        <div class="test-section">
+            <h3>Debug Panel:</h3>
+            <div id="debug-panel" class="debug-panel">
+                Initializing offline test...<br>
+            </div>
+        </div>
+    </div>
+
+    <!-- WordPopover container -->
+    <div id="word-popover-container"></div>
+
+    <script type="module">
+        // Test WordPopover in offline mode (no API calls)
+        async function testWordPopoverOffline() {
+            try {
+                log('Importing WordPopover...');
+
+                // Import WordPopover
+                const { WordPopover } = await import('./assets/js/ui/components/WordPopover.js');
+
+                log('Creating WordPopover in offline mode...');
+
+                const container = document.getElementById('word-popover-container');
+                // Create with offline mode (no API calls)
+                const wordPopover = new WordPopover(container, { useAPIs: false });
+
+                log('WordPopover created successfully');
+
+                // Wait a bit for initialization
+                setTimeout(() => {
+                    log('Adding click handlers...');
+
+                    // Add click handlers to test words
+                    document.querySelectorAll('.interactive-word').forEach(wordEl => {
+                        wordEl.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const word = wordEl.dataset.word;
+                            const rect = wordEl.getBoundingClientRect();
+
+                            log(`Word clicked: ${word}, rect: ${rect.left}, ${rect.top}, ${rect.width}, ${rect.height}`);
+                            wordPopover.show(wordEl, rect, word);
+                        });
+                    });
+
+                    log('✅ Offline test ready! Click on words above.');
+                }, 500);
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        function log(message) {
+            const debugPanel = document.getElementById('debug-panel');
+            const timestamp = new Date().toLocaleTimeString();
+            debugPanel.innerHTML += `[${timestamp}] ${message}<br>`;
+            debugPanel.scrollTop = debugPanel.scrollHeight;
+            console.log(message);
+        }
+
+        // Start test
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', testWordPopoverOffline);
+        } else {
+            testWordPopoverOffline();
+        }
+    </script>
+</body>
+</html>

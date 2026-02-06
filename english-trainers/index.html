@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive English grammar trainers. Master To Be, Present Simple, Have/Have Got, Much/Many with game-based learning. Adaptive difficulty, instant feedback.">
+  <meta name="keywords" content="English grammar, interactive exercises, ESL, language learning, gamification">
+  <title>English Trainers – Interactive Grammar Practice</title>
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Hub-specific styles */
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      margin-bottom: 3rem;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .trainers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .trainer-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                  box-shadow 0.3s ease;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .trainer-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    
+    .trainer-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+    
+    .trainer-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .trainer-card.new::after {
+      content: 'NEW';
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    }
+    
+    .trainer-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    
+    .trainer-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+    
+    .trainer-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .trainer-stats {
+      display: flex;
+      gap: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-muted);
+    }
+    
+    .stat-item strong {
+      color: var(--text);
+    }
+    
+    .features {
+      background: var(--bg-secondary);
+      padding: 3rem 1rem;
+      margin-top: 4rem;
+    }
+    
+    .features h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .feature-item {
+      text-align: center;
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-item h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .feature-item p {
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+  </style>
+  <script src="../assets/js/analytics.js"></script>
+</head>
+<body>
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1>🎮 English Trainers</h1>
+    <p>Master English grammar through interactive, game-based exercises with instant feedback and adaptive difficulty</p>
+  </div>
+
+  <!-- Trainers Grid -->
+  <main class="container">
+    <div class="trainers-grid">
+      <!-- To Be Trainer -->
+      <a href="to-be.html" class="trainer-card">
+        <span class="trainer-icon">🔵</span>
+        <h2>To Be Trainer</h2>
+        <p>Master the fundamental forms of "to be" (am/is/are) with context-aware exercises that adapt to your skill level.</p>
+        <div class="trainer-stats">
+          <div class="stat-item">
+            <span>🎯</span>
+            <span><strong>3</strong> levels</span>
+          </div>
+          <div class="stat-item">
+            <span>💬</span>
+            <span><strong>15+</strong> templates</span>
+          </div>
+          <div class="stat-item">
+            <span>⏱️</span>
+            <span><strong>5</strong> min</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Present Simple Trainer -->
+      <a href="present-simple.html" class="trainer-card">
+        <span class="trainer-icon">🟢</span>
+        <h2>Present Simple</h2>
+        <p>Perfect subject-verb agreement with do/does practice. Covers positive, negative, and question forms with 18+ irregular verbs.</p>
+        <div class="trainer-stats">
+          <div class="stat-item">
+            <span>📖</span>
+            <span><strong>18</strong> verbs</span>
+          </div>
+          <div class="stat-item">
+            <span>⚙️</span>
+            <span><strong>3</strong> forms</span>
+          </div>
+          <div class="stat-item">
+            <span>⏱️</span>
+            <span><strong>8</strong> min</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Have/Have Got Trainer -->
+      <a href="have-got.html" class="trainer-card">
+        <span class="trainer-icon">🟣</span>
+        <h2>Have/Have Got</h2>
+        <p>Learn both British and American possession forms. Practice with 45+ vocabulary items across family, pets, objects, and abilities.</p>
+        <div class="trainer-stats">
+          <div class="stat-item">
+            <span>🇬🇧🇺🇸</span>
+            <span><strong>2</strong> styles</span>
+          </div>
+          <div class="stat-item">
+            <span>📚</span>
+            <span><strong>45+</strong> words</span>
+          </div>
+          <div class="stat-item">
+            <span>⏱️</span>
+            <span><strong>6</strong> min</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Mixed Tenses Trainer -->
+      <a href="mixed-tenses.html" class="trainer-card">
+        <span class="trainer-icon">🎯</span>
+        <h2>Mixed Tenses Master</h2>
+        <p>Master Present Simple, Continuous & Perfect together! 5 progressive levels from basics to exam. Smart question balancing.</p>
+        <div class="trainer-stats">
+          <div class="stat-item">
+            <span>📚</span>
+            <span><strong>3</strong> tenses</span>
+          </div>
+          <div class="stat-item">
+            <span>📊</span>
+            <span><strong>5</strong> levels</span>
+          </div>
+          <div class="stat-item">
+            <span>🎓</span>
+            <span><strong>Exam</strong> mode</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Much/Many Trainer (NEW) -->
+      <a href="much-many.html" class="trainer-card new">
+        <span class="trainer-icon">🪨</span>
+        <h2>Much/Many/A lot of</h2>
+        <p>Falling questions game! Control a character across 3 lanes, throw stones with correct answers. Speed increases from 10s to 0.1s over 10 minutes.</p>
+        <div class="trainer-stats">
+          <div class="stat-item">
+            <span>🎮</span>
+            <span><strong>Arcade</strong> mode</span>
+          </div>
+          <div class="stat-item">
+            <span>🎁</span>
+            <span><strong>Power-ups</strong></span>
+          </div>
+          <div class="stat-item">
+            <span>⏱️</span>
+            <span><strong>10</strong> min</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Irregular Verbs Trainer (NEW) -->
+      <a href="irregular-verbs.html" class="trainer-card new">
+        <span class="trainer-icon">🎯</span>
+        <h2>Неправильные глаголы</h2>
+        <p>Изучи все 3 формы 100+ неправильных глаголов! 10 паттернов, 3 режима: выбор, ввод, гибрид. Прогресс и экзамен.</p>
+        <div class="trainer-stats">
+          <div class="stat-item">
+            <span>📚</span>
+            <span><strong>100+</strong> verbs</span>
+          </div>
+          <div class="stat-item">
+            <span>🔄</span>
+            <span><strong>10</strong> patterns</span>
+          </div>
+          <div class="stat-item">
+            <span>🏆</span>
+            <span><strong>Exam</strong> mode</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2>✨ Why Use Trainers?</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">🧠</div>
+          <h3>Adaptive Difficulty</h3>
+          <p>Questions automatically adjust to your skill level based on real-time performance tracking.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Feedback</h3>
+          <p>Get immediate explanations with grammar tips for every answer, right or wrong.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔥</div>
+          <h3>Streak Bonuses</h3>
+          <p>Build combos with correct answers to earn bonus points and track your progress.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <h3>Game Mechanics</h3>
+          <p>Arcade-style gameplay with falling questions, power-ups, and progressive difficulty.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

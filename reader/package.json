@@ -1,0 +1,104 @@
+{
+  "name": "reader",
+  "version": "2.0.0",
+  "description": "Modern book reading application with FB2, EPUB, and TXT support",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve . -p 8000 -s",
+    "dev": "npx serve . -p 8000",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui",
+    "lint": "eslint assets/js/**/*.js tests/**/*.js --ext .js",
+    "lint:fix": "eslint assets/js/**/*.js tests/**/*.js --ext .js --fix",
+    "format": "prettier --write \"assets/js/**/*.js\" \"tests/**/*.js\"",
+    "build": "echo 'No build step required - vanilla JS'",
+    "preview": "npx serve dist -p 3000",
+    "docs": "echo 'Documentation available in README.md, API.md, and ARCHITECTURE.md'"
+  },
+  "keywords": [
+    "ebook",
+    "reader",
+    "fb2",
+    "epub",
+    "txt",
+    "pwa",
+    "vanilla-js",
+    "web-app"
+  ],
+  "author": "Reader Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-repo/reader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-repo/reader/issues"
+  },
+  "homepage": "https://github.com/your-repo/reader#readme",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "eslint": "^8.50.0",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.0.0",
+    "serve": "^14.2.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": [
+    "Chrome >= 90",
+    "Firefox >= 88",
+    "Safari >= 14",
+    "Edge >= 90"
+  ],
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-unused-vars": "warn",
+      "no-console": "off",
+      "prefer-const": "error",
+      "no-var": "error"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false
+  },
+  "vitest": {
+    "environment": "jsdom",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "coverage": {
+      "reporter": ["text", "json", "html"],
+      "exclude": [
+        "**/node_modules/**",
+        "**/tests/**",
+        "**/*.config.js"
+      ]
+    },
+    "setupFiles": [
+      "./tests/setup.js"
+    ]
+  }
+}

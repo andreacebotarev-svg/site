@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master Present Simple tense with do/does practice. Subject-verb agreement, irregular verbs, adaptive difficulty.">
+  <title>Present Simple Trainer | English Trainers</title>
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/trainers.css">
+  <link rel="stylesheet" href="assets/css/effects.css">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="../assets/js/analytics.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="trainer-header">
+    <div class="container">
+      <a href="../index.html" class="back-btn" aria-label="Back to main portal">
+        ← Portal
+      </a>
+      <h1>🟢 Present Simple Trainer</h1>
+      <p class="subtitle">Master do/does & verb forms</p>
+    </div>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" role="region" aria-label="Game statistics">
+    <div class="container">
+      <div class="stat">
+        <span class="label">Score</span>
+        <span id="score" class="value">0</span>
+      </div>
+      <div id="streak" class="stat hidden">
+        <span class="value">🔥 0</span>
+      </div>
+      <div class="stat">
+        <span class="label">Lives</span>
+        <span id="lives" class="value">❤️❤️❤️</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <main class="trainer-content">
+    <div class="container">
+      <div id="question-container" class="question-wrapper">
+        <!-- Start Screen -->
+        <div class="start-screen" style="text-align: center;">
+          <div class="emoji" style="font-size: 5rem; margin-bottom: 1.5rem;">⚙️</div>
+          <h2 style="margin-bottom: 1rem;">Ready to Master Present Simple?</h2>
+          <p style="color: var(--text-muted); margin-bottom: 2rem;">
+            Choose the correct verb form or auxiliary (do/does) for each sentence.<br>
+            Covers positive, negative, and question forms.
+          </p>
+          
+          <div class="rules card" style="text-align: left; max-width: 550px; margin: 0 auto 2rem; padding: 1.5rem;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">📜 What You'll Practice</h3>
+            <ul style="list-style: none; padding: 0; margin: 0; line-height: 2.2;">
+              <li>✅ <strong>Subject-Verb Agreement</strong> — he/she/it + -s/-es</li>
+              <li>🔄 <strong>Irregular Verbs</strong> — go→goes, have→has, do→does</li>
+              <li>❌ <strong>Negatives</strong> — do not / does not + base form</li>
+              <li>❓ <strong>Questions</strong> — Do/Does + subject + base verb</li>
+            </ul>
+            
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+              <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
+                🎮 Difficulty adapts automatically: Positive → Negative → Questions
+              </p>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg" onclick="window.trainer.start()">
+            🚀 Start Training
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts: Load generators first -->
+  <script src="assets/js/generators/present-simple/PSRecognitionGenerator.js"></script>
+  <script src="assets/js/generators/present-simple/PSFillInGenerator.js"></script>
+  <script src="assets/js/generators/present-simple/PSErrorCorrectionGenerator.js"></script>
+  <script src="assets/js/generators/present-simple/PSTransformationGenerator.js"></script>
+  <script src="assets/js/generators/present-simple/PSContextGenerator.js"></script>
+
+  <script src="assets/js/effects/AuroraEffect.js"></script>
+  <script src="assets/js/effects/AudioEffectsManager.js"></script>
+  <script src="assets/js/effects/HapticFeedback.js"></script>
+  <script src="assets/js/effects/EffectsManager.js"></script>
+  <script src="assets/js/trainer-core.js"></script>
+  <script src="assets/js/trainer-ui.js"></script>
+  <script src="assets/js/trainer-timer-tts.js"></script>
+  <script src="assets/js/trainer-dom-events-utils.js"></script>
+  <script src="assets/js/modules/present-simple.js"></script>
+
+  <script>
+    // Debug hook
+    window.debugEffects = (event, data) => {
+      console.log(`[Effects] ${event}`, data);
+    };
+
+    // Init trainer
+    window.trainer = new PresentSimpleTrainer({
+      maxLives: 3,
+      streakBonus: 10
+    });
+
+    // Load audio assets
+    let audioLoaded = false;
+    document.addEventListener('click', () => {
+      if (!audioLoaded && trainer._effects) {
+        audioLoaded = true;
+        trainer._effects.loadAudioAssets({
+          correct: 'assets/audio/correct.mp3',
+          milestone: 'assets/audio/milestone.mp3',
+          error: 'assets/audio/error.mp3'
+        }).then(() => console.log('🔊 Audio loaded'));
+      }
+    }, { once: false });
+
+    // Auto-init
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => window.trainer.init());
+    } else {
+      window.trainer.init();
+    }
+
+    // Event hooks
+    trainer.on('start', () => console.log('🎮 Present Simple started'));
+    trainer.on('end', (stats) => console.log('🏁 Final stats:', stats));
+  </script>
+</body>
+</html>

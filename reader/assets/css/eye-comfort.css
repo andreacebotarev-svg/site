@@ -1,0 +1,162 @@
+/* Eye Comfort & Accessibility Utilities */
+
+/* Blue Light Filter - Integrates with system Night Shift/Night Light */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Subtle blue light reduction during daytime */
+    --blue-light-overlay: rgba(255, 243, 224, var(--blue-light-filter-intensity));
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Enhanced blue light reduction at night */
+    --blue-light-overlay: rgba(255, 243, 200, calc(var(--blue-light-filter-intensity) * 0.8));
+  }
+}
+
+/* Apply blue light filter globally */
+.eye-comfort-enabled::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--blue-light-overlay);
+  pointer-events: none;
+  z-index: 9999;
+  transition: background-color 0.3s ease;
+}
+
+/* Reading-focused blue light filter */
+.reader-blue-light-filter {
+  position: relative;
+}
+
+.reader-blue-light-filter::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--blue-light-overlay);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Eye strain reduction background patterns */
+.eye-strain-minimal .reader-content {
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.03) 0%, transparent 50%);
+  background-size: 400px 400px;
+  background-position: 0% 0%, 100% 100%;
+}
+
+/* WCAG 2.2 AA Compliance Utilities */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #000000;
+    --bg-primary: #FFFFFF;
+    --border-color: #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus indicators - Enhanced for accessibility */
+.focus-visible:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Screen reader utilities */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Minimum touch targets - 48x48px minimum */
+.btn-accessible,
+.interactive-element {
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Color contrast utilities */
+.text-high-contrast {
+  color: var(--text-primary);
+}
+
+.bg-high-contrast {
+  background: var(--bg-primary);
+}
+
+/* Reading performance optimizations */
+.reading-optimized {
+  /* Scientifically proven reading parameters */
+  font-size: var(--reader-font-size);
+  line-height: var(--reader-line-height);
+  max-width: var(--reader-max-width);
+  margin: 0 auto;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Eye tracking friendly layouts */
+.eye-tracking-friendly .reader-content p {
+  /* Prevent excessive line length variations */
+  text-justify: inter-word;
+  widows: 2;
+  orphans: 2;
+}
+
+/* Performance monitoring utilities */
+.performance-indicator {
+  /* Subtle performance hints for development */
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 10000;
+}

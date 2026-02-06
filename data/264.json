@@ -1,0 +1,396 @@
+{
+  "title": "Cooking at School",
+  "subtitle": "Reading about school cooking programs",
+  "meta": {
+    "level": "B1",
+    "duration": 45,
+    "topic": "Education & Health"
+  },
+  
+  "content": {
+    "reading": [
+      {
+        "type": "paragraph",
+        "text": "According to experts, nearly 25% of Britons, including children, are overweight. The government is worried and it is looking for ways to solve the problem."
+      },
+      {
+        "type": "paragraph",
+        "text": "In the UK, 1 in 4 year olds already co cookery at school but from 2011, the government is making this compulsory. They hope that this will encourage people to cook instead of eating ready meals, fast food and snacks."
+      },
+      {
+        "type": "paragraph",
+        "text": "At secondary school students will have cooking lessons for one hour a week. Eventually they will learn to use simple, fresh ingredients and simple recipes to prepare healthy, tasty meals, for example a good tomato and pasta dish."
+      },
+      {
+        "type": "paragraph",
+        "text": "And schools are setting up cookery clubs called 'Let's Get Cooking' throughout the country. The clubs give children and parents the chance to learn to cook after school."
+      },
+      {
+        "type": "paragraph",
+        "text": "Head Teachers worry about the equipment they will need for the lessons. About 10% of schools do not have kitchens and there are not enough cookery facilities."
+      },
+      {
+        "type": "paragraph",
+        "text": "The government is promising to train 800 cookery teachers and to give schools £2.5 million a year to help children from poorer families to pay for ingredients."
+      }
+    ]
+  },
+  
+  "vocabulary": {
+    "words": [
+      {
+        "en": "diet",
+        "transcription": "[ˈdaɪət]",
+        "ru": "диета, рацион питания",
+        "example": "A healthy diet is important for children.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "energy",
+        "transcription": "[ˈenədʒi]",
+        "ru": "энергия",
+        "example": "You need energy to study well.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "lifestyle",
+        "transcription": "[ˈlaɪfstaɪl]",
+        "ru": "образ жизни",
+        "example": "A healthy lifestyle includes exercise.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "weight",
+        "transcription": "[weɪt]",
+        "ru": "вес",
+        "example": "To lose weight, eat less and exercise more.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "cheese",
+        "transcription": "[tʃiːz]",
+        "ru": "сыр",
+        "example": "A bowl of cheese and crackers.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "cereal",
+        "transcription": "[ˈsɪəriəl]",
+        "ru": "хлопья, крупа",
+        "example": "I eat cereal for breakfast.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "soup",
+        "transcription": "[suːp]",
+        "ru": "суп",
+        "example": "Hot soup is perfect for winter.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "lunch",
+        "transcription": "[lʌntʃ]",
+        "ru": "обед",
+        "example": "A school lunch should be healthy.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "ready",
+        "transcription": "[ˈredi]",
+        "ru": "готовый",
+        "example": "Ready meals are not very healthy.",
+        "part_of_speech": "adjective"
+      },
+      {
+        "en": "packed",
+        "transcription": "[pækt]",
+        "ru": "упакованный",
+        "example": "A packed lunch from home.",
+        "part_of_speech": "adjective"
+      },
+      {
+        "en": "lemonade",
+        "transcription": "[ˌleməˈneɪd]",
+        "ru": "лимонад",
+        "example": "A can of lemonade is full of sugar.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "bread",
+        "transcription": "[bred]",
+        "ru": "хлеб",
+        "example": "Fresh bread smells delicious.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "cola",
+        "transcription": "[ˈkəʊlə]",
+        "ru": "кола",
+        "example": "Cola contains a lot of sugar.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "murder",
+        "transcription": "[ˈmɜːdə(r)]",
+        "ru": "убийство",
+        "example": "To commit a murder is a serious crime.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "crime",
+        "transcription": "[kraɪm]",
+        "ru": "преступление",
+        "example": "To commit a crime means breaking the law.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "law",
+        "transcription": "[lɔː]",
+        "ru": "закон",
+        "example": "Everyone must follow the law.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "overweight",
+        "transcription": "[ˌəʊvəˈweɪt]",
+        "ru": "имеющий избыточный вес",
+        "example": "25% of British children are overweight.",
+        "part_of_speech": "adjective"
+      },
+      {
+        "en": "ingredient",
+        "transcription": "[ɪnˈɡriːdiənt]",
+        "ru": "ингредиент",
+        "example": "Use fresh ingredients for cooking.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "recipe",
+        "transcription": "[ˈresəpi]",
+        "ru": "рецепт",
+        "example": "Simple recipes are easy to follow.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "equipment",
+        "transcription": "[ɪˈkwɪpmənt]",
+        "ru": "оборудование",
+        "example": "Schools need cooking equipment.",
+        "part_of_speech": "noun"
+      }
+    ],
+    
+    "phrases": [
+      {
+        "en": "strict parents",
+        "ru": "строгие родители"
+      },
+      {
+        "en": "easy-going parents",
+        "ru": "спокойные, либеральные родители"
+      },
+      {
+        "en": "fair parents",
+        "ru": "справедливые родители"
+      },
+      {
+        "en": "to bring up children",
+        "ru": "воспитывать детей"
+      },
+      {
+        "en": "to guide in difficult situations",
+        "ru": "направлять в сложных ситуациях"
+      },
+      {
+        "en": "to punish children",
+        "ru": "наказывать детей"
+      },
+      {
+        "en": "to control children",
+        "ru": "контролировать детей"
+      },
+      {
+        "en": "to treat all children the same way",
+        "ru": "относиться ко всем детям одинаково"
+      },
+      {
+        "en": "to make arrangements",
+        "ru": "договариваться, делать договоренности"
+      },
+      {
+        "en": "to make a mess",
+        "ru": "устроить беспорядок"
+      },
+      {
+        "en": "to make homework",
+        "ru": "делать домашнюю работу"
+      },
+      {
+        "en": "ready meals",
+        "ru": "готовая еда"
+      },
+      {
+        "en": "fast food",
+        "ru": "фастфуд"
+      },
+      {
+        "en": "cookery lessons",
+        "ru": "уроки кулинарии"
+      }
+    ]
+  },
+  
+  "grammar": {
+    "title": "do, have or make - Verb Collocations",
+    "explanation": "Some verbs are commonly used with specific nouns. These combinations are called collocations. In English, we use 'do', 'have', and 'make' in different situations.",
+    "rules": [
+      {
+        "rule": "Use DO for:",
+        "examples": [
+          "homework",
+          "housework",
+          "the shopping",
+          "exercise",
+          "business"
+        ]
+      },
+      {
+        "rule": "Use HAVE for:",
+        "examples": [
+          "breakfast/lunch/dinner",
+          "a party",
+          "a good time",
+          "a problem",
+          "a conversation"
+        ]
+      },
+      {
+        "rule": "Use MAKE for:",
+        "examples": [
+          "arrangements",
+          "a mess",
+          "mistakes",
+          "progress",
+          "a decision"
+        ]
+      }
+    ],
+    "examples": {
+      "affirmative": [
+        "My sister and I never do/have/make any arguments.",
+        "My father always does/has/makes our holiday arrangements.",
+        "My brother is so lazy! He never does/has/makes any homework at all.",
+        "I'm worried about Lukas – he is doing/having/making badly at school right now."
+      ],
+      "negative": [
+        "You can use the kitchen – but please don't do/have/make a mess!",
+        "I don't have to can should mustn't speak English perfectly but they must can usually be able to explain things clearly."
+      ],
+      "questions": [
+        "You have to do/have/make your homework before you go out.",
+        "My mum says I should do/have/make my bed before going to school.",
+        "In Spain, people often do/have/make dinner at 9 p.m."
+      ]
+    }
+  },
+  
+  "quiz": [
+    {
+      "question": "Choose the words a–c that can complete the phrase: 1. a healthy ___",
+      "options": ["diet", "energy", "lifestyle"],
+      "correct": 0,
+      "correct_alt": 2,
+      "explanation": "Both 'a healthy diet' and 'a healthy lifestyle' are correct collocations."
+    },
+    {
+      "question": "2. to ___ weight",
+      "options": ["put on", "lose", "get"],
+      "correct": 0,
+      "correct_alt": 1,
+      "explanation": "Both 'put on weight' and 'lose weight' are correct."
+    },
+    {
+      "question": "3. a bowl of ___",
+      "options": ["cheese", "cereal", "soup"],
+      "correct": 1,
+      "correct_alt": 2,
+      "explanation": "'A bowl of cereal' and 'a bowl of soup' are both correct."
+    },
+    {
+      "question": "4. a ___ lunch",
+      "options": ["school", "ready", "packed"],
+      "correct": 0,
+      "correct_alt": 2,
+      "explanation": "'A school lunch' and 'a packed lunch' are both correct."
+    },
+    {
+      "question": "5. a can of ___",
+      "options": ["lemonade", "bread", "cola"],
+      "correct": 0,
+      "correct_alt": 2,
+      "explanation": "'A can of lemonade' and 'a can of cola' are both correct."
+    },
+    {
+      "question": "6. to commit ___",
+      "options": ["a murder", "a crime", "a law"],
+      "correct": 0,
+      "correct_alt": 1,
+      "explanation": "'Commit a murder' and 'commit a crime' are correct collocations."
+    },
+    {
+      "question": "What problem is the British government trying to solve?",
+      "options": [
+        "The number of people in Britain is growing",
+        "Many people in Britain are overweight",
+        "25% of British children are overweight",
+        "It does not know how to solve the problem"
+      ],
+      "correct": 1,
+      "explanation": "The text states that nearly 25% of Britons, including children, are overweight."
+    },
+    {
+      "question": "All pupils are going to learn to cook:",
+      "options": [
+        "in primary school",
+        "for one hour a week for a year",
+        "for two hours a week for one term",
+        "using simple ingredients and recipes"
+      ],
+      "correct": 3,
+      "explanation": "Students will learn to use simple, fresh ingredients and simple recipes."
+    },
+    {
+      "question": "Schools are setting up clubs to:",
+      "options": [
+        "train cookery teachers",
+        "teach children cooking skills",
+        "help poorer children",
+        "give practical cooking lessons"
+      ],
+      "correct": 3,
+      "explanation": "Cookery clubs give children and parents the chance to learn to cook."
+    },
+    {
+      "question": "One problem mentioned in the article is that:",
+      "options": [
+        "some schools do not know how to cook",
+        "some schools do not have enough equipment",
+        "students prefer fast food and snacks",
+        "students forget to buy ingredients"
+      ],
+      "correct": 1,
+      "explanation": "About 10% of schools do not have kitchens and there are not enough cookery facilities."
+    },
+    {
+      "question": "The government is promising to:",
+      "options": [
+        "buy food for students",
+        "build new school kitchens",
+        "pay for ingredients for poorer students",
+        "pay for school lunches for poorer children"
+      ],
+      "correct": 2,
+      "explanation": "The government will give £2.5 million a year to help children from poorer families pay for ingredients."
+    }
+  ]
+}

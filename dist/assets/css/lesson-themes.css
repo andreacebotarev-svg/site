@@ -1,0 +1,272 @@
+/* ========================================
+   THEME SYSTEM
+   Handles color schemes and theme switching UI
+   ======================================== */
+
+/* ========================================
+   DEFAULT THEME (Classic)
+   ======================================== */
+:root,
+:root.theme-default {
+  --bg-primary: #0a0e27;
+  --bg-secondary: #1a1f3a;
+  --bg-card: #151934;
+  --text-main: #e8eaf0;
+  --text-muted: #a0a7b8;
+  --text-soft: #777d8e;
+  --accent: #4f8cff;
+  --accent-hover: #3b7ae0;
+  --accent-soft: rgba(79, 140, 255, 0.15);
+  --accent-danger: #ff4757;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ========================================
+   KIDS THEME (Mint Fresh - Playful & Fresh)
+   ======================================== */
+:root.theme-kids {
+  --bg-primary: #f0fdf4;
+  --bg-secondary: #d1fae5;
+  --bg-card: #ffffff;
+  --text-main: #14532d;
+  --text-muted: #166534;
+  --text-soft: #22c55e;
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --accent-soft: rgba(16, 185, 129, 0.15);
+  --accent-danger: #ef4444;
+  --border-color: rgba(16, 185, 129, 0.2);
+  --shadow-sm: 0 2px 8px rgba(16, 185, 129, 0.1);
+  --shadow-md: 0 4px 16px rgba(16, 185, 129, 0.15);
+  --shadow-lg: 0 8px 32px rgba(16, 185, 129, 0.2);
+}
+
+/* Kids theme specific styling */
+:root.theme-kids body {
+  background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+  color: #14532d;
+}
+
+:root.theme-kids .card {
+  border: 2px solid #10b981;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+}
+
+:root.theme-kids .primary-btn {
+  background: linear-gradient(135deg, #34d399 0%, #6ee7b7 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  font-weight: 600;
+}
+
+:root.theme-kids .primary-btn:hover {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+:root.theme-kids .vocab-word {
+  color: #10b981;
+  font-weight: 600;
+}
+
+:root.theme-kids .interactive-word {
+  color: #14532d;
+}
+
+:root.theme-kids .interactive-word:hover {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+:root.theme-kids .tab {
+  color: #166534;
+}
+
+:root.theme-kids .tab.active {
+  background: #10b981;
+  color: #ffffff;
+}
+
+:root.theme-kids .lesson-header {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border-bottom: 2px solid #10b981;
+}
+
+/* ========================================
+   DARK THEME (High Contrast)
+   ======================================== */
+:root.theme-dark {
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #0d0d0d;
+  --text-main: #ffffff;
+  --text-muted: #b3b3b3;
+  --text-soft: #8a8a8a;
+  --accent: #00ff88;
+  --accent-hover: #00cc6a;
+  --accent-soft: rgba(0, 255, 136, 0.15);
+  --accent-danger: #ff3366;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --shadow-sm: 0 2px 8px rgba(0, 255, 136, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 255, 136, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 255, 136, 0.2);
+}
+
+/* Dark theme specific styling */
+:root.theme-dark body {
+  background: #000000;
+}
+
+:root.theme-dark .card {
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+}
+
+:root.theme-dark .primary-btn {
+  background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+  color: #000000;
+  font-weight: 600;
+}
+
+:root.theme-dark .vocab-word {
+  color: #00ff88;
+}
+
+/* ========================================
+   THEME SWITCHER UI
+   ======================================== */
+
+.theme-switcher {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  user-select: none;
+}
+
+.theme-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.theme-btn:active {
+  transform: translateY(0);
+}
+
+.theme-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(79, 140, 255, 0.3);
+}
+
+/* Kids theme active button */
+:root.theme-kids .theme-btn.active {
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Dark theme active button */
+:root.theme-dark .theme-btn.active {
+  color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.theme-emoji {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.theme-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ========================================
+   SMOOTH TRANSITIONS
+   ======================================== */
+
+/* Apply smooth transitions to all theme-dependent properties */
+:root {
+  transition: background-color 0.3s ease,
+              color 0.3s ease;
+}
+
+.card,
+.primary-btn,
+.vocab-word,
+.lesson-header,
+.tab,
+.vocab-item {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Mobile: Hide theme labels, show only emojis */
+@media (max-width: 768px) {
+  .theme-label {
+    display: none;
+  }
+  
+  .theme-btn {
+    padding: 8px;
+    min-width: 44px;
+    justify-content: center;
+  }
+  
+  .theme-switcher {
+    padding: 4px;
+    gap: 4px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .theme-switcher {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    flex-direction: column;
+    padding: 6px;
+  }
+  
+  .theme-btn {
+    padding: 10px;
+  }
+  
+  .theme-emoji {
+    font-size: 1.4rem;
+  }
+}

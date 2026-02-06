@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta name="referrer" content="no-referrer">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Волшебная Неделя 📅</title>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-purple: #9C27B0;
+            --primary-blue: #2196F3;
+            --primary-orange: #FF9800;
+            --primary-green: #4CAF50;
+            --bg-gradient: linear-gradient(135deg, #FFF3E0 0%, #E1BEE7 100%);
+            --font-main: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            --shadow-card: 0 10px 20px rgba(0,0,0,0.1);
+            --shadow-btn: 0 5px 0 rgba(0,0,0,0.2);
+        }
+
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 10px; /* Reduced padding for mobile */
+            min-height: 100vh;
+            color: #444;
+        }
+
+        h1, h2 { text-align: center; color: #333; text-shadow: 2px 2px 0px #fff; margin-bottom: 20px; }
+        h1 { font-size: 1.8rem; }
+        h2 { font-size: 1.5rem; }
+
+        /* --- NAVIGATION --- */
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover { transform: translateY(-3px); }
+        .nav-btn.active { transform: scale(1.05); box-shadow: 0 6px 15px rgba(0,0,0,0.3); border: 3px solid #fff; }
+        
+        .btn-purple { background: var(--primary-purple); }
+        .btn-blue { background: var(--primary-blue); }
+        .btn-orange { background: var(--primary-orange); }
+        .btn-green { background: var(--primary-green); }
+
+        .game-section {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-card);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .game-section.active { display: block; }
+
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        /* --- GAME 1: LEARN (FLASHCARDS) --- */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Smaller min-width for mobile */
+            gap: 15px;
+            padding: 5px;
+        }
+
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid #eee;
+            box-shadow: 0 4px 0 #ddd;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flashcard:hover { transform: translateY(-5px); border-color: var(--primary-purple); }
+        .flashcard:active { transform: translateY(0); box-shadow: 0 0 0; }
+        
+        .flashcard h3 { margin: 10px 0 5px; font-size: 1.3rem; color: #333; }
+        .flashcard .transcription { color: #888; font-family: 'Courier New', monospace; font-size: 0.8rem; }
+        .flashcard .translation { color: var(--primary-purple); font-weight: bold; margin-top: 10px; font-size: 1rem; }
+        .audio-icon { font-size: 1.2rem; display: block; margin-bottom: 5px; }
+
+        /* --- MOBILE FIX for IMAGES --- */
+        .flashcard img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        /* --- OPTIONAL: PROFILE CARD STYLE --- */
+        .profile-card {
+            text-align: center;
+            padding: 20px;
+        }
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-purple);
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* --- GAME 2: ORDER (CLICK & MATCH) --- */
+        .order-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .draggables-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            min-height: 80px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            width: 100%;
+        }
+
+        .drop-zones-row {
+            display: flex;
+            flex-direction: column; /* Stack vertically on mobile for better visibility */
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px; /* Limit width */
+        }
+
+        .drag-item {
+            padding: 10px 15px;
+            background: white;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #ccc;
+            border: 2px solid #ddd;
+            font-size: 1rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .drag-item.selected { 
+            background: #FFF9C4; 
+            border-color: #FBC02D; 
+            transform: scale(1.1); 
+            box-shadow: 0 6px 15px rgba(251, 192, 45, 0.4);
+            z-index: 10;
+        }
+        .drag-item.dimmed { opacity: 0.3; pointer-events: none; }
+
+        /* Unified Zone Styling */
+        .drop-zone {
+            width: 100%;
+            height: 50px;
+            border: 2px dashed #bbb;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #ccc;
+            font-weight: bold;
+            background: rgba(255,255,255,0.5);
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .drop-zone::before {
+            content: attr(data-index);
+            position: absolute;
+            left: 15px;
+            background: var(--primary-blue);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        /* Hint for the day name in Russian */
+        .drop-zone::after {
+            content: attr(data-rus);
+            position: absolute;
+            right: 15px;
+            font-size: 0.9rem;
+            color: #999;
+            font-weight: normal;
+        }
+
+        .drop-zone.active-target { background: #E3F2FD; border-color: var(--primary-blue); border-style: solid; animation: pulse 0.8s infinite alternate; }
+        .drop-zone.filled { border-color: var(--primary-green); background: #E8F5E9; border-style: solid; color: var(--primary-green); }
+        .drop-zone.filled::before { background: var(--primary-green); }
+
+        @keyframes pulse { from { border-color: #2196F3; } to { border-color: #64B5F6; box-shadow: 0 0 10px #BBDEFB; } }
+
+        /* --- GAME 3: MATCHING --- */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px; /* Reduced gap */
+            margin-top: 20px;
+        }
+        .match-col { display: flex; flex-direction: column; gap: 10px; }
+        
+        .match-item {
+            padding: 15px;
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 3px 0 #ddd;
+        }
+        .match-item:hover { transform: scale(1.02); }
+        .match-item.selected { border-color: var(--primary-orange); background: #FFF3E0; }
+        .match-item.matched { 
+            border-color: var(--primary-green); 
+            background: #E8F5E9; 
+            opacity: 0.5; 
+            pointer-events: none;
+            transform: scale(0.98);
+            box-shadow: none;
+        }
+
+        /* --- GAME 4: MEMORY --- */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .mem-card {
+            aspect-ratio: 3/4;
+            background: var(--primary-purple);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .mem-card.flipped { transform: rotateY(180deg); }
+        
+        .mem-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 5px;
+            text-align: center;
+            word-break: break-all;
+        }
+        .mem-front { background: white; transform: rotateY(180deg); border: 2px solid var(--primary-purple); color: #333; font-size: 0.9rem; }
+        .mem-back { background: var(--primary-purple); background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.2)"/></svg>'); }
+
+        @media (max-width: 600px) {
+            .match-grid { grid-template-columns: 1fr; gap: 15px; }
+            .memory-grid { grid-template-columns: repeat(3, 1fr); }
+            /* Mobile adjustment for Learn cards */
+            .flashcard h3 { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>📅 Волшебная Неделя</h1>
+
+<!-- Navigation -->
+<div class="nav-menu">
+    <button class="nav-btn btn-purple active" onclick="showGame('learn')">🎓 Изучаем</button>
+    <button class="nav-btn btn-blue" onclick="showGame('order')">🔁 Порядок</button>
+    <button class="nav-btn btn-orange" onclick="showGame('match')">🔗 Пары</button>
+    <button class="nav-btn btn-green" onclick="showGame('memory')">🧠 Память</button>
+</div>
+
+<!-- SECTION 1: LEARN -->
+<div id="learn" class="game-section active">
+    <h2>Дни недели и Произношение</h2>
+    <div style="background:#E3F2FD; padding:15px; border-radius:15px; margin-bottom:20px; text-align:center; font-size: 0.9rem;">
+        💡 <strong>Совет:</strong> Дни недели на английском ВСЕГДА пишутся с <strong>Большой Буквы</strong>!<br>
+        (Monday ✅, monday ❌)
+    </div>
+    <div class="cards-grid" id="cardsContainer">
+        <!-- JS will populate -->
+    </div>
+</div>
+
+<!-- SECTION 2: ORDER -->
+<div id="order" class="game-section">
+    <h2>Расставь дни по порядку (1-7)</h2>
+    <div style="margin-bottom: 15px; text-align: center;">
+        <button class="nav-btn btn-blue" onclick="initOrderGame()" style="font-size: 0.9rem;">🔄 Перемешать / Заново</button>
+    </div>
+    <div class="order-container">
+        <!-- Zones first on mobile for contextual hint -->
+        <div class="drop-zones-row" id="dropZones"></div>
+        <div class="draggables-row" id="dragSource"></div>
+    </div>
+    <div id="order-feedback" style="text-align:center; font-weight:bold; margin-top:20px; min-height:30px;"></div>
+</div>
+
+<!-- SECTION 3: MATCH -->
+<div id="match" class="game-section">
+    <h2>Соедини Слово и Перевод</h2>
+    <div class="match-grid">
+        <div class="match-col" id="colEng"></div>
+        <div class="match-col" id="colRus"></div>
+    </div>
+</div>
+
+<!-- SECTION 4: MEMORY -->
+<div id="memory" class="game-section">
+    <h2>Игра "Найди Пару"</h2>
+    <div style="text-align:center; margin-bottom:20px;">
+        <button class="nav-btn btn-purple" onclick="initMemory()">🔄 Начать Заново</button>
+    </div>
+    <div class="memory-grid" id="memoryGrid"></div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const DAYS_DATA = [
+    { id: 1, eng: "Monday", trans: "/'mʌndeɪ/", rus: "Понедельник", color: "#FFEB3B" },
+    { id: 2, eng: "Tuesday", trans: "/'tjuːzdeɪ/", rus: "Вторник", color: "#FFCDD2" },
+    { id: 3, eng: "Wednesday", trans: "/'wenzdeɪ/", rus: "Среда", color: "#C8E6C9" },
+    { id: 4, eng: "Thursday", trans: "/'θɜːzdeɪ/", rus: "Четверг", color: "#BBDEFB" },
+    { id: 5, eng: "Friday", trans: "/'fraɪdeɪ/", rus: "Пятница", color: "#E1BEE7" },
+    { id: 6, eng: "Saturday", trans: "/'sætədeɪ/", rus: "Суббота", color: "#FFF9C4" },
+    { id: 7, eng: "Sunday", trans: "/'sʌndeɪ/", rus: "Воскресенье", color: "#FFCC80" }
+];
+
+/* ================= TTS ================= */
+function speak(text) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9; 
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+/* ================= UTILS ================= */
+function confettiWin() {
+    if(typeof confetti === 'function') {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        setTimeout(() => confetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0 } }), 300);
+        setTimeout(() => confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1 } }), 300);
+    }
+}
+
+/* ================= NAVIGATION ================= */
+function showGame(gameId) {
+    document.querySelectorAll('.game-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(gameId).classList.add('active');
+    
+    const targetBtn = [...document.querySelectorAll('.nav-btn')].find(btn => 
+        btn.getAttribute('onclick').includes(gameId)
+    );
+    if(targetBtn) targetBtn.classList.add('active');
+
+    // Re-init games dynamically if needed to reset state
+    if(gameId === 'order') initOrderGame();
+    if(gameId === 'match') initMatchGame();
+    if(gameId === 'memory') initMemory();
+}
+
+/* ================= GAME 1: LEARN ================= */
+const cardsContainer = document.getElementById('cardsContainer');
+DAYS_DATA.forEach(day => {
+    const card = document.createElement('div');
+    card.className = 'flashcard';
+    card.innerHTML = `
+        <span class="audio-icon">🔊</span>
+        <h3>${day.eng}</h3>
+        <div class="transcription">[ ${day.trans} ]</div>
+        <div class="translation">${day.rus}</div>
+    `;
+    card.addEventListener('click', () => {
+        speak(day.eng);
+        card.style.transform = "scale(0.95)";
+        setTimeout(() => card.style.transform = "", 150);
+    });
+    cardsContainer.appendChild(card);
+});
+
+/* ================= GAME 2: ORDER (MOBILE OPTIMIZED) ================= */
+let selectedItem = null;
+
+function initOrderGame() {
+    const dropZones = document.getElementById('dropZones');
+    const dragSource = document.getElementById('dragSource');
+    dropZones.innerHTML = '';
+    dragSource.innerHTML = '';
+    document.getElementById('order-feedback').innerText = '';
+    selectedItem = null;
+
+    // Create Drop Zones (Vertical for mobile)
+    for(let i=1; i<=7; i++) {
+        const zone = document.createElement('div');
+        zone.className = 'drop-zone';
+        zone.setAttribute('data-index', i);
+        zone.setAttribute('data-rus', DAYS_DATA[i-1].rus); // Hint
+        zone.onclick = () => handleZoneClick(zone, i);
+        dropZones.appendChild(zone);
+    }
+
+    // Create Draggable Items (shuffled)
+    const shuffledDays = [...DAYS_DATA].sort(() => Math.random() - 0.5);
+    shuffledDays.forEach(day => {
+        const item = document.createElement('div');
+        item.className = 'drag-item';
+        item.innerText = day.eng;
+        item.setAttribute('data-id', day.id);
+        
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleItemClick(item, day);
+        });
+
+        dragSource.appendChild(item);
+    });
+}
+
+function handleItemClick(item, day) {
+    if(item.classList.contains('dimmed')) return;
+
+    speak(day.eng);
+
+    // Deselect if already selected
+    if (selectedItem === item) {
+        selectedItem.classList.remove('selected');
+        selectedItem = null;
+        highlightZones(false);
+        return;
+    }
+
+    // New selection
+    if (selectedItem) selectedItem.classList.remove('selected');
+    selectedItem = item;
+    selectedItem.classList.add('selected');
+    highlightZones(true);
+}
+
+function handleZoneClick(zone, index) {
+    if (!selectedItem) {
+        // If clicked safe zone without selection, maybe shake or speak hint?
+        return;
+    }
+    
+    if (zone.classList.contains('filled')) return; // Already filled
+
+    const itemId = parseInt(selectedItem.getAttribute('data-id'));
+    
+    if (itemId === index) {
+        // Correct
+        zone.innerHTML = selectedItem.innerText; // Move text to zone
+        zone.classList.add('filled');
+        
+        // Hide original item
+        selectedItem.classList.remove('selected');
+        selectedItem.classList.add('dimmed');
+        selectedItem = null;
+        
+        highlightZones(false);
+        speak("Correct!");
+        
+        // Check win
+        if(document.querySelectorAll('.drop-zone.filled').length === 7) {
+            document.getElementById('order-feedback').innerHTML = "<span style='color:green; font-size:1.5rem;'>🎉 Отлично! Неделя собрана!</span>";
+            speak("Excellent! You know the days of the week!");
+            confettiWin();
+        }
+    } else {
+        // Incorrect
+        speak("Not here");
+        zone.style.borderColor = "red";
+        setTimeout(() => zone.style.borderColor = "#bbb", 500);
+        
+        // Shake animation
+        zone.animate([
+            { transform: 'translateX(0)' },
+            { transform: 'translateX(-5px)' },
+            { transform: 'translateX(5px)' },
+            { transform: 'translateX(0)' }
+        ], { duration: 300 });
+    }
+}
+
+function highlightZones(state) {
+    document.querySelectorAll('.drop-zone').forEach(z => {
+        if(!z.classList.contains('filled')) {
+            if(state) z.classList.add('active-target');
+            else z.classList.remove('active-target');
+        }
+    });
+}
+
+/* ================= GAME 3: MATCH ================= */
+let selectedMatchItem = null;
+
+function initMatchGame() {
+    const colEng = document.getElementById('colEng');
+    const colRus = document.getElementById('colRus');
+    colEng.innerHTML = '';
+    colRus.innerHTML = '';
+
+    const engList = [...DAYS_DATA].sort(() => Math.random() - 0.5);
+    const rusList = [...DAYS_DATA].sort(() => Math.random() - 0.5);
+
+    engList.forEach(day => {
+        const item = document.createElement('div');
+        item.className = 'match-item';
+        item.innerText = day.eng;
+        item.setAttribute('data-id', day.id);
+        item.onclick = () => handleMatchClick(item, 'eng');
+        colEng.appendChild(item);
+    });
+
+    rusList.forEach(day => {
+        const item = document.createElement('div');
+        item.className = 'match-item';
+        item.innerText = day.rus;
+        item.setAttribute('data-id', day.id);
+        item.onclick = () => handleMatchClick(item, 'rus');
+        colRus.appendChild(item);
+    });
+}
+
+function handleMatchClick(item, type) {
+    if(item.classList.contains('matched')) return;
+
+    if(type === 'eng') speak(item.innerText);
+
+    if(!selectedMatchItem) {
+        selectedMatchItem = item;
+        item.classList.add('selected');
+    } else {
+        if(selectedMatchItem === item) {
+            item.classList.remove('selected');
+            selectedMatchItem = null;
+            return;
+        }
+
+        const id1 = selectedMatchItem.getAttribute('data-id');
+        const id2 = item.getAttribute('data-id');
+
+        if(id1 === id2) {
+            item.classList.add('matched');
+            selectedMatchItem.classList.add('matched');
+            selectedMatchItem.classList.remove('selected');
+            selectedMatchItem = null;
+            speak("Good!");
+            
+            // Check win
+            if(document.querySelectorAll('.match-item.matched').length === 14) confettiWin();
+            
+        } else {
+            item.classList.add('selected');
+            setTimeout(() => {
+                item.classList.remove('selected');
+                selectedMatchItem.classList.remove('selected');
+                selectedMatchItem = null;
+            }, 500);
+        }
+    }
+}
+
+/* ================= GAME 4: MEMORY ================= */
+let flippedCards = [];
+let memoryLocked = false;
+
+function initMemory() {
+    const grid = document.getElementById('memoryGrid');
+    grid.innerHTML = '';
+    flippedCards = [];
+    
+    let cards = [];
+    DAYS_DATA.forEach(day => {
+        cards.push({ id: day.id, content: day.eng, type: 'eng' });
+        cards.push({ id: day.id, content: day.rus, type: 'rus' });
+    });
+    
+    cards.sort(() => Math.random() - 0.5);
+
+    cards.forEach(card => {
+        const el = document.createElement('div');
+        el.className = 'mem-card';
+        el.innerHTML = `
+            <div class="mem-face mem-front">${card.content}</div>
+            <div class="mem-face mem-back"></div>
+        `;
+        el.onclick = () => flipCard(el, card);
+        grid.appendChild(el);
+    });
+}
+
+function flipCard(el, cardData) {
+    if(memoryLocked) return;
+    if(el.classList.contains('flipped')) return;
+
+    if(cardData.type === 'eng') speak(cardData.content);
+
+    el.classList.add('flipped');
+    flippedCards.push({ el, data: cardData });
+
+    if(flippedCards.length === 2) {
+        memoryLocked = true;
+        checkForMatch();
+    }
+}
+
+function checkForMatch() {
+    const [c1, c2] = flippedCards;
+    
+    if(c1.data.id === c2.data.id) {
+        flippedCards = [];
+        memoryLocked = false;
+        speak("Yes!");
+        // Check win
+        if(document.querySelectorAll('.mem-card.flipped').length === 14) confettiWin();
+    } else {
+        setTimeout(() => {
+            c1.el.classList.remove('flipped');
+            c2.el.classList.remove('flipped');
+            flippedCards = [];
+            memoryLocked = false;
+        }, 1000);
+    }
+}
+
+// Auto-start Learn
+showGame('learn');
+
+</script>
+</body>
+</html>

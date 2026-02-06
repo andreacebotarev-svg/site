@@ -1,0 +1,101 @@
+/* Professional Reader Content Styles */
+
+/* Prevent margin collapsing - critical for paragraph spacing */
+.reader-viewer {
+  padding-top: 1px !important;  /* Break margin collapsing */
+  padding-bottom: 1px !important;
+  overflow: auto; /* Additional safeguard */
+}
+
+/* Use padding instead of margin for paragraphs - padding NEVER collapses */
+.reader-viewer p,
+.reader-viewer section p,
+.reader-viewer .chapter p {
+  display: block !important;
+  margin: 0 !important; /* Remove all margins to prevent collapsing */
+  padding-top: 0 !important;
+  padding-bottom: 1.25em !important; /* Use padding instead - guaranteed spacing */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-indent: 1.5em;
+  line-height: 1.7;
+  color: var(--text-primary);
+  text-align: justify;
+  min-height: 1em; /* Prevent empty paragraphs from collapsing */
+  /* No border needed - padding doesn't collapse */
+}
+
+/* First paragraph in section usually shouldn't have indent */
+.reader-viewer section > p:first-of-type,
+.reader-viewer h2 + p,
+.reader-viewer h3 + p {
+  text-indent: 0;
+}
+
+.reader-viewer .empty-line {
+  display: block !important;
+  height: 1.25em !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 1.25em !important;
+}
+
+.reader-viewer .subtitle {
+  font-weight: 600;
+  font-size: 1.25em;
+  margin: 2em 0 1em;
+  text-align: center;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.reader-viewer .poem {
+  margin: 2em auto;
+  max-width: 80%;
+  font-style: italic;
+}
+
+.reader-viewer .stanza {
+  margin-bottom: 1.5em;
+}
+
+.reader-viewer .poem-line {
+  text-indent: 0 !important;
+  margin: 0 !important; /* Remove margins */
+  padding-bottom: 0.3em !important; /* Use padding for consistency */
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* Fix for mixed content paragraphs (EPUB) */
+.reader-viewer .paragraph-container {
+  margin-bottom: 1.2em;
+}
+
+@media (max-width: 768px) {
+  .reader-viewer p,
+  .reader-viewer section p,
+  .reader-viewer .chapter p {
+    padding-bottom: 1em !important; /* Use padding on mobile too */
+    line-height: 1.6;
+  }
+  .reader-viewer .poem {
+    max-width: 95%;
+    margin: 1.5em 1em;
+  }
+}
+
+/* Selection Highlight */
+.sentence-highlight {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+/* Debug mode: Uncomment to visualize paragraph boundaries */
+/*
+.reader-viewer p {
+  border-bottom: 1px dashed rgba(255, 0, 0, 0.2) !important;
+}
+*/

@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reading Trainer (Standalone)</title>
+  <style>
+    :root{
+      --bg:#0b1020; --panel:#121a33; --muted:#9fb0ff;
+      --text:#e9eeff; --accent:#6aa6ff; --good:#2dd4bf; --warn:#fbbf24; --bad:#fb7185;
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
+      --radius: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8ff; --panel:#ffffff; --text:#0b1020; --muted:#4b5bd6; --border: rgba(0,0,0,.12); --shadow: 0 10px 25px rgba(9,30,66,.12); }
+    }
+    html,body{height:100%}
+    body{
+      margin:0; font-family:var(--sans);
+      background: radial-gradient(1200px 600px at 15% 10%, rgba(106,166,255,.18), transparent 60%),
+                  radial-gradient(1000px 500px at 80% 0%, rgba(45,212,191,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:var(--accent)}
+    .wrap{max-width:1100px; margin:0 auto; padding:18px}
+    header{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap;
+      padding:14px 16px; background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);
+    }
+    header h1{margin:0; font-size:18px; letter-spacing:.2px}
+    header .sub{margin-top:6px; color:var(--muted); font-size:12.5px; line-height:1.25}
+    .grid{display:grid; grid-template-columns: 360px 1fr; gap:14px; margin-top:14px}
+    @media (max-width: 920px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:14px;
+    }
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .row > *{flex: 0 0 auto}
+    label{font-size:12px; color:var(--muted)}
+    select,input[type="range"],input[type="text"]{
+      width:100%; margin-top:6px;
+      background: transparent; color:var(--text);
+      border:1px solid var(--border); border-radius:12px; padding:10px 12px; outline:none;
+    }
+    input[type="text"]{font-family:var(--mono)}
+    button{
+      border:1px solid var(--border); background:transparent; color:var(--text);
+      padding:10px 12px; border-radius:12px; cursor:pointer;
+    }
+    button:hover{border-color:rgba(255,255,255,.25)}
+    button.primary{background:rgba(106,166,255,.15); border-color:rgba(106,166,255,.35)}
+    button.good{background:rgba(45,212,191,.16); border-color:rgba(45,212,191,.35)}
+    button.warn{background:rgba(251,191,36,.16); border-color:rgba(251,191,36,.35)}
+    button.bad{background:rgba(251,113,133,.16); border-color:rgba(251,113,133,.35)}
+    button:disabled{opacity:.45; cursor:not-allowed}
+
+    .meta{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px}
+    .meta .kpi{padding:10px 12px; border:1px solid var(--border); border-radius:12px}
+    .kpi .t{font-size:11px; color:var(--muted)}
+    .kpi .v{font-size:16px; margin-top:3px; font-family:var(--mono)}
+    .hint{margin-top:10px; color:var(--muted); font-size:12.5px; line-height:1.35}
+
+    .trainer{
+      display:grid; grid-template-rows: auto auto 1fr auto; gap:12px;
+      min-height: 520px;
+    }
+    .big{
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid var(--border); border-radius:18px;
+      min-height: 220px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(600px 220px at 50% 30%, rgba(106,166,255,.14), transparent 60%),
+        radial-gradient(520px 220px at 50% 90%, rgba(45,212,191,.10), transparent 60%),
+        rgba(0,0,0,.06);
+    }
+    .word{
+      font-size: clamp(40px, 7vw, 82px);
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+    .phonics{
+      position:absolute; left:14px; top:14px;
+      font-family:var(--mono); font-size:12px; color:var(--muted);
+      padding:8px 10px; border:1px solid var(--border); border-radius:12px;
+      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,.10);
+    }
+    .modebar{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
+    .modebar .left, .modebar .right{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .divider{height:1px; background:var(--border); margin:8px 0}
+
+    .answer{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .answer input{flex: 1 1 260px; min-width:240px}
+    .pill{
+      font-family:var(--mono); font-size:12px; color:var(--muted);
+      padding:8px 10px; border:1px solid var(--border); border-radius:999px;
+    }
+    .sr{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;
+    }
+
+    details summary{cursor:pointer; color:var(--muted); font-size:12.5px}
+    .kbd{font-family:var(--mono); font-size:12px; border:1px solid var(--border); border-bottom-width:2px; padding:2px 6px; border-radius:8px; color:var(--muted)}
+    .small{font-size:12px; color:var(--muted)}
+    .danger{color:var(--bad)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Reading Trainer — закрытый слог (CVC) + интервальные повторы</h1>
+        <div class="sub">
+          Горячие клавиши: <span class="kbd">Space</span> показать/следующее, <span class="kbd">S</span> озвучить,
+          <span class="kbd">1..4</span> оценка (Again/Hard/Good/Easy), <span class="kbd">R</span> сброс ввода.
+        </div>
+      </div>
+      <div class="row">
+        <button id="btnExport">Экспорт</button>
+        <button id="btnImport">Импорт</button>
+        <button id="btnReset" class="bad">Сбросить прогресс</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <section class="card" aria-label="Настройки">
+        <div>
+          <label for="lesson">Урок / набор</label>
+          <select id="lesson"></select>
+        </div>
+
+        <div style="margin-top:10px">
+          <label for="mode">Режим</label>
+          <select id="mode">
+            <option value="flash">Карточки (читать → оценить)</option>
+            <option value="type">Ввод (показ → скрыть → введите)</option>
+            <option value="mix">Смешанный</option>
+          </select>
+        </div>
+
+        <div class="meta">
+          <div class="kpi">
+            <div class="t">На сегодня (due)</div>
+            <div class="v" id="kpiDue">0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">Всего слов</div>
+            <div class="v" id="kpiTotal">0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">Выучено (reps ≥ 5)</div>
+            <div class="v" id="kpiMastered">0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">Точность (сессия)</div>
+            <div class="v" id="kpiAcc">—</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label for="ttsRate">Озвучка: скорость</label>
+          <input id="ttsRate" type="range" min="0.6" max="1.2" step="0.05" value="0.9" />
+          <div class="row" style="margin-top:10px">
+            <button id="btnSpeak">Озвучить (S)</button>
+            <button id="btnToggleHint">Подсказка</button>
+          </div>
+        </div>
+
+        <div class="hint" id="lessonInfo"></div>
+        <div class="divider"></div>
+
+        <details>
+          <summary>Подсказки по работе</summary>
+          <div class="hint">
+            <ul>
+              <li>Цель: декодировать слово (CVC) “по звукам”, не угадывать по форме.</li>
+              <li>В режиме “Ввод” сначала слово показывается кратко, затем нужно напечатать.</li>
+              <li>Если TTS не говорит — проверьте, что у системы установлен английский голос.</li>
+            </ul>
+          </div>
+        </details>
+
+        <div class="divider"></div>
+        <div class="small">
+          Данные хранятся локально в браузере (без сервера).<br/>
+          Если открыть файл в приватном режиме — сохранение может очищаться после закрытия вкладки.
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <section class="card trainer" aria-label="Тренировка">
+        <div class="modebar">
+          <div class="left">
+            <span class="pill" id="pillQueue">Очередь: —</span>
+            <span class="pill" id="pillWordId">Слово: —</span>
+          </div>
+          <div class="right">
+            <button id="btnPrev">← Назад</button>
+            <button id="btnNext" class="primary">Дальше (Space)</button>
+          </div>
+        </div>
+
+        <div class="big" role="region" aria-label="Карточка">
+          <div class="phonics" id="phonicsBox" hidden></div>
+          <div class="word" id="wordBox">—</div>
+          <div class="sr" id="srLive" aria-live="polite"></div>
+        </div>
+
+        <div class="answer" id="answerRow" hidden>
+          <input id="answer" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Введите слово..." />
+          <button id="btnCheck" class="primary">Проверить</button>
+          <button id="btnReveal">Показать</button>
+        </div>
+
+        <div class="row" aria-label="Оценка">
+          <button id="btnAgain" class="bad">1 Again</button>
+          <button id="btnHard" class="warn">2 Hard</button>
+          <button id="btnGood" class="good">3 Good</button>
+          <button id="btnEasy" class="primary">4 Easy</button>
+          <span class="pill" id="pillSM2">SM-2: —</span>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------- Data (можно расширять) ----------
+  const LESSONS = [
+    {
+      id: "short-e",
+      title: "Short E /e/ (CVC)",
+      rule: "Закрытый слог (CVC): e читается как /e/ (например: ten, pen).",
+      grapheme: "E/e",
+      ipa: "/e/",
+      words: ["ten","net","pen","pet","men","met","hen","set","sent","pent"]
+    },
+    {
+      id: "short-a",
+      title: "Short A /æ/ (CVC)",
+      rule: "Закрытый слог (CVC): a читается как /æ/ (например: cat, hat).",
+      grapheme: "A/a",
+      ipa: "/æ/",
+      words: ["cat","hat","ant","map","man","ham","tan","pap","pant","hap"]
+    },
+    {
+      id: "short-u",
+      title: "Short U /ʌ/ (CVC)",
+      rule: "Закрытый слог (CVC): u часто читается как /ʌ/ (up, cup, sun).",
+      grapheme: "U/u",
+      ipa: "/ʌ/",
+      words: ["up","cup","nut","sun","mum","hum","hunt","pun","pup","punt"]
+    },
+    {
+      id: "short-o",
+      title: "Short O /ɒ/~/ɑ/ (CVC)",
+      rule: "Закрытый слог (CVC): o как короткий звук (dog, mop, top).",
+      grapheme: "O/o",
+      ipa: "/ɒ/~/ɑ/",
+      words: ["dog","mop","top","pond","cop","cut","cup","sup"]
+    },
+    {
+      id: "mixed-cvc",
+      title: "Mixed CVC review",
+      rule: "Смешанная тренировка коротких гласных в закрытом слоге.",
+      grapheme: "CVC",
+      ipa: "short vowels",
+      words: ["ten","pen","pet","cat","hat","map","up","cup","sun","dog","mop","top","man","tan","nut","net"]
+    }
+  ];
+
+  // ---------- Storage ----------
+  const STORAGE_KEY = "reading_trainer_v1";
+  const nowMs = () => Date.now();
+  const dayMs = 24 * 60 * 60 * 1000;
+
+  function safeJsonParse(s, fallback){
+    try { return JSON.parse(s); } catch { return fallback; }
+  }
+
+  function loadState(){
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const st = safeJsonParse(raw, null);
+    if (!st || typeof st !== "object") return { version: 1, cards: {} };
+    if (!st.version) st.version = 1;
+    if (!st.cards) st.cards = {};
+    return st;
+  }
+
+  function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function resetState(){
+    localStorage.removeItem(STORAGE_KEY);
+    state = { version: 1, cards: {} };
+    saveState();
+  }
+
+  // ---------- SM-2 (упрощённая реализация) ----------
+  // q: 0..5 (здесь мапим 1..4 на q=2..5)
+  function ensureCard(word){
+    const c = state.cards[word];
+    if (c && typeof c === "object") return c;
+    const fresh = { word, reps: 0, interval: 0, ef: 2.5, due: 0, last: 0 };
+    state.cards[word] = fresh;
+    return fresh;
+  }
+
+  function sm2Update(card, q){
+    // Based on SM-2: ef = ef + (0.1 - (5-q)*(0.08 + (5-q)*0.02)), min 1.3
+    // intervals: 1, 6, prev*ef, ...
+    const ts = nowMs();
+    card.last = ts;
+
+    if (q < 3){
+      card.reps = 0;
+      card.interval = 1;
+      card.due = ts + card.interval * dayMs;
+      return card;
+    }
+
+    card.reps += 1;
+
+    if (card.reps === 1) card.interval = 1;
+    else if (card.reps === 2) card.interval = 6;
+    else card.interval = Math.round(card.interval * card.ef);
+
+    const dq = (5 - q);
+    card.ef = Math.max(1.3, +(card.ef + (0.1 - dq * (0.08 + dq * 0.02))).toFixed(2));
+    card.due = ts + card.interval * dayMs;
+    return card;
+  }
+
+  // ---------- UI ----------
+  const $ = (id) => document.getElementById(id);
+
+  const lessonSel = $("lesson");
+  const modeSel = $("mode");
+  const wordBox = $("wordBox");
+  const phonicsBox = $("phonicsBox");
+  const lessonInfo = $("lessonInfo");
+  const answerRow = $("answerRow");
+  const answerInp = $("answer");
+  const btnCheck = $("btnCheck");
+  const btnReveal = $("btnReveal");
+
+  const btnNext = $("btnNext");
+  const btnPrev = $("btnPrev");
+  const btnSpeak = $("btnSpeak");
+  const btnToggleHint = $("btnToggleHint");
+
+  const btnAgain = $("btnAgain");
+  const btnHard = $("btnHard");
+  const btnGood = $("btnGood");
+  const btnEasy = $("btnEasy");
+
+  const pillQueue = $("pillQueue");
+  const pillWordId = $("pillWordId");
+  const pillSM2 = $("pillSM2");
+
+  const kpiDue = $("kpiDue");
+  const kpiTotal = $("kpiTotal");
+  const kpiMastered = $("kpiMastered");
+  const kpiAcc = $("kpiAcc");
+
+  const btnExport = $("btnExport");
+  const btnImport = $("btnImport");
+  const btnReset = $("btnReset");
+
+  const srLive = $("srLive");
+  const ttsRate = $("ttsRate");
+
+  let state = loadState();
+  let currentLesson = LESSONS[0];
+  let showHint = true;
+
+  // session stats
+  const session = { seen: 0, correct: 0 };
+
+  // queue + history
+  let queue = [];
+  let history = [];
+  let current = null; // {word, lessonId}
+  let revealed = true;
+  let flashTimer = null;
+
+  function normalize(s){ return (s || "").trim().toLowerCase(); }
+
+  function buildLessons(){
+    lessonSel.innerHTML = "";
+    for (const l of LESSONS){
+      const opt = document.createElement("option");
+      opt.value = l.id;
+      opt.textContent = l.title;
+      lessonSel.appendChild(opt);
+    }
+  }
+
+  function dueWordsForLesson(lesson){
+    const ts = nowMs();
+    return lesson.words.filter(w => ensureCard(w).due <= ts);
+  }
+
+  function masteredCount(lesson){
+    return lesson.words.filter(w => ensureCard(w).reps >= 5).length;
+  }
+
+  function computeQueue(){
+    const ts = nowMs();
+    const words = currentLesson.words.slice();
+
+    // Sort by: due first, then lowest reps, then oldest last-seen
+    words.sort((a,b) => {
+      const ca = ensureCard(a), cb = ensureCard(b);
+      const adue = ca.due <= ts ? 0 : 1;
+      const bdue = cb.due <= ts ? 0 : 1;
+      if (adue !== bdue) return adue - bdue;
+      if (ca.reps !== cb.reps) return ca.reps - cb.reps;
+      return (ca.last || 0) - (cb.last || 0);
+    });
+
+    queue = words;
+    updateKpis();
+  }
+
+  function updateKpis(){
+    const due = dueWordsForLesson(currentLesson).length;
+    kpiDue.textContent = String(due);
+    kpiTotal.textContent = String(currentLesson.words.length);
+    kpiMastered.textContent = String(masteredCount(currentLesson));
+    if (session.seen === 0) kpiAcc.textContent = "—";
+    else kpiAcc.textContent = Math.round((session.correct / session.seen) * 100) + "%";
+    pillQueue.textContent = `Очередь: ${Math.max(0, queue.length)} | due: ${due}`;
+  }
+
+  function setLesson(id){
+    currentLesson = LESSONS.find(x => x.id === id) || LESSONS[0];
+    lessonInfo.innerHTML = `
+      <div><b>${currentLesson.grapheme}</b> • ${currentLesson.ipa}</div>
+      <div style="margin-top:6px">${currentLesson.rule}</div>
+      <div class="small" style="margin-top:6px">Слова: ${currentLesson.words.join(", ")}</div>
+    `;
+    computeQueue();
+    history = [];
+    nextCard(true);
+  }
+
+  function setMode(mode){
+    const isType = (mode === "type");
+    const isMix = (mode === "mix");
+    answerRow.hidden = !(isType || isMix);
+    // In flash mode: keep answer hidden
+  }
+
+  function speakWord(text){
+    const t = normalize(text);
+    if (!t) return;
+    if (!("speechSynthesis" in window)) {
+      alert("SpeechSynthesis недоступен в этом браузере.");
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = "en-US";
+    u.rate = Number(ttsRate.value || 0.9);
+    window.speechSynthesis.speak(u);
+  }
+
+  function showWord(word){
+    wordBox.textContent = word;
+    srLive.textContent = `Слово: ${word}`;
+    const c = ensureCard(word);
+    pillWordId.textContent = `Слово: ${word}`;
+    pillSM2.textContent = `reps=${c.reps} ef=${c.ef} int=${c.interval}d`;
+    phonicsBox.textContent = showHint ? `${currentLesson.grapheme} ${currentLesson.ipa} • ${currentLesson.rule}` : "";
+    phonicsBox.hidden = !showHint;
+  }
+
+  function reveal(){
+    revealed = true;
+    wordBox.style.filter = "none";
+    wordBox.style.opacity = "1";
+  }
+  function hideWord(){
+    revealed = false;
+    wordBox.style.filter = "blur(10px)";
+    wordBox.style.opacity = "0.15";
+  }
+
+  function clearFlashTimer(){
+    if (flashTimer) { clearTimeout(flashTimer); flashTimer = null; }
+  }
+
+  function nextCard(force = false){
+    clearFlashTimer();
+
+    // If queue empty, recompute (could happen after import/reset)
+    if (!queue.length) computeQueue();
+
+    // pop first from queue
+    const word = queue.shift();
+    if (!word){
+      wordBox.textContent = "Нет слов";
+      return;
+    }
+    current = { word, lessonId: currentLesson.id };
+    history.push(current.word);
+
+    showWord(current.word);
+    setMode(modeSel.value);
+
+    const mode = modeSel.value;
+    if (mode === "flash"){
+      reveal();
+    } else if (mode === "type"){
+      // flash then hide, focus input
+      reveal();
+      answerInp.value = "";
+      flashTimer = setTimeout(() => {
+        hideWord();
+        answerInp.focus();
+      }, 900);
+    } else { // mix
+      // alternate: if due -> type, else flash
+      const ts = nowMs();
+      const due = ensureCard(current.word).due <= ts;
+      if (due){
+        reveal();
+        answerInp.value = "";
+        flashTimer = setTimeout(() => {
+          hideWord();
+          answerInp.focus();
+        }, 900);
+      } else {
+        reveal();
+      }
+    }
+
+    updateKpis();
+  }
+
+  function prevCard(){
+    if (history.length < 2) return;
+    // current is last; remove it and take previous
+    clearFlashTimer();
+    history.pop();
+    const prev = history.pop();
+    if (prev){
+      queue.unshift(current.word); // put current back
+      queue.unshift(prev);
+      nextCard(true);
+    }
+  }
+
+  function grade(mapped){
+    if (!current) return;
+    // map buttons 1..4 => q 2..5
+    const q = (mapped === 1) ? 2 : (mapped === 2) ? 3 : (mapped === 3) ? 4 : 5;
+    const c = ensureCard(current.word);
+
+    // Session accuracy: treat Good/Easy as correct; Again/Hard as incorrect (прагматично)
+    session.seen += 1;
+    if (mapped >= 3) session.correct += 1;
+
+    sm2Update(c, q);
+    saveState();
+
+    // After grading: push back into queue if wrong (Again/Hard) to reinforce
+    if (mapped <= 2){
+      queue.splice(Math.min(3, queue.length), 0, current.word);
+    }
+
+    nextCard();
+  }
+
+  function checkTyped(){
+    if (!current) return;
+    const typed = normalize(answerInp.value);
+    const target = normalize(current.word);
+    const ok = typed === target;
+
+    // Reveal and give immediate reinforcement
+    reveal();
+    if (ok) {
+      answerInp.value = "";
+      grade(3); // Good
+    } else {
+      alert(`Неверно.\nВы ввели: "${typed || "—"}"\nПравильно: "${target}"`);
+      // keep on card; user can try again or reveal and grade
+      session.seen += 1;
+      saveState();
+      updateKpis();
+      answerInp.focus();
+      answerInp.select();
+    }
+  }
+
+  function exportProgress(){
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "reading-trainer-progress.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function importProgress(){
+    const inp = document.createElement("input");
+    inp.type = "file";
+    inp.accept = "application/json";
+    inp.onchange = () => {
+      const file = inp.files && inp.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = () => {
+        const data = safeJsonParse(String(r.result || ""), null);
+        if (!data || typeof data !== "object" || !data.cards) {
+          alert("Файл не похож на экспорт тренажёра.");
+          return;
+        }
+        state = data;
+        saveState();
+        computeQueue();
+        nextCard(true);
+        alert("Импорт выполнен.");
+      };
+      r.readAsText(file);
+    };
+    inp.click();
+  }
+
+  // ---------- Events ----------
+  buildLessons();
+
+  lessonSel.addEventListener("change", () => setLesson(lessonSel.value));
+  modeSel.addEventListener("change", () => { setMode(modeSel.value); nextCard(true); });
+
+  btnNext.addEventListener("click", () => nextCard());
+  btnPrev.addEventListener("click", () => prevCard());
+
+  btnSpeak.addEventListener("click", () => speakWord(current?.word));
+  btnToggleHint.addEventListener("click", () => {
+    showHint = !showHint;
+    if (current) showWord(current.word);
+  });
+
+  btnAgain.addEventListener("click", () => grade(1));
+  btnHard.addEventListener("click", () => grade(2));
+  btnGood.addEventListener("click", () => grade(3));
+  btnEasy.addEventListener("click", () => grade(4));
+
+  btnCheck.addEventListener("click", () => checkTyped());
+  btnReveal.addEventListener("click", () => reveal());
+
+  answerInp.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") checkTyped();
+  });
+
+  btnExport.addEventListener("click", exportProgress);
+  btnImport.addEventListener("click", importProgress);
+
+  btnReset.addEventListener("click", () => {
+    if (!confirm("Точно сбросить прогресс?")) return;
+    resetState();
+    computeQueue();
+    nextCard(true);
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) {
+      if (e.key === "Escape") { e.target.blur(); }
+      if (e.key.toLowerCase() === "r") { answerInp.value = ""; }
+      return;
+    }
+    if (e.code === "Space") { e.preventDefault(); nextCard(); }
+    const k = e.key.toLowerCase();
+    if (k === "s") speakWord(current?.word);
+    if (k === "1") grade(1);
+    if (k === "2") grade(2);
+    if (k === "3") grade(3);
+    if (k === "4") grade(4);
+  });
+
+  // init
+  lessonSel.value = LESSONS[0].id;
+  setLesson(lessonSel.value);
+})();
+</script>
+</body>
+</html>

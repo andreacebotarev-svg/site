@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Lesson</title>
+    <style>
+        /* --- 1. DESIGN SYSTEM --- */
+        :root {
+            --bg: #F0F4F8;
+            --surface: #FFFFFF;
+            --sidebar-bg: #FFFFFF;
+            --text: #102A43;
+            --text-light: #627D98;
+            --accent: #00838F; /* Перезапишется JS */
+            --accent-light: rgba(0, 131, 143, 0.1);
+            --border: #D9E2EC;
+            --success: #00E676;
+            --error: #FF1744;
+            --radius: 16px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-lg: 0 15px 30px rgba(0,0,0,0.1);
+            --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            --font-read: "Merriweather", "Georgia", serif;
+            --nav-height: 70px;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --sidebar-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+            --shadow-lg: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: var(--font-ui);
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding-bottom: 100px; /* Space for bottom nav on mobile */
+            transition: background 0.4s ease;
+        }
+
+        /* --- LAYOUT WITH TABS --- */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar (Desktop Navigation) */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            position: fixed; height: 100vh;
+            padding: 30px; z-index: 100;
+            display: flex; flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .logo { font-weight: 900; font-size: 1.5rem; color: var(--accent); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        
+        .nav-menu { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .nav-btn {
+            padding: 14px 20px; border-radius: 12px;
+            background: transparent; border: none;
+            color: var(--text-light); font-weight: 600; font-size: 1rem;
+            cursor: pointer; text-align: left; transition: 0.2s;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .nav-btn:hover { background: var(--bg); color: var(--accent); }
+        .nav-btn.active { background: var(--accent-light); color: var(--accent); }
+        .nav-btn .badge { margin-left: auto; background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; }
+
+        /* Mobile Bottom Nav */
+        .mobile-nav { display: none; }
+
+        /* Main Content Area */
+        .main-view {
+            flex: 1; margin-left: 280px; /* Sidebar width */
+            padding: 40px 60px;
+            max-width: 1000px;
+        }
+
+        /* Tab Views */
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- HERO --- */
+        .hero {
+            background: linear-gradient(135deg, var(--accent), #1a202c);
+            border-radius: 24px; padding: 60px 40px;
+            color: white; margin-bottom: 50px;
+            box-shadow: var(--shadow-lg);
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; right: -20%;
+            width: 400px; height: 400px; background: white; opacity: 0.05;
+            border-radius: 50%; filter: blur(60px);
+        }
+        .hero-tag { 
+            background: rgba(255,255,255,0.2); padding: 6px 14px; 
+            border-radius: 20px; font-size: 0.85rem; font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .lesson-title { font-size: 3rem; margin: 20px 0 10px; line-height: 1.1; font-weight: 800; }
+        
+        /* --- READING BLOCKS --- */
+        .block { margin-bottom: 60px; }
+        .block-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .block-title { font-size: 1.8rem; font-weight: 800; margin: 0; position: relative; }
+        
+        .reading-text { 
+            font-family: var(--font-read); font-size: 1.35rem; 
+            line-height: 1.9; color: var(--text); 
+        }
+
+        /* --- INTERACTIVE WORDS --- */
+        .word { 
+            cursor: pointer; border-bottom: 2px solid transparent; 
+            border-radius: 4px; transition: all 0.15s;
+        }
+        .word:hover { background: var(--accent-light); border-bottom-color: var(--accent); }
+        .word.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-light); }
+        .word.saved { border-bottom: 2px solid var(--success); }
+
+        /* --- TOOLTIP (Modern Glass) --- */
+        #tooltip {
+            position: absolute; z-index: 9999;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.6);
+            padding: 16px; border-radius: 16px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+            min-width: 200px;
+            opacity: 0; pointer-events: none; transform: scale(0.95);
+            transition: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        [data-theme="dark"] #tooltip { background: rgba(30, 40, 50, 0.9); border-color: rgba(255,255,255,0.1); }
+        #tooltip.visible { opacity: 1; pointer-events: auto; transform: scale(1); }
+
+        .tt-word { font-size: 1.2rem; font-weight: 800; margin-bottom: 4px; text-transform: capitalize; }
+        .tt-trans { font-size: 1.1rem; color: var(--accent); margin-bottom: 12px; font-family: var(--font-ui); }
+        .tt-loading { font-size: 0.9rem; color: var(--text-light); font-style: italic; display: none; }
+        .tt-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        
+        .tt-btn {
+            padding: 8px; border-radius: 8px; border: 1px solid var(--border);
+            background: transparent; cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            transition: 0.2s; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .tt-btn:hover { background: var(--bg); border-color: var(--text-light); }
+        .tt-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+        .tt-btn.primary:hover { opacity: 0.9; }
+
+        /* --- VOCABULARY TAB --- */
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .v-card {
+            background: var(--surface); border-radius: 16px; padding: 25px;
+            border: 1px solid var(--border); position: relative; transition: 0.3s;
+            box-shadow: var(--shadow-sm); cursor: pointer;
+        }
+        .v-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+        .v-card h3 { margin: 0 0 5px 0; font-size: 1.4rem; color: var(--accent); }
+        .v-card p { margin: 0; color: var(--text-light); font-size: 1rem; }
+        .v-delete { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--error); opacity: 0; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+        .v-card:hover .v-delete { opacity: 1; }
+
+        /* --- FLASHCARDS --- */
+        .flashcard-container { 
+            max-width: 500px; margin: 40px auto; perspective: 1000px; height: 300px; cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.6s; transform-style: preserve-3d;
+            box-shadow: var(--shadow-lg); border-radius: 24px;
+        }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .fc-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--surface); border-radius: 24px; border: 2px solid var(--border);
+        }
+        .fc-front h2 { font-size: 2.5rem; color: var(--accent); margin: 0; }
+        .fc-back { transform: rotateY(180deg); background: var(--bg); }
+        .fc-back h2 { font-size: 2rem; color: var(--text); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 800px) {
+            .sidebar { display: none; }
+            .mobile-nav {
+                display: flex; position: fixed; bottom: 0; left: 0; width: 100%;
+                background: var(--surface); padding: 10px; border-top: 1px solid var(--border);
+                justify-content: space-around; z-index: 1000;
+            }
+            .nav-btn-mobile {
+                flex-direction: column; gap: 4px; font-size: 0.8rem; background: none; border: none; color: var(--text-light);
+            }
+            .nav-btn-mobile.active { color: var(--accent); }
+            .nav-btn-mobile svg { width: 24px; height: 24px; fill: currentColor; }
+            
+            .main-view { margin-left: 0; padding: 20px; padding-bottom: 90px; }
+            .reading-text { font-size: 1.1rem; }
+            .hero-title { font-size: 2rem; }
+        }
+
+        /* --- LOADER --- */
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--accent); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <!-- Desktop Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <span style="font-size:2rem">⚡</span> LingoLearn
+        </div>
+        <nav class="nav-menu">
+            <button class="nav-btn active" onclick="switchTab('lesson')">
+                📖 Lesson Content
+            </button>
+            <button class="nav-btn" onclick="switchTab('vocab')">
+                🧠 My Vocabulary
+                <span class="badge" id="badge-count">0</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('practice')">
+                🎓 Flashcards
+            </button>
+        </nav>
+        <div style="margin-top: auto;">
+            <button class="nav-btn" onclick="toggleTheme()">◑ Toggle Theme</button>
+        </div>
+    </aside>
+
+    <!-- Mobile Bottom Nav -->
+    <div class="mobile-nav">
+        <button class="nav-btn-mobile active" onclick="switchTab('lesson')">
+            <span>📖</span> Lesson
+        </button>
+        <button class="nav-btn-mobile" onclick="switchTab('vocab')">
+            <span>🧠</span> Vocab
+        </button>
+        <button class="nav-btn-mobile" onclick="switchTab('practice')">
+            <span>🎓</span> Practice
+        </button>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip">
+        <div class="tt-header" style="display:flex; justify-content:space-between;">
+            <div class="tt-word">Word</div>
+            <div class="tt-loading"><div class="loader"></div></div>
+        </div>
+        <div class="tt-trans">Translation...</div>
+        <div class="tt-actions">
+            <button class="tt-btn primary" onclick="tooltipActions.play()">🔊 Listen</button>
+            <button class="tt-btn" id="tt-save" onclick="tooltipActions.toggleSave()">+ Save</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-view">
+        
+        <!-- TAB 1: LESSON -->
+        <div id="tab-lesson" class="tab-content active">
+            <div class="hero" id="hero">
+                <span class="hero-tag">LESSON Loading...</span>
+                <h1 class="lesson-title">Loading Content...</h1>
+            </div>
+            <div id="lesson-body"></div>
+        </div>
+
+        <!-- TAB 2: VOCABULARY -->
+        <div id="tab-vocab" class="tab-content">
+            <h1 class="block-title" style="margin-bottom:30px;">My Vocabulary</h1>
+            <div id="vocab-list" class="vocab-grid">
+                <!-- Cards injected here -->
+            </div>
+            <div id="empty-vocab" style="text-align:center; margin-top:50px; display:none;">
+                <h3>No words saved yet</h3>
+                <p>Click on any word in the lesson text to translate and save it.</p>
+            </div>
+        </div>
+
+        <!-- TAB 3: PRACTICE -->
+        <div id="tab-practice" class="tab-content">
+            <h1 class="block-title" style="text-align:center;">Flashcards</h1>
+            <div class="flashcard-container" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="fc-face fc-front">
+                        <h2 id="fc-front-text">Start</h2>
+                        <p style="margin-top:20px; color:var(--text-light)">(Click to flip)</p>
+                    </div>
+                    <div class="fc-face fc-back">
+                        <h2 id="fc-back-text">...</h2>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:30px; display:flex; gap:20px; justify-content:center;">
+                <button class="tt-btn" style="padding:12px 24px; font-size:1.2rem;" onclick="flashcards.prev()">← Prev</button>
+                <button class="tt-btn primary" style="padding:12px 24px; font-size:1.2rem;" onclick="flashcards.next()">Next →</button>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    // --- 1. CONFIG & STATE ---
+    const lessonId = window.location.pathname.split('/').pop().replace('.html', '') || '263';
+    const storageKey = `lingo_vocab_${lessonId}`;
+    
+    // App State
+    let savedWords = JSON.parse(localStorage.getItem(storageKey)) || [];
+    let currentTooltipWord = null;
+    
+    // --- 2. API INTEGRATIONS ---
+
+    // A. Google TTS Hack (Better Audio)
+    function speak(text) {
+        if (!navigator.onLine) {
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-GB'; u.rate = 0.9;
+            window.speechSynthesis.speak(u);
+            return;
+        }
+        const audio = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=tw-ob`);
+        audio.play();
+    }
+
+    // B. Translation API (MyMemory - Free Tier)
+    async function fetchTranslation(text) {
+        try {
+            const existing = savedWords.find(w => w.en.toLowerCase() === text.toLowerCase());
+            if (existing) return existing.ru;
+
+            const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|ru`;
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            if (data.responseData && data.responseData.translatedText) {
+                return data.responseData.translatedText;
+            }
+            return "No translation found";
+        } catch (e) {
+            console.error(e);
+            return "Error loading translation";
+        }
+    }
+
+    // --- 3. CORE LOGIC MANAGERS ---
+
+    const vocabManager = {
+        add(en, ru) {
+            const clean = en.toLowerCase();
+            if (savedWords.some(w => w.en.toLowerCase() === clean)) return; 
+            
+            savedWords.push({ id: Date.now(), en: clean, ru: ru });
+            this.save();
+            this.render();
+            updateUIState();
+        },
+        remove(id) {
+            savedWords = savedWords.filter(w => w.id !== id);
+            this.save();
+            this.render();
+            updateUIState();
+        },
+        save() {
+            localStorage.setItem(storageKey, JSON.stringify(savedWords));
+            updateBadge();
+        },
+        isSaved(word) {
+            return savedWords.some(w => w.en.toLowerCase() === word.toLowerCase());
+        },
+        render() {
+            const container = document.getElementById('vocab-list');
+            const emptyState = document.getElementById('empty-vocab');
+            
+            if (savedWords.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            container.innerHTML = savedWords.map(w => `
+                <div class="v-card" onclick="speak('${w.en}')">
+                    <h3>${w.en}</h3>
+                    <p>${w.ru}</p>
+                    <button class="v-delete" onclick="event.stopPropagation(); vocabManager.remove(${w.id})">✕</button>
+                </div>
+            `).join('');
+            
+            flashcards.init();
+        }
+    };
+
+    const tooltipActions = {
+        el: document.getElementById('tooltip'),
+        wordEl: document.querySelector('.tt-word'),
+        transEl: document.querySelector('.tt-trans'),
+        loader: document.querySelector('.tt-loading'),
+        saveBtn: document.getElementById('tt-save'),
+        
+        async show(target, word) {
+            currentTooltipWord = word;
+            
+            this.el.classList.remove('visible');
+            this.wordEl.innerText = word;
+            this.transEl.innerText = '';
+            this.loader.style.display = 'block';
+            this.updateSaveBtn();
+
+            const rect = target.getBoundingClientRect();
+            const top = rect.top + window.scrollY - 10;
+            const left = rect.left + window.scrollX + (rect.width/2);
+            
+            this.el.style.top = `${top}px`; 
+            this.el.style.left = `${left}px`; 
+            this.el.style.transform = 'translate(-50%, -100%) scale(0.95)';
+            
+            requestAnimationFrame(() => {
+                this.el.classList.add('visible');
+                this.el.style.transform = 'translate(-50%, -110%) scale(1)';
+            });
+
+            const translation = await fetchTranslation(word);
+            this.transEl.innerText = translation;
+            this.loader.style.display = 'none';
+        },
+        
+        hide() {
+            this.el.classList.remove('visible');
+        },
+
+        play() {
+            if(currentTooltipWord) speak(currentTooltipWord);
+        },
+
+        toggleSave() {
+            const word = currentTooltipWord;
+            const trans = this.transEl.innerText;
+            
+            const existing = savedWords.find(w => w.en.toLowerCase() === word.toLowerCase());
+            
+            if (existing) {
+                vocabManager.remove(existing.id);
+            } else {
+                if (!trans || trans === 'Loading...') return;
+                vocabManager.add(word, trans);
+            }
+            this.updateSaveBtn();
+        },
+
+        updateSaveBtn() {
+            if (!currentTooltipWord) return;
+            const isSaved = vocabManager.isSaved(currentTooltipWord);
+            this.saveBtn.innerText = isSaved ? '✓ Saved' : '+ Save';
+            this.saveBtn.style.background = isSaved ? 'var(--success)' : 'transparent';
+            this.saveBtn.style.color = isSaved ? 'white' : 'var(--text)';
+            this.saveBtn.style.borderColor = isSaved ? 'var(--success)' : 'var(--border)';
+        }
+    };
+
+    const flashcards = {
+        idx: 0,
+        
+        init() {
+            if(savedWords.length > 0) this.render();
+            else {
+                document.getElementById('fc-front-text').innerText = 'Add words first';
+                document.getElementById('fc-back-text').innerText = 'Go to lesson tab';
+            }
+        },
+        
+        render() {
+            const item = savedWords[this.idx];
+            document.querySelector('.flashcard-container').classList.remove('flipped');
+            setTimeout(() => {
+                document.getElementById('fc-front-text').innerText = item.en;
+                document.getElementById('fc-back-text').innerText = item.ru;
+            }, 200);
+        },
+
+        next() {
+            if (savedWords.length === 0) return;
+            this.idx = (this.idx + 1) % savedWords.length;
+            this.render();
+        },
+
+        prev() {
+            if (savedWords.length === 0) return;
+            this.idx = (this.idx - 1 + savedWords.length) % savedWords.length;
+            this.render();
+        }
+    };
+
+    // --- 4. UI HELPERS ---
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn, .nav-btn-mobile').forEach(el => el.classList.remove('active'));
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+    }
+    
+    function updateBadge() {
+        document.getElementById('badge-count').innerText = savedWords.length;
+    }
+
+    function updateUIState() {
+        document.querySelectorAll('.word').forEach(el => {
+            const w = el.innerText.toLowerCase().replace(/[^a-z]/g, '');
+            if (vocabManager.isSaved(w)) el.classList.add('saved');
+            else el.classList.remove('saved');
+        });
+    }
+
+    function processText(text) {
+        return text.split(/(\s+|[.,!?;:()"])/).map(part => {
+            if (part.trim().length === 0 || !/[a-zA-Z]/.test(part)) return part;
+            const clean = part.toLowerCase().replace(/[^a-z]/g, '');
+            const isSaved = vocabManager.isSaved(clean) ? 'saved' : '';
+            return `<span class="word ${isSaved}" onclick="handleWordClick(this)">${part}</span>`;
+        }).join('');
+    }
+
+    window.handleWordClick = function(el) {
+        const word = el.innerText.replace(/[^a-zA-Z]/g, "");
+        tooltipActions.show(el, word);
+    };
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#tooltip') && !e.target.closest('.word')) {
+            tooltipActions.hide();
+        }
+    });
+
+    function toggleTheme() {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    }
+
+    // --- 5. FETCH & RENDER ---
+    
+    fetch(`../data/${lessonId}.json`)
+        .then(r => r.json())
+        .then(data => {
+            document.title = data.title;
+            document.documentElement.style.setProperty('--accent', data.colors?.[0] || '#00838F');
+            
+            document.querySelector('.hero-tag').innerText = `LESSON ${data.id}`;
+            document.querySelector('.lesson-title').innerText = data.title;
+
+            let html = '';
+            data.content.forEach(block => {
+                if (block.type === 'block') {
+                    html += `
+                    <div class="block">
+                        <div class="block-header">
+                            <h2 class="block-title">${block.title || ''}</h2>
+                            <button class="tt-btn" onclick="speakBlock(this)">🔊 Listen</button>
+                        </div>
+                        <div class="reading-text">${processText(block.text)}</div>
+                    </div>`;
+                }
+                else if (block.type === 'fact') {
+                    html += `
+                    <div class="block" style="margin: 40px 0;">
+                         <div style="background:var(--surface); padding:30px; border-radius:16px; border-left:5px solid var(--accent); box-shadow:var(--shadow-sm);">
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                                <span style="font-size:1.5rem;">💡</span>
+                                <h4 style="margin:0; color:var(--accent); letter-spacing:1px; text-transform:uppercase;">Did you know?</h4>
+                            </div>
+                            <div class="reading-text" style="font-style:italic;">${processText(block.text)}</div>
+                         </div>
+                    </div>`;
+                }
+                else if (block.type === 'vocab') {
+                    html += `
+                    <div class="block">
+                        <h2 class="block-title">Lesson Vocabulary</h2>
+                        <div class="vocab-grid" style="margin-top:20px;">
+                            ${block.items.map(w => `
+                                <div class="v-card" onclick="speak('${w.en}')">
+                                    <h3>${w.en}</h3>
+                                    <p>${w.ru}</p>
+                                    <button class="tt-btn" style="margin-top:15px; width:100%; justify-content:center;" 
+                                        onclick="event.stopPropagation(); vocabManager.add('${w.en.replace(/'/g, "\\'")}', '${w.ru.replace(/'/g, "\\'")}')">
+                                        + Add to My Words
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+                else if (block.type === 'phrase') {
+                    html += `
+                    <div class="block">
+                        <h2 class="block-title">Useful Phrases</h2>
+                        <div style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
+                            ${block.items.map(p => `
+                                <div style="background:var(--surface); padding:20px; border-radius:12px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:0.2s;" 
+                                     onmouseover="this.style.borderColor='var(--accent)'" 
+                                     onmouseout="this.style.borderColor='var(--border)'"
+                                     onclick="speak('${p.en.replace(/'/g, "\\'")}')">
+                                    <div>
+                                        <div style="font-weight:700; font-size:1.1rem; margin-bottom:5px;">${p.en}</div>
+                                        <div style="color:var(--text-light);">${p.ru}</div>
+                                    </div>
+                                    <span style="color:var(--accent); font-size:1.2rem;">▶</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+                else if (block.type === 'quiz') {
+                    const safeFeedback = (block.feedback || '').replace(/'/g, "\\'");
+                    const options = block.options.map((o, idx) => 
+                        `<button class="tt-btn quiz-opt" style="width:100%; text-align:left; padding:16px; margin-bottom:10px; border:2px solid var(--border); font-size:1rem;" 
+                            onclick="checkQuiz(this, ${idx}, ${block.answer}, '${safeFeedback}')">
+                            ${o}
+                        </button>`
+                    ).join('');
+                    
+                    html += `
+                    <div class="block">
+                        <div style="background:var(--surface); padding:35px; border-radius:20px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
+                            <h3 style="margin-top:0; font-size:1.5rem; margin-bottom:25px;">${block.question}</h3>
+                            <div class="quiz-opts">${options}</div>
+                            <div class="quiz-fb" style="margin-top:20px; padding:20px; background:var(--bg); border-radius:12px; display:none;"></div>
+                        </div>
+                    </div>`;
+                }
+            });
+            
+            document.getElementById('lesson-body').innerHTML = html;
+            updateBadge();
+            vocabManager.render();
+            updateUIState();
+        })
+        .catch(err => console.error(err));
+
+    function speakBlock(btn) {
+        const txt = btn.closest('.block').querySelector('.reading-text').innerText;
+        speak(txt);
+    }
+
+    window.checkQuiz = function(btn, idx, correct, fbTxt) {
+        const parent = btn.closest('.block');
+        const fbDiv = parent.querySelector('.quiz-fb');
+        const allBtns = parent.querySelectorAll('.quiz-opt');
+        
+        allBtns.forEach(b => b.disabled = true);
+        
+        if (idx === correct) {
+            btn.style.borderColor = 'var(--success)';
+            btn.style.background = 'rgba(0, 230, 118, 0.1)';
+            btn.innerHTML += ' ✅';
+            fbDiv.innerHTML = `<strong style="color:var(--success)">Correct!</strong><br>${fbTxt}`;
+            fbDiv.style.borderLeft = '4px solid var(--success)';
+        } else {
+            btn.style.borderColor = 'var(--error)';
+            btn.style.background = 'rgba(255, 23, 68, 0.1)';
+            btn.innerHTML += ' ❌';
+            const correctBtn = allBtns[correct];
+            correctBtn.style.borderColor = 'var(--success)';
+            correctBtn.style.background = 'rgba(0, 230, 118, 0.1)';
+            fbDiv.innerHTML = `<strong style="color:var(--error)">Incorrect.</strong><br>${fbTxt}`;
+            fbDiv.style.borderLeft = '4px solid var(--error)';
+        }
+        fbDiv.style.display = 'block';
+    }
+</script>
+</body>
+</html>

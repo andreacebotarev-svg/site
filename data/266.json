@@ -1,0 +1,404 @@
+{
+  "title": "Зачёт: Present Simple, Continuous, Perfect",
+  "subtitle": "B1 Level Test",
+  "colors": [
+    "#667eea",
+    "#764ba2"
+  ],
+  "meta": {
+    "level": "B1",
+    "tags": [
+      "grammar",
+      "test",
+      "present tenses"
+    ],
+    "theme": "light",
+    "duration": 20
+  },
+  "content": {
+    "reading": [
+      {
+        "type": "paragraph",
+        "text": "Complete the sentences choosing the correct form of the verb.",
+        "highlight": [
+          "gym",
+          "climb",
+          "boil",
+          "sunglasses",
+          "noise",
+          "prefer"
+        ],
+        "audio_paragraph": false
+      },
+      {
+        "type": "list",
+        "text": "1. Present Simple\n2. Present Continuous\n3. Present Perfect",
+        "highlight": [],
+        "audio_paragraph": false
+      },
+      {
+        "type": "fact",
+        "text": "Read the context carefully to determine the correct tense.",
+        "highlight": [],
+        "audio_paragraph": false
+      }
+    ]
+  },
+  "vocabulary": {
+    "words": [
+      {
+        "en": "gym",
+        "ru": "спортзал",
+        "transcription": "dʒɪm",
+        "example": "She goes to the gym three times a week.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "climb",
+        "ru": "взбираться",
+        "transcription": "klaɪm",
+        "example": "The cat is climbing the tree right now.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "boil",
+        "ru": "кипеть",
+        "transcription": "bɔɪl",
+        "example": "Water boils at 100 degrees Celsius.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "sunglasses",
+        "ru": "солнцезащитные очки",
+        "transcription": "ˈsʌnɡlɑːsɪz",
+        "example": "Why are you wearing sunglasses?",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "cloudy",
+        "ru": "облачный",
+        "transcription": "ˈklaʊdi",
+        "example": "It's cloudy today.",
+        "part_of_speech": "adjective"
+      },
+      {
+        "en": "key",
+        "ru": "ключ",
+        "transcription": "kiː",
+        "example": "I can't find my keys.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "earth",
+        "ru": "Земля",
+        "transcription": "ɜːθ",
+        "example": "The Earth moves around the Sun.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "noise",
+        "ru": "шум",
+        "transcription": "nɔɪz",
+        "example": "Don't make noise!",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "prefer",
+        "ru": "предпочитать",
+        "transcription": "prɪˈfɜː(r)",
+        "example": "He prefers tea.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "knock",
+        "ru": "стучать",
+        "transcription": "nɒk",
+        "example": "Someone is knocking at the door.",
+        "part_of_speech": "verb"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "three times a week",
+        "ru": "три раза в неделю",
+        "example": "She goes to the gym three times a week."
+      },
+      {
+        "en": "right now",
+        "ru": "прямо сейчас",
+        "example": "The cat is climbing the tree right now."
+      },
+      {
+        "en": "make noise",
+        "ru": "шуметь",
+        "example": "Don't make noise!"
+      },
+      {
+        "en": "for a living",
+        "ru": "на жизнь (зарабатывать)",
+        "example": "What do you do for a living?"
+      },
+      {
+        "en": "go out",
+        "ru": "выходить (в свет, гулять)",
+        "example": "Can I go out now?"
+      }
+    ]
+  },
+  "grammar": {
+    "rule": "Использование времен Present зависит от характера действия: регулярность (Simple), процесс в моменте (Continuous) или результат (Perfect).",
+    "pattern": "Simple: V/V-s | Continuous: am/is/are + V-ing | Perfect: have/has + V3/ed",
+    "examples": [
+      "+ She goes to the gym. (Регулярно)",
+      "- I haven't finished yet. (Результат к моменту)",
+      "? Why are you wearing sunglasses? (Временная ситуация)"
+    ],
+    "common_mistakes": [
+      "Использование Continuous с глаголами состояния (I am knowing -> I know).",
+      "Использование Past Simple вместо Perfect с 'yet' или 'since'.",
+      "Забывание окончания -s в 3-м лице ед.ч. Present Simple."
+    ]
+  },
+  "quiz": [
+    {
+      "question": "Look! The cat _____ the tree right now.",
+      "options": [
+        "climbs",
+        "is climbing",
+        "has climbed",
+        "climbed"
+      ],
+      "correct": 1,
+      "fb": "Correct! 'Look!' and 'right now' indicate an action happening at the moment of speech (Present Continuous).",
+      "type": "comprehension"
+    },
+    {
+      "question": "Shh! The baby _____. Don't make noise!",
+      "options": [
+        "sleeps",
+        "is sleeping",
+        "has slept",
+        "sleep"
+      ],
+      "correct": 1,
+      "fb": "Correct! 'Shh!' creates a context of 'right now', requiring Present Continuous.",
+      "type": "comprehension"
+    },
+    {
+      "question": "Why _____ you _____ sunglasses? It's cloudy today.",
+      "options": [
+        "do / wear",
+        "are / wearing",
+        "have / worn",
+        "did / wear"
+      ],
+      "correct": 1,
+      "fb": "Correct! This is a temporary situation happening around now, contrasting with the weather.",
+      "type": "comprehension"
+    },
+    {
+      "question": "We _____ about moving to a bigger apartment these days.",
+      "options": [
+        "think",
+        "are thinking",
+        "have thought",
+        "thinks"
+      ],
+      "correct": 1,
+      "fb": "Correct! 'These days' suggests a temporary process or consideration, allowing 'think' in Continuous.",
+      "type": "comprehension"
+    },
+    {
+      "question": "You look tired! _____ you _____ all night?",
+      "options": [
+        "Do / work",
+        "Are / working",
+        "Have / worked",
+        "Did / work"
+      ],
+      "correct": 2,
+      "fb": "Correct! We see the result now (tiredness) from an action in the past.",
+      "type": "comprehension"
+    },
+    {
+      "question": "Listen! Someone _____ at the door.",
+      "options": [
+        "knocks",
+        "is knocking",
+        "has knocked",
+        "knocked"
+      ],
+      "correct": 1,
+      "fb": "Correct! 'Listen!' is a sensory marker for an action happening immediately.",
+      "type": "comprehension"
+    },
+    {
+      "question": "I _____ my homework. Can I go out now?",
+      "options": [
+        "finish",
+        "am finishing",
+        "have finished",
+        "finished"
+      ],
+      "correct": 2,
+      "fb": "Correct! The action is complete, and the result is relevant now (permission to go out).",
+      "type": "comprehension"
+    },
+    {
+      "question": "My parents _____ married for 25 years now.",
+      "options": [
+        "are",
+        "are being",
+        "have been",
+        "were"
+      ],
+      "correct": 2,
+      "fb": "Correct! A state starting in the past and continuing until now.",
+      "type": "comprehension"
+    },
+    {
+      "question": "I _____ this book yet.",
+      "options": [
+        "don't finish",
+        "am not finishing",
+        "haven't finished",
+        "didn't finish"
+      ],
+      "correct": 2,
+      "fb": "Correct! 'Yet' is a strong marker for Present Perfect in negative sentences.",
+      "type": "vocabulary"
+    },
+    {
+      "question": "They _____ in London since 2015.",
+      "options": [
+        "live",
+        "are living",
+        "have lived",
+        "lived"
+      ],
+      "correct": 2,
+      "fb": "Correct! 'Since' followed by a date indicates Present Perfect.",
+      "type": "vocabulary"
+    },
+    {
+      "question": "How long _____ you _____ English?",
+      "options": [
+        "do / study",
+        "are / studying",
+        "have / studied",
+        "did / study"
+      ],
+      "correct": 2,
+      "fb": "Correct! 'How long' is a typical question marker for Present Perfect (duration).",
+      "type": "vocabulary"
+    },
+    {
+      "question": "She _____ three countries this year.",
+      "options": [
+        "visits",
+        "is visiting",
+        "has visited",
+        "visit"
+      ],
+      "correct": 2,
+      "fb": "Correct! 'This year' is an unfinished time period requiring Present Perfect.",
+      "type": "vocabulary"
+    },
+    {
+      "question": "I can't find my keys. I _____ them somewhere.",
+      "options": [
+        "lose",
+        "am losing",
+        "have lost",
+        "lost"
+      ],
+      "correct": 2,
+      "fb": "Correct! 'Lost' implies a result relevant to the present.",
+      "type": "vocabulary"
+    },
+    {
+      "question": "She _____ to the gym three times a week.",
+      "options": [
+        "go",
+        "goes",
+        "is going",
+        "has gone"
+      ],
+      "correct": 1,
+      "fb": "Correct! Present Simple is used for regular habits and routines.",
+      "type": "grammar"
+    },
+    {
+      "question": "Water _____ at 100 degrees Celsius.",
+      "options": [
+        "boils",
+        "is boiling",
+        "has boiled",
+        "boil"
+      ],
+      "correct": 0,
+      "fb": "Correct! Scientific facts and general truths take Present Simple.",
+      "type": "grammar"
+    },
+    {
+      "question": "My brother _____ as a doctor in a local hospital.",
+      "options": [
+        "work",
+        "works",
+        "is working",
+        "has worked"
+      ],
+      "correct": 1,
+      "fb": "Correct! Permanent situations and professions use Present Simple.",
+      "type": "grammar"
+    },
+    {
+      "question": "The Earth _____ around the Sun.",
+      "options": [
+        "moves",
+        "is moving",
+        "has moved",
+        "move"
+      ],
+      "correct": 0,
+      "fb": "Correct! This is a universal truth, requiring Present Simple.",
+      "type": "grammar"
+    },
+    {
+      "question": "He _____ coffee. He prefers tea.",
+      "options": [
+        "doesn't drink",
+        "isn't drinking",
+        "hasn't drunk",
+        "don't drink"
+      ],
+      "correct": 0,
+      "fb": "Correct! Preferences are general states, not temporary actions.",
+      "type": "grammar"
+    },
+    {
+      "question": "I _____ what you mean. Can you explain again?",
+      "options": [
+        "don't understand",
+        "am not understanding",
+        "haven't understood",
+        "doesn't understand"
+      ],
+      "correct": 0,
+      "fb": "Correct! Stative verbs like 'understand' are rarely used in Continuous forms.",
+      "type": "grammar"
+    },
+    {
+      "question": "What _____ you _____ for a living?",
+      "options": [
+        "do / do",
+        "are / doing",
+        "have / done",
+        "does / do"
+      ],
+      "correct": 0,
+      "fb": "Correct! Questions about permanent jobs use Present Simple.",
+      "type": "grammar"
+    }
+  ]
+}

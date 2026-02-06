@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starter 1: Интерактивный Учебник (A0)</title>
+    <style>
+        /* --- ЦВЕТОВАЯ ПАЛИТРА (ИЗ УЧЕБНИКА) --- */
+        :root {
+            --orange: #e67e22;   /* Заголовки */
+            --green: #8bc34a;    /* Грамматика */
+            --blue: #3498db;     /* Аудио/Чат */
+            --dark: #2c3e50;     /* Текст */
+            --cream: #f9f7f2;    /* Фон бумаги */
+            --white: #ffffff;
+            --error: #e74c3c;
+            --success: #27ae60;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* --- БАЗОВЫЕ НАСТРОЙКИ --- */
+        body {
+            font-family: var(--font-main);
+            background-color: #ecf0f1;
+            color: var(--dark);
+            margin: 0;
+            padding-bottom: 60px;
+            line-height: 1.6;
+        }
+
+        /* --- ШАПКА --- */
+        header {
+            background: linear-gradient(135deg, var(--orange), #d35400);
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+            border-radius: 0 0 25px 25px;
+            margin-bottom: 20px;
+        }
+        header h1 { margin: 0; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        header p { margin: 5px 0 0; opacity: 0.9; font-size: 1rem; }
+
+        /* --- НАВИГАЦИЯ (TAB BAR) --- */
+        .nav-scroll {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px 15px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .nav-scroll::-webkit-scrollbar { display: none; }
+
+        .nav-btn {
+            display: inline-block;
+            background: white;
+            color: var(--dark);
+            border: 2px solid transparent;
+            padding: 12px 24px;
+            margin: 0 5px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .nav-btn.active {
+            background: var(--orange);
+            color: white;
+            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* --- КОНТЕЙНЕР КОНТЕНТА --- */
+        .container { max-width: 800px; margin: 0 auto; padding: 0 15px; }
+        
+        .tab-pane { 
+            display: none; 
+            animation: slideUp 0.4s ease-out; 
+        }
+        .tab-pane.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- КАРТОЧКИ (UI ELEMENTS) --- */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- ПОМОЩНИК ПЕРЕВОДА (TOOLTIP) --- */
+        .word-interactive {
+            border-bottom: 2px dashed var(--blue);
+            cursor: help;
+            position: relative;
+            color: var(--blue);
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .word-interactive:hover { background: #ebf5fb; }
+        
+        /* Стили для всплывающей подсказки (Pure CSS) */
+        .word-interactive::after {
+            content: attr(data-ru);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .word-interactive:hover::after {
+            opacity: 1;
+            visibility: visible;
+            bottom: 130%;
+        }
+
+        /* --- КНОПКИ --- */
+        .btn-action {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: transform 0.1s;
+        }
+        .btn-action:active { transform: scale(0.98); }
+        
+        .btn-audio {
+            background: none;
+            border: 2px solid var(--blue);
+            color: var(--blue);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: 0.2s;
+        }
+        .btn-audio:hover { background: var(--blue); color: white; }
+
+        /* --- УВЕДОМЛЕНИЯ --- */
+        .helper-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none; /* Скрыто по умолчанию */
+        }
+        
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Starter 1 <span style="font-size:0.6em; opacity:0.8; vertical-align: middle;">| Level A0</span></h1>
+    <p>Интерактивный помощник для начинающих</p>
+</header>
+
+<nav class="nav-scroll">
+    <button class="nav-btn active" onclick="openTab('grammar')">🧩 Грамматика (To Be)</button>
+    <button class="nav-btn" onclick="openTab('reading')">📱 Чат (Reading)</button>
+    <button class="nav-btn" onclick="openTab('vocab')">🔤 Словарь (Vocab)</button>
+    <button class="nav-btn" onclick="openTab('practice')">⚡ Практика (Quiz)</button>
+</nav>
+
+<div class="container">
+    <!-- КОНТЕНТ БУДЕТ ЗАГРУЖЕН В СЛЕДУЮЩИХ ЧАСТЯХ -->
+    <!-- Вкладка 1: ГРАММАТИКА (КОНСТРУКТОР) -->
+    <div id="grammar" class="tab-pane active">
+        
+        <!-- Блок выбора -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">🤖 Конструктор "To Be"</h2>
+                <span style="font-size:0.85rem; color:#666; background:#eee; padding:5px 10px; border-radius:20px;">Глагол "Быть"</span>
+            </div>
+            
+            <p style="margin-bottom:15px;">Выберите местоимение (Кто?) и тип предложения, чтобы увидеть правило:</p>
+
+            <!-- 1. Выбор Местоимения -->
+            <div style="margin-bottom:20px;">
+                <strong style="display:block; margin-bottom:10px; color:var(--orange);">1. Кто? (Subject)</strong>
+                <div class="grid-btns" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;">
+                    <button class="select-btn g-subject active" data-val="I">I (Я)</button>
+                    <button class="select-btn g-subject" data-val="You">You (Ты/Вы)</button>
+                    <button class="select-btn g-subject" data-val="HeShe">He/She/It</button>
+                    <button class="select-btn g-subject" data-val="We">We (Мы)</button>
+                    <button class="select-btn g-subject" data-val="They">They (Они)</button>
+                </div>
+            </div>
+
+            <!-- 2. Выбор Типа -->
+            <div style="margin-bottom:20px;">
+                <strong style="display:block; margin-bottom:10px; color:var(--green);">2. Какое предложение?</strong>
+                <div class="grid-btns" style="display:flex; gap:10px;">
+                    <button class="select-btn g-type active" data-val="pos" style="flex:1;">➕ Утверждение</button>
+                    <button class="select-btn g-type" data-val="neg" style="flex:1;">➖ Отрицание</button>
+                    <button class="select-btn g-type" data-val="ques" style="flex:1;">❓ Вопрос</button>
+                </div>
+            </div>
+
+            <!-- 3. Результат (Экран) -->
+            <div id="grammar-display" style="background:var(--dark); color:white; padding:20px; border-radius:12px; text-align:center; transition:0.3s;">
+                <div id="g-res-en" style="font-size:1.8rem; font-weight:bold; margin-bottom:5px;">I am</div>
+                <div id="g-res-ru" style="color:#bdc3c7; font-size:1rem;">Я есть (являюсь)</div>
+                <div id="g-res-ex" style="margin-top:15px; border-top:1px solid #555; padding-top:10px; color:#f1c40f; font-style:italic;">
+                    Example: I am a student.
+                </div>
+            </div>
+        </div>
+
+        <!-- Памятка сокращений -->
+        <div class="card" style="background:#e8f6f3; border:1px solid #d1f2eb;">
+            <h3 style="font-size:1.1rem; margin-top:0;">💡 Короткие формы (Short Forms)</h3>
+            <ul style="padding-left:20px; margin-bottom:0;">
+                <li>I am = <strong>I'm</strong></li>
+                <li>You are = <strong>You're</strong></li>
+                <li>He is = <strong>He's</strong></li>
+                <li>is not = <strong>isn't</strong></li>
+                <li>are not = <strong>aren't</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Вкладка 2: ЧАТ (READING) -->
+    <div id="reading" class="tab-pane">
+        
+        <!-- Профиль -->
+        <div class="card" style="padding:15px; display:flex; gap:15px; align-items:center; background:#fff;">
+            <div style="font-size:2.5rem;">👦👩</div>
+            <div>
+                <h3 style="margin:0;">Friends Profile</h3>
+                <div style="font-size:0.9rem; color:#666;">
+                    <strong>Leo (16):</strong> Birthday: June 🍰<br>
+                    <strong>Grace (15):</strong> From: Mexico 🇲🇽
+                </div>
+            </div>
+        </div>
+
+        <!-- Чат -->
+        <div class="card" style="background:#f0f2f5; border:none;">
+            <div class="chat-wrapper" style="display:flex; flex-direction:column; gap:15px;">
+                
+                <!-- Дата -->
+                <div style="text-align:center; color:#999; font-size:0.8rem; margin-bottom:10px;">16 June</div>
+
+                <!-- Сообщение 1 (Amelia) -->
+                <div class="chat-msg left">
+                    <div class="bubble user-a">
+                        <div class="msg-text">When is <span class="word-interactive" data-ru="её">her</span> birthday?</div>
+                        <button class="trans-toggle" onclick="toggleTrans(this)">🇷🇺 Перевод</button>
+                        <div class="trans-text">Когда у неё день рождения?</div>
+                    </div>
+                </div>
+
+                <!-- Сообщение 2 (Luke) -->
+                <div class="chat-msg right">
+                    <div class="bubble user-b">
+                        <div class="msg-text"><span class="word-interactive" data-ru="Её">Her</span> birthday is in September.</div>
+                        <button class="trans-toggle" onclick="toggleTrans(this)">🇷🇺 Перевод</button>
+                        <div class="trans-text">Её день рождения в сентябре.</div>
+                    </div>
+                </div>
+
+                <!-- Сообщение 3 (Amelia) -->
+                <div class="chat-msg left">
+                    <div class="bubble user-a">
+                        <div class="msg-text">Are they <span class="word-interactive" data-ru="парень и девушка">boyfriend and girlfriend</span>?</div>
+                        <button class="trans-toggle" onclick="toggleTrans(this)">🇷🇺 Перевод</button>
+                        <div class="trans-text">Они парень и девушка?</div>
+                    </div>
+                </div>
+
+                <!-- Сообщение 4 (Luke) -->
+                <div class="chat-msg right">
+                    <div class="bubble user-b">
+                        <div class="msg-text">No, they aren't! They're <span class="word-interactive" data-ru="брат и сестра">brother and sister</span>.</div>
+                        <button class="trans-toggle" onclick="toggleTrans(this)">🇷🇺 Перевод</button>
+                        <div class="trans-text">Нет! Они брат и сестра.</div>
+                    </div>
+                </div>
+
+                <!-- Сообщение 5 (Amelia) -->
+                <div class="chat-msg left">
+                    <div class="bubble user-a">
+                        <div class="msg-text">Are they American?</div>
+                        <button class="trans-toggle" onclick="toggleTrans(this)">🇷🇺 Перевод</button>
+                        <div class="trans-text">Они американцы?</div>
+                    </div>
+                </div>
+
+                <!-- Сообщение 6 (Luke) -->
+                <div class="chat-msg right">
+                    <div class="bubble user-b">
+                        <div class="msg-text">Yes. But their parents are Mexican.</div>
+                        <button class="trans-toggle" onclick="toggleTrans(this)">🇷🇺 Перевод</button>
+                        <div class="trans-text">Да. Но их родители мексиканцы.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Проверка понимания -->
+        <div class="card" style="border-top:4px solid var(--orange);">
+            <h3 class="card-title">✅ Проверка (True/False)</h3>
+            <p style="font-size:0.9rem; color:#666; margin-bottom:15px;">Прочитайте чат выше и отметьте, правда это или нет.</p>
+
+            <div class="quiz-row">
+                <p>1. Leo is sixteen (Лео 16 лет).</p>
+                <div class="tf-buttons">
+                    <button class="tf-btn" onclick="checkTF(this, true, true)">True (Да)</button>
+                    <button class="tf-btn" onclick="checkTF(this, false, true)">False (Нет)</button>
+                </div>
+                <div class="tf-feedback"></div>
+            </div>
+
+            <div class="quiz-row">
+                <p>2. Grace is from New York.</p>
+                <div class="tf-buttons">
+                    <button class="tf-btn" onclick="checkTF(this, false, false)">True (Да)</button>
+                    <button class="tf-btn" onclick="checkTF(this, true, false)">False (Нет)</button>
+                </div>
+                <div class="tf-feedback"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Вкладка 3: СЛОВАРЬ (VOCAB) -->
+    <div id="vocab" class="tab-pane">
+        <div class="card">
+            <h2 class="card-title">🌏 Страны и Национальности</h2>
+            <p style="margin-bottom:20px; color:#666;">Нажмите на карточку, чтобы увидеть перевод.</p>
+            
+            <div class="vocab-grid" id="vocab-container">
+                <!-- Карточки генерируются JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Вкладка 4: ПРАКТИКА (QUIZ) -->
+    <div id="practice" class="tab-pane">
+        <div class="card" style="border-top:5px solid var(--blue);">
+            <h2 class="card-title">🏆 Финальный Тест</h2>
+            <div id="quiz-area">
+                <div id="q-text" style="font-size:1.2rem; font-weight:bold; margin:20px 0;">Загрузка...</div>
+                <div id="q-options" style="display:grid; gap:10px;"></div>
+                <div id="q-feedback" class="helper-box"></div>
+                <button id="q-next" class="btn-action" style="display:none;" onclick="nextQuestion()">Следующий вопрос ➡️</button>
+            </div>
+            <div id="quiz-score" style="display:none; text-align:center; padding:20px;">
+                <div style="font-size:3rem;">🎉</div>
+                <h3>Тест завершен!</h3>
+                <p id="score-text" style="font-size:1.2rem;">Ваш результат: 0/0</p>
+                <button class="btn-action" onclick="initQuiz()">Пройти заново</button>
+            </div>
+        </div>
+    </div>
+
+</div> <!-- Закрываем container -->
+
+<!-- ДОПОЛНИТЕЛЬНЫЕ СТИЛИ (ДЛЯ ЧАТА И ГРАММАТИКИ) -->
+<style>
+    /* Стили для Чата */
+    .chat-msg { display: flex; margin-bottom: 15px; }
+    .chat-msg.left { justify-content: flex-start; }
+    .chat-msg.right { justify-content: flex-end; }
+    
+    .bubble {
+        max-width: 80%;
+        padding: 12px 16px;
+        border-radius: 18px;
+        position: relative;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .bubble.user-a { background: #ffffff; border-bottom-left-radius: 4px; border: 1px solid #eee; }
+    .bubble.user-b { background: #dcf8c6; border-bottom-right-radius: 4px; color: #075e54; }
+    
+    .trans-toggle {
+        background: none; border: none; color: var(--blue);
+        font-size: 0.75rem; font-weight: bold; cursor: pointer;
+        margin-top: 5px; padding: 0; text-decoration: underline;
+    }
+    .trans-text {
+        display: none; font-size: 0.9rem; color: #555;
+        margin-top: 5px; border-top: 1px dotted #ccc; padding-top: 4px;
+    }
+    .trans-text.show { display: block; }
+
+    /* Стили для Грамматики */
+    .grid-btns button {
+        padding: 10px; border: 1px solid #ddd; background: white;
+        border-radius: 8px; cursor: pointer; font-weight: 600;
+        transition: 0.2s; color: #555;
+    }
+    .select-btn.active {
+        background: var(--orange); color: white; border-color: var(--orange);
+        transform: scale(1.05); box-shadow: 0 3px 8px rgba(230,126,34,0.3);
+    }
+    .g-type.active[data-val="pos"] { background: var(--success); border-color: var(--success); }
+    .g-type.active[data-val="neg"] { background: var(--error); border-color: var(--error); }
+    .g-type.active[data-val="ques"] { background: var(--blue); border-color: var(--blue); }
+
+    /* Стили для True/False */
+    .quiz-row { padding: 15px 0; border-bottom: 1px solid #eee; }
+    .tf-buttons { display: flex; gap: 10px; margin-top: 10px; }
+    .tf-btn {
+        padding: 8px 16px; border: 1px solid #ddd; background: white;
+        border-radius: 20px; cursor: pointer;
+    }
+    .tf-btn.correct { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+    .tf-btn.wrong { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+
+    /* Стили для Словаря */
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+    .v-card {
+        background: white; border: 1px solid #eee; border-radius: 12px;
+        padding: 15px; text-align: center; cursor: pointer; transition: 0.3s;
+        position: relative; overflow: hidden;
+    }
+    .v-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .v-front { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+    .v-back { font-size: 0.9rem; color: var(--blue); opacity: 0.5; transition: 0.3s; }
+    .v-card:hover .v-back { opacity: 1; }
+</style>
+
+<!-- СКРИПТЫ (ЛОГИКА) -->
+<script>
+    // --- 1. Навигация ---
+    function openTab(tabId) {
+        document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // --- 2. Чат: Перевод ---
+    function toggleTrans(btn) {
+        const textDiv = btn.nextElementSibling;
+        textDiv.classList.toggle('show');
+        btn.textContent = textDiv.classList.contains('show') ? 'Скрыть' : '🇷🇺 Перевод';
+    }
+
+    // --- 3. True/False Проверка ---
+    function checkTF(btn, isCorrect, isAnswerTrue) {
+        const parent = btn.parentElement;
+        const feedback = parent.nextElementSibling;
+        
+        // Сброс
+        parent.querySelectorAll('.tf-btn').forEach(b => {
+            b.classList.remove('correct', 'wrong');
+            b.disabled = false;
+        });
+
+        if(isCorrect) {
+            btn.classList.add('correct');
+            feedback.innerHTML = "<span style='color:green'>✅ Правильно!</span>";
+        } else {
+            btn.classList.add('wrong');
+            const correctText = isAnswerTrue ? "True" : "False";
+            feedback.innerHTML = `<span style='color:red'>❌ Ошибка. Правильный ответ: ${correctText}</span>`;
+        }
+    }
+
+    // --- 4. Грамматический Конструктор ---
+    const gSubjectBtns = document.querySelectorAll('.g-subject');
+    const gTypeBtns = document.querySelectorAll('.g-type');
+    
+    let gState = { subj: 'I', type: 'pos' };
+
+    const grammarData = {
+        'I': { pos: ["I am ('m)", "Я есть"], neg: ["I am not ('m not)", "Я не есть"], ques: ["Am I...?", "Я есть...?"] },
+        'You': { pos: ["You are ('re)", "Ты/Вы есть"], neg: ["You are not (aren't)", "Ты не есть"], ques: ["Are you...?", "Ты есть...?"] },
+        'HeShe': { pos: ["He/She is ('s)", "Он/Она есть"], neg: ["He/She is not (isn't)", "Он не есть"], ques: ["Is he/she...?", "Он есть...?"] },
+        'We': { pos: ["We are ('re)", "Мы есть"], neg: ["We are not (aren't)", "Мы не есть"], ques: ["Are we...?", "Мы есть...?"] },
+        'They': { pos: ["They are ('re)", "Они есть"], neg: ["They are not (aren't)", "Они не есть"], ques: ["Are they...?", "Они есть...?"] }
+    };
+
+    function updateGrammar() {
+        const data = grammarData[gState.subj][gState.type];
+        document.getElementById('g-res-en').textContent = data[0];
+        document.getElementById('g-res-ru').textContent = data[1];
+        
+        // Цвет блока
+        const display = document.getElementById('grammar-display');
+        if(gState.type === 'pos') display.style.borderLeft = "5px solid #27ae60";
+        if(gState.type === 'neg') display.style.borderLeft = "5px solid #e74c3c";
+        if(gState.type === 'ques') display.style.borderLeft = "5px solid #3498db";
+    }
+
+    gSubjectBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            gSubjectBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            gState.subj = btn.getAttribute('data-val');
+            updateGrammar();
+        });
+    });
+
+    gTypeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            gTypeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            gState.type = btn.getAttribute('data-val');
+            updateGrammar();
+        });
+    });
+
+    // --- 5. Словарь (Генерация) ---
+    const vocabWords = [
+        {en: "Poland", ru: "Польша", nat: "Polish"},
+        {en: "Italy", ru: "Италия", nat: "Italian"},
+        {en: "The UK", ru: "Великобритания", nat: "British"},
+        {en: "The USA", ru: "США", nat: "American"},
+        {en: "Mexico", ru: "Мексика", nat: "Mexican"},
+        {en: "Birthday", ru: "День рождения", nat: ""},
+        {en: "Month", ru: "Месяц", nat: ""}
+    ];
+
+    const vocabContainer = document.getElementById('vocab-container');
+    vocabWords.forEach(w => {
+        vocabContainer.innerHTML += `
+            <div class="v-card" onclick="speak('${w.en}')">
+                <div class="v-front">${w.en}</div>
+                <div class="v-back">${w.ru}</div>
+                ${w.nat ? `<div style="font-size:0.8rem; margin-top:5px; color:#e67e22;">Nat: ${w.nat}</div>` : ''}
+            </div>
+        `;
+    });
+
+    function speak(txt) {
+        const msg = new SpeechSynthesisUtterance(txt);
+        msg.lang = 'en-US';
+        window.speechSynthesis.speak(msg);
+    }
+
+    // --- 6. Тест (Quiz) ---
+    const questions = [
+        { t: "Где ошибка? 'He are a student.'", opts: ["He is", "He am", "He be"], c: 0, why: "С 'He' мы используем 'is'." },
+        { t: "Как сказать 'Они не из США'?", opts: ["They not from USA", "They aren't from USA", "They isn't from USA"], c: 1, why: "They are not = They aren't." },
+        { t: "Переведи: 'When is her birthday?'", opts: ["Когда его ДР?", "Когда ее ДР?", "Где ее ДР?"], c: 1, why: "Her = Её." }
+    ];
+
+    let qIdx = 0;
+    let score = 0;
+
+    function initQuiz() {
+        qIdx = 0; score = 0;
+        document.getElementById('quiz-score').style.display = 'none';
+        document.getElementById('quiz-area').style.display = 'block';
+        loadQ();
+    }
+
+    function loadQ() {
+        const q = questions[qIdx];
+        document.getElementById('q-text').textContent = `${qIdx+1}. ${q.t}`;
+        document.getElementById('q-feedback').style.display = 'none';
+        document.getElementById('q-next').style.display = 'none';
+        
+        const opts = document.getElementById('q-options');
+        opts.innerHTML = '';
+        q.opts.forEach((o, i) => {
+            opts.innerHTML += `<button class="nav-btn" style="width:100%; text-align:left; margin:0;" onclick="checkQ(this, ${i})">${o}</button>`;
+        });
+    }
+
+    function checkQ(btn, ansIdx) {
+        const q = questions[qIdx];
+        const allBtns = document.getElementById('q-options').children;
+        for(let b of allBtns) b.disabled = true;
+
+        const fb = document.getElementById('q-feedback');
+        fb.style.display = 'block';
+
+        if(ansIdx === q.c) {
+            score++;
+            btn.style.background = '#d4edda';
+            fb.innerHTML = `✅ <b>Верно!</b> ${q.why}`;
+        } else {
+            btn.style.background = '#f8d7da';
+            allBtns[q.c].style.background = '#d4edda';
+            fb.innerHTML = `❌ <b>Ошибка.</b> ${q.why}`;
+        }
+        document.getElementById('q-next').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        qIdx++;
+        if(qIdx < questions.length) loadQ();
+        else showScore();
+    }
+
+    function showScore() {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('quiz-score').style.display = 'block';
+        document.getElementById('score-text').textContent = `Вы набрали ${score} из ${questions.length}`;
+    }
+
+    // Init
+    updateGrammar();
+    initQuiz();
+
+</script>
+</body>
+</html>

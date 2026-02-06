@@ -1,0 +1,581 @@
+/* ============================================
+   FLASHCARDS MODE - STAGE 3
+   Added: 3D flip animation, action buttons
+   ============================================ */
+
+/* CSS Variables */
+:root {
+    --flashcard-primary: #4A90E2;
+    --flashcard-secondary: #667eea;
+    --flashcard-accent: #764ba2;
+    --flashcard-bg: #f5f7fa;
+    --flashcard-text: #333;
+    --flashcard-text-light: #666;
+    --flashcard-border: #e0e0e0;
+    --flashcard-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --flashcard-radius: 1rem;
+    --flashcard-transition: 0.6s;
+}
+
+/* ============================================
+   VOCABULARY HEADER
+   ============================================ */
+.vocabulary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--flashcard-border);
+}
+
+/* ============================================
+   MODE TOGGLE BUTTONS
+   ============================================ */
+.vocab-mode-toggle {
+    display: inline-flex;
+    gap: 0.5rem;
+    background: var(--flashcard-bg);
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.vocab-mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--flashcard-text-light);
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.vocab-mode-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--flashcard-text);
+}
+
+.vocab-mode-btn.active {
+    background: white;
+    color: var(--flashcard-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.vocab-mode-btn svg {
+    flex-shrink: 0;
+}
+
+/* ============================================
+   FLASHCARDS CONTAINER
+   ============================================ */
+.flashcards-container {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    min-height: 500px;
+}
+
+.flashcards-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+/* ============================================
+   FLASHCARDS HEADER
+   ============================================ */
+.flashcards-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.flashcards-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--flashcard-text);
+}
+
+.flashcards-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Stats Badge */
+.stats-badge {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.stats-badge span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* ============================================
+   FLASHCARD STAGE
+   ============================================ */
+.flashcard-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem 0;
+    min-height: 450px;
+}
+
+.flashcard-container {
+    flex: 1;
+    max-width: 600px;
+    aspect-ratio: 3 / 2;
+    perspective: 1000px;
+    position: relative;
+}
+
+/* ============================================
+   3D FLIP CARD (Stage 3)
+   ============================================ */
+.flashcard-flip-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.flashcard-flip-container.flashcard-enter {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform var(--flashcard-transition);
+    transform-style: preserve-3d;
+}
+
+.flashcard-inner.flipped {
+    transform: rotateY(180deg);
+}
+
+/* Front and Back shared styles */
+.flashcard-front,
+.flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: var(--flashcard-radius);
+    box-shadow: var(--flashcard-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Front Side */
+.flashcard-front {
+    background: linear-gradient(135deg, var(--flashcard-secondary) 0%, var(--flashcard-accent) 100%);
+    color: white;
+    cursor: pointer;
+    user-select: none;
+}
+
+.flashcard-front:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    transform: translateY(-5px);
+}
+
+/* Decorative shimmer */
+.flashcard-front::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-30px, -30px); }
+}
+
+.flashcard-word {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    line-height: 1.2;
+    position: relative;
+    z-index: 1;
+}
+
+.flashcard-transcription {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+}
+
+.flashcard-hint {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2rem;
+    backdrop-filter: blur(5px);
+    position: relative;
+    z-index: 1;
+}
+
+/* Back Side */
+.flashcard-back {
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    color: white;
+    transform: rotateY(180deg);
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.flashcard-translation {
+    font-size: 2rem;
+    font-weight: 600;
+    opacity: 0.98;
+    line-height: 1.3;
+}
+
+.flashcard-example {
+    font-size: 1rem;
+    opacity: 0.9;
+    font-style: italic;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    backdrop-filter: blur(5px);
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   ACTION BUTTONS (Stage 3)
+   ============================================ */
+.flashcard-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+}
+
+.action-btn {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: white;
+    transform: scale(1.1);
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+}
+
+.action-btn.active {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.action-btn svg {
+    pointer-events: none;
+}
+
+/* Audio button animation */
+.audio-btn.playing {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Favorite button */
+.favorite-btn.active {
+    color: #FFD700;
+}
+
+/* Known button */
+.known-btn.active {
+    color: #4CAF50;
+}
+
+/* ============================================
+   NAVIGATION BUTTONS
+   ============================================ */
+.flashcard-nav {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 2px solid var(--flashcard-border);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--flashcard-text-light);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flashcard-nav:hover:not(:disabled) {
+    background: var(--flashcard-primary);
+    color: white;
+    border-color: var(--flashcard-primary);
+    transform: scale(1.1);
+}
+
+.flashcard-nav:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.flashcard-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   PROGRESS SECTION
+   ============================================ */
+.flashcards-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.progress-dots {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 500px;
+}
+
+.progress-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--flashcard-border);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+.progress-dot:hover {
+    background: var(--flashcard-text-light);
+    transform: scale(1.3);
+}
+
+.progress-dot.active {
+    background: var(--flashcard-primary);
+    transform: scale(1.5);
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+}
+
+.progress-text {
+    font-size: 1.1rem;
+    color: var(--flashcard-text-light);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   PLACEHOLDER
+   ============================================ */
+.flashcard-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 400px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--flashcard-radius);
+    box-shadow: var(--flashcard-shadow);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+.placeholder-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.placeholder-title {
+    margin: 0.5rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.placeholder-subtitle {
+    margin: 0.5rem 0;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .flashcard-stage {
+        gap: 1rem;
+        padding: 1rem 0;
+    }
+
+    .flashcard-nav {
+        width: 40px;
+        height: 40px;
+    }
+
+    .flashcard-container {
+        max-width: 100%;
+    }
+
+    .flashcard-front,
+    .flashcard-back {
+        padding: 1.5rem;
+    }
+
+    .flashcard-word {
+        font-size: 2.5rem;
+    }
+
+    .flashcard-transcription {
+        font-size: 1.1rem;
+    }
+
+    .flashcard-translation {
+        font-size: 1.6rem;
+    }
+
+    .flashcard-example {
+        font-size: 0.9rem;
+    }
+
+    .action-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .stats-badge {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .flashcard-stage {
+        gap: 0.5rem;
+    }
+
+    .flashcard-nav {
+        width: 36px;
+        height: 36px;
+    }
+
+    .flashcard-word {
+        font-size: 2rem;
+    }
+
+    .flashcard-translation {
+        font-size: 1.4rem;
+    }
+
+    .action-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .flashcard-actions {
+        gap: 0.75rem;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.vocab-mode-btn:focus,
+.flashcard-nav:focus,
+.action-btn:focus {
+    outline: 2px solid var(--flashcard-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .flashcard-front,
+    .flashcard-back {
+        border: 2px solid white;
+    }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .flashcard-inner {
+        transition: none;
+    }
+}

@@ -1,0 +1,417 @@
+/* ============================================
+   FLASHCARDS MODE - STAGE 4
+   Added: Quiz mode, Shuffle, Themes, Progress tracking
+   ============================================ */
+
+/* Import Stage 3 styles */
+@import url('flashcards.css');
+
+/* ============================================
+   STAGE 4: CONTROL BUTTONS
+   ============================================ */
+.control-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 2px solid var(--flashcard-border);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--flashcard-text-light);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.control-btn:hover {
+    background: var(--flashcard-primary);
+    color: white;
+    border-color: var(--flashcard-primary);
+    transform: scale(1.05);
+}
+
+.control-btn.active {
+    background: var(--flashcard-primary);
+    color: white;
+    border-color: var(--flashcard-primary);
+}
+
+.flashcards-controls {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+/* ============================================
+   STAGE 4: QUIZ MODE
+   ============================================ */
+.quiz-mode {
+    --quiz-primary: #667eea;
+    --quiz-correct: #4CAF50;
+    --quiz-wrong: #F44336;
+}
+
+.quiz-stats {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.quiz-score {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.score-label {
+    font-size: 0.85rem;
+    color: var(--flashcard-text-light);
+    font-weight: 500;
+}
+
+.score-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--flashcard-text);
+}
+
+.quiz-accuracy {
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-width: 80px;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+/* Quiz Card */
+.quiz-card-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+    min-height: 450px;
+}
+
+.quiz-question-card {
+    background: linear-gradient(135deg, var(--flashcard-secondary) 0%, var(--flashcard-accent) 100%);
+    color: white;
+    border-radius: var(--flashcard-radius);
+    box-shadow: var(--flashcard-shadow);
+    padding: 3rem 2rem;
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeInScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.quiz-word {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.quiz-transcription {
+    font-size: 1.3rem;
+    text-align: center;
+    opacity: 0.95;
+    font-style: italic;
+}
+
+.quiz-hint {
+    text-align: center;
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 0.5rem;
+}
+
+/* Quiz Options */
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.quiz-option {
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 1.1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+}
+
+.quiz-option:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateX(5px);
+}
+
+.quiz-option:disabled {
+    cursor: not-allowed;
+}
+
+.quiz-option.correct {
+    background: var(--quiz-correct);
+    border-color: var(--quiz-correct);
+    animation: correctAnswer 0.5s ease;
+}
+
+.quiz-option.wrong {
+    background: var(--quiz-wrong);
+    border-color: var(--quiz-wrong);
+    animation: wrongAnswer 0.5s ease;
+}
+
+@keyframes correctAnswer {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes wrongAnswer {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Quiz Feedback */
+.quiz-feedback {
+    min-height: 30px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.feedback-correct {
+    color: #C8E6C9;
+}
+
+.feedback-wrong {
+    color: #FFCDD2;
+}
+
+/* ============================================
+   STAGE 4: QUIZ RESULTS
+   ============================================ */
+.quiz-results {
+    background: linear-gradient(135deg, var(--flashcard-secondary) 0%, var(--flashcard-accent) 100%);
+    color: white;
+    border-radius: var(--flashcard-radius);
+    box-shadow: var(--flashcard-shadow);
+    padding: 3rem 2rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 2rem auto;
+    animation: fadeInScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.results-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.quiz-results h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.results-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stat-value {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stat-label {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.results-message {
+    font-size: 1.5rem;
+    margin: 1.5rem 0;
+    opacity: 0.95;
+}
+
+.results-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.action-btn-large {
+    padding: 1rem 2rem;
+    background: white;
+    color: var(--flashcard-primary);
+    border: none;
+    border-radius: 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn-large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.action-btn-large.secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(5px);
+}
+
+/* ============================================
+   STAGE 4: THEME VARIATIONS
+   ============================================ */
+:root {
+    --flashcard-secondary: #667eea;
+    --flashcard-accent: #764ba2;
+}
+
+/* Themes can be dynamically changed via JS */
+[data-theme="blue"] {
+    --flashcard-secondary: #4A90E2;
+    --flashcard-accent: #357ABD;
+}
+
+[data-theme="green"] {
+    --flashcard-secondary: #11998e;
+    --flashcard-accent: #38ef7d;
+}
+
+[data-theme="orange"] {
+    --flashcard-secondary: #f2994a;
+    --flashcard-accent: #f2c94c;
+}
+
+[data-theme="pink"] {
+    --flashcard-secondary: #f093fb;
+    --flashcard-accent: #f5576c;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE (Stage 4)
+   ============================================ */
+@media (max-width: 768px) {
+    .quiz-word {
+        font-size: 2.5rem;
+    }
+
+    .quiz-option {
+        font-size: 1rem;
+        padding: 0.875rem 1.25rem;
+    }
+
+    .quiz-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .quiz-accuracy {
+        font-size: 1.5rem;
+    }
+
+    .results-stats {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+    }
+
+    .control-btn {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .quiz-question-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .quiz-word {
+        font-size: 2rem;
+    }
+
+    .quiz-option {
+        font-size: 0.95rem;
+    }
+
+    .results-actions {
+        flex-direction: column;
+    }
+
+    .action-btn-large {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.quiz-option {
+    animation: slideInRight 0.3s ease forwards;
+}
+
+.quiz-option:nth-child(1) { animation-delay: 0.1s; }
+.quiz-option:nth-child(2) { animation-delay: 0.2s; }
+.quiz-option:nth-child(3) { animation-delay: 0.3s; }
+.quiz-option:nth-child(4) { animation-delay: 0.4s; }

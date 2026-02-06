@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards Demo - Stage 4 Complete</title>
+    <link rel="stylesheet" href="styles/flashcards.css">
+    <link rel="stylesheet" href="styles/flashcards-stage4.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .demo-header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .demo-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .badges {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #4CAF50;
+            color: white;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge.stage-4 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation: glow 2s ease-in-out infinite;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(240, 147, 251, 0.6); }
+            50% { box-shadow: 0 0 25px rgba(245, 87, 108, 0.8); }
+        }
+
+        #vocabulary-list-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .vocab-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.2s;
+        }
+
+        .vocab-item:hover {
+            background: #f5f7fa;
+        }
+
+        .vocab-item:last-child {
+            border-bottom: none;
+        }
+
+        .vocab-word {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .vocab-translation {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-card h4 {
+            color: #333;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .feature-card ul {
+            margin-left: 1.25rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .feature-card li {
+            margin: 0.5rem 0;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .demo-header h1 {
+                font-size: 1.8rem;
+            }
+
+            #vocabulary-list-container {
+                padding: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="demo-header">
+            <h1>🎮 Flashcards Stage 4 - Complete</h1>
+            <p>Advanced vocabulary learning with Quiz, Progress tracking, and Themes</p>
+            <div class="badges">
+                <span class="badge">✅ Stage 1</span>
+                <span class="badge">✅ Stage 2</span>
+                <span class="badge">✅ Stage 3</span>
+                <span class="badge stage-4">🚀 Stage 4 ULTIMATE!</span>
+            </div>
+        </div>
+
+        <div id="vocabulary-list-container">
+            <h3 style="margin-bottom: 1rem; color: #333;">📚 Vocabulary List (20 words)</h3>
+            
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">diet</div>
+                    <div class="vocab-translation">диета, рацион питания</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">healthy</div>
+                    <div class="vocab-translation">здоровый</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">exercise</div>
+                    <div class="vocab-translation">упражнение</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">vitamin</div>
+                    <div class="vocab-translation">витамин</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">breakfast</div>
+                    <div class="vocab-translation">завтрак</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">water</div>
+                    <div class="vocab-translation">вода</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">sleep</div>
+                    <div class="vocab-translation">сон</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">fruit</div>
+                    <div class="vocab-translation">фрукт</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">vegetable</div>
+                    <div class="vocab-translation">овощ</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">protein</div>
+                    <div class="vocab-translation">белок</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">energy</div>
+                    <div class="vocab-translation">энергия</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">muscle</div>
+                    <div class="vocab-translation">мышца</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">balance</div>
+                    <div class="vocab-translation">баланс</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">nutrition</div>
+                    <div class="vocab-translation">питание</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">calories</div>
+                    <div class="vocab-translation">калории</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">lifestyle</div>
+                    <div class="vocab-translation">образ жизни</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">fitness</div>
+                    <div class="vocab-translation">фитнес</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">weight</div>
+                    <div class="vocab-translation">вес</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">stress</div>
+                    <div class="vocab-translation">стресс</div>
+                </div>
+            </div>
+            <div class="vocab-item">
+                <div>
+                    <div class="vocab-word">wellness</div>
+                    <div class="vocab-translation">благополучие</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <h4>Quiz Mode</h4>
+                <ul>
+                    <li>Multiple choice questions</li>
+                    <li>Real-time scoring</li>
+                    <li>Accuracy tracking</li>
+                    <li>Results screen with stats</li>
+                    <li>Auto-advance after answer</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h4>Progress Tracking</h4>
+                <ul>
+                    <li>Session duration tracking</li>
+                    <li>Cards viewed per session</li>
+                    <li>Word view statistics</li>
+                    <li>Last viewed timestamps</li>
+                    <li>Study history</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔀</div>
+                <h4>Shuffle Cards</h4>
+                <ul>
+                    <li>Randomize card order</li>
+                    <li>Toggle on/off</li>
+                    <li>Restore original order</li>
+                    <li>Visual feedback</li>
+                    <li>Works in all modes</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h4>Theme Customization</h4>
+                <ul>
+                    <li>5 beautiful themes</li>
+                    <li>Purple, Blue, Green, Orange, Pink</li>
+                    <li>Persistent theme storage</li>
+                    <li>One-click theme switcher</li>
+                    <li>Smooth transitions</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/flashcards-stage4.js"></script>
+    <script>
+        // TTS Services
+        const TTS_SERVICES = [
+            (text) => `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=tw-ob`,
+            (text) => `https://translate.googleapis.com/translate_tts?ie=UTF-8&total=1&idx=0&client=gtx&tl=en&q=${encodeURIComponent(text)}`,
+            (text) => {
+                if (typeof responsiveVoice !== 'undefined') {
+                    responsiveVoice.speak(text, 'UK English Male');
+                    return null;
+                }
+                return null;
+            },
+            (text) => {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1;
+                    speechSynthesis.speak(utterance);
+                    return null;
+                }
+                return null;
+            }
+        ];
+
+        let ttsIndex = 0;
+
+        window.speak = function(text) {
+            for (let i = 0; i < TTS_SERVICES.length; i++) {
+                try {
+                    const url = TTS_SERVICES[(ttsIndex + i) % TTS_SERVICES.length](text);
+                    if (url) {
+                        const audio = new Audio(url);
+                        audio.play().catch(e => console.log("Audio play error", e));
+                        ttsIndex = (ttsIndex + i) % TTS_SERVICES.length;
+                        break;
+                    }
+                } catch (e) {
+                    console.log("TTS API failed:", e);
+                    continue;
+                }
+            }
+        };
+
+        // Vocabulary data
+        const vocabularyData = [
+            { word: 'diet', translation: 'диета, рацион питания', transcription: '[ˈdaɪət]', example: 'A balanced diet is important for health.' },
+            { word: 'healthy', translation: 'здоровый', transcription: '[ˈhelθi]', example: 'She leads a healthy lifestyle.' },
+            { word: 'exercise', translation: 'упражнение', transcription: '[ˈeksəsaɪz]', example: 'Regular exercise keeps you fit.' },
+            { word: 'vitamin', translation: 'витамин', transcription: '[ˈvaɪtəmɪn]', example: 'Oranges contain vitamin C.' },
+            { word: 'breakfast', translation: 'завтрак', transcription: '[ˈbrekfəst]', example: 'Breakfast is the most important meal.' },
+            { word: 'water', translation: 'вода', transcription: '[ˈwɔːtə]', example: 'Drink eight glasses of water daily.' },
+            { word: 'sleep', translation: 'сон', transcription: '[sliːp]', example: 'Good sleep improves memory.' },
+            { word: 'fruit', translation: 'фрукт', transcription: '[fruːt]', example: 'Eat fresh fruit every day.' },
+            { word: 'vegetable', translation: 'овощ', transcription: '[ˈvedʒtəbl]', example: 'Vegetables are rich in fiber.' },
+            { word: 'protein', translation: 'белок', transcription: '[ˈprəʊtiːn]', example: 'Eggs are a good source of protein.' },
+            { word: 'energy', translation: 'энергия', transcription: '[ˈenədʒi]', example: 'Carbs provide quick energy.' },
+            { word: 'muscle', translation: 'мышца', transcription: '[ˈmʌsl]', example: 'Exercise builds muscle strength.' },
+            { word: 'balance', translation: 'баланс', transcription: '[ˈbæləns]', example: 'Maintain work-life balance.' },
+            { word: 'nutrition', translation: 'питание', transcription: '[njuːˈtrɪʃn]', example: 'Good nutrition prevents disease.' },
+            { word: 'calories', translation: 'калории', transcription: '[ˈkæləriz]', example: 'Count your daily calories.' },
+            { word: 'lifestyle', translation: 'образ жизни', transcription: '[ˈlaɪfstaɪl]', example: 'A healthy lifestyle includes exercise.' },
+            { word: 'fitness', translation: 'фитнес', transcription: '[ˈfɪtnəs]', example: 'Join a fitness class.' },
+            { word: 'weight', translation: 'вес', transcription: '[weɪt]', example: 'Monitor your weight regularly.' },
+            { word: 'stress', translation: 'стресс', transcription: '[stres]', example: 'Reduce stress through meditation.' },
+            { word: 'wellness', translation: 'благополучие', transcription: '[ˈwelnəs]', example: 'Focus on overall wellness.' }
+        ];
+
+        // Initialize Stage 4
+        const flashcards = new FlashcardsManagerStage4(vocabularyData);
+        flashcards.init('vocabulary-list-container');
+
+        console.log('🚀 Stage 4 Demo loaded!');
+        console.log('🎮 Features: Quiz Mode, Progress Tracking, Shuffle, Themes');
+        console.log('📊 Vocabulary loaded:', vocabularyData.length, 'words');
+    </script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cooking at School - English Lesson</title>
+  <meta name="description" content="Learn about school cooking programs in Britain. Level B1, 45 minutes." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  
+  <!-- ✨ NEW: Design Token System (MUST BE FIRST!) + CACHE BUSTING -->
+  <link rel="stylesheet" href="assets/css/design-tokens.css?v=3.2.1">
+  
+  <!-- CSS Modules + CACHE BUSTING -->
+  <link rel="stylesheet" href="assets/css/lesson-core.css?v=2.0.0">
+  <link rel="stylesheet" href="assets/css/lesson-components.css?v=2.1.0">
+  <link rel="stylesheet" href="assets/css/theme-switcher.css?v=3.2.2">
+  <link rel="stylesheet" href="assets/css/lesson-responsive.css">
+  
+  <!-- Flashcards CSS (Stage 4) -->
+  <link rel="stylesheet" href="styles/flashcards.css">
+  <link rel="stylesheet" href="styles/flashcards-stage4.css">
+  
+  <!-- ✨ NEW: Kanban Board CSS -->
+  <link rel="stylesheet" href="assets/css/vocabulary-kanban.css">
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="assets/js/lesson-engine.js" as="script">
+  <link rel="preload" href="../data/264.json" as="fetch" crossorigin>
+</head>
+<body>
+  <!-- Loader with animation -->
+  <div class="loader-container" id="loader">
+    <div class="loader">
+      <div class="loader-orbit"></div>
+      <div class="loader-orbit loader-orbit--2"></div>
+      <div class="loader-core"></div>
+    </div>
+    <p class="loader-text">Loading lesson...</p>
+  </div>
+
+  <!-- App Root Container -->
+  <div id="app-root">
+    <!-- Main Application Container -->
+    <div id="app"></div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="notification" id="notification">
+    <span id="notification-text"></span>
+  </div>
+
+  <!-- Debug Module (only for development) -->
+  <script src="assets/js/lesson-debug.js"></script>
+
+  <!-- Flashcards JavaScript (Stage 4) -->
+  <script src="js/flashcards-stage4.js"></script>
+
+  <!-- JavaScript Modules (in dependency order) -->
+  <script src="assets/js/lesson-storage.js"></script>
+  <script src="assets/js/lesson-tts.js"></script>
+  
+  <!-- ✨ NEW: Theme Manager v3.3.1 ULTIMATE FIX (BEFORE renderer and engine) -->
+  <script src="assets/js/theme-manager.js?v=3.3.1"></script>
+  
+  <script src="assets/js/lesson-renderer.js"></script>
+  
+  <!-- ✨ NEW: Kanban Controller + Event Bus (BEFORE lesson-engine.js) -->
+  <script src="assets/js/vocabulary-kanban.js"></script>
+  
+  <script src="assets/js/lesson-engine.js"></script>
+  
+  <!-- Initialization Script -->
+  <script>
+    // Extract lesson ID from filename (264.html -> 264)
+    const lessonId = window.location.pathname
+      .split('/').pop()
+      .replace('.html', '');
+    
+    // Initialize lesson engine
+    window.lessonEngine = new LessonEngine(lessonId);
+    
+    // Global flashcards instance (will be initialized after lesson loads)
+    window.flashcardsManager = null;
+    
+    // Start the application
+    window.lessonEngine.init().then(() => {
+      // Initialize flashcards after lesson loads
+      console.log('🎴 Initializing flashcards integration...');
+      initFlashcardsIntegration();
+      
+      // ✨ NEW: Log theme system status
+      console.log('🎨 Theme system initialized:', window.lessonEngine.themeManager.getCurrentTheme());
+    }).catch(error => {
+      console.error('Failed to initialize lesson:', error);
+      document.getElementById('loader').innerHTML = `
+        <div class="error-state">
+          <h2>😔 Failed to load lesson</h2>
+          <p>${error.message}</p>
+          <button onclick="location.reload()" class="primary-btn">Try Again</button>
+        </div>
+      `;
+    });
+    
+    /**
+     * Initialize Flashcards Integration with Lesson Engine
+     */
+    function initFlashcardsIntegration() {
+      // Wait for vocabulary to be rendered
+      const checkVocab = setInterval(() => {
+        const vocabContainer = document.querySelector('.card[id*="vocabulary"]');
+        if (vocabContainer && window.lessonEngine?.data?.vocabulary?.words) {
+          clearInterval(checkVocab);
+          
+          // Convert lesson vocabulary format to flashcards format
+          const vocabularyData = window.lessonEngine.data.vocabulary.words.map(item => ({
+            word: item.en,
+            translation: item.ru,
+            transcription: item.transcription || '',
+            example: item.example || '',
+            partOfSpeech: item.part_of_speech || ''
+          }));
+          
+          console.log('✅ Vocabulary data converted:', vocabularyData.length, 'words');
+          
+          // Create flashcards container inside vocabulary card
+          const vocabCardBody = vocabContainer.querySelector('.card-body');
+          if (vocabCardBody) {
+            // Create container for flashcards
+            const flashcardsDiv = document.createElement('div');
+            flashcardsDiv.id = 'vocabulary-flashcards-container';
+            flashcardsDiv.style.display = 'none'; // Hidden by default
+            vocabCardBody.appendChild(flashcardsDiv);
+            
+            // Initialize FlashcardsManager
+            window.flashcardsManager = new FlashcardsManagerStage4(vocabularyData);
+            
+            // Custom init to inject into existing vocabulary section
+            injectFlashcardsUI(vocabContainer);
+            
+            console.log('🎴 Flashcards integration complete!');
+          }
+        }
+      }, 100);
+      
+      // Timeout after 5 seconds
+      setTimeout(() => {
+        clearInterval(checkVocab);
+      }, 5000);
+    }
+    
+    /**
+     * Inject Flashcards UI into existing vocabulary section
+     */
+    function injectFlashcardsUI(vocabCard) {
+      const fm = window.flashcardsManager;
+      if (!fm) return;
+      
+      // Find card header and add mode toggle
+      const cardHeader = vocabCard.querySelector('.card-header');
+      if (cardHeader) {
+        // Check if toggle already exists
+        if (!cardHeader.querySelector('.vocab-mode-toggle')) {
+          const toggleHTML = `
+            <div class="vocab-mode-toggle" style="display: flex; gap: 0.5rem; background: rgba(9, 13, 32, 0.5); padding: 0.25rem; border-radius: 0.5rem;">
+              <button class="vocab-mode-btn active" data-mode="list" style="padding: 0.5rem 1rem; border: none; background: white; color: #4A90E2; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                📋 List
+              </button>
+              <button class="vocab-mode-btn" data-mode="flashcards" style="padding: 0.5rem 1rem; border: none; background: transparent; color: #9CA3AF; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                🎴 Flashcards
+              </button>
+              <button class="vocab-mode-btn" data-mode="quiz" style="padding: 0.5rem 1rem; border: none; background: transparent; color: #9CA3AF; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                🎮 Quiz
+              </button>
+            </div>
+          `;
+          cardHeader.insertAdjacentHTML('beforeend', toggleHTML);
+          
+          // Attach event listeners
+          cardHeader.querySelectorAll('.vocab-mode-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const mode = e.target.dataset.mode;
+              switchVocabMode(mode, vocabCard);
+            });
+          });
+        }
+      }
+    }
+    
+    /**
+     * Switch between vocabulary modes
+     */
+    function switchVocabMode(mode, vocabCard) {
+      const fm = window.flashcardsManager;
+      if (!fm) return;
+      
+      // Update button states
+      vocabCard.querySelectorAll('.vocab-mode-btn').forEach(btn => {
+        if (btn.dataset.mode === mode) {
+          btn.classList.add('active');
+          btn.style.background = 'white';
+          btn.style.color = '#4A90E2';
+        } else {
+          btn.classList.remove('active');
+          btn.style.background = 'transparent';
+          btn.style.color = '#9CA3AF';
+        }
+      });
+      
+      // Get containers
+      const vocabList = vocabCard.querySelector('.vocab-layout') || vocabCard.querySelector('.vocab-list');
+      const flashcardsContainer = document.getElementById('vocabulary-flashcards-container');
+      
+      if (!flashcardsContainer) return;
+      
+      fm.currentMode = mode;
+      fm.quizMode = (mode === 'quiz');
+      
+      if (mode === 'list') {
+        // Show list, hide flashcards
+        if (vocabList) vocabList.style.display = '';
+        flashcardsContainer.style.display = 'none';
+      } else {
+        // Hide list, show flashcards
+        if (vocabList) vocabList.style.display = 'none';
+        flashcardsContainer.style.display = 'block';
+        
+        // Render appropriate mode
+        if (mode === 'flashcards') {
+          renderFlashcardsMode(flashcardsContainer);
+        } else if (mode === 'quiz') {
+          renderQuizMode(flashcardsContainer);
+        }
+      }
+      
+      console.log('🔄 Switched to', mode, 'mode');
+    }
+    
+    /**
+     * Render Flashcards Mode
+     */
+    function renderFlashcardsMode(container) {
+      const fm = window.flashcardsManager;
+      if (!fm) return;
+      
+      fm.currentCardIndex = 0;
+      container.innerHTML = '';
+      
+      // Create flashcards wrapper
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flashcards-container';
+      wrapper.style.display = 'flex';
+      container.appendChild(wrapper);
+      
+      fm.flashcardsContainer = wrapper;
+      fm.renderFlashcardsContainer();
+    }
+    
+    /**
+     * Render Quiz Mode
+     */
+    function renderQuizMode(container) {
+      const fm = window.flashcardsManager;
+      if (!fm) return;
+      
+      container.innerHTML = '';
+      
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flashcards-container';
+      wrapper.style.display = 'flex';
+      container.appendChild(wrapper);
+      
+      fm.flashcardsContainer = wrapper;
+      fm.startQuiz();
+    }
+    
+    // Handle online/offline status
+    window.addEventListener('online', () => {
+      window.lessonEngine.showNotification('✅ Back online');
+    });
+    
+    window.addEventListener('offline', () => {
+      window.lessonEngine.showNotification('⚠️ You are offline. Some features may not work.');
+    });
+  </script>
+  
+  <!-- Performance monitoring (optional, for development) -->
+  <script>
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const perfData = performance.getEntriesByType('navigation')[0];
+          if (perfData) {
+            console.group('📊 Performance Metrics');
+            console.log('DOM Content Loaded:', Math.round(perfData.domContentLoadedEventEnd - perfData.fetchStart), 'ms');
+            console.log('Page Load:', Math.round(perfData.loadEventEnd - perfData.fetchStart), 'ms');
+            console.log('DNS Lookup:', Math.round(perfData.domainLookupEnd - perfData.domainLookupStart), 'ms');
+            console.log('Response Time:', Math.round(perfData.responseEnd - perfData.requestStart), 'ms');
+            console.groupEnd();
+          }
+        }, 0);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+/**
+ * TRAINERS SPECIFIC STYLES
+ * Trainer-specific UI overrides and extensions.
+ */
+
+/* Find Error Mode Styles */
+.options.find-error-mode .sentence-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    font-size: 1.5rem;
+    padding: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+}
+
+.word-chunk-btn {
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 60px;
+    font-size: 1.1rem;
+}
+
+.word-chunk-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.3);
+}
+
+.word-chunk-btn:disabled {
+    cursor: not-allowed;
+}
+
+.word-chunk-btn.correct {
+    background: rgba(76, 175, 80, 0.8);
+    border-color: #4CAF50;
+    color: white;
+    animation: pulse-correct 0.6s ease;
+}
+
+.word-chunk-btn.wrong {
+    background: rgba(244, 67, 54, 0.8);
+    border-color: #F44336;
+    color: white;
+    animation: shake-wrong 0.5s ease;
+}
+
+@keyframes pulse-correct {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake-wrong {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* Feedback Styles */
+.feedback {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-md);
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.feedback.correct {
+  background: rgba(76, 175, 80, 0.2);
+  border: 2px solid #4CAF50;
+  color: #4CAF50;
+}
+
+.feedback.wrong {
+  background: rgba(244, 67, 54, 0.2);
+  border: 2px solid #F44336;
+  color: #F44336;
+}
+
+.feedback.hidden {
+  display: none;
+}

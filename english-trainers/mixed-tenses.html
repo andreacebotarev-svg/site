@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mixed Tenses Trainer - Master Present Simple, Continuous & Perfect together. Progressive difficulty with 5 levels.">
+  <title>Mixed Tenses Trainer | English Trainers</title>
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/trainers.css">
+  <link rel="stylesheet" href="assets/css/effects.css">
+  <link rel="stylesheet" href="assets/css/mixed-tenses.css">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="../assets/js/analytics.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="trainer-header">
+    <div class="container">
+      <a href="index.html" class="back-btn" aria-label="Back to main portal">
+        ← Portal
+      </a>
+      <h1>🎯 Mixed Tenses Trainer</h1>
+      <p class="subtitle">Master all tenses together</p>
+    </div>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" role="region" aria-label="Game statistics">
+    <div class="container">
+      <div class="stat">
+        <span class="label">Score</span>
+        <span id="score" class="value">0</span>
+      </div>
+      <div id="streak" class="stat hidden">
+        <span class="value">🔥 0</span>
+      </div>
+      <div class="stat">
+        <span class="label">Lives</span>
+        <span id="lives" class="value">❤️❤️❤️</span>
+      </div>
+      <div class="stat">
+        <span class="label">Level</span>
+        <span id="level" class="value">1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Level Info -->
+    <div id="level-info" class="level-info">
+      <h2 id="level-title">Level 1: Basics</h2>
+      <p id="level-description">Only affirmative sentences (+)</p>
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="quota-display">
+        <span id="quota-text">PS: 5, PC: 5, PP: 5</span>
+      </div>
+    </div>
+
+    <!-- Question Area -->
+    <div id="question-container" class="question-container">
+      <!-- Start Screen -->
+      <div id="start-screen" class="start-screen">
+        <div class="start-content">
+          <div class="emoji" style="font-size: 4rem;">🎯</div>
+          <h2>Ready to Mix Tenses?</h2>
+          <p style="color: var(--text-muted); margin: 1rem 0;">
+            Master Present Simple, Continuous & Perfect together!<br>
+            Progressive difficulty across 5 levels.
+          </p>
+
+          <div class="level-selector">
+            <h3>Choose Starting Level:</h3>
+            <div class="level-buttons">
+              <button class="btn btn-secondary" data-level="1">Level 1<br><small>Basics (+)</small></button>
+              <button class="btn btn-secondary" data-level="2">Level 2<br><small>Negation (-)</small></button>
+              <button class="btn btn-secondary" data-level="3">Level 3<br><small>Master (+/-/?)</small></button>
+              <button class="btn btn-secondary" data-level="hard">Hardcore<br><small>Advanced</small></button>
+              <button class="btn btn-primary" data-level="exam">FINAL EXAM<br><small>60 Questions</small></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Screen -->
+      <div id="game-screen" class="game-screen" style="display: none;">
+        <div class="question-card">
+          <div id="question-text" class="question-text"></div>
+
+          <!-- Standard Options -->
+          <div id="options-standard" class="options-grid">
+            <button class="option-btn" data-option="0"></button>
+            <button class="option-btn" data-option="1"></button>
+            <button class="option-btn" data-option="2"></button>
+          </div>
+
+          <!-- Find Error Options -->
+          <div id="options-error" class="error-options" style="display: none;">
+            <p class="error-instruction">Click on the word that has a mistake:</p>
+            <div id="error-words" class="error-words"></div>
+          </div>
+
+          <!-- Feedback -->
+          <div id="feedback" class="feedback" style="display: none;">
+            <div id="feedback-icon" class="feedback-icon"></div>
+            <div id="feedback-text" class="feedback-text"></div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="game-controls">
+          <button id="hint-btn" class="btn btn-secondary">💡 Hint</button>
+          <button id="next-btn" class="btn btn-primary" style="display: none;">Next Question →</button>
+        </div>
+      </div>
+
+      <!-- Results Screen -->
+      <div id="results-screen" class="results-screen" style="display: none;">
+        <div class="results-card">
+          <h2>🎉 Level Complete!</h2>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">Questions</span>
+              <span id="results-questions" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Correct</span>
+              <span id="results-correct" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Accuracy</span>
+              <span id="results-accuracy" class="stat-value">0%</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Best Streak</span>
+              <span id="results-streak" class="stat-value">0</span>
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button id="retry-btn" class="btn btn-secondary">🔄 Retry Level</button>
+            <button id="next-level-btn" class="btn btn-primary">Next Level →</button>
+            <button id="finish-btn" class="btn btn-primary">🏆 Finish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="assets/js/trainer-core.js"></script>
+  <script src="assets/js/trainer-ui.js"></script>
+  <script src="assets/js/trainer-timer-tts.js"></script>
+  <script src="assets/js/trainer-dom-events-utils.js"></script>
+  <script src="assets/js/effects/EffectsManager.js"></script>
+  <script src="assets/js/effects/AuroraEffect.js"></script>
+  <script src="assets/js/effects/AudioEffectsManager.js"></script>
+  <script src="assets/js/effects/HapticFeedback.js"></script>
+
+  <script type="module">
+    import MixedTrainer from './assets/js/modules/mixed-tenses.js';
+
+    class MixedTensesUI {
+      constructor() {
+        this.trainer = null;
+        this.currentQuestion = null;
+        this.elements = this.cacheElements();
+        this.bindEvents();
+      }
+
+      cacheElements() {
+        return {
+          startScreen: document.getElementById('start-screen'),
+          gameScreen: document.getElementById('game-screen'),
+          resultsScreen: document.getElementById('results-screen'),
+          levelInfo: document.getElementById('level-info'),
+          levelTitle: document.getElementById('level-title'),
+          levelDesc: document.getElementById('level-description'),
+          progressFill: document.getElementById('progress-fill'),
+          quotaText: document.getElementById('quota-text'),
+          questionText: document.getElementById('question-text'),
+          optionsStandard: document.getElementById('options-standard'),
+          optionsError: document.getElementById('options-error'),
+          errorWords: document.getElementById('error-words'),
+          feedback: document.getElementById('feedback'),
+          feedbackIcon: document.getElementById('feedback-icon'),
+          feedbackText: document.getElementById('feedback-text'),
+          hintBtn: document.getElementById('hint-btn'),
+          nextBtn: document.getElementById('next-btn'),
+          score: document.getElementById('score'),
+          lives: document.getElementById('lives'),
+          level: document.getElementById('level'),
+          streak: document.getElementById('streak')
+        };
+      }
+
+      bindEvents() {
+        // Level selection
+        document.querySelectorAll('[data-level]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const level = e.target.closest('[data-level]').dataset.level;
+            this.startGame(level);
+          });
+        });
+
+        // Answer buttons
+        this.elements.optionsStandard.addEventListener('click', (e) => {
+          if (e.target.classList.contains('option-btn')) {
+            const optionIndex = parseInt(e.target.dataset.option);
+            this.submitAnswer(optionIndex);
+          }
+        });
+
+        // Error finding buttons
+        this.elements.errorWords.addEventListener('click', (e) => {
+          if (e.target.classList.contains('error-word')) {
+            const optionIndex = parseInt(e.target.dataset.option);
+            this.submitAnswer(optionIndex);
+          }
+        });
+
+        // Control buttons
+        this.elements.hintBtn.addEventListener('click', () => this.showHint());
+        this.elements.nextBtn.addEventListener('click', () => this.nextQuestion());
+
+        // Results buttons
+        document.getElementById('retry-btn').addEventListener('click', () => this.retryLevel());
+        document.getElementById('next-level-btn').addEventListener('click', () => this.nextLevel());
+        document.getElementById('finish-btn').addEventListener('click', () => this.finishGame());
+      }
+
+      async startGame(level) {
+        try {
+          this.trainer = new MixedTrainer(level);
+          
+          // Load Audio Assets
+          await this.trainer._effects.loadAudioAssets({
+            correct: 'assets/audio/correct.mp3',
+            milestone: 'assets/audio/milestone.mp3',
+            error: 'assets/audio/error.mp3'
+          });
+          
+          this.elements.startScreen.style.display = 'none';
+          this.elements.gameScreen.style.display = 'block';
+          this.updateLevelInfo();
+          await this.loadNextQuestion();
+        } catch (error) {
+          console.error('Error starting game:', error);
+          alert('Failed to start game: ' + error.message);
+        }
+      }
+
+      async loadNextQuestion() {
+        try {
+          this.currentQuestion = await this.trainer.generateQuestion();
+
+          if (this.currentQuestion.finished) {
+            this.showResults(this.currentQuestion.stats);
+            return;
+          }
+
+          this.renderQuestion();
+          this.updateUI();
+        } catch (error) {
+          console.error('Error loading question:', error);
+          this.showError('Failed to load question');
+        }
+      }
+
+      renderQuestion() {
+        const q = this.currentQuestion;
+
+        // Clean up and localize instructions
+        let instruction = '';
+        let questionText = q.question;
+
+        // Clean up raw generator output
+        if (q.type === 'choice') {
+           instruction = 'Choose the correct option:';
+           questionText = questionText.replace(/^Choose correct[^:]*:\s*/i, '');
+        } else if (q.type === 'gap') {
+           instruction = 'Complete the sentence:';
+        } else if (q.type === 'find_error') {
+           instruction = 'Find the mistake:';
+           // questionText now contains the full sentence from generator
+        }
+
+        // Render with proper hierarchy
+        this.elements.questionText.innerHTML = 
+          `<span style="display:block; font-size: 0.9em; color: var(--text-muted); margin-bottom: 0.5rem;">${instruction}</span>` +
+          `<span style="display:block; font-size: 1.4em; font-weight: bold;">${questionText}</span>`;
+
+        // Hide feedback
+        this.elements.feedback.style.display = 'none';
+        this.elements.nextBtn.style.display = 'none';
+        this.elements.hintBtn.style.display = 'inline-block';
+
+        if (q.type === 'find_error') {
+          // Find error mode
+          this.elements.optionsStandard.style.display = 'none';
+          this.elements.optionsError.style.display = 'block';
+
+          this.elements.errorWords.innerHTML = q.options.map((option, index) => `
+            <button class="error-word" data-option="${index}">
+              ${option.text}
+            </button>
+          `).join('');
+        } else {
+          // Standard mode
+          this.elements.optionsStandard.style.display = 'grid';
+          this.elements.optionsError.style.display = 'none';
+
+          const buttons = this.elements.optionsStandard.querySelectorAll('.option-btn');
+          q.options.forEach((option, index) => {
+            if (buttons[index]) {
+              buttons[index].textContent = option;
+              buttons[index].disabled = false;
+              buttons[index].classList.remove('correct', 'wrong');
+            }
+          });
+        }
+      }
+
+      async submitAnswer(answerIndex) {
+        const q = this.currentQuestion;
+        let isCorrect = false;
+
+        if (q.type === 'find_error') {
+          isCorrect = q.options[answerIndex].correct;
+        } else {
+          isCorrect = q.options[answerIndex] === q.correct;
+        }
+
+        // Update trainer state
+        if (isCorrect) {
+          this.trainer.state.score += 10;
+          this.trainer.state.correctAnswers++;
+          this.trainer.state.streak++;
+          if (this.trainer.state.streak > this.trainer.state.maxStreak) {
+            this.trainer.state.maxStreak = this.trainer.state.streak;
+          }
+        } else {
+          this.trainer.state.lives--;
+          this.trainer.state.streak = 0;
+        }
+
+        this.trainer.state.questionsAnswered++;
+
+        // Visual feedback
+        this.showFeedback(isCorrect, answerIndex);
+
+        // Effects
+        if (isCorrect) {
+          this.trainer._effects.triggerSuccessEffects(this.trainer.state.streak, document.getElementById('question-container'));
+        } else {
+          this.trainer._effects.triggerErrorEffects();
+        }
+
+        // Update UI
+        this.updateUI();
+
+        // Check game over
+        if (this.trainer.state.lives <= 0) {
+          setTimeout(() => {
+            this.showResults(this.trainer.getStats());
+          }, 2000);
+          return;
+        }
+
+        // Show next button after delay
+        setTimeout(() => {
+          this.elements.nextBtn.style.display = 'inline-block';
+        }, 1500);
+      }
+
+      showFeedback(isCorrect, selectedIndex) {
+        this.elements.feedback.style.display = 'block';
+
+        if (isCorrect) {
+          this.elements.feedbackIcon.textContent = '✅';
+          this.elements.feedbackText.textContent = 'Correct!';
+          this.elements.feedback.className = 'feedback correct';
+
+          // Highlight correct answer
+          if (this.currentQuestion.type === 'find_error') {
+            const correctBtn = this.elements.errorWords.querySelector(`[data-option="${selectedIndex}"]`);
+            if (correctBtn) correctBtn.classList.add('correct');
+          } else {
+            const correctBtn = this.elements.optionsStandard.querySelector(`[data-option="${selectedIndex}"]`);
+            if (correctBtn) correctBtn.classList.add('correct');
+          }
+        } else {
+          this.elements.feedbackIcon.textContent = '❌';
+          this.elements.feedbackText.textContent = 'Incorrect!';
+          this.elements.feedback.className = 'feedback wrong';
+
+          // Highlight wrong answer and show correct one
+          if (this.currentQuestion.type === 'find_error') {
+            const wrongBtn = this.elements.errorWords.querySelector(`[data-option="${selectedIndex}"]`);
+            if (wrongBtn) wrongBtn.classList.add('wrong');
+
+            // Show correct answer
+            this.currentQuestion.options.forEach((option, index) => {
+              if (option.correct) {
+                const correctBtn = this.elements.errorWords.querySelector(`[data-option="${index}"]`);
+                if (correctBtn) correctBtn.classList.add('correct');
+              }
+            });
+          } else {
+            const wrongBtn = this.elements.optionsStandard.querySelector(`[data-option="${selectedIndex}"]`);
+            if (wrongBtn) wrongBtn.classList.add('wrong');
+
+            // Show correct answer
+            const correctIndex = this.currentQuestion.options.indexOf(this.currentQuestion.correct);
+            const correctBtn = this.elements.optionsStandard.querySelector(`[data-option="${correctIndex}"]`);
+            if (correctBtn) correctBtn.classList.add('correct');
+          }
+        }
+      }
+
+      showHint() {
+        // Simple hint implementation
+        const hints = {
+          'present-simple': 'Present Simple: habits, facts, schedules',
+          'present-continuous': 'Present Continuous: actions happening now',
+          'present-perfect': 'Present Perfect: experience, completed actions'
+        };
+
+        const tense = this.currentQuestion.metadata?.tense;
+        const hint = hints[tense] || 'Check the tense carefully!';
+
+        alert(`💡 Hint: ${hint}`);
+        this.trainer.state.score -= 2; // Penalty for hint
+        this.updateUI();
+      }
+
+      async nextQuestion() {
+        await this.loadNextQuestion();
+      }
+
+      updateUI() {
+        // Update stats
+        this.elements.score.textContent = this.trainer.state.score;
+        this.elements.level.textContent = this.trainer.currentLevelId;
+
+        // Update lives
+        const hearts = '❤️'.repeat(this.trainer.state.lives) +
+                      '🖤'.repeat(3 - this.trainer.state.lives);
+        this.elements.lives.textContent = hearts;
+
+        // Update streak
+        if (this.trainer.state.streak > 0) {
+          this.elements.streak.classList.remove('hidden');
+          this.elements.streak.querySelector('.value').textContent = `🔥 ${this.trainer.state.streak}`;
+        } else {
+          this.elements.streak.classList.add('hidden');
+        }
+
+        // Update level info
+        this.updateLevelInfo();
+      }
+
+      updateLevelInfo() {
+        if (!this.trainer?.config) return;
+
+        this.elements.levelTitle.textContent = this.trainer.config.title;
+        this.elements.levelDesc.textContent = this.trainer.config.description;
+
+        // Update quota display
+        const quota = this.trainer.quota;
+        if (this.trainer.config.mode === 'strict_count') {
+          this.elements.quotaText.textContent =
+            `+: ${quota.affirmative || 0}, -: ${quota.negative || 0}, ?: ${quota.question || 0}`;
+        } else {
+          this.elements.quotaText.textContent =
+            `PS: ${quota['present-simple'] || 0}, PC: ${quota['present-continuous'] || 0}, PP: ${quota['present-perfect'] || 0}`;
+        }
+
+        // Update progress
+        const total = Object.values(this.trainer.config.quota || this.trainer.config.totalQuota || {}).reduce((a, b) => a + b, 15);
+        const remaining = Object.values(this.trainer.quota).reduce((a, b) => a + b, 0);
+        const progress = ((total - remaining) / total) * 100;
+        this.elements.progressFill.style.width = `${progress}%`;
+      }
+
+      showResults(stats) {
+        this.elements.gameScreen.style.display = 'none';
+        this.elements.resultsScreen.style.display = 'block';
+
+        document.getElementById('results-questions').textContent = stats.totalQuestions;
+        document.getElementById('results-correct').textContent = stats.correctAnswers;
+        document.getElementById('results-accuracy').textContent = `${stats.accuracy}%`;
+        document.getElementById('results-streak').textContent = stats.bestStreak;
+      }
+
+      retryLevel() {
+        this.trainer.initLevel(this.trainer.currentLevelId);
+        this.elements.resultsScreen.style.display = 'none';
+        this.elements.gameScreen.style.display = 'block';
+        this.loadNextQuestion();
+      }
+
+      nextLevel() {
+        const nextLevel = this.trainer.config.nextLevel;
+        if (nextLevel && nextLevel !== 'win') {
+          this.trainer.initLevel(nextLevel);
+          this.elements.resultsScreen.style.display = 'none';
+          this.elements.gameScreen.style.display = 'block';
+          this.loadNextQuestion();
+        } else {
+          this.finishGame();
+        }
+      }
+
+      finishGame() {
+        // Return to start screen
+        this.elements.resultsScreen.style.display = 'none';
+        this.elements.startScreen.style.display = 'block';
+      }
+
+      showError(message) {
+        alert(`Error: ${message}`);
+      }
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      window.mixedTrainer = new MixedTensesUI();
+    });
+  </script>
+</body>
+</html>

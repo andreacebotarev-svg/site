@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Highlighter Fix Test</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+    <div id="reader-container">
+        <div class="reader-header">
+            <h1>Word Highlighter Fix Test</h1>
+            <p>This test verifies that WordHighlighter is initialized before pagination setup.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        // Mock book data for testing
+        const mockBookData = {
+            book: {
+                id: 'test-book',
+                title: 'Test Book',
+                author: 'Test Author'
+            },
+            content: {
+                sections: [
+                    {
+                        id: 'section-1',
+                        title: 'Chapter 1',
+                        paragraphs: [
+                            { text: 'This is the first paragraph with some words to highlight.' },
+                            { text: 'This is the second paragraph with more words.' },
+                            { text: 'The third paragraph contains various terms and phrases.' }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Import required modules
+        import { ReaderView } from './assets/js/views/ReaderView.js';
+
+        async function runTest() {
+            console.log('🧪 Starting Word Highlighter Fix Test');
+
+            try {
+                // Create reader view
+                const container = document.getElementById('reader-container');
+                const readerView = new ReaderView(container, ['test-book']);
+
+                // Initialize
+                readerView.initialize(container);
+
+                // Load and render book
+                await readerView.loadBook('test-book');
+                await readerView.renderBookContent(mockBookData);
+
+                console.log('✅ Test completed successfully');
+
+                // Run diagnostics
+                setTimeout(() => {
+                    runDiagnostics();
+                }, 1000);
+
+            } catch (error) {
+                console.error('❌ Test failed:', error);
+            }
+        }
+
+        function runDiagnostics() {
+            console.log('\n🔍 DIAGNOSTICS');
+
+            const readerView = window.readerView;
+            const wordHighlighter = window.wordHighlighter;
+            const paginationController = window.paginationController;
+
+            console.log('1️⃣ Global Objects Check');
+            console.log('readerView exists:', !!readerView);
+            console.log('wordHighlighter exists:', !!wordHighlighter);
+            console.log('paginationController exists:', !!paginationController);
+
+            console.log('\n2️⃣ WordHighlighter State');
+            if (wordHighlighter) {
+                console.log('WordHighlighter initialized:', wordHighlighter.initialized || 'unknown');
+                console.log('WordHighlighter container:', wordHighlighter.container);
+            }
+
+            console.log('\n3️⃣ DOM Structure');
+            const readingContent = document.getElementById('reading-content');
+            const pageContent = document.querySelector('.page-content');
+            const interactiveWords = document.querySelectorAll('.interactive-word');
+
+            console.log('#reading-content exists:', !!readingContent);
+            console.log('.page-content exists:', !!pageContent);
+            console.log('Interactive words (.interactive-word):', interactiveWords.length);
+
+            console.log('\n4️⃣ Pagination State');
+            if (paginationController) {
+                console.log('PaginationController exists:', !!paginationController);
+                console.log('PageRenderer exists:', !!paginationController.pageRenderer);
+                if (paginationController.pageRenderer) {
+                    console.log('PageRenderer container:', paginationController.pageRenderer.container?.id);
+                }
+            }
+
+            console.log('\n🎯 SUMMARY');
+            const issues = [];
+
+            if (!wordHighlighter) issues.push('WordHighlighter not available globally');
+            if (!readingContent) issues.push('Reading content container not found');
+            if (!pageContent) issues.push('Page content not rendered');
+            if (interactiveWords.length === 0) issues.push('No interactive words found');
+
+            if (issues.length === 0) {
+                console.log('✅ All checks passed - Word Highlighter fix appears to work!');
+            } else {
+                console.log('❌ Issues found:');
+                issues.forEach(issue => console.log('  -', issue));
+            }
+        }
+
+        // Run test when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runTest);
+        } else {
+            runTest();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+/**
+ * MOBILE RESPONSIVE STYLES
+ */
+
+/* ========================================
+   GLOBAL MOBILE ADJUSTMENTS
+   ======================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --font-size: 16px;
+    --line-height: 1.5;
+    --page-width: 100%;
+  }
+  
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  body {
+    font-size: 16px;
+  }
+  
+  .app-header {
+    padding: 0 16px;
+  }
+  
+  .navbar {
+    gap: 16px;
+  }
+  
+  .nav-link {
+    font-size: 14px;
+  }
+}
+
+/* ========================================
+   LIBRARY PAGE (index.html)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .library-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .library-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  #bookSearch {
+    width: 60%;
+  }
+  
+  .book-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .book-card {
+    flex-direction: row;
+    height: 120px;
+  }
+  
+  .book-cover {
+    width: 80px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+  
+  .book-info {
+    padding: 12px;
+  }
+  
+  .book-title {
+    font-size: 15px;
+  }
+  
+  .book-author {
+    font-size: 13px;
+  }
+}
+
+/* ========================================
+   READER PAGE (reader.html)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .reader-header {
+    padding: 0 12px;
+  }
+  
+  #bookTitle {
+    font-size: 15px;
+    max-width: 200px;
+  }
+  
+  .reader-viewer {
+    padding: 20px 16px 80px;
+    font-size: 18px;
+    max-width: 100%;
+    text-align: left;
+  }
+  
+  .reader-viewer p:not(.poem-line) {
+    text-indent: 0;
+  }
+  
+  /* Bottom Sheet and Footer */
+  .reader-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  }
+
+  /* Responsive Word Popup */
+  .word-popup {
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 60px !important;
+    top: auto !important;
+    width: auto !important;
+    max-height: 50vh;
+    overflow-y: auto;
+    margin: 0 !important;
+    animation: popupSlideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes popupSlideIn {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Bottom Sheet Backdrop */
+.sheet-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.sheet-backdrop.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Bottom Sheet */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px 0;
+}
+
+.bottom-sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--text-tertiary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.btn-close-sheet {
+  position: absolute;
+  right: 16px;
+  top: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.btn-close-sheet:hover {
+  background: var(--border-color);
+}
+
+.bottom-sheet-content {
+  padding: 16px 20px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ========================================
+   FLASHCARDS PAGE (flashcards.html)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .flashcard-container {
+    padding: 16px;
+  }
+  
+  .flashcard {
+    height: 450px;
+  }
+  
+  .word {
+    font-size: 32px;
+  }
+  
+  .btn-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .btn-rating {
+    padding: 16px 8px;
+  }
+  
+  .shortcuts-hint {
+    display: none;
+  }
+  
+  .session-info {
+    min-width: 120px;
+  }
+}
+
+/* ========================================
+   TOUCH TARGETS
+   ======================================== */
+
+@media (max-width: 768px) {
+  .btn, button, .nav-link, .toc-item {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn-icon {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+

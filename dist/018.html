@@ -1,0 +1,2457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>English A0 — have got / has got (Standalone)</title>
+
+  <style>
+    /* =========================================================
+       ROOT + RESET
+       ========================================================= */
+    :root{
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,.06);
+      --panel-2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --faint: rgba(255,255,255,.55);
+
+      --brand: #66e3ff;
+      --brand-2: #7cffb2;
+      --warn: #ffcc66;
+      --danger: #ff6b6b;
+
+      --shadow: 0 14px 50px rgba(0,0,0,.45);
+      --border: 1px solid rgba(255,255,255,.14);
+
+      --r-lg: 18px;
+      --r-md: 14px;
+      --r-sm: 10px;
+
+      --gap-1: 8px;
+      --gap-2: 12px;
+      --gap-3: 16px;
+      --gap-4: 22px;
+      --gap-5: 30px;
+
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+      --tap: 44px;
+
+      --t-fast: 140ms;
+      --t-med: 220ms;
+      --t-slow: 320ms;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: var(--font);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(102,227,255,.20), transparent 55%),
+        radial-gradient(1000px 650px at 85% 15%, rgba(124,255,178,.14), transparent 55%),
+        radial-gradient(900px 600px at 50% 95%, rgba(255,204,102,.10), transparent 58%),
+        var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Anti-copy baseline: allow selection only where explicitly allowed */
+    body, .no-select { user-select: none; -webkit-user-select: none; }
+    .selectable, input, textarea { user-select: text; -webkit-user-select: text; }
+
+    a{ color: inherit; text-decoration: none; }
+    button, input { font-family: inherit; }
+
+    /* =========================================================
+       APP LAYOUT
+       ========================================================= */
+    .app-shell{
+      min-height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: var(--gap-4);
+      padding: calc(var(--gap-4) + env(safe-area-inset-top)) var(--gap-4) calc(var(--gap-4) + env(safe-area-inset-bottom));
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    .main{
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-4);
+      min-width: 0;
+    }
+
+    .panel{
+      background: var(--panel);
+      border: var(--border);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* =========================================================
+       LOADER
+       ========================================================= */
+    .loader-container{
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(7, 11, 19, .82);
+      z-index: 50;
+      transition: opacity var(--t-slow) ease, transform var(--t-slow) ease;
+    }
+    .loader{
+      width: min(520px, 92vw);
+      padding: 22px;
+      border-radius: var(--r-lg);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .spinner{
+      width: 52px;
+      height: 52px;
+      margin: 2px auto 12px;
+      border-radius: 50%;
+      border: 6px solid rgba(255,255,255,.16);
+      border-top-color: var(--brand);
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin{ to { transform: rotate(360deg); } }
+    .loader h1{
+      margin: 6px 0 6px;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+    .loader p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .loader-hidden{
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+    }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+    .header{
+      padding: var(--gap-4);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--gap-3);
+      align-items: start;
+    }
+    .title{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+    .title h2{
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .subtitle{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .meta{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .chip{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 4px rgba(102,227,255,.12);
+    }
+
+    /* =========================================================
+       TABS
+       ========================================================= */
+    .tabs{
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      border-radius: var(--r-lg);
+      border: var(--border);
+      background: rgba(255,255,255,.04);
+    }
+    .tab{
+      min-height: var(--tap);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background var(--t-med) ease, border-color var(--t-med) ease, transform var(--t-fast) ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .tab:hover{ background: rgba(255,255,255,.06); transform: translateY(-1px); }
+    .tab[aria-selected="true"]{
+      color: rgba(255,255,255,.95);
+      background: rgba(102,227,255,.12);
+      border-color: rgba(102,227,255,.28);
+    }
+
+    .content{
+      padding: var(--gap-4);
+    }
+    .section-title{
+      margin: 0 0 10px;
+      font-size: 15px;
+      letter-spacing: .2px;
+    }
+    .section-hint{
+      margin: 0 0 var(--gap-3);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    /* =========================================================
+       BUTTONS + INPUTS
+       ========================================================= */
+    .row{
+      display: flex;
+      gap: var(--gap-2);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn{
+      min-height: var(--tap);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      cursor: pointer;
+      transition: transform var(--t-fast) ease, background var(--t-med) ease, border-color var(--t-med) ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); }
+    .btn:active{ transform: translateY(0px); }
+    .btn-primary{
+      background: rgba(124,255,178,.14);
+      border-color: rgba(124,255,178,.28);
+    }
+    .btn-danger{
+      background: rgba(255,107,107,.12);
+      border-color: rgba(255,107,107,.28);
+    }
+    .btn-ghost{
+      background: transparent;
+      border-color: rgba(255,255,255,.14);
+      color: var(--muted);
+    }
+    .btn[disabled]{
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .input{
+      min-height: var(--tap);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.20);
+      color: rgba(255,255,255,.92);
+      outline: none;
+      width: min(520px, 100%);
+    }
+    .input::placeholder{ color: rgba(255,255,255,.45); }
+
+    /* =========================================================
+       READING (no inline margins)
+       ========================================================= */
+    .reading-box{ display: grid; gap: var(--gap-2); }
+    .reading-text{
+      padding: var(--gap-3);
+      border-radius: var(--r-md);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      line-height: 1.65;
+      color: rgba(255,255,255,.86);
+      font-size: 14px;
+    }
+    .reading-text p{ margin: 0; }
+    .reading-text p + p{ margin-top: 10px; }
+    .reading-text br{ display: none; }
+    .reading-text .word{
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin: 1px 0;
+      cursor: pointer;
+      transition: background var(--t-med) ease, transform var(--t-fast) ease;
+      border: 1px solid transparent;
+    }
+    .reading-text .word:hover{
+      background: rgba(102,227,255,.12);
+      border-color: rgba(102,227,255,.18);
+      transform: translateY(-1px);
+    }
+    .reading-actions{
+      display: flex;
+      gap: var(--gap-2);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* =========================================================
+       VOCAB: LIST + FLASHCARDS
+       ========================================================= */
+    .mode-switch{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--gap-3);
+    }
+    .pill{
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      cursor: pointer;
+      transition: background var(--t-med) ease, border-color var(--t-med) ease;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pill[aria-pressed="true"]{
+      background: rgba(102,227,255,.12);
+      border-color: rgba(102,227,255,.28);
+      color: rgba(255,255,255,.92);
+    }
+
+    .vocab-group-title{
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .vocab-grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--gap-2);
+    }
+    .vocab-item{
+      display: grid;
+      grid-template-columns: 1.2fr 1fr auto;
+      gap: var(--gap-2);
+      align-items: center;
+      padding: 12px;
+      border-radius: var(--r-md);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      transition: transform var(--t-fast) ease, background var(--t-med) ease;
+    }
+    .vocab-item:hover{ transform: translateY(-1px); background: rgba(255,255,255,.05); }
+    .w{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .w strong{
+      font-size: 14px;
+      font-weight: 650;
+      letter-spacing: .2px;
+    }
+    .w small{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+    .tag{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 12px;
+      justify-self: start;
+      white-space: nowrap;
+    }
+
+    /* Flashcard */
+    .card-wrap{
+      display: grid;
+      gap: var(--gap-3);
+      justify-items: center;
+    }
+    .card{
+      width: min(520px, 100%);
+      min-height: 220px;
+      border-radius: var(--r-lg);
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      position: relative;
+      perspective: 1200px;
+      overflow: hidden;
+    }
+    .card-inner{
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      transition: transform var(--t-slow) ease;
+    }
+    .card.flipped .card-inner{ transform: rotateY(180deg); }
+    .card-face{
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: var(--gap-4);
+      backface-visibility: hidden;
+    }
+    .card-front{ gap: 10px; }
+    .card-back{
+      transform: rotateY(180deg);
+      gap: 10px;
+      background: rgba(102,227,255,.06);
+    }
+    .big{
+      font-size: 28px;
+      font-weight: 760;
+      letter-spacing: .4px;
+      text-align: center;
+    }
+    .small{
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      line-height: 1.45;
+      max-width: 42ch;
+    }
+
+    /* =========================================================
+       GRAMMAR
+       ========================================================= */
+    .grammar-grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--gap-3);
+    }
+    .note{
+      padding: 12px;
+      border-radius: var(--r-md);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.86);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    .mini-table{
+      display: grid;
+      gap: 10px;
+    }
+    .mini-row{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .cell{
+      padding: 12px;
+      border-radius: var(--r-md);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .mono{
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: rgba(255,255,255,.88);
+    }
+
+    /* =========================================================
+       QUIZ
+       ========================================================= */
+    .quiz-top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--gap-2);
+      flex-wrap: wrap;
+      margin-bottom: var(--gap-3);
+    }
+    .progress{
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .timer{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      font-size: 12px;
+      color: rgba(255,255,255,.88);
+    }
+    .bar{
+      width: 120px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      --qbar: 1;
+    }
+    .bar > i{
+      display: block;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, rgba(124,255,178,.95), rgba(102,227,255,.95));
+      transform-origin: left center;
+      transform: scaleX(var(--qbar));
+      transition: transform 1s linear;
+    }
+
+    /* Discrete progress without inline styles (0..30) */
+    .bar[data-left="30"]{ --qbar: 1; }
+    .bar[data-left="29"]{ --qbar: 0.9667; }
+    .bar[data-left="28"]{ --qbar: 0.9333; }
+    .bar[data-left="27"]{ --qbar: 0.9; }
+    .bar[data-left="26"]{ --qbar: 0.8667; }
+    .bar[data-left="25"]{ --qbar: 0.8333; }
+    .bar[data-left="24"]{ --qbar: 0.8; }
+    .bar[data-left="23"]{ --qbar: 0.7667; }
+    .bar[data-left="22"]{ --qbar: 0.7333; }
+    .bar[data-left="21"]{ --qbar: 0.7; }
+    .bar[data-left="20"]{ --qbar: 0.6667; }
+    .bar[data-left="19"]{ --qbar: 0.6333; }
+    .bar[data-left="18"]{ --qbar: 0.6; }
+    .bar[data-left="17"]{ --qbar: 0.5667; }
+    .bar[data-left="16"]{ --qbar: 0.5333; }
+    .bar[data-left="15"]{ --qbar: 0.5; }
+    .bar[data-left="14"]{ --qbar: 0.4667; }
+    .bar[data-left="13"]{ --qbar: 0.4333; }
+    .bar[data-left="12"]{ --qbar: 0.4; }
+    .bar[data-left="11"]{ --qbar: 0.3667; }
+    .bar[data-left="10"]{ --qbar: 0.3333; }
+    .bar[data-left="9"]{ --qbar: 0.3; }
+    .bar[data-left="8"]{ --qbar: 0.2667; }
+    .bar[data-left="7"]{ --qbar: 0.2333; }
+    .bar[data-left="6"]{ --qbar: 0.2; }
+    .bar[data-left="5"]{ --qbar: 0.1667; }
+    .bar[data-left="4"]{ --qbar: 0.1333; }
+    .bar[data-left="3"]{ --qbar: 0.1; }
+    .bar[data-left="2"]{ --qbar: 0.0667; }
+    .bar[data-left="1"]{ --qbar: 0.0333; }
+    .bar[data-left="0"]{ --qbar: 0; }
+
+    .qbox{
+      padding: 14px;
+      border-radius: var(--r-md);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      display: grid;
+      gap: 12px;
+    }
+    .qtitle{
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+    .options{
+      display: grid;
+      gap: 10px;
+    }
+    .opt{
+      min-height: var(--tap);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.12);
+      cursor: pointer;
+      transition: transform var(--t-fast) ease, background var(--t-med) ease, border-color var(--t-med) ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(255,255,255,.90);
+      font-size: 13px;
+    }
+    .opt:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); }
+    .opt[aria-disabled="true"]{ opacity: .55; cursor: not-allowed; transform: none; }
+    .badge{
+      font-size: 11px;
+      color: rgba(255,255,255,.86);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      white-space: nowrap;
+    }
+    .feedback{
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      color: rgba(255,255,255,.86);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .feedback.good{ border-color: rgba(124,255,178,.30); background: rgba(124,255,178,.10); }
+    .feedback.bad{ border-color: rgba(255,107,107,.30); background: rgba(255,107,107,.10); }
+
+    .lock{
+      padding: 12px;
+      border-radius: var(--r-md);
+      border: 1px solid rgba(255,204,102,.28);
+      background: rgba(255,204,102,.10);
+      color: rgba(255,255,255,.88);
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    /* =========================================================
+       SIDEBAR (MY WORDS)
+       ========================================================= */
+    .sidebar{
+      position: sticky;
+      top: calc(var(--gap-4) + env(safe-area-inset-top));
+      align-self: start;
+      height: calc(100vh - (var(--gap-4) * 2) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar .head{
+      padding: var(--gap-3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--gap-2);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .sidebar .head h3{
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: .2px;
+    }
+    .sidebar .body{
+      padding: var(--gap-3);
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+    }
+    .myword{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .myword .t{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .myword .t b{
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .myword .t span{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    /* =========================================================
+       NOTIFICATIONS (no inline opacity)
+       ========================================================= */
+    .toasts{
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      display: grid;
+      gap: 10px;
+      z-index: 60;
+      width: min(360px, calc(100vw - 28px));
+    }
+    .toast{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.40);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: rgba(255,255,255,.92);
+      box-shadow: var(--shadow);
+      animation: pop var(--t-slow) ease;
+      font-size: 13px;
+      line-height: 1.35;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity var(--t-slow) ease, transform var(--t-slow) ease;
+    }
+    .toast.good{ border-color: rgba(124,255,178,.30); }
+    .toast.warn{ border-color: rgba(255,204,102,.30); }
+    .toast.bad{ border-color: rgba(255,107,107,.30); }
+    .toast.is-hiding{ opacity: 0; transform: translateY(8px); }
+
+    @keyframes pop{
+      from { transform: translateY(8px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* =========================================================
+       WATERMARK
+       ========================================================= */
+    .wm{
+      position: fixed;
+      left: 10px;
+      top: 10px;
+      z-index: 5;
+      pointer-events: none;
+      opacity: .14;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(255,255,255,.85);
+      transform: rotate(-8deg);
+      text-shadow: 0 1px 0 rgba(0,0,0,.35);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Hide internal TTS audio */
+    #ttsAudio{ display: none !important; }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+    @media (max-width: 768px){
+      .app-shell{
+        grid-template-columns: 1fr;
+        padding: calc(var(--gap-3) + env(safe-area-inset-top)) var(--gap-3) calc(var(--gap-3) + env(safe-area-inset-bottom));
+      }
+      .sidebar{
+        position: relative;
+        top: auto;
+        height: auto;
+        order: 3;
+      }
+      .vocab-item{
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+      .meta{
+        justify-content: flex-start;
+      }
+      .header{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px){
+      .tab{ flex: 1; justify-content: center; }
+      .bar{ width: 96px; }
+      .big{ font-size: 24px; }
+      .reading-text{ font-size: 13.5px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader-container" id="loader" aria-live="polite" aria-busy="true">
+    <div class="loader panel">
+      <div class="spinner" aria-hidden="true"></div>
+      <h1>Loading lesson…</h1>
+      <p>Offline-ready after the first successful open (service worker cache).</p>
+    </div>
+  </div>
+
+  <!-- Watermark -->
+  <div class="wm" id="wm">lesson</div>
+
+  <!-- App -->
+  <div class="app-shell" id="app" hidden>
+    <main class="main" id="main"></main>
+
+    <aside class="sidebar panel" id="sidebar" aria-label="My Words">
+      <div class="head">
+        <h3>My Words</h3>
+        <button class="btn btn-ghost" id="btnClearWords" type="button" title="Clear list">Clear</button>
+      </div>
+      <div class="body" id="myWordsList"></div>
+    </aside>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toasts" id="toasts" aria-live="polite" aria-relevant="additions"></div>
+
+  <script>
+    /* =========================================================
+       GLOBAL STATE (standalone, no external JSON)
+       ========================================================= */
+
+    // Lesson id derived from filename (e.g., 263.html -> "263")
+    const LESSON_ID = (() => {
+      try{
+        const p = (location.pathname || "").split("/").pop() || "lesson.html";
+        const m = p.match(/(\d+)\.html$/i);
+        return m ? m[1] : (p.replace(".html","") || "standalone");
+      }catch(_e){ return "standalone"; }
+    })();
+
+    const state = {
+      lessonId: LESSON_ID,
+      lesson: null,
+      activeTab: "reading",
+
+      vocabMode: "list",
+      cardIndex: 0,
+      learned: new Set(),
+      myWords: [],
+
+      quizIndex: 0,
+      quizScore: 0,
+      quizLocked: true,
+      quizTimerSec: 30,
+      quizTimeLeft: 30,
+      quizTick: null,
+      quizAnswered: false,
+      quizMistakes: 0,
+      quizCheatFlags: 0
+    };
+
+    // Embedded lesson data
+    function getEmbeddedLesson(){
+      const lesson = {
+        id: state.lessonId,
+        title: "Have got / Has got",
+        subtitle: "Family + appearance words. Learn the form with pronouns and answer fast (30s).",
+        cefr: "A0",
+        duration: "12–18 min",
+
+        reading: {
+          title: "Daniel’s family photo (easy text)",
+          hint: "Tap words to hear them and save them. Then practice have got / has got.",
+          paragraphs: [
+            "This is my family. We have got a big photo. I have got a brother and a sister.",
+            "My mum has got long dark hair. She has got glasses. She is friendly.",
+            "My dad has got short fair hair. He is tall and slim. He is nice.",
+            "My grandma has got grey hair. She is short. My grandpa has got grey hair too.",
+            "My uncle has got a beard and a moustache. My aunt is pretty. She has got long hair.",
+            "My little cousin is fun. She is seven."
+          ],
+          ttsText: "This is my family. We have got a big photo. I have got a brother and a sister. My mum has got long dark hair. She has got glasses. She is friendly. My dad has got short fair hair. He is tall and slim. He is nice."
+        },
+
+        vocabulary: {
+          title: "Words to know",
+          hint: "Save words to My Words. Quiz unlocks after you learn at least 8 words.",
+          groups: [
+            {
+              name: "Family",
+              items: [
+                { id:"brother", en:"brother", ru:"брат", ex:"I have got a brother." },
+                { id:"sister", en:"sister", ru:"сестра", ex:"I have got a sister." },
+                { id:"mother", en:"mother", ru:"мама", ex:"My mother has got long hair." },
+                { id:"father", en:"father", ru:"папа", ex:"My father has got short hair." },
+                { id:"parents", en:"parents", ru:"родители", ex:"I have got nice parents." },
+                { id:"son", en:"son", ru:"сын", ex:"They have got a son." },
+                { id:"daughter", en:"daughter", ru:"дочь", ex:"They have got a daughter." },
+                { id:"children", en:"children", ru:"дети", ex:"They have got two children." },
+                { id:"grandmother", en:"grandmother", ru:"бабушка", ex:"My grandmother is friendly." },
+                { id:"grandfather", en:"grandfather", ru:"дедушка", ex:"My grandfather is about 70." },
+                { id:"grandparents", en:"grandparents", ru:"бабушка и дедушка", ex:"My grandparents are nice." },
+                { id:"aunt", en:"aunt", ru:"тётя", ex:"My aunt is pretty." },
+                { id:"uncle", en:"uncle", ru:"дядя", ex:"My uncle has got a beard." },
+                { id:"cousin", en:"cousin", ru:"двоюродный брат/сестра", ex:"My cousin is fun." },
+                { id:"husband", en:"husband", ru:"муж", ex:"He is her husband." },
+                { id:"wife", en:"wife", ru:"жена", ex:"She is his wife." }
+              ]
+            },
+            {
+              name: "Looks",
+              items: [
+                { id:"short", en:"short", ru:"низкий/короткий", ex:"She is short." },
+                { id:"tall", en:"tall", ru:"высокий", ex:"He is tall." },
+                { id:"slim", en:"slim", ru:"стройный", ex:"He is slim." },
+                { id:"young", en:"young", ru:"молодой/юный", ex:"She is young." },
+                { id:"old", en:"old", ru:"старый/пожилой", ex:"He is old." },
+                { id:"friendly", en:"friendly", ru:"дружелюбный", ex:"She is friendly." },
+                { id:"shy", en:"shy", ru:"застенчивый", ex:"She is shy." },
+                { id:"nice", en:"nice", ru:"приятный/милый", ex:"He is nice." },
+                { id:"fun", en:"fun", ru:"весёлый/забавный", ex:"She is fun." },
+                { id:"pretty", en:"pretty", ru:"красивая/симпатичная", ex:"She is pretty." },
+                { id:"glasses", en:"glasses", ru:"очки", ex:"She has got glasses." },
+                { id:"grey_hair", en:"grey hair", ru:"седые волосы", ex:"She has got grey hair." },
+                { id:"long_hair", en:"long hair", ru:"длинные волосы", ex:"She has got long hair." },
+                { id:"dark_hair", en:"dark hair", ru:"тёмные волосы", ex:"She has got dark hair." },
+                { id:"fair_hair", en:"fair hair", ru:"светлые волосы", ex:"He has got fair hair." },
+                { id:"short_hair", en:"short hair", ru:"короткие волосы", ex:"He has got short hair." },
+                { id:"beard", en:"beard", ru:"борода", ex:"He has got a beard." },
+                { id:"moustache", en:"moustache", ru:"усы", ex:"He has got a moustache." }
+              ]
+            }
+          ]
+        },
+
+        grammar: {
+          title: "have got / has got (A0)",
+          hint: "Remember: I/you/we/they → have got. He/she/it → has got.",
+          blocks: [
+            { kind: "rule", text: "Use have got / has got to talk about possession and description." },
+            {
+              kind: "table",
+              leftTitle: "Positive",
+              rightTitle: "Negative",
+              rows: [
+                { left: "I have got a sister.", right: "I haven’t got a sister." },
+                { left: "You have got glasses.", right: "You haven’t got glasses." },
+                { left: "He has got short hair.", right: "He hasn’t got short hair." },
+                { left: "She has got a cousin.", right: "She hasn’t got a cousin." },
+                { left: "We have got grandparents.", right: "We haven’t got grandparents." },
+                { left: "They have got two children.", right: "They haven’t got two children." }
+              ]
+            },
+            {
+              kind: "table",
+              leftTitle: "Questions",
+              rightTitle: "Short answers",
+              rows: [
+                { left: "Have you got a brother?", right: "Yes, I have. / No, I haven’t." },
+                { left: "Has she got long hair?", right: "Yes, she has. / No, she hasn’t." },
+                { left: "Have they got children?", right: "Yes, they have. / No, they haven’t." }
+              ]
+            }
+          ],
+          microDrills: [
+            { prompt: "I / (glasses) →", answer: "I have got glasses." },
+            { prompt: "He / (a beard) →", answer: "He has got a beard." },
+            { prompt: "They / (two children) →", answer: "They have got two children." },
+            { prompt: "She / (long dark hair) →", answer: "She has got long dark hair." }
+          ]
+        },
+
+        quiz: {
+          title: "Quiz (30 seconds each)",
+          hint: "No pausing: switching tabs during a question counts as a cheat flag.",
+          unlockRule: { learnedMin: 8 },
+          questions: [
+            { id:"q1", type:"mcq", prompt:"Choose the correct sentence.", options:["He have got short hair.","He has got short hair.","He has got short hairs."], correctIndex:1, explain:"He/she/it → has got." },
+            { id:"q2", type:"mcq", prompt:"Choose the correct sentence.", options:["I has got a sister.","I have got a sister.","I have got sister."], correctIndex:1, explain:"I/you/we/they → have got." },
+            { id:"q3", type:"mcq", prompt:"Pick the correct question.", options:["Have she got glasses?","Has she got glasses?","Has got she glasses?"], correctIndex:1, explain:"Has + she + got …?" },
+            { id:"q4", type:"input", prompt:"Type the missing words: She ___ ___ long hair.", answer:"has got", explain:"She → has got." },
+            { id:"q5", type:"input", prompt:"Type the missing words: We ___ ___ a big family.", answer:"have got", explain:"We → have got." },
+            { id:"q6", type:"mcq", prompt:"Choose the negative form.", options:["He hasn’t got a moustache.","He haven’t got a moustache.","He not has got a moustache."], correctIndex:0, explain:"He → hasn’t got." }
+          ]
+        }
+      };
+      return lesson;
+    }
+
+    /* =========================================================
+       LOADER + INIT
+       ========================================================= */
+    function setLoader(visible){
+      const el = document.getElementById("loader");
+      if(!el) return;
+      el.classList.toggle("loader-hidden", !visible);
+      el.setAttribute("aria-busy", visible ? "true" : "false");
+      if(!visible){ setTimeout(() => { el.style.display = "none"; el.removeAttribute("style"); }, 360); }
+    }
+
+    function setWatermark(){
+      const wm = document.getElementById("wm");
+      if(!wm) return;
+      const ts = new Date().toISOString().slice(0,16).replace("T"," ");
+      wm.textContent = `lesson:${state.lessonId} • ${ts}`;
+    }
+
+    async function loadLesson(){
+      try{
+        setLoader(true);
+        setWatermark();
+        await delay(220);
+        state.lesson = getEmbeddedLesson();
+        buildInterface();
+        loadMyWords();
+        applyQuizLock();
+        switchTab("reading");
+        initProtectionLayer();
+        initServiceWorkerInline(); /* registration needs secure context/localhost [web:20] */
+        setLoader(false);
+      }catch(err){
+        setLoader(false);
+        showNotification("Could not start the lesson. Try reloading the page.", "bad");
+        console.error(err);
+      }
+    }
+
+    /* =========================================================
+       BUILD INTERFACE (no inline styles)
+       ========================================================= */
+    function buildInterface(){
+      const app = document.getElementById("app");
+      const main = document.getElementById("main");
+      if(!app || !main) return;
+
+      app.hidden = false;
+      main.textContent = "";
+
+      // Header
+      const header = document.createElement("section");
+      header.className = "header panel";
+
+      const left = document.createElement("div");
+      left.className = "title";
+
+      const h2 = document.createElement("h2");
+      h2.textContent = escapeJS(`${state.lesson.title} — lesson ${state.lesson.id}`);
+
+      const p = document.createElement("p");
+      p.className = "subtitle";
+      p.textContent = escapeJS(state.lesson.subtitle);
+
+      left.appendChild(h2);
+      left.appendChild(p);
+
+      const right = document.createElement("div");
+      right.className = "meta";
+      right.appendChild(makeChip("Level", state.lesson.cefr, "dot"));
+      right.appendChild(makeChip("Time", state.lesson.duration, null));
+      right.appendChild(makeChip("Rule", "30s / question", null));
+
+      header.appendChild(left);
+      header.appendChild(right);
+
+      // Tabs
+      const tabsWrap = document.createElement("div");
+      tabsWrap.className = "tabs panel";
+      tabsWrap.setAttribute("role", "tablist");
+      tabsWrap.setAttribute("aria-label", "Lesson sections");
+
+      [
+        { id:"reading", label:"Reading" },
+        { id:"vocabulary", label:"Vocabulary" },
+        { id:"grammar", label:"Grammar" },
+        { id:"quiz", label:"Quiz" }
+      ].forEach(t => {
+        const b = document.createElement("button");
+        b.className = "tab";
+        b.type = "button";
+        b.setAttribute("role", "tab");
+        b.setAttribute("aria-selected", "false");
+        b.dataset.tab = t.id;
+        b.textContent = escapeJS(t.label);
+        b.addEventListener("click", () => switchTab(t.id));
+        tabsWrap.appendChild(b);
+      });
+
+      // Content
+      const content = document.createElement("section");
+      content.className = "content panel";
+      content.setAttribute("role", "tabpanel");
+      content.id = "content";
+
+      // Mount
+      main.appendChild(header);
+      main.appendChild(tabsWrap);
+      main.appendChild(content);
+
+      // Sidebar controls
+      const btnClear = document.getElementById("btnClearWords");
+      if(btnClear){
+        btnClear.onclick = () => {
+          if(state.myWords.length === 0){
+            showNotification("My Words is already empty.", "warn");
+            return;
+          }
+          state.myWords = [];
+          persistMyWords();
+          renderMyWords();
+          applyQuizLock();
+          showNotification("My Words cleared.", "good");
+          vibrate(15);
+        };
+      }
+
+      renderMyWords();
+      updateTabsUI();
+    }
+
+    function makeChip(k, v, dotClass){
+      const chip = document.createElement("div");
+      chip.className = "chip";
+      if(dotClass){
+        const d = document.createElement("span");
+        d.className = dotClass;
+        d.setAttribute("aria-hidden", "true");
+        chip.appendChild(d);
+      }
+      const t = document.createElement("span");
+      t.textContent = `${k}: ${v}`;
+      chip.appendChild(t);
+      return chip;
+    }
+
+    function delay(ms){ return new Promise(res => setTimeout(res, ms)); }
+
+    // DOMContentLoaded boot [web:92][web:95]
+    document.addEventListener("DOMContentLoaded", () => {
+      stopSpeech(); // safety
+      loadLesson();
+    }); /* [web:92][web:95] */
+  </script>
+  <script>
+    /* =========================================================
+       RENDER DISPATCH
+       ========================================================= */
+    function renderActiveTab(){
+      const content = document.getElementById("content");
+      if(!content || !state.lesson) return;
+      content.textContent = "";
+
+      if(state.activeTab === "reading") renderReading(content);
+      else if(state.activeTab === "vocabulary") renderVocabulary(content);
+      else if(state.activeTab === "grammar") renderGrammar(content);
+      else if(state.activeTab === "quiz") renderQuiz(content);
+    }
+
+    /* =========================================================
+       READING
+       ========================================================= */
+    function renderReading(mount){
+      const r = state.lesson.reading;
+
+      const h = document.createElement("h3");
+      h.className = "section-title";
+      h.textContent = escapeJS(r.title);
+
+      const hint = document.createElement("p");
+      hint.className = "section-hint";
+      hint.textContent = escapeJS(r.hint);
+
+      const box = document.createElement("div");
+      box.className = "reading-box";
+
+      const text = document.createElement("div");
+      text.className = "reading-text";
+      text.setAttribute("role", "article");
+      text.setAttribute("aria-label", "Reading text");
+
+      r.paragraphs.forEach((para) => {
+        const p = document.createElement("p");
+        const tokens = tokenizeForReading(para);
+
+        tokens.forEach(tok => {
+          if(tok.type === "space" || tok.type === "punct"){
+            p.appendChild(document.createTextNode(tok.value));
+            return;
+          }
+          const span = document.createElement("span");
+          span.className = "word";
+          span.textContent = escapeJS(tok.value);
+          span.dataset.word = tok.value;
+          span.addEventListener("click", () => {
+            const w = normalizeWord(tok.value);
+            if(!w) return;
+            speakWord(w);
+            showWordQuickActions(w);
+          });
+          p.appendChild(span);
+        });
+
+        text.appendChild(p);
+      });
+
+      const actions = document.createElement("div");
+      actions.className = "reading-actions";
+
+      const btnListen = document.createElement("button");
+      btnListen.className = "btn btn-primary";
+      btnListen.type = "button";
+      btnListen.textContent = "Listen";
+      btnListen.addEventListener("click", () => {
+        speakText(state.lesson.reading.ttsText);
+        showNotification("Listening… tap Stop to cancel.", "good");
+      });
+
+      const btnStop = document.createElement("button");
+      btnStop.className = "btn btn-ghost";
+      btnStop.type = "button";
+      btnStop.textContent = "Stop";
+      btnStop.addEventListener("click", () => {
+        stopSpeech();
+        showNotification("Stopped.", "warn");
+      });
+
+      const btnTip = document.createElement("button");
+      btnTip.className = "btn";
+      btnTip.type = "button";
+      btnTip.textContent = "How to use";
+      btnTip.addEventListener("click", () => {
+        showNotification("Tap a word → Hear it → Save in Vocabulary. Learn 8+ words to unlock Quiz.", "warn");
+        vibrate(10);
+      });
+
+      actions.appendChild(btnListen);
+      actions.appendChild(btnStop);
+      actions.appendChild(btnTip);
+
+      box.appendChild(text);
+      box.appendChild(actions);
+
+      mount.appendChild(h);
+      mount.appendChild(hint);
+      mount.appendChild(box);
+    }
+
+    function tokenizeForReading(text){
+      const out = [];
+      const re = /([A-Za-z']+|[0-9]+|[\.\,\!\?\:\;\(\)])/g;
+      let last = 0;
+      let m;
+      while((m = re.exec(text)) !== null){
+        const start = m.index;
+        if(start > last) out.push({ type:"space", value: text.slice(last, start) });
+        const v = m[0];
+        if(/^[A-Za-z']+$/.test(v) || /^[0-9]+$/.test(v)) out.push({ type:"word", value: v });
+        else out.push({ type:"punct", value: v });
+        last = start + v.length;
+      }
+      if(last < text.length) out.push({ type:"space", value: text.slice(last) });
+      return out;
+    }
+
+    function normalizeWord(w){
+      return String(w || "").toLowerCase().replace(/[^a-z']/g, "").trim();
+    }
+
+    function showWordQuickActions(word){
+      const exists = findVocabEntry(word);
+      if(exists) showNotification(`Word: ${word}. Open Vocabulary to save it.`, "good");
+      else showNotification(`Word: ${word}. (Not in vocab list.)`, "warn");
+    }
+
+    /* =========================================================
+       VOCABULARY
+       ========================================================= */
+    function renderVocabulary(mount){
+      const v = state.lesson.vocabulary;
+
+      const h = document.createElement("h3");
+      h.className = "section-title";
+      h.textContent = escapeJS(v.title);
+
+      const hint = document.createElement("p");
+      hint.className = "section-hint";
+      hint.textContent = escapeJS(v.hint);
+
+      const mode = document.createElement("div");
+      mode.className = "mode-switch";
+
+      const btnList = document.createElement("button");
+      btnList.className = "pill";
+      btnList.type = "button";
+      btnList.setAttribute("aria-pressed", state.vocabMode === "list" ? "true" : "false");
+      btnList.textContent = "List";
+      btnList.addEventListener("click", () => {
+        state.vocabMode = "list";
+        renderActiveTab();
+        showNotification("Mode: List.", "good");
+      });
+
+      const btnCards = document.createElement("button");
+      btnCards.className = "pill";
+      btnCards.type = "button";
+      btnCards.setAttribute("aria-pressed", state.vocabMode === "cards" ? "true" : "false");
+      btnCards.textContent = "Flashcards";
+      btnCards.addEventListener("click", () => {
+        state.vocabMode = "cards";
+        state.cardIndex = 0;
+        renderActiveTab();
+        showNotification("Mode: Flashcards.", "good");
+      });
+
+      const stats = document.createElement("div");
+      stats.className = "chip";
+      stats.textContent = escapeJS(`Learned: ${getLearnedCount()} • Saved: ${state.myWords.length}`);
+
+      mode.appendChild(btnList);
+      mode.appendChild(btnCards);
+      mode.appendChild(stats);
+
+      mount.appendChild(h);
+      mount.appendChild(hint);
+      mount.appendChild(mode);
+
+      if(state.vocabMode === "list") renderVocabList(mount);
+      else renderVocabCards(mount);
+    }
+
+    function renderVocabList(mount){
+      const groups = state.lesson.vocabulary.groups;
+
+      groups.forEach(g => {
+        const title = document.createElement("h4");
+        title.className = "section-title vocab-group-title";
+        title.textContent = escapeJS(g.name);
+
+        const grid = document.createElement("div");
+        grid.className = "vocab-grid";
+
+        g.items.forEach(item => {
+          const row = document.createElement("div");
+          row.className = "vocab-item";
+
+          const left = document.createElement("div");
+          left.className = "w";
+
+          const strong = document.createElement("strong");
+          strong.textContent = escapeJS(item.en);
+
+          const small = document.createElement("small");
+          small.textContent = escapeJS(`${item.ru} • ${item.ex}`);
+
+          left.appendChild(strong);
+          left.appendChild(small);
+
+          const tag = document.createElement("div");
+          tag.className = "tag";
+          tag.textContent = escapeJS(isLearned(item.id) ? "Learned" : "New");
+
+          const actions = document.createElement("div");
+          actions.className = "row";
+
+          const bSpeak = document.createElement("button");
+          bSpeak.className = "btn btn-ghost";
+          bSpeak.type = "button";
+          bSpeak.textContent = "Speak";
+          bSpeak.addEventListener("click", () => speakWord(item.en));
+
+          const bSave = document.createElement("button");
+          bSave.className = "btn btn-primary";
+          bSave.type = "button";
+          bSave.textContent = isSaved(item.id) ? "Saved" : "Save";
+          bSave.disabled = isSaved(item.id);
+          bSave.addEventListener("click", () => {
+            saveWord(item);
+            markLearned(item.id, true);
+            applyQuizLock();
+            renderActiveTab();
+            showNotification(`Saved: ${item.en}`, "good");
+            vibrate(12);
+          });
+
+          const bLearn = document.createElement("button");
+          bLearn.className = "btn";
+          bLearn.type = "button";
+          bLearn.textContent = isLearned(item.id) ? "Unlearn" : "Mark learned";
+          bLearn.addEventListener("click", () => {
+            markLearned(item.id, !isLearned(item.id));
+            applyQuizLock();
+            renderActiveTab();
+            showNotification(isLearned(item.id) ? `Learned: ${item.en}` : `Back to New: ${item.en}`, "warn");
+            vibrate(10);
+          });
+
+          actions.appendChild(bSpeak);
+          actions.appendChild(bSave);
+          actions.appendChild(bLearn);
+
+          row.appendChild(left);
+          row.appendChild(tag);
+          row.appendChild(actions);
+          grid.appendChild(row);
+        });
+
+        mount.appendChild(title);
+        mount.appendChild(grid);
+      });
+    }
+
+    function renderVocabCards(mount){
+      const all = getAllVocabItems();
+      if(all.length === 0){
+        const p = document.createElement("p");
+        p.className = "section-hint";
+        p.textContent = "No vocabulary items found.";
+        mount.appendChild(p);
+        return;
+      }
+
+      state.cardIndex = clamp(state.cardIndex, 0, all.length - 1);
+      const item = all[state.cardIndex];
+
+      const wrap = document.createElement("div");
+      wrap.className = "card-wrap";
+
+      const card = document.createElement("div");
+      card.className = "card";
+      card.id = "flashcard";
+
+      const inner = document.createElement("div");
+      inner.className = "card-inner";
+
+      const front = document.createElement("div");
+      front.className = "card-face card-front";
+
+      const big = document.createElement("div");
+      big.className = "big";
+      big.textContent = escapeJS(item.en);
+
+      const small = document.createElement("div");
+      small.className = "small";
+      small.textContent = "Tap card to flip. Remember first.";
+
+      front.appendChild(big);
+      front.appendChild(small);
+
+      const back = document.createElement("div");
+      back.className = "card-face card-back";
+
+      const big2 = document.createElement("div");
+      big2.className = "big";
+      big2.textContent = escapeJS(item.ru);
+
+      const small2 = document.createElement("div");
+      small2.className = "small";
+      small2.textContent = escapeJS(item.ex);
+
+      back.appendChild(big2);
+      back.appendChild(small2);
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+
+      card.addEventListener("click", () => flipCard());
+
+      const controls = document.createElement("div");
+      controls.className = "row";
+
+      const bPrev = document.createElement("button");
+      bPrev.className = "btn";
+      bPrev.type = "button";
+      bPrev.textContent = "Prev";
+      bPrev.disabled = state.cardIndex === 0;
+      bPrev.addEventListener("click", () => {
+        state.cardIndex = clamp(state.cardIndex - 1, 0, all.length - 1);
+        unflipCard();
+        renderActiveTab();
+      });
+
+      const bFlip = document.createElement("button");
+      bFlip.className = "btn btn-ghost";
+      bFlip.type = "button";
+      bFlip.textContent = "Flip";
+      bFlip.addEventListener("click", () => flipCard());
+
+      const bNext = document.createElement("button");
+      bNext.className = "btn";
+      bNext.type = "button";
+      bNext.textContent = "Next";
+      bNext.disabled = state.cardIndex === all.length - 1;
+      bNext.addEventListener("click", () => {
+        state.cardIndex = clamp(state.cardIndex + 1, 0, all.length - 1);
+        unflipCard();
+        renderActiveTab();
+      });
+
+      const bSpeak = document.createElement("button");
+      bSpeak.className = "btn btn-ghost";
+      bSpeak.type = "button";
+      bSpeak.textContent = "Speak";
+      bSpeak.addEventListener("click", () => speakWord(item.en));
+
+      const bSave = document.createElement("button");
+      bSave.className = "btn btn-primary";
+      bSave.type = "button";
+      bSave.textContent = isSaved(item.id) ? "Saved" : "Save";
+      bSave.disabled = isSaved(item.id);
+      bSave.addEventListener("click", () => {
+        saveWord(item);
+        markLearned(item.id, true);
+        applyQuizLock();
+        renderActiveTab();
+        showNotification(`Saved: ${item.en}`, "good");
+        vibrate(12);
+      });
+
+      const bLearned = document.createElement("button");
+      bLearned.className = "btn";
+      bLearned.type = "button";
+      bLearned.textContent = isLearned(item.id) ? "Learned ✓" : "Mark learned";
+      bLearned.addEventListener("click", () => {
+        markLearned(item.id, !isLearned(item.id));
+        applyQuizLock();
+        renderActiveTab();
+        showNotification(isLearned(item.id) ? `Learned: ${item.en}` : `Back to New: ${item.en}`, "warn");
+        vibrate(10);
+      });
+
+      controls.appendChild(bPrev);
+      controls.appendChild(bFlip);
+      controls.appendChild(bNext);
+      controls.appendChild(bSpeak);
+      controls.appendChild(bSave);
+      controls.appendChild(bLearned);
+
+      const footer = document.createElement("div");
+      footer.className = "chip";
+      footer.textContent = escapeJS(`Card ${state.cardIndex + 1} / ${all.length} • Learned ${getLearnedCount()}`);
+
+      wrap.appendChild(card);
+      wrap.appendChild(controls);
+      wrap.appendChild(footer);
+
+      mount.appendChild(wrap);
+    }
+
+    function getAllVocabItems(){
+      const groups = (state.lesson && state.lesson.vocabulary && state.lesson.vocabulary.groups) ? state.lesson.vocabulary.groups : [];
+      return groups.flatMap(g => g.items || []);
+    }
+
+    function findVocabEntry(wordLower){
+      const all = getAllVocabItems();
+      const w = normalizeWord(wordLower);
+      return all.find(it => normalizeWord(it.en) === w) || null;
+    }
+
+    function isSaved(id){ return state.myWords.some(x => x && x.id === id); }
+    function isLearned(id){ return state.learned.has(id); }
+    function markLearned(id, yes){ if(!id) return; yes ? state.learned.add(id) : state.learned.delete(id); persistLearned(); }
+    function getLearnedCount(){ return state.learned.size; }
+
+    /* =========================================================
+       GRAMMAR
+       ========================================================= */
+    function renderGrammar(mount){
+      const g = state.lesson.grammar;
+
+      const h = document.createElement("h3");
+      h.className = "section-title";
+      h.textContent = escapeJS(g.title);
+
+      const hint = document.createElement("p");
+      hint.className = "section-hint";
+      hint.textContent = escapeJS(g.hint);
+
+      const grid = document.createElement("div");
+      grid.className = "grammar-grid";
+
+      g.blocks.forEach(b => {
+        if(b.kind === "rule"){
+          const note = document.createElement("div");
+          note.className = "note";
+          note.textContent = escapeJS(b.text);
+          grid.appendChild(note);
+          return;
+        }
+        if(b.kind === "table"){
+          const wrap = document.createElement("div");
+          wrap.className = "mini-table";
+
+          const title = document.createElement("div");
+          title.className = "row";
+
+          const a = document.createElement("div");
+          a.className = "chip";
+          a.textContent = escapeJS(b.leftTitle);
+
+          const c = document.createElement("div");
+          c.className = "chip";
+          c.textContent = escapeJS(b.rightTitle);
+
+          title.appendChild(a);
+          title.appendChild(c);
+          wrap.appendChild(title);
+
+          (b.rows || []).forEach(r => {
+            const row = document.createElement("div");
+            row.className = "mini-row";
+
+            const left = document.createElement("div");
+            left.className = "cell mono";
+            left.textContent = escapeJS(r.left);
+
+            const right = document.createElement("div");
+            right.className = "cell mono";
+            right.textContent = escapeJS(r.right);
+
+            row.appendChild(left);
+            row.appendChild(right);
+            wrap.appendChild(row);
+          });
+
+          grid.appendChild(wrap);
+        }
+      });
+
+      const drillsTitle = document.createElement("h4");
+      drillsTitle.className = "section-title";
+      drillsTitle.textContent = "Micro drills (type fast)";
+
+      const drillsHint = document.createElement("p");
+      drillsHint.className = "section-hint";
+      drillsHint.textContent = "Type the sentence. Then check. (No copy/paste.)";
+
+      const drills = document.createElement("div");
+      drills.className = "vocab-grid";
+
+      g.microDrills.forEach((d, i) => {
+        const box = document.createElement("div");
+        box.className = "qbox";
+
+        const q = document.createElement("p");
+        q.className = "qtitle";
+        q.textContent = escapeJS(`${i+1}) ${d.prompt}`);
+
+        const inp = document.createElement("input");
+        inp.className = "input selectable";
+        inp.type = "text";
+        inp.autocomplete = "off";
+        inp.placeholder = "Type here…";
+
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const btnCheck = document.createElement("button");
+        btnCheck.className = "btn btn-primary";
+        btnCheck.type = "button";
+        btnCheck.textContent = "Check";
+        btnCheck.addEventListener("click", () => {
+          const ok = normalizeAnswer(inp.value) === normalizeAnswer(d.answer);
+          const fb = document.createElement("div");
+          fb.className = "feedback " + (ok ? "good" : "bad");
+          fb.textContent = ok ? "Correct." : "Not yet. Hint: I/you/we/they have got; he/she/it has got.";
+          box.querySelectorAll(".feedback").forEach(x => x.remove());
+          box.appendChild(fb);
+          showNotification(ok ? "Good." : "Try again.", ok ? "good" : "warn");
+          vibrate(ok ? 10 : 20);
+        });
+
+        const btnSpeak = document.createElement("button");
+        btnSpeak.className = "btn btn-ghost";
+        btnSpeak.type = "button";
+        btnSpeak.textContent = "Hear answer";
+        btnSpeak.addEventListener("click", () => speakText(d.answer));
+
+        row.appendChild(btnCheck);
+        row.appendChild(btnSpeak);
+
+        box.appendChild(q);
+        box.appendChild(inp);
+        box.appendChild(row);
+        drills.appendChild(box);
+      });
+
+      mount.appendChild(h);
+      mount.appendChild(hint);
+      mount.appendChild(grid);
+      mount.appendChild(drillsTitle);
+      mount.appendChild(drillsHint);
+      mount.appendChild(drills);
+    }
+
+    function normalizeAnswer(s){
+      return String(s || "")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .replace(/[^\w\s']/g, "")
+        .trim();
+    }
+
+    /* =========================================================
+       QUIZ
+       ========================================================= */
+    function renderQuiz(mount){
+      const qz = state.lesson.quiz;
+
+      const h = document.createElement("h3");
+      h.className = "section-title";
+      h.textContent = escapeJS(qz.title);
+
+      const hint = document.createElement("p");
+      hint.className = "section-hint";
+      hint.textContent = escapeJS(qz.hint);
+
+      mount.appendChild(h);
+      mount.appendChild(hint);
+
+      if(state.quizLocked){
+        const lock = document.createElement("div");
+        lock.className = "lock";
+        const need = (qz.unlockRule && qz.unlockRule.learnedMin) ? qz.unlockRule.learnedMin : 8;
+        lock.textContent = escapeJS(`Quiz is locked. Learn at least ${need} words to unlock.`);
+        mount.appendChild(lock);
+
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const btnGoV = document.createElement("button");
+        btnGoV.className = "btn btn-primary";
+        btnGoV.type = "button";
+        btnGoV.textContent = "Go to Vocabulary";
+        btnGoV.addEventListener("click", () => switchTab("vocabulary"));
+
+        row.appendChild(btnGoV);
+        mount.appendChild(row);
+        return;
+      }
+
+      const top = document.createElement("div");
+      top.className = "quiz-top";
+
+      const progress = document.createElement("div");
+      progress.className = "progress";
+      progress.id = "quizProgress";
+
+      const timer = document.createElement("div");
+      timer.className = "timer";
+      timer.id = "quizTimer";
+
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      bar.setAttribute("data-left", "30");
+
+      const bi = document.createElement("i");
+      bar.appendChild(bi);
+
+      const tlabel = document.createElement("span");
+      tlabel.id = "quizTimeLabel";
+      tlabel.textContent = "30s";
+
+      timer.appendChild(bar);
+      timer.appendChild(tlabel);
+
+      top.appendChild(progress);
+      top.appendChild(timer);
+
+      const qbox = document.createElement("div");
+      qbox.className = "qbox";
+      qbox.id = "quizBox";
+
+      const controls = document.createElement("div");
+      controls.className = "row";
+
+      const btnRestart = document.createElement("button");
+      btnRestart.className = "btn btn-danger";
+      btnRestart.type = "button";
+      btnRestart.textContent = "Restart";
+      btnRestart.addEventListener("click", () => restartQuiz());
+
+      const btnNoPause = document.createElement("button");
+      btnNoPause.className = "btn btn-ghost";
+      btnNoPause.type = "button";
+      btnNoPause.textContent = "Pause?";
+      btnNoPause.addEventListener("click", () => {
+        showNotification("No pausing in Quiz. Answer fast.", "bad");
+        vibrate(25);
+      });
+
+      controls.appendChild(btnRestart);
+      controls.appendChild(btnNoPause);
+
+      mount.appendChild(top);
+      mount.appendChild(qbox);
+      mount.appendChild(controls);
+
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion(){
+      const box = document.getElementById("quizBox");
+      const prog = document.getElementById("quizProgress");
+      if(!box) return;
+
+      const qs = state.lesson.quiz.questions || [];
+      state.quizIndex = clamp(state.quizIndex, 0, qs.length);
+      box.textContent = "";
+      state.quizAnswered = false;
+
+      if(state.quizIndex >= qs.length){
+        stopQuizTimer();
+        const done = document.createElement("div");
+        done.className = "feedback good";
+        done.textContent = escapeJS(`Finished. Score: ${state.quizScore} / ${qs.length}. Cheat flags: ${state.quizCheatFlags}.`);
+        box.appendChild(done);
+        if(prog) prog.textContent = escapeJS(`Done • ${qs.length} questions`);
+        return;
+      }
+
+      const q = qs[state.quizIndex];
+      if(prog) prog.textContent = escapeJS(`Question ${state.quizIndex + 1} / ${qs.length} • Score ${state.quizScore}`);
+
+      startQuizTimer(30);
+
+      const title = document.createElement("p");
+      title.className = "qtitle";
+      title.textContent = escapeJS(q.prompt);
+      box.appendChild(title);
+
+      if(q.type === "mcq"){
+        const opts = document.createElement("div");
+        opts.className = "options";
+
+        (q.options || []).forEach((text, oi) => {
+          const b = document.createElement("button");
+          b.className = "opt";
+          b.type = "button";
+
+          const left = document.createElement("span");
+          left.textContent = escapeJS(text);
+
+          const badge = document.createElement("span");
+          badge.className = "badge";
+          badge.textContent = "Pick";
+
+          b.appendChild(left);
+          b.appendChild(badge);
+
+          b.addEventListener("click", () => {
+            if(state.quizAnswered) return;
+            handleQuizAnswer(oi);
+          });
+
+          opts.appendChild(b);
+        });
+
+        box.appendChild(opts);
+        return;
+      }
+
+      if(q.type === "input"){
+        const inp = document.createElement("input");
+        inp.className = "input selectable";
+        inp.type = "text";
+        inp.autocomplete = "off";
+        inp.placeholder = "Type here (example: has got)";
+        inp.id = "quizInput";
+
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const b = document.createElement("button");
+        b.className = "btn btn-primary";
+        b.type = "button";
+        b.textContent = "Submit";
+        b.addEventListener("click", () => {
+          if(state.quizAnswered) return;
+          handleQuizInputAnswer(inp.value);
+        });
+
+        row.appendChild(b);
+        box.appendChild(inp);
+        box.appendChild(row);
+
+        inp.addEventListener("keydown", (e) => {
+          if(e.key === "Enter"){
+            e.preventDefault();
+            if(state.quizAnswered) return;
+            handleQuizInputAnswer(inp.value);
+          }
+        });
+
+        return;
+      }
+    }
+
+    function handleQuizAnswer(choiceIndex){
+      const qs = state.lesson.quiz.questions || [];
+      const q = qs[state.quizIndex];
+      if(!q) return;
+
+      state.quizAnswered = true;
+      stopQuizTimer();
+
+      const ok = (choiceIndex === q.correctIndex);
+      ok ? (state.quizScore += 1) : (state.quizMistakes += 1);
+
+      lockQuizOptions();
+
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (ok ? "good" : "bad");
+      fb.textContent = ok ? "Correct." : "Wrong. Remember: I/you/we/they have got; he/she/it has got.";
+
+      const exp = document.createElement("div");
+      exp.className = "feedback";
+      exp.textContent = escapeJS(q.explain || "—");
+
+      const row = document.createElement("div");
+      row.className = "row";
+
+      const bNext = document.createElement("button");
+      bNext.className = "btn btn-primary";
+      bNext.type = "button";
+      bNext.textContent = "Next";
+      bNext.addEventListener("click", () => {
+        state.quizIndex += 1;
+        renderQuizQuestion();
+      });
+
+      row.appendChild(bNext);
+
+      const box = document.getElementById("quizBox");
+      if(box){
+        box.appendChild(fb);
+        box.appendChild(exp);
+        box.appendChild(row);
+      }
+
+      showNotification(ok ? "Correct." : "Wrong. Focus on pronouns.", ok ? "good" : "bad");
+      vibrate(ok ? 10 : 30);
+    }
+
+    function handleQuizInputAnswer(userValue){
+      const qs = state.lesson.quiz.questions || [];
+      const q = qs[state.quizIndex];
+      if(!q) return;
+
+      state.quizAnswered = true;
+      stopQuizTimer();
+
+      const ok = normalizeAnswer(userValue) === normalizeAnswer(q.answer);
+      ok ? (state.quizScore += 1) : (state.quizMistakes += 1);
+
+      const input = document.getElementById("quizInput");
+      if(input) input.disabled = true;
+
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (ok ? "good" : "bad");
+      fb.textContent = ok ? "Correct." : escapeJS(`Wrong. Correct answer: ${q.answer}`);
+
+      const exp = document.createElement("div");
+      exp.className = "feedback";
+      exp.textContent = escapeJS(q.explain || "—");
+
+      const row = document.createElement("div");
+      row.className = "row";
+
+      const bNext = document.createElement("button");
+      bNext.className = "btn btn-primary";
+      bNext.type = "button";
+      bNext.textContent = "Next";
+      bNext.addEventListener("click", () => {
+        state.quizIndex += 1;
+        renderQuizQuestion();
+      });
+
+      row.appendChild(bNext);
+
+      const box = document.getElementById("quizBox");
+      if(box){
+        box.appendChild(fb);
+        box.appendChild(exp);
+        box.appendChild(row);
+      }
+
+      showNotification(ok ? "Correct." : "Wrong. Drill have/has got.", ok ? "good" : "bad");
+      vibrate(ok ? 10 : 30);
+    }
+
+    function lockQuizOptions(){
+      document.querySelectorAll(".opt").forEach(b => {
+        b.setAttribute("aria-disabled", "true");
+        b.disabled = true;
+      });
+    }
+
+    /* Timer: uses dataset for bar progress [web:112][web:24] */
+    function startQuizTimer(seconds){
+      stopQuizTimer();
+      state.quizTimerSec = seconds;
+      state.quizTimeLeft = seconds;
+      updateQuizTimerUI();
+
+      state.quizTick = setInterval(() => {
+        state.quizTimeLeft -= 1;
+        updateQuizTimerUI();
+        if(state.quizTimeLeft <= 0){
+          stopQuizTimer();
+          onQuizTimeOver();
+        }
+      }, 1000);
+    }
+
+    function stopQuizTimer(){
+      if(state.quizTick){
+        clearInterval(state.quizTick);
+        state.quizTick = null;
+      }
+    }
+
+    function updateQuizTimerUI(){
+      const label = document.getElementById("quizTimeLabel");
+      const bar = document.querySelector(".bar");
+      if(label) label.textContent = `${state.quizTimeLeft}s`;
+      if(bar) bar.setAttribute("data-left", String(Math.max(0, state.quizTimeLeft)));
+    }
+
+    function onQuizTimeOver(){
+      if(state.quizAnswered) return;
+      state.quizAnswered = true;
+      state.quizMistakes += 1;
+
+      lockQuizOptions();
+
+      const box = document.getElementById("quizBox");
+      if(!box) return;
+
+      const fb = document.createElement("div");
+      fb.className = "feedback bad";
+      fb.textContent = "Time is over. Answer was not accepted.";
+
+      const row = document.createElement("div");
+      row.className = "row";
+
+      const bNext = document.createElement("button");
+      bNext.className = "btn btn-primary";
+      bNext.type = "button";
+      bNext.textContent = "Next";
+      bNext.addEventListener("click", () => {
+        state.quizIndex += 1;
+        renderQuizQuestion();
+      });
+
+      row.appendChild(bNext);
+      box.appendChild(fb);
+      box.appendChild(row);
+
+      showNotification("Too slow. 30 seconds only.", "bad");
+      vibrate(35);
+    }
+
+    function restartQuiz(){
+      stopQuizTimer();
+      state.quizIndex = 0;
+      state.quizScore = 0;
+      state.quizMistakes = 0;
+      state.quizAnswered = false;
+      state.quizCheatFlags = 0;
+      renderActiveTab();
+      showNotification("Quiz restarted.", "warn");
+      vibrate(10);
+    }
+
+    /* =========================================================
+       NAVIGATION
+       ========================================================= */
+    function switchTab(tabId){
+      if(!tabId) return;
+
+      if(state.activeTab === "quiz" && state.quizTick && !state.quizAnswered){
+        state.quizCheatFlags += 1;
+        showNotification("Cheat flag: switching while question is active.", "bad");
+        vibrate(25);
+      }
+
+      state.activeTab = tabId;
+      updateTabsUI();
+      renderActiveTab();
+      stopSpeech();
+    }
+
+    function updateTabsUI(){
+      document.querySelectorAll(".tab").forEach(btn => {
+        const selected = (btn.dataset.tab === state.activeTab);
+        btn.setAttribute("aria-selected", selected ? "true" : "false");
+      });
+    }
+
+    /* =========================================================
+       FLASHCARD HELPERS
+       ========================================================= */
+    function flipCard(){
+      const card = document.getElementById("flashcard");
+      if(card) card.classList.toggle("flipped");
+      vibrate(8);
+    }
+    function unflipCard(){
+      const card = document.getElementById("flashcard");
+      if(card) card.classList.remove("flipped");
+    }
+
+    /* =========================================================
+       LOCALSTORAGE (Storage.getItem / setItem) [web:109][web:103]
+       ========================================================= */
+    function storageKey(){ return `lesson:${state.lessonId}:myWords`; }
+    function storageLearnedKey(){ return `lesson:${state.lessonId}:learned`; }
+
+    function loadMyWords(){
+      try{
+        const raw = localStorage.getItem(storageKey());
+        const arr = raw ? JSON.parse(raw) : [];
+        state.myWords = Array.isArray(arr) ? arr.filter(Boolean) : [];
+      }catch(_e){ state.myWords = []; }
+
+      try{
+        const rawL = localStorage.getItem(storageLearnedKey());
+        const arrL = rawL ? JSON.parse(rawL) : [];
+        state.learned = new Set(Array.isArray(arrL) ? arrL : []);
+      }catch(_e){ state.learned = new Set(); }
+
+      renderMyWords();
+    }
+
+    function persistMyWords(){
+      try{ localStorage.setItem(storageKey(), JSON.stringify(state.myWords)); }catch(_e){}
+    }
+    function persistLearned(){
+      try{ localStorage.setItem(storageLearnedKey(), JSON.stringify(Array.from(state.learned))); }catch(_e){}
+    }
+
+    function saveWord(item){
+      if(!item || !item.id) return;
+      if(isSaved(item.id)){
+        showNotification("Already saved.", "warn");
+        return;
+      }
+      state.myWords.unshift({ id:String(item.id), en:String(item.en||""), ru:String(item.ru||""), ex:String(item.ex||"") });
+      persistMyWords();
+      renderMyWords();
+      applyQuizLock();
+    }
+
+    function removeWord(id){
+      state.myWords = state.myWords.filter(w => w && w.id !== id);
+      persistMyWords();
+      renderMyWords();
+      applyQuizLock();
+    }
+
+    function renderMyWords(){
+      const host = document.getElementById("myWordsList");
+      if(!host) return;
+      host.textContent = "";
+
+      if(state.myWords.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "feedback";
+        empty.textContent = "No saved words yet. Save words from Vocabulary.";
+        host.appendChild(empty);
+        return;
+      }
+
+      state.myWords.forEach(w => {
+        const row = document.createElement("div");
+        row.className = "myword";
+
+        const t = document.createElement("div");
+        t.className = "t";
+
+        const b = document.createElement("b");
+        b.textContent = escapeJS(w.en);
+
+        const s = document.createElement("span");
+        s.textContent = escapeJS(`${w.ru} • ${w.ex}`);
+
+        t.appendChild(b);
+        t.appendChild(s);
+
+        const actions = document.createElement("div");
+        actions.className = "row";
+
+        const speakBtn = document.createElement("button");
+        speakBtn.className = "btn btn-ghost";
+        speakBtn.type = "button";
+        speakBtn.textContent = "Speak";
+        speakBtn.addEventListener("click", () => speakWord(w.en));
+
+        const del = document.createElement("button");
+        del.className = "btn btn-danger";
+        del.type = "button";
+        del.textContent = "Delete";
+        del.addEventListener("click", () => removeWord(w.id));
+
+        actions.appendChild(speakBtn);
+        actions.appendChild(del);
+
+        row.appendChild(t);
+        row.appendChild(actions);
+
+        host.appendChild(row);
+      });
+    }
+
+    function applyQuizLock(){
+      const need = (state.lesson && state.lesson.quiz && state.lesson.quiz.unlockRule && state.lesson.quiz.unlockRule.learnedMin)
+        ? state.lesson.quiz.unlockRule.learnedMin
+        : 8;
+
+      state.quizLocked = getLearnedCount() < need;
+
+      if(state.activeTab === "quiz") renderActiveTab();
+    }
+
+    /* =========================================================
+       TTS (Web Speech + optional Google fallback)
+       stop uses speechSynthesis.cancel() [web:3]
+       ========================================================= */
+    function stopSpeech(){
+      try{
+        if(window.speechSynthesis) window.speechSynthesis.cancel();
+      }catch(_e){}
+      const a = document.getElementById("ttsAudio");
+      if(a){
+        try{ a.pause(); a.removeAttribute("src"); }catch(_e){}
+      }
+    }
+
+    function canUseSpeechSynthesis(){
+      return !!(window.speechSynthesis && window.SpeechSynthesisUtterance);
+    }
+
+    function speakWithBrowserAPI(text){
+      try{
+        stopSpeech();
+        const u = new SpeechSynthesisUtterance(String(text || ""));
+        u.lang = "en-US";
+        u.rate = 0.95;
+        u.pitch = 1.0;
+        u.volume = 1.0;
+        window.speechSynthesis.speak(u);
+      }catch(_e){
+        showNotification("TTS not available.", "bad");
+      }
+    }
+
+    function getOrCreateTTSAudio(){
+      let a = document.getElementById("ttsAudio");
+      if(a) return a;
+      a = document.createElement("audio");
+      a.id = "ttsAudio";
+      a.preload = "none";
+      a.crossOrigin = "anonymous";
+      document.body.appendChild(a);
+      return a;
+    }
+
+    function speakWithGoogleTTS(text){
+      try{
+        const audio = getOrCreateTTSAudio();
+        const q = encodeURIComponent(String(text || ""));
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${q}&tl=en&client=tw-ob`;
+        audio.setAttribute("src", url);
+        audio.play().catch(() => {
+          showNotification("Online TTS blocked/offline. Using browser TTS if available.", "warn");
+          if(canUseSpeechSynthesis()) speakWithBrowserAPI(text);
+        });
+      }catch(_e){
+        showNotification("Could not play TTS.", "bad");
+      }
+    }
+
+    function speakWord(word){
+      const t = String(word || "").trim();
+      if(!t) return;
+      stopSpeech();
+      if(canUseSpeechSynthesis()) speakWithBrowserAPI(t);
+      else speakWithGoogleTTS(t);
+    }
+
+    function speakText(text){
+      const t = String(text || "").trim();
+      if(!t) return;
+      stopSpeech();
+      if(canUseSpeechSynthesis()) speakWithBrowserAPI(t);
+      else speakWithGoogleTTS(t);
+    }
+
+    /* =========================================================
+       NOTIFICATIONS + VIBRATION
+       No inline styles: fade by classList + timeout [web:67]
+       ========================================================= */
+    function showNotification(message, type="good"){
+      const host = document.getElementById("toasts");
+      if(!host) return;
+
+      const toast = document.createElement("div");
+      toast.className = "toast " + (type || "good");
+      toast.textContent = escapeJS(message);
+      host.appendChild(toast);
+
+      setTimeout(() => { toast.classList.add("is-hiding"); }, 2300);
+      setTimeout(() => { toast.remove(); }, 2700);
+    }
+
+    function vibrate(ms){
+      try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(_e){}
+    }
+
+    function escapeJS(input){
+      const s = String(input ?? "");
+      return s
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    /* =========================================================
+       PROTECTION LAYER
+       copy/cut/paste prevented using preventDefault() [web:15][web:54]
+       Anti-cheat: visibilitychange uses document.hidden [web:112][web:24]
+       ========================================================= */
+    function initProtectionLayer(){
+      const block = (e) => {
+        e.preventDefault();
+        showNotification("Copy/paste is disabled in this lesson.", "bad");
+        if(state.activeTab === "quiz") state.quizCheatFlags += 1;
+        vibrate(20);
+        return false;
+      };
+
+      document.addEventListener("copy", block);  /* [web:15] */
+      document.addEventListener("cut", block);   /* [web:15] */
+      document.addEventListener("paste", block); /* [web:54] */
+
+      document.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        showNotification("Context menu disabled.", "warn");
+        vibrate(8);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        const k = (e.key || "").toLowerCase();
+        const ctrl = e.ctrlKey || e.metaKey;
+        const shift = e.shiftKey;
+
+        if(ctrl && ["c","v","x","s","u","p"].includes(k)){
+          e.preventDefault();
+          showNotification("Shortcut blocked.", "bad");
+          if(state.activeTab === "quiz") state.quizCheatFlags += 1;
+          vibrate(18);
+        }
+        if(k === "f12" || (ctrl && shift && ["i","j","c"].includes(k))){
+          e.preventDefault();
+          showNotification("DevTools shortcut blocked.", "bad");
+          if(state.activeTab === "quiz") state.quizCheatFlags += 1;
+          vibrate(18);
+        }
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if(document.hidden){ /* [web:112] */
+          if(state.activeTab === "quiz" && state.quizTick && !state.quizAnswered){
+            state.quizCheatFlags += 1;
+            showNotification("Cheat flag: tab hidden during a question.", "bad");
+            vibrate(30);
+          }
+          stopSpeech();
+        }
+      }); /* [web:24] */
+    }
+
+    /* =========================================================
+       SERVICE WORKER (best effort)
+       register requires secure context/localhost [web:20]
+       ========================================================= */
+    async function initServiceWorkerInline(){
+      try{
+        if(!("serviceWorker" in navigator)) return;
+
+        const swCode = `
+          const CACHE = 'lesson-cache-v1';
+          self.addEventListener('install', (event) => {
+            event.waitUntil((async () => {
+              const cache = await caches.open(CACHE);
+              await cache.addAll([self.registration.scope]);
+              self.skipWaiting();
+            })());
+          });
+          self.addEventListener('activate', (event) => {
+            event.waitUntil((async () => {
+              const keys = await caches.keys();
+              await Promise.all(keys.map(k => (k === CACHE ? null : caches.delete(k))));
+              self.clients.claim();
+            })());
+          });
+          self.addEventListener('fetch', (event) => {
+            event.respondWith((async () => {
+              const cached = await caches.match(event.request);
+              if(cached) return cached;
+              try{ return await fetch(event.request); }
+              catch(_e){ return cached || new Response('Offline', { status: 503 }); }
+            })());
+          });
+        `;
+
+        const blob = new Blob([swCode], { type: "text/javascript" });
+        const swUrl = URL.createObjectURL(blob);
+        await navigator.serviceWorker.register(swUrl); /* [web:20] */
+        setTimeout(() => URL.revokeObjectURL(swUrl), 8000);
+
+        showNotification("Offline cache enabled after this load.", "good");
+      }catch(_e){
+        /* ignore */
+      }
+    }
+
+    /* =========================================================
+       SMALL HELPERS
+       ========================================================= */
+    function clamp(n, a, b){
+      const x = Number(n);
+      return Math.max(a, Math.min(b, x));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Families2gether - English Lesson</title>
+  <meta name="description" content="Family Holiday Destinations: Rhodes, Florida, London. Level A2, 45 minutes." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+
+  <!-- ✨ Design Token System (MUST BE FIRST!) -->
+  <link rel="stylesheet" href="assets/css/design-tokens.css?v=3.2.1">
+
+  <!-- CSS Modules + CACHE BUSTING -->
+  <link rel="stylesheet" href="assets/css/lesson-core.css?v=2.0.0">
+  <link rel="stylesheet" href="assets/css/lesson-components.css?v=2.1.0">
+  <link rel="stylesheet" href="assets/css/theme-switcher.css?v=3.2.2">
+  <link rel="stylesheet" href="assets/css/lesson-responsive.css">
+
+  <!-- Flashcards CSS (Stage 4) -->
+  <link rel="stylesheet" href="styles/flashcards.css">
+  <link rel="stylesheet" href="styles/flashcards-stage4.css">
+
+  <!-- Kanban Board CSS -->
+  <link rel="stylesheet" href="assets/css/vocabulary-kanban.css">
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="assets/js/lesson-engine.js" as="script">
+  <link rel="preload" href="data/271.json" as="fetch" crossorigin>
+
+  <!-- ✨ SPECIAL STYLES FOR INTERACTIVE FEATURES -->
+  <style>
+    /* --- Glassmorphism Utilities --- */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      padding: var(--spacing-md);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* --- Holiday Matchmaker Styles --- */
+    .matchmaker-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none !important;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      margin: var(--spacing-lg) 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .matchmaker-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .matchmaker-card .card-header {
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .destination-option {
+      background: rgba(255, 255, 255, 0.95);
+      color: #2d3748;
+      padding: var(--spacing-md);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0.5rem 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .destination-option:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      border-color: #667eea;
+    }
+
+    .destination-icon {
+      font-size: 2.2rem;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    /* --- Ticket Preview --- */
+    .ticket-preview {
+      background: linear-gradient(135deg, #4A90E2, #357ABD);
+      color: white;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius);
+      border-left: 12px dashed rgba(255,255,255,0.4);
+      margin-top: var(--spacing-md);
+      font-family: 'Courier New', Courier, monospace;
+      box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+      position: relative;
+      overflow: hidden;
+      transform: rotate(-1deg);
+      transition: transform 0.3s ease;
+    }
+
+    .ticket-preview:hover {
+      transform: rotate(0deg) scale(1.01);
+    }
+
+    .ticket-preview::before {
+      content: '✈️';
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 5rem;
+      opacity: 0.1;
+      transform: rotate(-20deg);
+    }
+
+    .ticket-barcode {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 2px dashed rgba(255,255,255,0.3);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-align: center;
+      background: rgba(0,0,0,0.1);
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* --- Weather Widget --- */
+    .weather-widget {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .weather-card {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(240, 147, 251, 0.3);
+      transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .weather-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .weather-card.sunny {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      color: #2d3748;
+    }
+
+    .weather-card.rainy {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      color: #2d3748;
+    }
+
+    .weather-icon {
+      font-size: 3.5rem;
+      margin: 1rem 0;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+
+    .temperature {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    /* --- Media Section Styles --- */
+    .media-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing-lg);
+    }
+
+    @media (min-width: 768px) {
+      .media-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .media-video-main {
+        grid-column: 1 / -1; /* Main video takes full width on desktop */
+      }
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #000;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .media-card {
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      padding: var(--spacing-md);
+      border: 1px solid var(--border-color);
+      transition: border-color 0.3s ease;
+    }
+
+    .media-card:hover {
+      border-color: var(--primary-color);
+    }
+
+    .media-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    /* --- Input styling --- */
+    .travel-input {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .travel-input:focus {
+      outline: none;
+      border-color: #4A90E2;
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+    }
+
+    /* --- Animation --- */
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in {
+      animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader-container" id="loader">
+    <div class="loader">
+      <div class="loader-orbit"></div>
+      <div class="loader-orbit loader-orbit--2"></div>
+      <div class="loader-core"></div>
+    </div>
+    <p class="loader-text">Loading your family adventure...</p>
+  </div>
+
+  <div id="app-root">
+    <div id="app"></div>
+
+    <!-- ✨ FEATURE 1: Holiday Matchmaker -->
+    <section class="card matchmaker-card animate-in" id="matchmaker-section" style="display: none;">
+      <div class="card-header">
+        <h3 class="card-title">🎯 Which Holiday is Perfect for You?</h3>
+      </div>
+      <div class="card-body" id="matchmaker-container">
+        <p style="opacity: 0.9; margin-bottom: var(--spacing-md); font-size: 1.1rem;">
+          Answer a quick question to find your ideal family destination!
+        </p>
+        <div id="quiz-step" style="text-align: center; padding: 2rem 0;">
+          <button class="primary-btn" onclick="startMatchmaker()" style="background: white; color: #667eea; font-weight: 800; font-size: 1.2rem; padding: 1rem 2rem; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            🗺️ Find My Destination
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✨ FEATURE 2: Weather Dashboard -->
+    <section class="card animate-in" id="weather-section" style="display: none; margin: var(--spacing-lg) 0;">
+      <div class="card-header">
+        <h3 class="card-title">🌤️ Live Weather at Destinations</h3>
+      </div>
+      <div class="card-body">
+        <div class="weather-widget" id="weather-widget">
+          <!-- Weather cards will be inserted here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ✨ MEDIA SECTION (RE-DESIGNED) -->
+    <section class="card animate-in" id="media-section" style="display: none; margin: var(--spacing-lg) 0;">
+      <div class="card-header" style="background: linear-gradient(90deg, rgba(37,99,235,0.1) 0%, transparent 100%); border-left: 4px solid var(--primary-color);">
+        <h3 class="card-title" style="color: var(--primary-color);">🎥 Watch & Listen</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="media-grid">
+          <!-- Main Video Lesson -->
+          <div class="media-video-main">
+            <div class="media-card">
+              <div class="media-title">
+                <span style="font-size: 1.5rem;">📹</span> Video Lesson: Present Continuous for Future
+              </div>
+              <p style="margin-bottom: var(--spacing-sm); opacity: 0.8; font-size: 0.95rem;">
+                Watch this video to understand the difference between current actions and future plans.
+              </p>
+              <div class="video-wrapper">
+                <!-- Using the recommended video from chat context -->
+                <iframe
+                  src="https://www.youtube.com/embed/ZBr5HCVifoQ"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                  title="Present Continuous for Future Arrangements">
+                </iframe>
+              </div>
+            </div>
+          </div>
+
+          <!-- Podcast 1 -->
+          <div class="media-card">
+            <div class="media-title">
+              <span style="font-size: 1.5rem;">🎧</span> Holidays Vocabulary
+            </div>
+            <p style="margin-bottom: var(--spacing-sm); opacity: 0.8; font-size: 0.9rem;">
+              Expand your travel vocabulary with this conversation practice.
+            </p>
+            <div class="video-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/bsKFANjGuTQ"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+                title="Holidays Vocabulary">
+              </iframe>
+            </div>
+          </div>
+
+          <!-- Podcast 2 -->
+          <div class="media-card">
+            <div class="media-title">
+              <span style="font-size: 1.5rem;">🏖️</span> A Cozy Family Holiday
+            </div>
+            <p style="margin-bottom: var(--spacing-sm); opacity: 0.8; font-size: 0.9rem;">
+              Listening practice about family travel plans.
+            </p>
+            <div class="video-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/eO7sS71SrC4"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+                title="Family Holiday Listening">
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <div class="notification" id="notification">
+    <span id="notification-text"></span>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="assets/js/lesson-storage.js"></script>
+  <script src="assets/js/lesson-tts.js"></script>
+  <script src="assets/js/theme-manager.js?v=3.3.1"></script>
+  <script src="assets/js/lesson-renderer.js"></script>
+  <script src="assets/js/vocabulary-kanban.js"></script>
+  <script src="assets/js/lesson-engine.js"></script>
+  <script src="js/flashcards-stage4.js"></script>
+
+  <!-- ✨ INTERACTIVE FEATURES LOGIC -->
+  <script>
+    // Lesson initialization
+    const lessonId = window.location.pathname.split('/').pop().replace('.html', '') || '271';
+    window.lessonEngine = new LessonEngine(lessonId);
+    window.flashcardsManager = null;
+
+    // Destination data
+    const destinations = {
+      Rhodes: {
+        icon: '🏖️',
+        name: 'Rhodes, Greece',
+        description: 'Beach paradise with water sports',
+        highlights: ['Windsurfing', 'Paragliding', 'Nightlife in Faliraki'],
+        weather: { temp: 28, condition: '☀️', desc: 'Sunny' },
+        bestFor: 'sports'
+      },
+      London: {
+        icon: '🏛️',
+        name: 'London, UK',
+        description: 'Historic city with world-class culture',
+        highlights: ['Museums', 'Theatres', 'River Thames boat trip'],
+        weather: { temp: 18, condition: '🌦️', desc: 'Cloudy' },
+        bestFor: 'culture'
+      },
+      Florida: {
+        icon: '🐊',
+        name: 'Florida, USA',
+        description: 'Theme parks & wild nature',
+        highlights: ['Disney World', 'Everglades wildlife', 'Orlando attractions'],
+        weather: { temp: 32, condition: '⛈️', desc: 'Thunderstorms' },
+        bestFor: 'adventure'
+      }
+    };
+
+    // Start application
+    window.lessonEngine.init().then(() => {
+      console.log('✅ Lesson loaded');
+      initFlashcardsIntegration();
+      initInteractiveFeatures();
+      console.log('🎨 Theme:', window.lessonEngine.themeManager.getCurrentTheme());
+    }).catch(error => {
+      console.error('Failed to initialize:', error);
+      document.getElementById('loader').innerHTML = `
+        <div class="error-state">
+          <h2>😔 Failed to load lesson</h2>
+          <p>${error.message}</p>
+          <button onclick="location.reload()" class="primary-btn">Try Again</button>
+        </div>
+      `;
+    });
+
+    /**
+     * Initialize Interactive Features
+     */
+    function initInteractiveFeatures() {
+      // Show special sections after main content loads with a stagger effect
+      const sections = ['matchmaker-section', 'weather-section', 'media-section'];
+      sections.forEach((id, index) => {
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.style.display = 'block';
+            // Trigger reflow for animation
+            el.offsetHeight;
+          }
+        }, 500 + (index * 200));
+      });
+      renderWeatherDashboard();
+    }
+
+    /**
+     * FEATURE 1: Holiday Matchmaker
+     */
+    function startMatchmaker() {
+      const container = document.getElementById('matchmaker-container');
+      container.innerHTML = `
+        <div class="animate-in">
+          <p style="font-size: 1.1rem; margin-bottom: var(--spacing-md); text-align: center;">
+            What type of holiday activities do you prefer?
+          </p>
+          <div style="display: grid; gap: 1rem; max-width: 600px; margin: 0 auto;">
+            ${Object.entries(destinations).map(([key, dest]) => `
+              <div class="destination-option" onclick="showMatch('${key}')">
+                <span class="destination-icon">${dest.icon}</span>
+                <div style="text-align: left;">
+                  <strong style="font-size: 1.1rem;">${dest.name}</strong>
+                  <div style="font-size: 0.9rem; opacity: 0.7;">${dest.description}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function showMatch(city) {
+      const container = document.getElementById('matchmaker-container');
+      const dest = destinations[city];
+
+      container.innerHTML = `
+        <div class="animate-in" style="text-align:center;">
+          <div style="font-size: 5rem; margin: 1rem 0; animation: float 3s ease-in-out infinite;">${dest.icon}</div>
+          <h4 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: 800;">
+            Your perfect match is <strong>${dest.name}</strong>!
+          </h4>
+          <p style="opacity: 0.9; margin-bottom: var(--spacing-md); font-size: 1.1rem; color: rgba(255,255,255,0.9);">
+            ${dest.highlights.join(' • ')}
+          </p>
+
+          <div style="background: rgba(255,255,255,0.15); padding: var(--spacing-lg); border-radius: var(--radius); margin: var(--spacing-lg) auto; max-width: 500px; backdrop-filter: blur(5px);">
+            <p style="margin-bottom: 1rem; font-weight: 600;">Now practice <em>Present Continuous</em> for future plans:</p>
+            <input
+              type="text"
+              id="t-plan"
+              class="travel-input"
+              placeholder="Ex: I'm flying to ${city} next Monday..."
+              style="background: white; color: #2d3748; padding: 1rem;"
+            />
+            <button class="primary-btn" onclick="generateTicket('${city}')" style="margin-top: 1rem; background: white; color: #667eea; width: 100%; font-weight: bold;">
+              ✈️ Create My Boarding Pass
+            </button>
+          </div>
+          <div id="ticket-result"></div>
+        </div>
+      `;
+    }
+
+    function generateTicket(city) {
+      const plan = document.getElementById('t-plan').value.trim();
+      if(!plan) {
+        window.lessonEngine.showNotification('⚠️ Please write your travel plan first!');
+        return;
+      }
+
+      // Grammar validation (simple check for Present Continuous)
+      const hasCorrectForm = /\b(am|is|are)\s+\w+ing\b/i.test(plan);
+      const grammarFeedback = hasCorrectForm
+        ? '✅ Perfect grammar!'
+        : '💡 Tip: Use am/is/are + verb-ing for future arrangements';
+
+      const result = document.getElementById('ticket-result');
+      const dest = destinations[city];
+      const ticketCode = 'F2G' + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+      result.innerHTML = `
+        <div class="ticket-preview animate-in">
+          <div style="font-size:0.8rem; opacity:0.8; letter-spacing: 1px;">BOARDING PASS — FAMILIES2GETHER AIRLINES</div>
+          <div style="font-size:1.4rem; margin:15px 0;">
+            <strong>PASSENGER:</strong> ${document.querySelector('.lesson-title')?.textContent || 'Student'} Explorer
+          </div>
+          <div style="margin: 15px 0; font-size: 1.1rem;">
+            <strong>TRAVEL PLAN:</strong><br/>
+            <em style="background: rgba(255,255,255,0.25); padding: 8px 12px; border-radius: 6px; display: inline-block; margin-top: 8px; font-weight: 600;">
+              ${plan}
+            </em>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; border-top: 1px dashed rgba(255,255,255,0.4); padding-top: 15px;">
+            <div><small>DESTINATION</small><br><strong>${dest.name}</strong></div>
+            <div><small>GATE</small><br><strong>A2</strong></div>
+            <div><small>SEAT</small><br><strong>271${Math.floor(Math.random()*90)+10}</strong></div>
+            <div><small>WEATHER</small><br><strong>${dest.weather.temp}°C ${dest.weather.condition}</strong></div>
+          </div>
+          <div class="ticket-barcode">
+            ${ticketCode} | GRAMMAR: ${grammarFeedback}
+          </div>
+        </div>
+      `;
+
+      window.lessonEngine.showNotification('🎫 Boarding pass created!');
+
+      // Speak the plan using TTS
+      if(window.lessonEngine.tts) {
+        setTimeout(() => {
+          window.lessonEngine.tts.speak(plan);
+        }, 500);
+      }
+    }
+
+    /**
+     * FEATURE 2: Weather Dashboard
+     */
+    function renderWeatherDashboard() {
+      const widget = document.getElementById('weather-widget');
+      const weatherClass = (temp) => temp > 25 ? 'sunny' : temp < 20 ? 'rainy' : '';
+
+      widget.innerHTML = Object.entries(destinations).map(([key, dest]) => `
+        <div class="weather-card ${weatherClass(dest.weather.temp)}">
+          <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem;">${dest.name}</h4>
+          <div class="weather-icon">${dest.weather.condition}</div>
+          <div class="temperature">${dest.weather.temp}°C</div>
+          <div style="margin-top: 0.5rem; opacity: 0.9; font-weight: 500;">${dest.weather.desc}</div>
+          <div style="margin-top: 1.5rem; font-size: 0.85rem; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 20px;">
+            Perfect for: <strong>${dest.bestFor}</strong>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /**
+     * Flashcards Integration
+     */
+    function initFlashcardsIntegration() {
+      const checkVocab = setInterval(() => {
+        const vocabContainer = document.querySelector('.card[id*="vocabulary"]');
+        if (vocabContainer && window.lessonEngine?.data?.vocabulary?.words) {
+          clearInterval(checkVocab);
+
+          const vocabularyData = window.lessonEngine.data.vocabulary.words.map(item => ({
+            word: item.en,
+            translation: item.ru,
+            transcription: item.transcription || '',
+            example: item.example || '',
+            partOfSpeech: item.part_of_speech || ''
+          }));
+
+          const vocabCardBody = vocabContainer.querySelector('.card-body');
+          if (vocabCardBody) {
+            const flashcardsDiv = document.createElement('div');
+            flashcardsDiv.id = 'vocabulary-flashcards-container';
+            flashcardsDiv.style.display = 'none';
+            vocabCardBody.appendChild(flashcardsDiv);
+
+            window.flashcardsManager = new FlashcardsManagerStage4(vocabularyData);
+            injectFlashcardsUI(vocabContainer);
+          }
+        }
+      }, 100);
+      setTimeout(() => clearInterval(checkVocab), 5000);
+    }
+
+    function injectFlashcardsUI(vocabCard) {
+      const cardHeader = vocabCard.querySelector('.card-header');
+      if (cardHeader && !cardHeader.querySelector('.vocab-mode-toggle')) {
+        const toggleHTML = `
+          <div class="vocab-mode-toggle" style="display: flex; gap: 0.5rem; background: rgba(9, 13, 32, 0.5); padding: 0.25rem; border-radius: 0.5rem;">
+            <button class="vocab-mode-btn active" data-mode="list" style="padding: 0.5rem 1rem; border: none; background: white; color: #4A90E2; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">📋 List</button>
+            <button class="vocab-mode-btn" data-mode="flashcards" style="padding: 0.5rem 1rem; border: none; background: transparent; color: #9CA3AF; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">🎴 Cards</button>
+            <button class="vocab-mode-btn" data-mode="quiz" style="padding: 0.5rem 1rem; border: none; background: transparent; color: #9CA3AF; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">🎮 Quiz</button>
+          </div>
+        `;
+        cardHeader.insertAdjacentHTML('beforeend', toggleHTML);
+        cardHeader.querySelectorAll('.vocab-mode-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => switchVocabMode(e.target.dataset.mode, vocabCard));
+        });
+      }
+    }
+
+    function switchVocabMode(mode, vocabCard) {
+      const fm = window.flashcardsManager;
+      if (!fm) return;
+
+      vocabCard.querySelectorAll('.vocab-mode-btn').forEach(btn => {
+        const isActive = btn.dataset.mode === mode;
+        btn.style.background = isActive ? 'white' : 'transparent';
+        btn.style.color = isActive ? '#4A90E2' : '#9CA3AF';
+      });
+
+      const vocabList = vocabCard.querySelector('.vocab-layout') || vocabCard.querySelector('.vocab-list');
+      const flashContainer = document.getElementById('vocabulary-flashcards-container');
+
+      if (mode === 'list') {
+        if (vocabList) vocabList.style.display = '';
+        flashContainer.style.display = 'none';
+      } else {
+        if (vocabList) vocabList.style.display = 'none';
+        flashContainer.style.display = 'block';
+        flashContainer.innerHTML = '<div class="flashcards-container" style="display: flex;"></div>';
+        fm.flashcardsContainer = flashContainer.firstChild;
+        mode === 'flashcards' ? fm.renderFlashcardsContainer() : fm.startQuiz();
+      }
+    }
+
+    // Online/Offline handlers
+    window.addEventListener('online', () => window.lessonEngine.showNotification('✅ Back online'));
+    window.addEventListener('offline', () => window.lessonEngine.showNotification('⚠️ Offline mode'));
+  </script>
+
+  <!-- ✨ Dialogue Order Exercise (Families2gether) -->
+  <section class="card" id="dialogue-order-card" style="display:none; margin: var(--spacing-md) 0;">
+    <div class="card-header">
+      <h3 class="card-title">🧩 Dialogue: put it in order</h3>
+    </div>
+
+    <div class="card-body">
+      <p style="margin-top:0">
+        Put the dialogue in the correct order. Then click <strong>Check</strong>.
+      </p>
+
+      <ol id="dialogue-sort-list" style="display:grid; gap:12px; padding-left: 20px; margin: 12px 0;"></ol>
+
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top: 12px;">
+        <button class="primary-btn" id="dialogue-check-btn">✅ Check</button>
+        <button class="primary-btn secondary" id="dialogue-reset-btn">🔄 Shuffle</button>
+        <button class="primary-btn secondary" id="dialogue-listen-btn">🔊 Listen (full)</button>
+      </div>
+
+      <div id="dialogue-result" style="margin-top: 12px; color: var(--text-soft);"></div>
+    </div>
+  </section>
+
+  <style>
+    .dialogue-item {
+      list-style: decimal;
+      background: rgba(9, 13, 32, 0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      cursor: grab;
+      user-select: none;
+    }
+    .dialogue-item:active { cursor: grabbing; }
+    .dialogue-lines { display: grid; gap: 6px; }
+    .dialogue-line { line-height: 1.45; }
+    .dialogue-line .speaker {
+      display:inline-block;
+      min-width: 1.6em;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .dialogue-item.correct {
+      outline: 2px solid rgba(34,197,94,0.7);
+      background: rgba(34,197,94,0.12);
+    }
+    .dialogue-item.wrong {
+      outline: 2px solid rgba(239,68,68,0.65);
+      background: rgba(239,68,68,0.10);
+    }
+    .dialogue-drop-target {
+      outline: 2px dashed rgba(59,130,246,0.7);
+    }
+
+    /* Optional: small move buttons (mobile-friendly) */
+    .dialogue-move {
+      display:flex; gap:6px; margin-top: 10px;
+    }
+    .dialogue-move button {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: inherit;
+      border-radius: 10px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+  (() => {
+    const Exercise = {
+      mounted: false,
+      correctOrderIds: [],     // e.g. [0,1,2,3,4]
+      itemsById: new Map(),    // id -> { L, S }
+      listEl: null,
+      cardEl: null,
+
+      init() {
+        this.cardEl = document.getElementById('dialogue-order-card');
+        this.listEl = document.getElementById('dialogue-sort-list');
+        if (!this.cardEl || !this.listEl) return;
+
+        // Patch switchTab to keep visibility in sync (non-invasive)
+        const originalSwitchTab = window.lessonEngine.switchTab.bind(window.lessonEngine);
+        if (!window.lessonEngine.__dialogueOrderPatched) {
+          window.lessonEngine.switchTab = (tabName) => {
+            originalSwitchTab(tabName);
+            this.syncVisibility();
+          };
+          window.lessonEngine.__dialogueOrderPatched = true;
+        }
+
+        document.getElementById('dialogue-check-btn').addEventListener('click', () => this.check());
+        document.getElementById('dialogue-reset-btn').addEventListener('click', () => this.shuffleAndRender());
+        document.getElementById('dialogue-listen-btn').addEventListener('click', () => this.listenFull());
+
+        this.buildFromLessonData();
+        this.shuffleAndRender();
+        this.syncVisibility();
+        this.mounted = true;
+      },
+
+      syncVisibility() {
+        // show only on reading tab
+        const isReading = window.lessonEngine?.currentTab === 'reading';
+        this.cardEl.style.display = isReading ? 'block' : 'none';
+      },
+
+      buildFromLessonData() {
+        const reading = window.lessonEngine?.lessonData?.content?.reading;
+        if (!Array.isArray(reading)) return;
+
+        const dialogueBlock = reading.find(x => x && x.type === 'dialogue' && typeof x.text === 'string');
+        if (!dialogueBlock) return;
+
+        // Parse "- line" format
+        const lines = dialogueBlock.text
+          .split('\n')
+          .map(s => s.trim())
+          .filter(s => s.startsWith('- '))
+          .map(s => s.replace(/^- /, '').trim());
+
+        // Expect alternating turns; pair them as L/S
+        const pairs = [];
+        for (let i = 0; i < lines.length; i += 2) {
+          const L = lines[i] || '';
+          const S = lines[i + 1] || '';
+          if (L && S) pairs.push({ L, S });
+        }
+
+        // Store canonical order
+        this.itemsById.clear();
+        this.correctOrderIds = pairs.map((_, idx) => idx);
+        pairs.forEach((p, idx) => this.itemsById.set(idx, p));
+      },
+
+      shuffleAndRender() {
+        const ids = [...this.correctOrderIds];
+        for (let i = ids.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [ids[i], ids[j]] = [ids[j], ids[i]];
+        }
+        this.render(ids);
+        document.getElementById('dialogue-result').textContent = 'Drag items to reorder, then press Check.';
+      },
+
+      render(orderIds) {
+        this.listEl.innerHTML = '';
+        orderIds.forEach(id => {
+          const p = this.itemsById.get(id);
+          const li = document.createElement('li');
+          li.className = 'dialogue-item';
+          li.draggable = true;
+          li.dataset.id = String(id);
+
+          li.innerHTML = `
+            <div class="dialogue-lines">
+              <div class="dialogue-line"><span class="speaker">L:</span> ${this.escape(p.L)}</div>
+              <div class="dialogue-line"><span class="speaker">S:</span> ${this.escape(p.S)}</div>
+            </div>
+            <div class="dialogue-move">
+              <button type="button" data-move="up">↑</button>
+              <button type="button" data-move="down">↓</button>
+            </div>
+          `;
+
+          // Drag & drop handlers
+          li.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', li.dataset.id);
+            e.dataTransfer.effectAllowed = 'move';
+          });
+          li.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            li.classList.add('dialogue-drop-target');
+          });
+          li.addEventListener('dragleave', () => li.classList.remove('dialogue-drop-target'));
+          li.addEventListener('drop', (e) => {
+            e.preventDefault();
+            li.classList.remove('dialogue-drop-target');
+            const draggedId = e.dataTransfer.getData('text/plain');
+            if (!draggedId) return;
+            this.moveDraggedBefore(draggedId, li.dataset.id);
+          });
+
+          // Mobile-friendly up/down
+          li.querySelectorAll('button[data-move]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const dir = e.currentTarget.dataset.move;
+              this.moveByButtons(li.dataset.id, dir);
+            });
+          });
+
+          this.listEl.appendChild(li);
+        });
+      },
+
+      moveDraggedBefore(draggedId, targetId) {
+        if (draggedId === targetId) return;
+        const nodes = [...this.listEl.querySelectorAll('.dialogue-item')];
+        const dragged = nodes.find(n => n.dataset.id === draggedId);
+        const target = nodes.find(n => n.dataset.id === targetId);
+        if (!dragged || !target) return;
+        this.listEl.insertBefore(dragged, target);
+      },
+
+      moveByButtons(id, dir) {
+        const nodes = [...this.listEl.querySelectorAll('.dialogue-item')];
+        const idx = nodes.findIndex(n => n.dataset.id === id);
+        if (idx === -1) return;
+        if (dir === 'up' && idx > 0) this.listEl.insertBefore(nodes[idx], nodes[idx - 1]);
+        if (dir === 'down' && idx < nodes.length - 1) this.listEl.insertBefore(nodes[idx + 1], nodes[idx]);
+      },
+
+      check() {
+        const nodes = [...this.listEl.querySelectorAll('.dialogue-item')];
+        const current = nodes.map(n => Number(n.dataset.id));
+
+        let correctCount = 0;
+        nodes.forEach((node, position) => {
+          node.classList.remove('correct', 'wrong');
+          const shouldBe = this.correctOrderIds[position];
+          if (Number(node.dataset.id) === shouldBe) {
+            node.classList.add('correct');
+            correctCount++;
+          } else {
+            node.classList.add('wrong');
+          }
+        });
+
+        const total = this.correctOrderIds.length;
+        const resultEl = document.getElementById('dialogue-result');
+        resultEl.textContent = `Result: ${correctCount}/${total} in the correct position.`;
+
+        window.lessonEngine?.showNotification?.(
+          correctCount === total ? '🎉 Perfect! Dialogue order is correct.' : '🧠 Almost! Keep rearranging.'
+        );
+      },
+
+      listenFull() {
+        // Speak the full dialogue in correct order, L then S for each pair
+        const texts = this.correctOrderIds.flatMap(id => {
+          const p = this.itemsById.get(id);
+          return [`${p.L}`, `${p.S}`];
+        });
+        if (window.lessonEngine?.tts?.speakSequence) {
+          window.lessonEngine.tts.speakSequence(texts, 900);
+        } else if (window.lessonEngine?.tts?.speak) {
+          window.lessonEngine.tts.speak(texts.join(' '));
+        }
+      },
+
+      escape(s) {
+        const div = document.createElement('div');
+        div.textContent = String(s);
+        return div.innerHTML;
+      }
+    };
+
+    // Init after lesson loads
+    const start = () => Exercise.init();
+    if (window.lessonEngine?.lessonData) start();
+    else {
+      // If script runs before init completes
+      const oldInit = window.lessonEngine.init.bind(window.lessonEngine);
+      window.lessonEngine.init = async () => {
+        const res = await oldInit();
+        start();
+        return res;
+      };
+    }
+
+    // expose if needed
+    window.__dialogueOrderExercise = Exercise;
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,512 @@
+/* Reader View Styles - Scientifically Optimized for Reading Performance */
+
+.reader-text {
+  font-family: var(--selected-font);
+  font-size: var(--reader-font-size);
+  line-height: var(--reader-line-height); /* Scientifically proven 1.65 */
+  color: var(--text-primary);
+  text-align: justify;                    /* Better for long-form reading */
+  hyphens: auto;                         /* Prevents awkward spacing */
+  word-wrap: break-word;
+  max-width: var(--reader-max-width);   /* 42rem optimal reading width */
+  margin: 0 auto;                       /* Center for eye comfort */
+  letter-spacing: var(--reader-letter-spacing);
+}
+
+/* Reading container with eye comfort background */
+.reader-content {
+  background: var(--bg-primary);         /* #fafafa - scientifically proven */
+  color: var(--text-primary);           /* #2c2c2c - ~7:1 contrast ratio */
+  padding: var(--space-6);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+}
+
+/* Interactive words */
+.interactive-word {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 2px 3px; /* Slightly larger for better mobile touch */
+  margin: 0 1px;
+  transition: all var(--ms-duration-fast) var(--curve-spring);
+}
+
+/* Saved words indication */
+.interactive-word.word-saved {
+  border-bottom: 2px dotted var(--apple-blue);
+  background-color: rgba(0, 122, 255, 0.05);
+}
+
+/* Hover state for saved words */
+.interactive-word.word-saved:hover {
+  background-color: rgba(0, 122, 255, 0.15);
+  border-bottom-style: solid;
+}
+
+/* TEMPORARY FIX: Test for text clipping issue (Причина №3) */
+.page {
+  overflow: visible !important;
+}
+
+.page-content {
+  overflow: visible !important;
+}
+
+.reading-paragraph {
+  overflow: visible !important;
+  height: auto !important;
+}
+
+.interactive-word:hover {
+  background: rgba(0, 122, 255, 0.08);
+  color: var(--apple-blue);
+  transform: translateY(-1px);
+}
+
+.interactive-word:focus {
+  outline: none;
+  background: rgba(0, 122, 255, 0.12);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+.interactive-word:active {
+  background: rgba(0, 122, 255, 0.16);
+  transform: translateY(0);
+}
+
+.book-content h1,
+.book-content h2,
+.book-content h3,
+.book-content h4 {
+  color: var(--text-primary);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.book-content h1 { font-size: 2.2em; }
+.book-content h2 { font-size: 1.8em; }
+.book-content h3 { font-size: 1.4em; }
+.book-content h4 { font-size: 1.2em; }
+
+.book-content p {
+  margin-bottom: var(--space-4);
+  text-indent: 1.5em;
+}
+
+.book-content p:first-child {
+  text-indent: 0;
+}
+
+.book-content .book-section {
+  margin-bottom: var(--space-8);
+  page-break-inside: avoid;
+}
+
+.book-content blockquote {
+  border-left: 4px solid var(--primary-color);
+  padding-left: var(--space-4);
+  margin: var(--space-4) var(--space-6);
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.book-content em,
+.book-content i {
+  font-style: italic;
+  color: var(--primary-color);
+}
+
+.book-content strong,
+.book-content b {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.book-content code {
+  background: var(--bg-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 0.9em;
+}
+
+.book-content .stanza {
+  margin: var(--space-4) 0;
+  text-align: center;
+  font-style: italic;
+}
+
+.book-content .line {
+  margin: var(--space-1) 0;
+}
+
+.book-content hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: var(--space-6) 0;
+}
+
+.book-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: var(--space-4) 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* Fix for EPUB images not blocking text rendering */
+  display: block !important;
+  float: none !important;
+  position: static !important;
+  clear: both !important;
+}
+
+/* Ensure text after images is properly displayed */
+.book-content img + *,
+.book-content image + * {
+  display: block !important;
+  clear: both !important;
+}
+
+/* Fix paragraphs containing images */
+.book-content p:has(img),
+.book-content p:has(image) {
+  display: block !important;
+  clear: both !important;
+  overflow: visible !important; /* Prevent content from being hidden */
+}
+
+/* Prevent container collapse and content disappearing */
+.book-content p {
+  overflow: visible !important;
+  display: block !important;
+}
+
+/* Magic bullet for disappearing content */
+.book-content::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.book-content .reader-content {
+  overflow: visible !important;
+}
+
+/* Ensure proper line height and spacing */
+.book-content .epub-image + * {
+  margin-top: 0.5rem;
+}
+
+/* Image container and EPUB image styling */
+.image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+  animation: slideInUp 0.6s ease-out both;
+  animation-delay: calc(var(--block-index, 0) * 0.1s);
+}
+
+.book-content .epub-image {
+  display: block !important;
+  margin: 1rem auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  opacity: 1; /* ✅ VISIBLE by default (safety net) */
+  transform: scale(0.95);
+}
+
+.book-content .epub-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Image loaded successfully */
+.book-content .epub-image.loaded {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Image loading failed */
+.book-content .epub-image.image-error {
+  opacity: 1;
+  transform: scale(1);
+  background-color: #fee;
+  border: 2px solid #fcc;
+  position: relative;
+  filter: grayscale(0.5);
+}
+
+.book-content .epub-image.image-error::after {
+  content: '⚠️ Image failed to load';
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #c33;
+  font-weight: 500;
+}
+
+.image-placeholder {
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  color: var(--text-tertiary);
+  font-style: italic;
+  text-align: center;
+  animation: slideInUp 0.6s ease-out both;
+  animation-delay: calc(var(--block-index, 0) * 0.1s);
+}
+
+.image-caption {
+  margin-top: 0.5rem;
+  font-size: var(--fs-caption-1);
+  color: var(--text-tertiary);
+  font-style: italic;
+  text-align: center;
+}
+
+.book-content .epub-image.loaded {
+  opacity: 1;
+}
+
+/* For inline images (icons, small graphics) */
+.book-content .epub-image.inline-image {
+  display: inline-block !important;
+  margin: 0 0.25rem !important;
+  vertical-align: middle;
+  min-height: auto;
+  box-shadow: none;
+}
+
+.book-content a {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.book-content a:hover {
+  opacity: 0.8;
+}
+
+/* Navigation */
+.book-navigation {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-color);
+}
+
+.book-navigation h3 {
+  font-size: var(--fs-h3);
+  margin-bottom: var(--space-3);
+  color: var(--text-primary);
+}
+
+.book-navigation ol {
+  padding-left: var(--space-4);
+}
+
+.book-navigation li {
+  margin-bottom: var(--space-1);
+}
+
+.book-navigation a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.book-navigation a:hover {
+  color: var(--accent-color);
+}
+
+/* Reading Progress (future feature) */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--bg-secondary);
+  z-index: 100;
+}
+
+.reading-progress-fill {
+  height: 100%;
+  background: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+/* Print styles */
+@media print {
+  .book-content {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+
+  .book-content h1,
+  .book-content h2,
+  .book-content h3,
+  .book-content h4 {
+    page-break-after: avoid;
+  }
+
+  .book-content .book-section {
+    page-break-inside: avoid;
+  }
+
+  .book-content p {
+    orphans: 3;
+    widows: 3;
+  }
+}
+
+/* Dark theme adjustments */
+[data-theme='dark'] .book-content {
+  color: var(--text-primary);
+}
+
+[data-theme='dark'] .book-content blockquote {
+  border-left-color: var(--accent-color);
+}
+
+[data-theme='dark'] .book-content em,
+[data-theme='dark'] .book-content i {
+  color: var(--accent-color);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  :root {
+    --reader-font-size: 16px;
+    --reader-max-width: 100%;
+  }
+
+  .book-content {
+    padding: 0 var(--space-4);
+  }
+
+  .book-content p {
+    text-indent: 1em;
+  }
+
+  .book-content blockquote {
+    margin: var(--space-3) var(--space-2);
+    padding-left: var(--space-3);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .book-content {
+    color: var(--text-primary);
+  }
+
+  .book-content em,
+  .book-content i {
+    font-weight: 600;
+  }
+
+  .book-content strong,
+  .book-content b {
+    text-decoration: underline;
+  }
+}
+
+/* Context styles */
+.word-context {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--separator-color);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.context-header {
+  margin-bottom: var(--space-2);
+}
+
+.context-label {
+  font-size: var(--fs-caption-2);
+  color: var(--text-quaternary);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+
+.context-source {
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--space-2);
+  font-style: italic;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.context-highlight {
+  background: rgba(255, 193, 7, 0.2);
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.context-translation {
+  font-size: var(--fs-body);
+  color: var(--text-primary);
+  line-height: var(--line-height-normal);
+  font-weight: 500;
+}
+
+/* Dark theme for context */
+[data-theme='dark'] .word-context {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .context-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme='dark'] .context-source {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme='dark'] .context-highlight {
+  background: rgba(255, 193, 7, 0.3);
+}
+
+[data-theme='dark'] .context-translation {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .book-content * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 1. ЗАЩИТА ОТ ОБРЕЗАНИЯ (Safety Net) */
+.book-content p {
+  overflow: visible !important;
+  text-indent: 1.5em;
+}
+
+/* 2. КОРРЕКЦИЯ ДЛЯ ДИАЛОГОВ */
+.book-content p.para-starts-with-quote {
+  text-indent: 0.8em !important;
+}
+
+/* 3. МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 768px) {
+  .book-content p.para-starts-with-quote {
+    text-indent: 0.6em !important;
+  }
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Much/Many/A lot of тренажёр с падающими вопросами. Уничтожай вопросы правильными ответами!">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Much/Many Trainer | English Trainers</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/effects.css">
+  <link rel="stylesheet" href="assets/css/much-many.css">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="../assets/js/analytics.js"></script>
+</head>
+<body class="game-body">
+  <header class="trainer-header">
+    <div class="container">
+      <a href="index.html" class="back-btn">← Портал</a>
+      <h1>🎯 Much/Many Trainer</h1>
+    </div>
+  </header>
+
+  <div class="game-stats">
+    <div class="stat-item">
+      <span class="stat-label">Очки:</span>
+      <span id="score" class="stat-value">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Скорость:</span>
+      <span id="speed" class="stat-value">1.0x</span>
+    </div>
+    <div class="stat-item">
+      <span id="lives" class="stat-value">❤️❤️❤️❤️❤️</span>
+    </div>
+    <div class="stat-item power-up-indicator" id="power-up-indicator" style="display: none;">
+      <span id="power-up-text"></span>
+    </div>
+  </div>
+
+  <div class="game-container">
+    <div id="start-screen" class="start-screen">
+      <div class="start-content">
+        <div class="emoji" style="font-size: 3rem;">🎮</div>
+        <h2>Готов к игре?</h2>
+        <p style="color: var(--text-muted);">
+          <strong>📱 Мобила:</strong> свайп ← → | кнопки 1/2/3<br>
+          <strong>💻 Desktop:</strong> A/D или ← → | цифры 1/2/3
+        </p>
+        
+        <div class="rules-compact">
+          <div class="rule-item">✅ <strong>Much</strong> — неисчисляемые</div>
+          <div class="rule-item">🔢 <strong>Many</strong> — исчисляемые</div>
+          <div class="rule-item">⭐ <strong>A lot of</strong> — универсальное</div>
+          <div class="rule-item">❌ Неправильно → ускорение +20%</div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" onclick="window.gameTrainer.start()">
+          🚀 Начать игру
+        </button>
+      </div>
+    </div>
+
+    <div id="game-arena" class="game-arena" style="display: none;">
+      <div class="lanes">
+        <div class="lane" data-lane="0"></div>
+        <div class="lane" data-lane="1"></div>
+        <div class="lane" data-lane="2"></div>
+      </div>
+      
+      <div class="player" id="player" data-current-lane="1">
+        <div class="player-character">🧑</div>
+        <div class="stone-throw" id="stone-throw"></div>
+      </div>
+    </div>
+
+    <div id="game-over-screen" class="game-over-screen" style="display: none;">
+      <div class="game-over-content">
+        <div class="emoji" style="font-size: 4rem;">🏆</div>
+        <h2>Игра окончена!</h2>
+        
+        <div class="final-stats">
+          <div class="stat-card">
+            <div class="stat-card-value" id="final-score">0</div>
+            <div class="stat-card-label">Финальный счёт</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-value" id="final-accuracy">0%</div>
+            <div class="stat-card-label">Точность</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-value" id="final-duration">0с</div>
+            <div class="stat-card-label">Время игры</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" onclick="window.gameTrainer.restart()">
+          🔄 Играть снова
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="answer-panel" id="answer-panel" style="display: none;">
+    <button class="answer-btn" onclick="window.gameTrainer.throwStone('much')">
+      <span class="answer-key">1</span>
+      Much
+    </button>
+    <button class="answer-btn" onclick="window.gameTrainer.throwStone('many')">
+      <span class="answer-key">2</span>
+      Many
+    </button>
+    <button class="answer-btn" onclick="window.gameTrainer.throwStone('a lot of')">
+      <span class="answer-key">3</span>
+      A lot of
+    </button>
+  </div>
+
+  <script src="assets/js/effects/AuroraEffect.js"></script>
+  <script src="assets/js/effects/AudioEffectsManager.js"></script>
+  <script src="assets/js/effects/HapticFeedback.js"></script>
+  <script src="assets/js/effects/EffectsManager.js"></script>
+  <script src="assets/js/modules/much-many.js"></script>
+
+  <script>
+    window.gameTrainer = new MuchManyTrainer({ maxLives: 5, lanes: 3 });
+
+    document.addEventListener('keydown', (e) => {
+      if (window.gameTrainer.state.isPlaying) {
+        if (e.key === '1') window.gameTrainer.throwStone('much');
+        if (e.key === '2') window.gameTrainer.throwStone('many');
+        if (e.key === '3') window.gameTrainer.throwStone('a lot of');
+      }
+    });
+
+    let audioLoaded = false;
+    document.addEventListener('click', () => {
+      if (!audioLoaded && window.gameTrainer._effects) {
+        audioLoaded = true;
+        window.gameTrainer._effects.loadAudioAssets({
+          correct: 'assets/audio/correct.mp3',
+          milestone: 'assets/audio/milestone.mp3',
+          error: 'assets/audio/error.mp3'
+        }).then(() => console.log('🔊 Audio loaded'));
+      }
+    }, { once: false });
+
+    console.log('🎮 Much/Many Trainer loaded');
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+/* App Layout */
+#app-view {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Main Content Layout */
+main {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-12);
+}
+
+/* Flex Utilities */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-4 { gap: var(--space-4); }
+
+/* Grid Utilities */
+.grid { display: grid; }
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  main {
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-8);
+  }
+
+  .container {
+    padding: 0 var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-6);
+  }
+
+  .container {
+    padding: 0 var(--space-2);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-primary: #000000;
+    --bg-secondary: #1C1C1E;
+    --bg-tertiary: #2C2C2E;
+    --bg-quaternary: #3A3A3C;
+
+    --text-primary: #FFFFFF;
+    --text-secondary: #EBEBF5;
+    --text-tertiary: #C7C7CC;
+    --text-quaternary: #8E8E93;
+
+    --card-bg: #1C1C1E;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    --border-color: #38383A;
+    --border-color-secondary: #48484A;
+    --separator-color: #38383A;
+  }
+}
+

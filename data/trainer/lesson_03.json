@@ -1,0 +1,44 @@
+{
+  "id": 3,
+  "title": "Урок 3: Буква A в закрытом слоге",
+  "emoji": "🐈",
+  "rule": "Буква A в закрытом слоге читается как [æ]",
+  "description": "Изучаем короткий звук A",
+  "phonemesSet": ["c", "a", "t", "h", "n", "m", "p"],
+  "wordCount": 4,
+  "estimatedTime": 5,
+  "words": [
+    {
+      "word": "cat",
+      "phonemes": ["c", "a", "t"],
+      "translation": "кошка",
+      "transcription": "[kæt]",
+      "emoji": "🐈",
+      "imageUrl": null
+    },
+    {
+      "word": "hat",
+      "phonemes": ["h", "a", "t"],
+      "translation": "шляпа",
+      "transcription": "[hæt]",
+      "emoji": "🎩",
+      "imageUrl": null
+    },
+    {
+      "word": "ant",
+      "phonemes": ["a", "n", "t"],
+      "translation": "муравей",
+      "transcription": "[ænt]",
+      "emoji": "🐜",
+      "imageUrl": null
+    },
+    {
+      "word": "map",
+      "phonemes": ["m", "a", "p"],
+      "translation": "карта",
+      "transcription": "[mæp]",
+      "emoji": "🗺️",
+      "imageUrl": null
+    }
+  ]
+}

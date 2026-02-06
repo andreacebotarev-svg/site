@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO -->
+  <title>Reader — Modern Book Reading Experience</title>
+  <meta name="description" content="Read FB2, EPUB, and TXT books with vocabulary tracking and flashcards">
+  
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Reader">
+  
+  <!-- Android Chrome -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#007AFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0A84FF" media="(prefers-color-scheme: dark)">
+  
+  <!-- Prevent phone number detection -->
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/images/icons/icon-192.png">
+
+  <!-- Preload critical fonts -->
+  <!-- <link rel="preload" href="assets/fonts/sf-pro-display.woff2" as="font" type="font/woff2" crossorigin> -->
+
+  <!-- Critical CSS (inlined for performance) -->
+  <style>
+    /* Reset */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Apple-inspired color palette */
+      --apple-blue: #007AFF;
+      --apple-green: #34C759;
+      --apple-red: #FF3B30;
+
+      /* Background hierarchy */
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+
+      /* Text hierarchy */
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+
+      /* Typography */
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+      }
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* Loading screen */
+    .app-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      gap: 32px;
+      background: var(--bg-primary);
+    }
+
+    .app-loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(0, 122, 255, 0.2);
+      border-top-color: var(--apple-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .app-loading-text {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 17px;
+      letter-spacing: 0.01em;
+    }
+
+    /* App shell */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--separator-color);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+
+    .header-content {
+      max-width: var(--max-width-xl);
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+    }
+
+    .nav-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: var(--fs-body);
+      padding: var(--space-3) var(--space-4);
+      border-radius: 12px;
+      transition: all var(--ms-duration-fast) var(--curve-spring);
+      white-space: nowrap;
+    }
+
+    .nav-link:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    .nav-link.active {
+      background: rgba(0, 122, 255, 0.1);
+      color: var(--apple-blue);
+      font-weight: 600;
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      background: var(--apple-blue);
+      border-radius: 1px;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .nav-label {
+      font-size: var(--fs-body);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .nav-link-small {
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--fs-caption-1);
+    }
+
+    .btn-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--text-secondary);
+      transition: all var(--ms-duration-fast) var(--curve-spring);
+      position: relative;
+    }
+
+    .btn-icon:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      transform: scale(1.05);
+    }
+
+    .btn-icon:active {
+      transform: scale(0.95);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .header-content {
+        padding: 0 var(--space-4);
+        min-height: 56px;
+      }
+
+      .navbar {
+        gap: var(--space-4);
+      }
+
+      .nav-link {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--fs-caption-1);
+      }
+
+      .nav-label {
+        display: none;
+      }
+
+      .nav-link-small .nav-label {
+        display: inline;
+      }
+    }
+  </style>
+
+  <!-- Non-critical CSS (async loaded) -->
+  <link rel="stylesheet" href="assets/css/base.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/layout.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/animations.css" media="print" onload="this.media='all'">
+
+  <!-- Component CSS -->
+  <link rel="stylesheet" href="assets/css/components/button.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/components/card.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/components/toast.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/components/modal.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/components/dropzone.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/components/skeleton.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/components/word-popover.css" media="print" onload="this.media='all'">
+
+  <!-- Eye Comfort & Accessibility CSS -->
+  <link rel="stylesheet" href="assets/css/eye-comfort.css" media="print" onload="this.media='all'">
+
+  <!-- View CSS -->
+  <link rel="stylesheet" href="assets/css/views/library.css?v=202601012003-glass" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/views/reader.css?v=202601012005-blob-persistence" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/views/settings.css?v=202601011902-debug" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/vocabulary-kanban.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/flashcards.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/statistics.css" media="print" onload="this.media='all'">
+  <script src="../assets/js/analytics.js"></script>
+</head>
+<body>
+  <!-- App Loading State -->
+  <div id="app-loading" class="app-loading" role="status" aria-live="polite">
+    <div class="app-loading-spinner"></div>
+    <div class="app-loading-text">Loading Reader...</div>
+  </div>
+
+  <!-- App Shell -->
+  <div id="app-root" style="display: none;">
+    <!-- Header -->
+    <header class="app-header" id="app-header" role="banner">
+      <div class="header-content">
+        <nav class="navbar" role="navigation" aria-label="Main Navigation">
+          <a href="#/library" class="nav-link" id="nav-library">
+            <span class="nav-icon">📚</span>
+            <span class="nav-label">Library</span>
+          </a>
+          <a href="#/vocabulary" class="nav-link" id="nav-vocabulary">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Vocabulary</span>
+          </a>
+          <a href="#/flashcards" class="nav-link" id="nav-flashcards">
+            <span class="nav-icon">🎴</span>
+            <span class="nav-label">Flashcards</span>
+          </a>
+          <a href="#/statistics" class="nav-link" id="nav-statistics">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Statistics</span>
+          </a>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <a href="#/settings" class="nav-link nav-link-small" id="nav-settings">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Settings</span>
+          </a>
+          <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme">
+            🌙
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="app-view" role="main" aria-live="polite"></main>
+
+    <!-- Overlay Root for Popovers/Modals (persistent across renders) -->
+    <div id="overlay-root" aria-live="polite"></div>
+
+    <!-- Toast Container (injected by ToastManager) -->
+    <!-- Modal Container (injected by ModalManager) -->
+  </div>
+
+  <!-- Error Boundary -->
+  <div id="error-boundary" role="alert" aria-live="assertive" style="display: none;">
+    <div class="error-container">
+      <div class="error-icon">⚠️</div>
+      <h2 class="error-title">Something went wrong</h2>
+      <p class="error-message" id="error-message"></p>
+      <button class="btn btn-primary" onclick="location.reload()">Reload Page</button>
+    </div>
+  </div>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(reg => console.log('✅ Service Worker registered'))
+          .catch(err => console.warn('❌ Service Worker registration failed:', err));
+      });
+    }
+  </script>
+
+  <!-- Development Debugging Tools -->
+  <script>
+    // Global error tracking for 404 debugging
+    window.resourceErrors = [];
+    window.networkRequests = [];
+    window.moduleLoads = [];
+    window.xhrRequests = [];
+
+    // Track all network requests
+    const originalFetch = window.fetch;
+    window.fetch = function(...args) {
+      const url = args[0];
+      const startTime = Date.now();
+
+      window.networkRequests.push({
+        url: url,
+        method: args[1]?.method || 'GET',
+        timestamp: startTime,
+        stack: new Error().stack
+      });
+
+      return originalFetch.apply(this, args).then(response => {
+        const duration = Date.now() - startTime;
+
+        // Update request with response
+        const lastRequest = window.networkRequests[window.networkRequests.length - 1];
+        lastRequest.status = response.status;
+        lastRequest.duration = duration;
+        lastRequest.ok = response.ok;
+
+        if (!response.ok) {
+          console.error(`🚨 Network Error: ${response.status} ${response.statusText} - ${url}`);
+          window.resourceErrors.push({
+            type: 'fetch',
+            url: url,
+            status: response.status,
+            statusText: response.statusText,
+            duration: duration,
+            timestamp: Date.now(),
+            stack: new Error().stack
+          });
+        }
+
+        return response;
+      }).catch(error => {
+        const duration = Date.now() - startTime;
+        console.error(`🚨 Network Error: ${error.message} - ${url}`);
+
+        window.resourceErrors.push({
+          type: 'fetch',
+          url: url,
+          error: error.message,
+          duration: duration,
+          timestamp: Date.now(),
+          stack: new Error().stack
+        });
+
+        throw error;
+      });
+    };
+
+    // Track module loading errors
+    window.addEventListener('error', function(event) {
+      if (event.error && event.error.stack) {
+        console.error('🚨 Script Error:', event.error);
+
+        window.resourceErrors.push({
+          type: 'script',
+          message: event.error.message,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+          stack: event.error.stack,
+          timestamp: Date.now()
+        });
+      }
+    });
+
+    // Track unhandled promise rejections
+    window.addEventListener('unhandledrejection', function(event) {
+      console.error('🚨 Unhandled Promise Rejection:', event.reason);
+
+      window.resourceErrors.push({
+        type: 'promise',
+        reason: event.reason,
+        timestamp: Date.now(),
+        stack: event.reason?.stack
+      });
+    });
+
+    // Track XMLHttpRequest (for older APIs)
+    const originalXMLHttpRequest = window.XMLHttpRequest;
+    window.XMLHttpRequest = function() {
+      const xhr = new originalXMLHttpRequest();
+      const originalOpen = xhr.open;
+      const originalSend = xhr.send;
+
+      xhr.open = function(method, url, ...args) {
+        xhr._debugUrl = url;
+        xhr._debugMethod = method;
+        xhr._debugStartTime = Date.now();
+        return originalOpen.apply(this, [method, url, ...args]);
+      };
+
+      xhr.send = function(data) {
+        xhr._debugData = data;
+
+        const originalOnLoad = this.onload;
+        const originalOnError = this.onerror;
+
+        this.onload = function() {
+          window.xhrRequests.push({
+            url: xhr._debugUrl,
+            method: xhr._debugMethod,
+            status: xhr.status,
+            duration: Date.now() - xhr._debugStartTime,
+            timestamp: xhr._debugStartTime,
+            type: 'xhr'
+          });
+
+          if (xhr.status >= 400) {
+            console.error(`🚨 XHR Error: ${xhr.status} ${xhr.statusText} - ${xhr._debugUrl}`);
+            window.resourceErrors.push({
+              type: 'xhr',
+              url: xhr._debugUrl,
+              status: xhr.status,
+              statusText: xhr.statusText,
+              timestamp: Date.now()
+            });
+          }
+
+          if (originalOnLoad) originalOnLoad.apply(this, arguments);
+        };
+
+        this.onerror = function() {
+          console.error(`🚨 XHR Network Error: ${xhr._debugUrl}`);
+          window.resourceErrors.push({
+            type: 'xhr',
+            url: xhr._debugUrl,
+            error: 'Network Error',
+            timestamp: Date.now()
+          });
+
+          if (originalOnError) originalOnError.apply(this, arguments);
+        };
+
+        return originalSend.apply(this, [data]);
+      };
+
+      return xhr;
+    };
+
+    // Track dynamic imports (ES6 modules)
+    const originalImport = window.import;
+    window._moduleLoadTracker = function(url) {
+      const startTime = Date.now();
+      window.moduleLoads.push({
+        url: url,
+        startTime: startTime,
+        status: 'loading'
+      });
+
+      return import(url).then(module => {
+        const loadTime = Date.now() - startTime;
+        const loadEntry = window.moduleLoads.find(m => m.url === url && m.startTime === startTime);
+        if (loadEntry) {
+          loadEntry.status = 'loaded';
+          loadEntry.duration = loadTime;
+        }
+
+        console.log(`📦 Module loaded: ${url} (${loadTime}ms)`);
+        return module;
+      }).catch(error => {
+        const loadEntry = window.moduleLoads.find(m => m.url === url && m.startTime === startTime);
+        if (loadEntry) {
+          loadEntry.status = 'error';
+          loadEntry.error = error.message;
+          loadEntry.duration = Date.now() - startTime;
+        }
+
+        console.error(`📦 Module failed: ${url} - ${error.message}`);
+        window.resourceErrors.push({
+          type: 'module',
+          url: url,
+          error: error.message,
+          timestamp: Date.now()
+        });
+
+        throw error;
+      });
+    };
+
+    // Development debugging functions
+    window.debugResourceErrors = function() {
+      console.group('🔍 Resource Loading Errors');
+      console.table(window.resourceErrors);
+      console.groupEnd();
+
+      return window.resourceErrors;
+    };
+
+    window.debugNetworkRequests = function() {
+      console.group('🌐 Network Requests');
+      console.table(window.networkRequests);
+      console.groupEnd();
+
+      return window.networkRequests;
+    };
+
+    window.debugModuleLoading = async function() {
+      console.group('📦 Module Loading Test');
+
+      const modulesToTest = [
+        './assets/js/core/Application.js',
+        './assets/js/ui/components/WordPopover.js',
+        './assets/js/utils/context-extractor.js',
+        './assets/js/services/context-translation-service.js'
+      ];
+
+      for (const modulePath of modulesToTest) {
+        try {
+          console.log(`Testing ${modulePath}...`);
+          const startTime = Date.now();
+          const module = await import(modulePath);
+          const duration = Date.now() - startTime;
+          console.log(`✅ ${modulePath} loaded in ${duration}ms`);
+        } catch (error) {
+          console.error(`❌ ${modulePath} failed:`, error);
+        }
+      }
+
+      console.groupEnd();
+    };
+
+    window.debug404Summary = function() {
+      console.group('📊 404 Error Summary');
+
+      const fetch404s = window.resourceErrors.filter(e => e.type === 'fetch' && e.status === 404);
+      const scriptErrors = window.resourceErrors.filter(e => e.type === 'script');
+      const xhr404s = window.resourceErrors.filter(e => e.type === 'xhr' && e.status === 404);
+
+      console.log(`Total errors: ${window.resourceErrors.length}`);
+      console.log(`404 fetch errors: ${fetch404s.length}`);
+      console.log(`404 XHR errors: ${xhr404s.length}`);
+      console.log(`Script errors: ${scriptErrors.length}`);
+      console.log(`Module errors: ${window.resourceErrors.filter(e => e.type === 'module').length}`);
+
+      if (fetch404s.length > 0) {
+        console.group('🚨 404 Fetch URLs:');
+        fetch404s.forEach(error => {
+          console.error(`❌ ${error.url} (${error.duration}ms)`);
+        });
+        console.groupEnd();
+      }
+
+      if (xhr404s.length > 0) {
+        console.group('🚨 404 XHR URLs:');
+        xhr404s.forEach(error => {
+          console.error(`❌ ${error.url}`);
+        });
+        console.groupEnd();
+      }
+
+      if (scriptErrors.length > 0) {
+        console.group('🚨 Script Errors:');
+        scriptErrors.forEach(error => {
+          console.error(`❌ ${error.filename}:${error.lineno} - ${error.message}`);
+        });
+        console.groupEnd();
+      }
+
+      console.groupEnd();
+    };
+
+    window.debugFullReport = function() {
+      console.group('🔬 FULL DEBUG REPORT');
+      console.log('='.repeat(50));
+
+      console.group('📊 Summary:');
+      console.log(`Total network requests: ${window.networkRequests.length}`);
+      console.log(`Total XHR requests: ${window.xhrRequests.length}`);
+      console.log(`Module loads: ${window.moduleLoads.length}`);
+      console.log(`Resource errors: ${window.resourceErrors.length}`);
+      console.groupEnd();
+
+      window.debug404Summary();
+      window.debugNetworkRequests();
+
+      console.group('📦 Module Loads:');
+      window.moduleLoads.forEach(module => {
+        if (module.status === 'error') {
+          console.error(`❌ ${module.url} - ${module.error}`);
+        } else {
+          console.log(`✅ ${module.url} (${module.duration || 0}ms)`);
+        }
+      });
+      console.groupEnd();
+
+      console.group('🔗 Top failing URLs:');
+      const urlErrors = {};
+      window.resourceErrors.forEach(error => {
+        const url = error.url || error.filename || 'unknown';
+        urlErrors[url] = (urlErrors[url] || 0) + 1;
+      });
+
+      Object.entries(urlErrors)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .forEach(([url, count]) => {
+          console.error(`${count}x - ${url}`);
+        });
+      console.groupEnd();
+
+      console.log('='.repeat(50));
+      console.log('💡 Copy this report when asking for help!');
+      console.groupEnd();
+    };
+
+    window.clearDebugData = function() {
+      window.resourceErrors = [];
+      window.networkRequests = [];
+      window.moduleLoads = [];
+      window.xhrRequests = [];
+      console.log('🧹 Debug data cleared');
+    };
+
+    // Debug function for EPUB path resolution
+    window.debugEPUBPathResolution = function() {
+      console.log('%c🧪 Testing EPUB Path Resolution', 'font-size: 16px; font-weight: bold; color: #8b5cf6;');
+
+      try {
+        // Dynamic import to avoid circular dependencies
+        import('./assets/js/parsers/epub-parser.js').then(({ EPUBParser }) => {
+          const parser = new EPUBParser();
+
+          const testCases = [
+            { base: 'OEBPS/content.opf', relative: 'images/cover.jpg', expected: 'OEBPS/images/cover.jpg' },
+            { base: 'content.opf', relative: 'images/cover.jpg', expected: 'images/cover.jpg' },
+            { base: 'OEBPS/content.opf', relative: '../images/cover.jpg', expected: 'images/cover.jpg' },
+            { base: 'OEBPS/chapter1.xhtml', relative: 'images/diagram.png', expected: 'OEBPS/images/diagram.png' }
+          ];
+
+          console.group('📊 Path Resolution Tests');
+          testCases.forEach((test, i) => {
+            const result = parser.resolvePath(test.base, test.relative);
+            const success = result === test.expected;
+            console.log(
+              `${success ? '✅' : '❌'} Test ${i + 1}: ${test.base} + ${test.relative} = ${result} ${success ? '' : `(expected: ${test.expected})`}`
+            );
+          });
+          console.groupEnd();
+
+          console.log('%c💡 Usage: window.debugEPUBPathResolution()', 'color: #6b7280;');
+        });
+      } catch (error) {
+        console.error('❌ Failed to load EPUBParser:', error);
+      }
+    };
+
+    // Comprehensive diagnostic function for image issues
+    window.diagnoseImageIssues = async function(bookId = 'dragon-epub') {
+      console.log('%c🔬 COMPREHENSIVE IMAGE DIAGNOSTICS', 'font-size: 18px; font-weight: bold; color: #ef4444;');
+
+      const results = {
+        indexedDB: null,
+        epubStructure: null,
+        pathAnalysis: null,
+        recommendations: []
+      };
+
+      try {
+        // 1. Check IndexedDB content
+        console.log('\n%c1️⃣ IndexedDB Analysis', 'font-weight: bold; color: #3b82f6;');
+        results.indexedDB = await debugImageBlobsDB(bookId);
+
+        // 2. Check EPUB file structure
+        console.log('\n%c2️⃣ EPUB Structure Analysis', 'font-weight: bold; color: #3b82f6;');
+        try {
+          const response = await fetch('./books/Dragon.epub');
+          if (response.ok) {
+            console.log('✅ EPUB file accessible');
+            results.epubStructure = { accessible: true };
+          } else {
+            console.error(`❌ EPUB file not accessible: ${response.status}`);
+            results.epubStructure = { accessible: false, status: response.status };
+          }
+        } catch (error) {
+          console.error('❌ EPUB fetch error:', error);
+          results.epubStructure = { accessible: false, error: error.message };
+        }
+
+        // 3. Path pattern analysis
+        console.log('\n%c3️⃣ Path Pattern Analysis', 'font-weight: bold; color: #3b82f6;');
+        if (results.indexedDB && results.indexedDB.length > 0) {
+          const paths = results.indexedDB.map(item => item.key.split(':')[1]);
+          console.log('📊 Stored paths:', paths);
+
+          // Analyze patterns
+          const hasOebpsPrefix = paths.some(p => p.startsWith('OEBPS/'));
+          const hasRelativePaths = paths.some(p => p.startsWith('../') || (!p.startsWith('/') && p.includes('/')));
+          const hasRootPaths = paths.some(p => !p.includes('/'));
+
+          console.log('🔍 Path patterns detected:');
+          console.log(`  - OEBPS prefix: ${hasOebpsPrefix ? 'YES' : 'NO'}`);
+          console.log(`  - Relative paths: ${hasRelativePaths ? 'YES' : 'NO'}`);
+          console.log(`  - Root paths: ${hasRootPaths ? 'YES' : 'NO'}`);
+
+          results.pathAnalysis = {
+            paths,
+            hasOebpsPrefix,
+            hasRelativePaths,
+            hasRootPaths
+          };
+        }
+
+        // 4. Generate recommendations
+        console.log('\n%c4️⃣ Recommendations', 'font-weight: bold; color: #10b981;');
+
+        if (!results.indexedDB || results.indexedDB.length === 0) {
+          results.recommendations.push('❌ CRITICAL: No image blobs found in IndexedDB. Check EPUB parsing.');
+        } else if (results.pathAnalysis.hasOebpsPrefix && results.pathAnalysis.hasRelativePaths) {
+          results.recommendations.push('⚠️ WARNING: Mixed path formats detected (both OEBPS/ and relative). This indicates inconsistent path resolution.');
+          results.recommendations.push('💡 RECOMMENDATION: Fix epub-parser.js resolvePath to always return paths relative to ZIP root.');
+        } else if (results.pathAnalysis.hasOebpsPrefix) {
+          results.recommendations.push('📁 All paths have OEBPS prefix - likely correct for this EPUB structure.');
+        } else {
+          results.recommendations.push('📁 Paths appear to be relative - may need root prefix in resolvePath.');
+        }
+
+        if (results.epubStructure && !results.epubStructure.accessible) {
+          results.recommendations.push('❌ EPUB file not accessible - check file path and server setup.');
+        }
+
+        // Summary
+        console.log('\n%c📋 SUMMARY', 'font-weight: bold; color: #f59e0b;');
+        console.log(`IndexedDB blobs: ${results.indexedDB ? results.indexedDB.length : 0}`);
+        console.log(`EPUB accessible: ${results.epubStructure?.accessible ? 'YES' : 'NO'}`);
+
+        if (results.recommendations.length === 0) {
+          console.log('✅ No issues detected - images should work.');
+        } else {
+          console.log('⚠️ Issues found - see recommendations above.');
+          results.recommendations.forEach((rec, i) => console.log(`  ${i + 1}. ${rec}`));
+        }
+
+      } catch (error) {
+        console.error('❌ Diagnostic failed:', error);
+      }
+
+      // Store results globally for further analysis
+      window.imageDiagnostics = results;
+      console.log('\n💾 Results saved to window.imageDiagnostics');
+
+      return results;
+    };
+
+    // Emergency function to enable fuzzy search if needed
+    window.enableFuzzySearch = function() {
+      console.log('🔧 Enabling fuzzy search for image lookup...');
+
+      // This would require reloading the BookService module
+      // For now, just show instructions
+      console.log('📋 To enable fuzzy search:');
+      console.log('1. Edit reader/assets/js/services/book-service.js');
+      console.log('2. Uncomment the fuzzy search block in getImageBlob()');
+      console.log('3. Reload the page');
+      console.log('⚠️ WARNING: Fuzzy search is a temporary workaround and may cause performance issues');
+    };
+
+    /**
+     * 🕵️‍♂️ IMAGE DIAGNOSTIC TOOL v2 - Advanced DOM/Image Analysis
+     * Tracks where img elements are created and how data-image-id attributes are handled
+     */
+    // Test Service Worker image serving (with OPFS/IndexedDB detection)
+    window.testBookImage = async function(bookId, imagePath) {
+      const testUrl = `/book-images/${bookId}/${imagePath}`;
+      console.log(`🧪 Testing Service Worker image: ${testUrl}`);
+
+      try {
+        const response = await fetch(testUrl);
+        if (response.ok) {
+          const blob = await response.blob();
+          console.log(`✅ Service Worker served image: ${blob.size} bytes, type: ${blob.type}`);
+
+          // Detect storage type from response headers or timing
+          const storageType = response.headers.get('X-Storage-Type') ||
+                            (blob.size > 100000 ? 'OPFS (large file)' : 'IndexedDB (small file)');
+          console.log(`💾 Storage backend: ${storageType}`);
+
+          return true;
+        } else if (response.status === 404) {
+          console.warn(`⚠️ Image not found (404): ${bookId}/${imagePath}`);
+          return false;
+        } else {
+          console.error(`❌ Service Worker failed: ${response.status} ${response.statusText}`);
+          return false;
+        }
+      } catch (error) {
+        console.error(`💥 Service Worker error:`, error);
+        return false;
+      }
+    };
+
+    // Test storage performance comparison
+    window.compareStoragePerformance = async function(bookId, imagePath) {
+      console.log(`⚡ Testing storage performance for ${bookId}/${imagePath}`);
+
+      const tests = [
+        { name: 'Service Worker (OPFS/IDB)', url: `/book-images/${bookId}/${imagePath}` },
+        { name: 'Direct imageStorage.getImage()', func: async () => {
+          const { imageStorage } = await import('./assets/js/services/image-storage.js');
+          return await imageStorage.getImage(bookId, imagePath);
+        }}
+      ];
+
+      for (const test of tests) {
+        const start = performance.now();
+        try {
+          let result;
+          if (test.url) {
+            const response = await fetch(test.url);
+            result = await response.blob();
+          } else {
+            result = await test.func();
+          }
+
+          const duration = performance.now() - start;
+          console.log(`✅ ${test.name}: ${duration.toFixed(2)}ms (${result.size} bytes)`);
+        } catch (error) {
+          const duration = performance.now() - start;
+          console.error(`❌ ${test.name}: ${duration.toFixed(2)}ms - ${error.message}`);
+        }
+      }
+    };
+
+    // Diagnose Service Worker functionality
+    window.diagnoseServiceWorker = async function() {
+      console.log('%c🔧 Service Worker Diagnostics', 'font-size: 16px; font-weight: bold; color: #10b981;');
+
+      // Check if SW is registered
+      if (!navigator.serviceWorker) {
+        console.error('❌ Service Worker not supported');
+        return;
+      }
+
+      try {
+        const registration = await navigator.serviceWorker.getRegistration();
+        if (!registration) {
+          console.error('❌ No Service Worker registered');
+          return;
+        }
+
+        console.log('✅ Service Worker registered:', registration.scope);
+
+        // Test basic functionality
+        const testResponse = await fetch('/book-images/test/test.png');
+        console.log(`📡 SW responds to /book-images/ paths: ${testResponse.status === 404 ? '✅ (expected 404 for non-existent)' : '❓ unexpected status'}`);
+
+        // Test IndexedDB access from SW context (this will fail but shows SW is working)
+        console.log('ℹ️  Service Worker is active and can handle book image requests');
+
+      } catch (error) {
+        console.error('❌ Service Worker diagnostic failed:', error);
+      }
+    };
+
+    window.diagnoseImagesV2 = () => {
+        console.clear();
+        console.log('%c🕵️‍♂️ ЗАПУСК ДИАГНОСТИКИ ИЗОБРАЖЕНИЙ v2 (Расширенная)', 'color: yellow; font-weight: bold; font-size: 14px;');
+
+        if (window.__imageInterceptInstalled) {
+            console.log('✅ Image interceptors already installed');
+            return;
+        }
+
+        // 1. Перехватываем создание IMG через createElement
+        const origCreate = document.createElement;
+        document.createElement = function(tag, ...args) {
+            const el = origCreate.call(document, tag, ...args);
+            if (tag.toLowerCase() === 'img') {
+                console.log('🛠️ createElement("img")', {
+                    stack: new Error().stack?.split('\n').slice(1, 7).join('\n')
+                });
+            }
+            return el;
+        };
+
+        // 2. Перехватываем innerHTML (здесь могут вставляться готовые теги)
+        const htmlDesc = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+        Object.defineProperty(Element.prototype, 'innerHTML', {
+            set(value) {
+                // Ищем <img> теги в строке
+                if (typeof value === 'string' && value.includes('<img')) {
+                    const matches = value.match(/<img[^>]*>/gi) || [];
+                    if (matches.length > 0) {
+                        const hasDataImageId = value.includes('data-image-id');
+                        const hasSrcNull = value.includes('src="null"') || value.includes("src='null'");
+
+                        console.log('🛠️ innerHTML with IMG tags', {
+                            count: matches.length,
+                            samples: matches.slice(0, 2),
+                            hasDataImageId,
+                            hasSrcNull,
+                            stack: new Error().stack?.split('\n').slice(1, 7).join('\n')
+                        });
+
+                        if (!hasDataImageId && hasSrcNull) {
+                            console.error('🚨 CRITICAL: IMG tags without data-image-id but with null src!', {
+                                html: value.substring(0, 200) + '...',
+                                fullStack: new Error().stack
+                            });
+                        }
+                    }
+                }
+                return htmlDesc.set.call(this, value);
+            },
+            get: htmlDesc.get
+        });
+
+        // 3. Перехватываем установку src (в том числе "null")
+        const imgProto = HTMLImageElement.prototype;
+        const srcDesc = Object.getOwnPropertyDescriptor(imgProto, 'src');
+        Object.defineProperty(imgProto, 'src', {
+            set(v) {
+                const info = {
+                    value: v,
+                    isNull: v === null || v === 'null' || v === undefined,
+                    dataImageId: this.getAttribute('data-image-id'),
+                    hasDataAttr: this.hasAttribute('data-image-id'),
+                    className: this.className,
+                    outerHTML: this.outerHTML.substring(0, 100)
+                };
+
+                if (info.isNull) {
+                    console.warn('🚨 IMG.src = NULL/UNDEFINED', {
+                        ...info,
+                        stack: new Error().stack?.split('\n').slice(1, 8).join('\n')
+                    });
+                } else if (v && v.startsWith('blob:')) {
+                    console.log('✅ IMG.src = BLOB URL', {
+                        url: v.substring(0, 50) + '...',
+                        dataImageId: info.dataImageId
+                    });
+                } else {
+                    console.log('ℹ️ IMG.src =', info.value.substring(0, 50));
+                }
+
+                return srcDesc.set.call(this, v);
+            },
+            get: srcDesc.get
+        });
+
+        // 4. Перехватываем установку атрибутов
+        const origSetAttribute = Element.prototype.setAttribute;
+        Element.prototype.setAttribute = function(name, value) {
+            if (name === 'data-image-id' && this.tagName === 'IMG') {
+                console.log('🏷️ IMG.setAttribute("data-image-id")', {
+                    value,
+                    stack: new Error().stack?.split('\n').slice(1, 5).join('\n')
+                });
+            }
+            return origSetAttribute.call(this, name, value);
+        };
+
+        window.__imageInterceptInstalled = true;
+        console.log('✅ diagnoseImagesV2(): All advanced interceptors installed');
+        console.log('🔄 Reload page or navigate to see the full creation chain');
+    };
+
+    /**
+     * 🕵️‍♂️ IMAGE DIAGNOSTIC TOOL
+     * Сравнивает содержимое IndexedDB с требованиями DOM-дерева.
+     */
+    window.diagnoseImages = async () => {
+        console.clear();
+        console.log('%c🕵️‍♂️ ЗАПУСК ДИАГНОСТИКИ ИЗОБРАЖЕНИЙ...', 'color: yellow; font-weight: bold; font-size: 14px;');
+
+        // 1. Определяем текущую книгу
+        const hash = window.location.hash;
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('bookId') || hash.split('/').pop() || 'dragon-epub'; // Fallback
+        console.log(`📘 Книга: %c${bookId}`, 'color: cyan');
+
+        // 2. Достаем ключи из IndexedDB (imageBlobs)
+        const dbKeys = await new Promise((resolve, reject) => {
+            const req = indexedDB.open('ReaderDB');
+            req.onsuccess = () => {
+                const db = req.result;
+                if (!db.objectStoreNames.contains('imageBlobs')) return resolve([]);
+                const tx = db.transaction('imageBlobs', 'readonly');
+                const store = tx.objectStore('imageBlobs');
+                // Получаем ВСЕ ключи, фильтруем в JS (проще для диагностики)
+                const keyReq = store.getAllKeys();
+                keyReq.onsuccess = () => {
+                    const keys = keyReq.result.filter(k => k.startsWith(bookId));
+                    resolve(keys);
+                };
+                keyReq.onerror = () => reject(keyReq.error);
+            };
+            req.onerror = () => reject(req.error);
+        });
+
+        console.log(`💽 В базе найдено блобов: %c${dbKeys.length}`, 'font-weight: bold');
+        if (dbKeys.length > 0) {
+            console.groupCollapsed('🔑 Ключи в БД (примеры)');
+            dbKeys.slice(0, 10).forEach(k => console.log(k));
+            console.groupEnd();
+        } else {
+            console.error('❌ В БАЗЕ НЕТ БЛОБОВ ДЛЯ ЭТОЙ КНИГИ! Проблема в сохранении (BookService/Parser).');
+            return;
+        }
+
+        // 3. Анализируем DOM (текущую страницу)
+        const images = document.querySelectorAll('img');
+        console.log(`🖼️ Тегов <img> на странице: %c${images.length}`, 'font-weight: bold');
+
+        const report = [];
+        let errors = 0;
+
+        images.forEach((img, idx) => {
+            const src = img.getAttribute('src') || 'N/A';
+            const dataId = img.getAttribute('data-image-id') || img.dataset.imageId;
+            const originalSrc = img.getAttribute('original-src'); // Если есть такой атрибут
+
+            // Попытка реконструировать ожидаемый ключ
+            // Логика: BookService ищет по "bookId:path"
+            let expectedKey = null;
+            if (dataId) {
+                 expectedKey = `${bookId}:${dataId.replace(/\\/g, '/').toLowerCase()}`;
+            } else if (src && !src.startsWith('data:') && !src.startsWith('http')) {
+                 // Если src относительный, пытаемся угадать
+                 expectedKey = `${bookId}:${src.replace(/\\/g, '/').toLowerCase()}`;
+            }
+
+            const status = {
+                index: idx,
+                domSrc: src.substring(0, 50),
+                dataId: dataId || 'MISSING ❌',
+                expectedDbKey: expectedKey || 'UNKNOWN',
+                foundInDb: false,
+                diagnosis: ''
+            };
+
+            if (expectedKey) {
+                // Точный поиск
+                if (dbKeys.includes(expectedKey)) {
+                    status.foundInDb = true;
+                    status.diagnosis = '✅ OK (Match)';
+                } else {
+                    // Поиск частичного совпадения (чтобы понять проблему путей)
+                    const fuzzy = dbKeys.find(k => k.endsWith(expectedKey.split(':').pop()));
+                    if (fuzzy) {
+                        status.diagnosis = `⚠️ MISMATCH. DOM хочет: "${expectedKey}", а в БД: "${fuzzy}"`;
+                        errors++;
+                    } else {
+                        status.diagnosis = '🔥 MISSING. Нет в БД даже похожего.';
+                        errors++;
+                    }
+                }
+            } else {
+                status.diagnosis = '⚪ SKIPPED (External/System image)';
+            }
+
+            // Не показываем системные иконки, если они работают
+            if (!src.includes('asset') && !src.startsWith('data:')) {
+                report.push(status);
+            }
+        });
+
+        // 4. Вывод таблицы результатов
+        if (report.length > 0) {
+            console.table(report);
+        } else {
+            console.log('Нет значимых изображений для анализа на этом экране.');
+        }
+
+        // 5. Итоговый вердикт
+        if (errors > 0) {
+            console.error(`%cОБНАРУЖЕНО ${errors} ПРОБЛЕМ С ПУТЯМИ!`, 'font-size: 16px');
+            console.warn('Рекомендация: Посмотрите колонку "diagnosis". Если там Mismatch - нужен фикс парсера (resolvePath).');
+        } else {
+            console.log('%c✅ Все связи DOM -> DB корректны.', 'color: green; font-size: 16px');
+        }
+    };
+
+    // Debug function to inspect IndexedDB imageBlobs store
+    window.debugImageBlobsDB = async function(bookId = null) {
+      console.log('%c🔍 Inspecting ImageBlobs IndexedDB Store', 'font-size: 16px; font-weight: bold; color: #f59e0b;');
+
+      try {
+        const dbName = 'ReaderDB';
+        const request = indexedDB.open(dbName);
+
+        return new Promise((resolve, reject) => {
+          request.onsuccess = async () => {
+            const db = request.result;
+
+            try {
+              const transaction = db.transaction(['imageBlobs'], 'readonly');
+              const store = transaction.objectStore('imageBlobs');
+
+              // Get all keys
+              const allKeysRequest = store.getAllKeys();
+              allKeysRequest.onsuccess = () => {
+                const allKeys = allKeysRequest.result;
+                console.log('🔑 All keys in imageBlobs store:', allKeys);
+
+                // Filter by bookId if provided
+                let filteredKeys = allKeys;
+                if (bookId) {
+                  filteredKeys = allKeys.filter(key => key.startsWith(`${bookId}:`));
+                  console.log(`🐲 Keys for book "${bookId}":`, filteredKeys);
+                }
+
+                // Get detailed info for each key
+                const detailsPromises = filteredKeys.map(async (key) => {
+                  try {
+                    const blobRequest = store.get(key);
+                    return new Promise((resolve) => {
+                      blobRequest.onsuccess = () => {
+                        const result = blobRequest.result;
+                        if (result && result.blob) {
+                          resolve({
+                            key,
+                            size: result.blob.size,
+                            type: result.blob.type,
+                            timestamp: result.timestamp
+                          });
+                        } else {
+                          resolve({ key, error: 'No blob data' });
+                        }
+                      };
+                      blobRequest.onerror = () => resolve({ key, error: 'Lookup failed' });
+                    });
+                  } catch (error) {
+                    return { key, error: error.message };
+                  }
+                });
+
+                Promise.all(detailsPromises).then(details => {
+                  console.group('📊 Detailed blob information:');
+                  details.forEach(detail => {
+                    if (detail.error) {
+                      console.error(`❌ ${detail.key}: ${detail.error}`);
+                    } else {
+                      console.log(`✅ ${detail.key}: ${detail.size} bytes, ${detail.type}, ${new Date(detail.timestamp).toLocaleString()}`);
+                    }
+                  });
+                  console.groupEnd();
+
+                  console.log(`%c💡 Total blobs: ${filteredKeys.length}`, 'color: #6b7280;');
+                  resolve(details);
+                });
+              };
+
+              allKeysRequest.onerror = () => {
+                console.error('❌ Failed to get keys from imageBlobs store');
+                reject(new Error('Failed to get keys'));
+              };
+
+            } catch (error) {
+              console.error('❌ Failed to access imageBlobs store:', error);
+              reject(error);
+            } finally {
+              db.close();
+            }
+          };
+
+          request.onerror = () => {
+            console.error('❌ Failed to open IndexedDB:', request.error);
+            reject(request.error);
+          };
+        });
+
+      } catch (error) {
+        console.error('❌ Error inspecting IndexedDB:', error);
+        return Promise.reject(error);
+      }
+    };
+
+    window.clearCache = async function() {
+      try {
+        console.log('🗑️ Clearing Service Worker caches...');
+
+        // Unregister all service workers
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          await registration.unregister();
+          console.log('✅ Service Worker unregistered');
+        }
+
+        // Clear all caches
+        const cacheNames = await caches.keys();
+        for (const cacheName of cacheNames) {
+          await caches.delete(cacheName);
+          console.log(`🗑️ Cache deleted: ${cacheName}`);
+        }
+
+        // Clear localStorage and sessionStorage
+        localStorage.clear();
+        sessionStorage.clear();
+        console.log('🧹 Storage cleared');
+
+        console.log('🎉 All caches and storage cleared! Please refresh the page.');
+        console.log('💡 Tip: Hard refresh (Ctrl+F5) to bypass browser cache completely.');
+
+      } catch (error) {
+        console.error('❌ Failed to clear cache:', error);
+      }
+    };
+
+    window.checkNavigationInvariants = function() {
+      console.log('🔍 Checking Navigation System Invariants...');
+
+      // Invariant #1: Exactly one reading navigation in DOM
+      const navElements = document.querySelectorAll('nav[aria-label="Reading navigation"]');
+      const invariant1 = navElements.length === 1;
+      console.log(`📏 Invariant #1 - Single Navigation: ${invariant1 ? '✅' : '❌'} (${navElements.length} found)`);
+      if (!invariant1) {
+        console.error('❌ Multiple navigation elements found:', navElements);
+      }
+
+      // Invariant #2: No undefined in navigation info
+      const navInfo = document.querySelector('.reader-nav__info');
+      const invariant2 = navInfo && !navInfo.textContent.includes('undefined');
+      console.log(`📏 Invariant #2 - No Undefined: ${invariant2 ? '✅' : '❌'}`);
+      if (!invariant2) {
+        console.error('❌ Undefined found in navigation info:', navInfo?.textContent);
+      }
+
+      // Invariant #3: Buttons have proper accessibility
+      const buttons = document.querySelectorAll('.reader-nav__btn[data-action]');
+      const invariant3 = buttons.length === 4 && Array.from(buttons).every(btn =>
+        btn.hasAttribute('aria-label') && btn.hasAttribute('title')
+      );
+      console.log(`📏 Invariant #3 - Accessibility: ${invariant3 ? '✅' : '❌'} (${buttons.length} buttons, all accessible: ${invariant3})`);
+
+      // Invariant #4: Mode switcher exists and works
+      const modeSwitcher = document.querySelector('.reading-mode-switcher');
+      const modeButtons = document.querySelectorAll('.mode-btn[data-mode]');
+      const invariant4 = modeSwitcher && modeButtons.length === 2;
+      console.log(`📏 Invariant #4 - Mode Switcher: ${invariant4 ? '✅' : '❌'} (switcher: ${!!modeSwitcher}, buttons: ${modeButtons.length})`);
+
+      // Check for busy state issues
+      const disabledButtons = document.querySelectorAll('.reader-nav__btn:disabled');
+      console.log(`ℹ️  Busy State: ${disabledButtons.length} buttons disabled (expected during navigation)`);
+
+      // Overall status
+      const allGood = invariant1 && invariant2 && invariant3 && invariant4;
+      console.log(`🎯 Overall Status: ${allGood ? '✅ ALL GOOD' : '❌ ISSUES FOUND'}`);
+
+      return {
+        singleNavigation: invariant1,
+        noUndefined: invariant2,
+        accessibility: invariant3,
+        modeSwitcher: invariant4,
+        overall: allGood
+      };
+    };
+
+    window.switchToPagedMode = async function() {
+      console.log('🔄 Switching to Paged Mode...');
+      try {
+        // Find the reader controller (this is a bit hacky but works for debugging)
+        const app = window.app || window.Application?.instance;
+        if (app && app.readerController) {
+          await app.readerController.switchMode('paged');
+          console.log('✅ Switched to Paged Mode');
+        } else {
+          console.error('❌ Reader controller not found');
+        }
+      } catch (error) {
+        console.error('❌ Failed to switch to Paged Mode:', error);
+      }
+    };
+
+    window.switchToScrollMode = async function() {
+      console.log('🔄 Switching to Scroll Mode...');
+      try {
+        const app = window.app || window.Application?.instance;
+        if (app && app.readerController) {
+          await app.readerController.switchMode('scroll');
+          console.log('✅ Switched to Scroll Mode');
+        } else {
+          console.error('❌ Reader controller not found');
+        }
+      } catch (error) {
+        console.error('❌ Failed to switch to Scroll Mode:', error);
+      }
+    };
+
+    window.testSwipeNavigation = function() {
+      console.log('🧪 Testing Swipe Navigation...');
+      console.log('📱 Instructions:');
+      console.log('1. On mobile/touch device, try swiping left/right on content');
+      console.log('2. Should trigger prev/next navigation without scrolling vertically');
+      console.log('3. Check console for gesture detection logs');
+
+      // Test swipe navigator if available
+      const app = window.app || window.Application?.instance;
+      if (app && app.readerController && app.readerController.swipePager) {
+        const config = app.readerController.swipePager.getConfig();
+        console.log('⚙️  Swipe Config:', config);
+      } else {
+        console.warn('⚠️  Swipe navigator not initialized yet');
+      }
+    };
+
+    window.testNavigationButtons = function() {
+      console.log('🎯 Testing Navigation Buttons...');
+
+      const navButtons = document.querySelectorAll('.reader-nav__btn[data-action]');
+      console.log('Found navigation buttons:', navButtons.length);
+
+      navButtons.forEach(btn => {
+        const action = btn.dataset.action;
+        const disabled = btn.disabled;
+        console.log(`Button ${action}: ${disabled ? 'DISABLED' : 'ENABLED'}`);
+
+        if (!disabled) {
+          console.log(`  → Clicking ${action} button...`);
+          btn.click();
+        }
+      });
+
+      // Check navigation state
+      const app = window.app || window.Application?.instance;
+      if (app && app.readerController) {
+        console.log('Controller busy state:', app.readerController.busy);
+        if (app.readerController.pagedBook && app.readerController.urlNavigator) {
+          const ctx = app.readerController.urlNavigator.getNavigationContext(app.readerController.pagedBook);
+          console.log('Navigation context:', {
+            chapter: ctx.current.chapter,
+            page: ctx.current.page,
+            hasPrev: ctx.navigation.hasPrevPage,
+            hasNext: ctx.navigation.hasNextPage
+          });
+        }
+      }
+    };
+
+    // Auto-run diagnostics after page load
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        console.log('🎯 Development debugging tools loaded!');
+        console.log('Available commands:');
+        console.log('- debugResourceErrors() - Show all resource errors');
+        console.log('- debugNetworkRequests() - Show all network/XHR requests');
+        console.log('- debugModuleLoading() - Test ES6 module loading');
+        console.log('- debug404Summary() - Summary of 404 errors');
+        console.log('- debugFullReport() - Complete diagnostic report');
+        console.log('- clearDebugData() - Clear all debug data');
+        console.log('- clearCache() - Clear all Service Worker caches');
+        console.log('- checkNavigationInvariants() - Verify navigation system integrity');
+        console.log('- testNavigationButtons() - Test if navigation buttons work');
+        console.log('- testSwipeNavigation() - Test mobile swipe gestures');
+        console.log('- debugEPUBPathResolution() - Test EPUB path resolution fixes');
+        console.log('- debugImageBlobsDB(bookId) - Inspect IndexedDB image blobs');
+        console.log('- diagnoseImageIssues(bookId) - Comprehensive image diagnostics');
+        console.log('- diagnoseImages() - DOM vs IndexedDB comparison (advanced)');
+        console.log('- diagnoseImagesV2() - Advanced DOM creation tracking');
+        console.log('- diagnoseServiceWorker() - Check Service Worker registration');
+        console.log('- testBookImage(bookId, imagePath) - Test Service Worker image serving');
+        console.log('- compareStoragePerformance(bookId, imagePath) - Compare OPFS vs IndexedDB performance');
+        console.log('- _moduleLoadTracker(url) - Track specific module loading');
+
+        // Auto-generate full report if there are errors
+        if (window.resourceErrors.length > 0) {
+          console.warn(`🚨 Found ${window.resourceErrors.length} resource errors!`);
+          console.warn('Run debugFullReport() for complete analysis');
+        }
+
+        // Auto-check for common issues
+        if (window.resourceErrors.length > 0) {
+          console.warn(`🚨 Found ${window.resourceErrors.length} resource errors!`);
+          console.warn('Run debugResourceErrors() for details');
+        }
+      }, 1000);
+    });
+  </script>
+
+  <!-- Vocabulary Migration (auto-run) -->
+  <script type="module">
+    import './assets/js/vocabulary/vocabulary-migration.js';
+  </script>
+
+  <!-- App Bootstrap -->
+  <script type="module">
+    import { Application } from './assets/js/core/Application.js';
+
+    // Initialize app
+    const app = new Application({
+      root: document.getElementById('app-root'),
+      loading: document.getElementById('app-loading'),
+      errorBoundary: document.getElementById('error-boundary'),
+      logLevel: 'info'
+    });
+
+    // Bootstrap
+    app.bootstrap().then(() => {
+    }).catch(error => {
+      console.error('Bootstrap failed:', error);
+      document.getElementById('error-boundary').style.display = 'flex';
+      document.getElementById('error-message').textContent = error.message;
+    });
+
+    // Global error handler
+    window.addEventListener('error', (event) => {
+      app.handleGlobalError(event.error);
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      app.handleGlobalError(event.reason);
+    });
+
+    // Expose for debugging
+    window.app = app;
+  </script>
+</body>
+</html>

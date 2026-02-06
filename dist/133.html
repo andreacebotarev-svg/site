@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Cool Cities: Manchester & Sydney</title>
+<style>
+  /* --- CORE VARIABLES --- */
+  :root {
+    --accent: #F57C00; /* Orange from screenshot */
+    --accent-light: #FFE0B2;
+    --bg-page: #F2F2F2;
+    --bg-card: #FFFFFF;
+    --text-main: #1D1D1F;
+    --text-muted: #666;
+    
+    --manchester-color: #0277BD; /* Blue accent */
+    --sydney-color: #2E7D32;    /* Green accent */
+    
+    --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  /* --- RESET & BASE --- */
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
+  body {
+    font-family: var(--font-main);
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    margin: 0; padding: 0;
+    line-height: 1.6;
+    padding-bottom: 100px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* --- HEADER SECTION --- */
+  header {
+    background: #333;
+    color: white;
+    padding: 20px 0 0;
+    margin-bottom: 30px;
+    border-bottom: 5px solid var(--accent);
+  }
+  .header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  h1.main-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    line-height: 1;
+    padding-bottom: 15px;
+  }
+  h1.main-title span { color: #999; font-weight: 300; }
+  
+  /* Fake Tabs */
+  .tabs { display: flex; gap: 5px; }
+  .tab {
+    background: #555;
+    padding: 8px 20px;
+    border-radius: 10px 10px 0 0;
+    font-size: 0.9rem;
+    color: #aaa;
+    font-weight: 600;
+  }
+  .tab.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  /* --- CITY CARDS LAYOUT --- */
+  .cities-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 700px) {
+    .cities-grid { grid-template-columns: 1fr; }
+  }
+
+  .city-card {
+    background: var(--bg-card);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .city-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .city-header h2 { margin: 0; font-size: 1.6rem; font-weight: 700; }
+  .city-manchester h2 { color: var(--manchester-color); }
+  .city-sydney h2 { color: var(--sydney-color); }
+
+  /* Listen Button */
+  .listen-btn {
+    background: rgba(0,0,0,0.05);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #555;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .listen-btn:hover { background: rgba(0,0,0,0.1); }
+  .listen-btn.playing {
+    background: var(--accent);
+    color: white;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+  .city-content {
+    padding: 25px;
+    font-size: 1.05rem;
+    color: #444;
+  }
+  
+  .author {
+    margin-top: 15px;
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 0.9rem;
+  }
+
+  /* --- INTERACTIVE WORDS --- */
+  .word {
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.1s;
+    padding: 0 1px;
+  }
+  .word:hover {
+    background: rgba(245, 124, 0, 0.15);
+    color: var(--accent);
+  }
+  .word.active {
+    background: var(--accent);
+    color: white;
+  }
+  
+  /* Highlighted keywords from book */
+  .hl-blue {
+    color: var(--manchester-color);
+    font-weight: 600;
+  }
+  .hl-green {
+    color: var(--sydney-color);
+    font-weight: 600;
+  }
+
+  /* --- EXTRA SECTIONS STYLES --- */
+  .section-block {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+    border-left: 6px solid transparent;
+  }
+  
+  .words-block { border-color: #F57C00; }
+  .grammar-block { border-color: #8BC34A; background: #F1F8E9; }
+  .phrases-block { border-color: #EF5350; }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .badge {
+    color: white;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transform: rotate(-2deg);
+  }
+  .badge.orange { background: #F57C00; }
+  .badge.green { background: #8BC34A; }
+  .badge.red { background: #EF5350; }
+
+  .st-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #555;
+    letter-spacing: -0.5px;
+  }
+
+  /* Word Cloud */
+  .word-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .vocab-item {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+    user-select: none;
+  }
+  .vocab-item:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .vocab-item.playing {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  /* Grammar List */
+  .grammar-list li { margin-bottom: 12px; }
+  .grammar-example {
+    display: block;
+    font-style: italic;
+    color: #555;
+    margin-top: 4px;
+    cursor: pointer;
+    border-left: 3px solid #ccc;
+    padding-left: 10px;
+  }
+  .grammar-example:hover { border-color: #8BC34A; color: #33691E; }
+
+  /* Phrases List */
+  .phrase-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: 0.1s;
+  }
+  .phrase-item:last-child { border-bottom: none; }
+  .phrase-item:hover { background: #FFF3E0; }
+  
+  .phrase-num {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #aaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #aaa;
+    border-radius: 4px;
+  }
+  .phrase-text { font-size: 1.05rem; }
+
+  /* --- QUIZ SECTION STYLES --- */
+  .quiz-block {
+    border-color: var(--accent);
+    background: linear-gradient(145deg, #fafafa, #f5f5f5);
+  }
+
+  .section-title .score-display {
+    margin-left: auto;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    background: rgba(245, 124, 0, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .quiz-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .quiz-question {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+  }
+
+  .quiz-question:hover {
+    transform: translateY(-2px);
+  }
+
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+    color: var(--text-main);
+    line-height: 1.4;
+  }
+
+  .answer-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .answer-btn {
+    background: var(--bg-page);
+    border: 2px solid #ddd;
+    border-radius: 14px;
+    padding: 14px 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  .answer-btn:hover:not(:disabled) {
+    background: rgba(245, 124, 0, 0.08);
+    transform: scale(1.03);
+  }
+
+  .answer-btn:disabled {
+    opacity: 0.85;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .answer-btn.correct {
+    background: #4CAF50;
+    border-color: #388E3C;
+    color: white;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+  }
+
+  .answer-btn.incorrect {
+    background: #F44336;
+    border-color: #D32F2F;
+    color: white;
+    animation: shake 0.5s;
+    box-shadow: 0 0 15px rgba(244, 67, 54, 0.5);
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .answer-options {
+      grid-template-columns: 1fr;
+    }
+    
+    .section-title {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .section-title .score-display {
+      margin-left: 0;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  /* Confetti celebration */
+  .confetti-celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    top: -20px;
+    width: var(--confetti-size, 8px);
+    height: var(--confetti-size, 8px);
+    background: #f00;
+    opacity: 0.8;
+    transform: rotate(45deg);
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <h1 class="main-title">COOL CITIES <span>UK & AU</span></h1>
+      <div class="tabs">
+        <div class="tab active">Home</div>
+        <div class="tab">Search</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Two Cities Grid -->
+  <div class="cities-grid">
+    
+    <!-- Manchester Card -->
+    <div class="city-card city-manchester">
+      <div class="city-header">
+        <h2>Manchester</h2>
+        <button class="listen-btn" onclick="readBlock(this)">▶ Listen</button>
+      </div>
+      <div class="city-content interactive-text">
+        <p>I live in Manchester. It's an exciting, multicultural city. I love Manchester because there are a lot of things to do – <span class="hl-blue">clubs</span>, <span class="hl-blue">restaurants</span> and <span class="hl-blue">cafés</span>.</p>
+        <p>There are a lot of beautiful buildings but there are a lot of ugly buildings, too! And there are 50,000 students here so the music scene is brilliant.</p>
+        <p>Manchester has got fantastic shops and department stores. There are also interesting <span class="hl-blue">museums</span> and <span class="hl-blue">art galleries</span>. We've got two great football teams – I'm a Manchester City fan.</p>
+        <p>Manchester has got 135 <span class="hl-blue">parks</span>. We are also near beautiful countryside but the weather is terrible. It's often cold and wet.</p>
+        <div class="author">Mohammed</div>
+      </div>
+    </div>
+
+    <!-- Sydney Card -->
+    <div class="city-card city-sydney">
+      <div class="city-header">
+        <h2>Sydney</h2>
+        <button class="listen-btn" onclick="readBlock(this)">▶ Listen</button>
+      </div>
+      <div class="city-content interactive-text">
+        <p>I'm from Sydney, Australia. It isn't the capital – the capital is Canberra. But it's a big, multicultural city. It has got a population of four million people and 30 percent are from abroad.</p>
+        <p>Sydney has got fantastic weather but it is also polluted. Sydney has got a famous opera house and <span class="hl-green">bridge</span>. There are a lot of things to do. It's got interesting museums and beautiful parks, and exciting restaurants with food from all over the world.</p>
+        <p>There is a lot of traffic. But there are also good buses and an <span class="hl-green">underground railway</span>. I like Sydney because it has got brilliant <span class="hl-green">beaches</span>. I often go surfing. Sometimes we drive to the countryside and visit the Blue Mountains National Park.</p>
+        <div class="author">Sally</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 1. Words 2 Know -->
+  <div class="section-block words-block">
+    <div class="section-title">
+      <span class="badge orange">Words</span>
+      <span class="badge" style="background:#ddd; color:#555; transform:rotate(2deg);">2</span>
+      <span class="st-text" style="color:#F57C00">know</span>
+    </div>
+    <div class="word-cloud">
+      <!-- Автоматически озвучиваются по клику -->
+      <div class="vocab-item" onclick="speak('police station')">police station</div>
+      <div class="vocab-item" onclick="speak('fire station')">fire station</div>
+      <div class="vocab-item" onclick="speak('post office')">post office</div>
+      <div class="vocab-item" onclick="speak('town hall')">town hall</div>
+      <div class="vocab-item" onclick="speak('hospital')">hospital</div>
+      <div class="vocab-item" onclick="speak('cinema')">cinema</div>
+      <div class="vocab-item" onclick="speak('library')">library</div>
+      <div class="vocab-item" onclick="speak('hotel')">hotel</div>
+      <div class="vocab-item" onclick="speak('school')">school</div>
+      <div class="vocab-item" onclick="speak('car park')">car park</div>
+      <div class="vocab-item" onclick="speak('sports centre')">sports centre</div>
+      <div class="vocab-item" onclick="speak('stadium')">stadium</div>
+      <div class="vocab-item" onclick="speak('swimming pool')">swimming pool</div>
+      <div class="vocab-item" onclick="speak('market')">market</div>
+      <div class="vocab-item" onclick="speak('university')">university</div>
+    </div>
+  </div>
+
+  <!-- 2. Grammar 2 Know -->
+  <div class="section-block grammar-block">
+    <div class="section-title">
+      <span class="badge green">Grammar</span>
+      <span class="badge" style="background:#ddd; color:#555; transform:rotate(2deg);">2</span>
+      <span class="st-text" style="color:#33691E">know</span>
+      <span style="margin-left:auto; font-weight:bold; color:#555">much / many / a lot of</span>
+    </div>
+    <div class="grammar-content">
+      <p>Use <strong>much, many</strong> and <strong>a lot of</strong> to talk about quantity.</p>
+      <ul class="grammar-list">
+        <li>
+          Use <strong>many</strong> and <strong>a lot of</strong> with countable nouns.
+          <span class="grammar-example" onclick="speak(this.innerText)">There are a lot of canal boats in Stratford.</span>
+        </li>
+        <li>
+          Use <strong>much</strong> and <strong>a lot of</strong> with uncountable nouns.
+          <span class="grammar-example" onclick="speak(this.innerText)">There's
+	</div>
+  </div>
+
+  <!-- Quiz Section -->
+  <div class="section-block quiz-block">
+    <div class="section-title">
+      <span class="badge orange">⚡</span>
+      <span class="st-text">Knowledge Check</span>
+      <div class="score-display">Correct: <span id="correct-count">0</span>/24</div>
+    </div>
+    
+    <div class="quiz-container">
+      <!-- Manchester vs Sydney Questions -->
+      <div class="quiz-question">
+        <p class="question-text">1. Which city has 50,000 students?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">Manchester</button>
+          <button class="answer-btn" data-correct="false">Sydney</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">2. Where is the famous Opera House?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">Manchester</button>
+          <button class="answer-btn" data-correct="true">Sydney</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">3. Which city has better weather?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">Manchester</button>
+          <button class="answer-btn" data-correct="true">Sydney</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">4. Where does Mohammed live?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">Manchester</button>
+          <button class="answer-btn" data-correct="false">Sydney</button>
+        </div>
+      </div>
+
+      <!-- Grammar Questions (much/many/a lot of/some/any) -->
+      <div class="quiz-question">
+        <p class="question-text">5. I don't have _______ money.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">much</button>
+          <button class="answer-btn" data-correct="true">any</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">6. There are _______ people at the concert.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">a lot of</button>
+          <button class="answer-btn" data-correct="false">much</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">7. Do you have _______ questions?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">much</button>
+          <button class="answer-btn" data-correct="true">any</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">8. I need _______ help with this project.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">many</button>
+          <button class="answer-btn" data-correct="true">some</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">9. There is _______ water in the bottle.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">some</button>
+          <button class="answer-btn" data-correct="false">many</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">10. How _______ books do you have?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">much</button>
+          <button class="answer-btn" data-correct="true">many</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">11. Is there _______ milk left?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">many</button>
+          <button class="answer-btn" data-correct="true">any</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">12. She has _______ friends in the city.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">a lot of</button>
+          <button class="answer-btn" data-correct="false">much</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">13. We don't have _______ time to finish this.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">much</button>
+          <button class="answer-btn" data-correct="false">many</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">14. Can I have _______ coffee?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">many</button>
+          <button class="answer-btn" data-correct="true">some</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">15. There aren't _______ cars in the parking lot.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">much</button>
+          <button class="answer-btn" data-correct="true">many</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">16. Do they have _______ pets?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">much</button>
+          <button class="answer-btn" data-correct="true">any</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">17. There is _______ information on the website.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">a lot of</button>
+          <button class="answer-btn" data-correct="false">many</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">18. I have _______ ideas for the project.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">some</button>
+          <button class="answer-btn" data-correct="false">much</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">19. How _______ sugar do we need?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">much</button>
+          <button class="answer-btn" data-correct="false">many</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">20. Are there _______ problems with the system?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">much</button>
+          <button class="answer-btn" data-correct="true">any</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">21. There are _______ interesting places to visit.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">a lot of</button>
+          <button class="answer-btn" data-correct="false">much</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">22. She doesn't have _______ experience in this field.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="true">much</button>
+          <button class="answer-btn" data-correct="false">many</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">23. Can you give me _______ advice?</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">many</button>
+          <button class="answer-btn" data-correct="true">some</button>
+        </div>
+      </div>
+      
+      <div class="quiz-question">
+        <p class="question-text">24. There aren't _______ shops open today.</p>
+        <div class="answer-options">
+          <button class="answer-btn" data-correct="false">much</button>
+          <button class="answer-btn" data-correct="true">many</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+	<script>
+  // 1. Инициализация: Делаем слова кликабельными
+  document.addEventListener('DOMContentLoaded', () => {
+    const textBlocks = document.querySelectorAll('.interactive-text p');
+    
+    textBlocks.forEach(p => {
+      // Сохраняем HTML теги (например, span с цветом), разбиваем текст
+      // Это сложная задача для простого split, поэтому мы пойдем умным путем:
+      // Мы ищем текстовые узлы и оборачиваем слова в них.
+      
+      wrapTextNodes(p);
+    });
+  });
+
+  function wrapTextNodes(element) {
+    // Рекурсивно проходим по детям
+    Array.from(element.childNodes).forEach(child => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        // Это текст - разбиваем на слова
+        const text = child.textContent;
+        if (!text.trim()) return;
+        
+        // Создаем фрагмент с обернутыми словами
+        const fragment = document.createDocumentFragment();
+        // Разбиваем по пробелам, сохраняя пробелы
+        const tokens = text.split(/(\s+)/); 
+        
+        tokens.forEach(token => {
+          if (!token.trim()) {
+             fragment.appendChild(document.createTextNode(token));
+          } else {
+             // Очищаем слово для озвучки
+             const cleanWord = token.replace(/[^\w']/g, "");
+             if (cleanWord) {
+               const span = document.createElement('span');
+               span.className = 'word';
+               span.textContent = token;
+               span.onclick = (e) => {
+                 e.stopPropagation(); // Чтобы не триггерить родителей
+                 speakWord(span, cleanWord);
+               };
+               fragment.appendChild(span);
+             } else {
+               fragment.appendChild(document.createTextNode(token));
+             }
+          }
+        });
+        
+        element.replaceChild(fragment, child);
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        // Если это span с классом hl-blue, заходим внутрь
+        wrapTextNodes(child);
+      }
+    });
+  }
+
+  // 2. Логика озвучки (Speech Engine)
+  function speak(text, onEnd) {
+    if (!window.speechSynthesis) return;
+    
+    window.speechSynthesis.cancel();
+    
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB'; // Британский акцент
+    u.rate = 0.9;
+    
+    // Пытаемся найти лучший голос
+    const voices = window.speechSynthesis.getVoices();
+    const bestVoice = voices.find(v => v.name.includes('Google UK English Male')) 
+                   || voices.find(v => v.lang.includes('GB'));
+    if (bestVoice) u.voice = bestVoice;
+    
+    u.onend = onEnd;
+    u.onerror = (e) => { console.error(e); if(onEnd) onEnd(); };
+    
+    window.speechSynthesis.speak(u);
+  }
+
+  // Озвучка отдельного слова
+  function speakWord(el, word) {
+    // Сброс активных классов
+    document.querySelectorAll('.word.active').forEach(w => w.classList.remove('active'));
+    el.classList.add('active');
+    
+    speak(word, () => {
+      setTimeout(() => el.classList.remove('active'), 200);
+    });
+  }
+
+  // Озвучка целого блока
+  function readBlock(btn) {
+    // Находим родительскую карточку
+    const card = btn.closest('.city-card');
+    // Собираем весь текст
+    const content = card.querySelector('.city-content');
+    const textToRead = content.innerText; // innerText берет только видимый текст
+
+    if (btn.classList.contains('playing')) {
+      window.speechSynthesis.cancel();
+      btn.classList.remove('playing');
+      btn.innerHTML = '▶ Listen';
+      return;
+    }
+
+    // Сброс других кнопок
+    document.querySelectorAll('.listen-btn').forEach(b => {
+      b.classList.remove('playing');
+      b.innerHTML = '▶ Listen';
+    });
+
+    btn.classList.add('playing');
+    btn.innerHTML = '⏹ Stop';
+    
+    speak(textToRead, () => {
+      btn.classList.remove('playing');
+      btn.innerHTML = '▶ Listen';
+    });
+  }
+
+  // Fix for Chrome loading voices
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+
+  // ===== QUIZ LOGIC =====
+  document.addEventListener('DOMContentLoaded', () => {
+    const quizQuestions = document.querySelectorAll('.quiz-question');
+    const correctCountElement = document.getElementById('correct-count');
+    let correctAnswers = 0;
+    
+    quizQuestions.forEach(question => {
+      const buttons = question.querySelectorAll('.answer-btn');
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Disable all buttons for this question
+          buttons.forEach(btn => btn.disabled = true);
+          
+          // Check if answer is correct
+          const isCorrect = button.getAttribute('data-correct') === 'true';
+          
+          // Apply visual feedback
+          if (isCorrect) {
+            button.classList.add('correct');
+            correctAnswers++;
+            updateScore();
+          } else {
+            button.classList.add('incorrect');
+            // Highlight correct answer
+            buttons.forEach(btn => {
+              if (btn.getAttribute('data-correct') === 'true') {
+                btn.classList.add('correct');
+              }
+            });
+          }
+        });
+      });
+    });
+    
+    function updateScore() {
+      correctCountElement.textContent = correctAnswers;
+      
+      // Special effect when all questions answered
+      if (correctAnswers === quizQuestions.length) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti-celebration';
+          document.body.appendChild(confetti);
+          
+          // Simple confetti animation
+          let count = 15;
+          const colors = ['#F57C00', '#0277BD', '#2E7D32', '#EF5350'];
+          
+          while (count--) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.left = Math.random() * 100 + 'vw';
+            piece.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            confetti.appendChild(piece);
+          }
+          
+          setTimeout(() => {
+            document.body.removeChild(confetti);
+          }, 5000);
+        }, 500);
+      }
+    }
+  });
+
+  // Add to existing CSS variables (optional enhancement)
+  document.documentElement.style.setProperty('--confetti-size', '8px');
+</script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+/* ============================================================
+   COMPONENTS LIBRARY
+   Buttons, Cards, Progress Bars, Game UI Elements
+   ============================================================ */
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Primary Button */
+.btn-primary {
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.8), rgba(79, 140, 255, 0.6));
+  color: #fff;
+  border: 1px solid rgba(79, 140, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgba(79, 140, 255, 1), rgba(79, 140, 255, 0.8));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79, 140, 255, 0.5);
+}
+
+/* Success Button */
+.btn-success {
+  background: linear-gradient(135deg, rgba(50, 212, 137, 0.8), rgba(50, 212, 137, 0.6));
+  color: #fff;
+  border: 1px solid rgba(50, 212, 137, 0.4);
+  box-shadow: 0 4px 16px rgba(50, 212, 137, 0.3);
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, rgba(50, 212, 137, 1), rgba(50, 212, 137, 0.8));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(50, 212, 137, 0.5);
+}
+
+/* Danger Button */
+.btn-danger {
+  background: linear-gradient(135deg, rgba(255, 79, 106, 0.8), rgba(255, 79, 106, 0.6));
+  color: #fff;
+  border: 1px solid rgba(255, 79, 106, 0.4);
+  box-shadow: 0 4px 16px rgba(255, 79, 106, 0.3);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, rgba(255, 79, 106, 1), rgba(255, 79, 106, 0.8));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 79, 106, 0.5);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: rgba(20, 27, 60, 0.8);
+  color: var(--text-soft);
+  border: 1px solid rgba(138, 150, 197, 0.6);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  background: rgba(30, 37, 75, 0.9);
+  color: #fff;
+  border-color: rgba(138, 150, 197, 0.8);
+}
+
+/* Icon Button */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 1.2rem;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(79, 140, 255, 0.2);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-lg),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(79, 140, 255, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.card:hover::before {
+  left: 100%;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(79, 140, 255, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
+              0 0 20px rgba(79, 140, 255, 0.3);
+}
+
+/* Trainer Card (for hub page) */
+.trainer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  text-align: center;
+  padding: var(--space-xl);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.trainer-card .emoji {
+  font-size: 3rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.trainer-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: var(--space-xs);
+}
+
+.trainer-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   PROGRESS & STATS
+   ============================================================ */
+
+/* Progress Bar */
+.progress {
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-success));
+  border-radius: var(--radius-full);
+  transition: width var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Streak Counter */
+.streak {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 6px 12px;
+  background: rgba(255, 165, 77, 0.2);
+  border: 1px solid rgba(255, 165, 77, 0.5);
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-warning);
+  animation: glow 2s ease-in-out infinite;
+}
+
+.streak.hidden {
+  display: none;
+}
+
+/* Lives Counter */
+.lives {
+  display: flex;
+  gap: var(--space-xs);
+  font-size: 1.5rem;
+}
+
+.lives .heart {
+  transition: all var(--transition-fast);
+}
+
+.lives .heart.lost {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+/* Score Display */
+.score {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 16px;
+  background: rgba(79, 140, 255, 0.15);
+  border: 1px solid rgba(79, 140, 255, 0.4);
+  border-radius: var(--radius-full);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ============================================================
+   GAME UI
+   ============================================================ */
+
+/* Question Card */
+.question {
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.4;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.question .blank {
+  display: inline-block;
+  min-width: 100px;
+  padding: 4px 16px;
+  margin: 0 8px;
+  border-bottom: 3px dashed rgba(79, 140, 255, 0.5);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Answer Options */
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+}
+
+.option {
+  padding: 16px 24px;
+  background: rgba(10, 15, 35, 0.7);
+  border: 2px solid rgba(138, 150, 197, 0.4);
+  border-radius: var(--radius-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(79, 140, 255, 0.15), transparent);
+  transition: left 0.5s;
+}
+
+/* --- PATCH START: VIBRANT HOVER EFFECT --- */
+.option:hover {
+  background: linear-gradient(135deg, #4f8cff 0%, #4458be 100%); /* Bright accent gradient */
+  border-color: #7aaaff;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(79, 140, 255, 0.4);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+/* --- PATCH END --- */
+
+.option:hover::before {
+  left: 100%;
+}
+
+.option.correct {
+  background: rgba(50, 212, 137, 0.2);
+  border-color: var(--accent-success);
+  color: var(--accent-success);
+  animation: correctPulse 0.6s ease-out;
+}
+
+@keyframes correctPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.option.wrong {
+  background: rgba(255, 79, 106, 0.2);
+  border-color: var(--accent-danger);
+  color: var(--accent-danger);
+  animation: wrongShake 0.5s ease-out;
+}
+
+@keyframes wrongShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.option:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Feedback Message */
+.feedback {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  animation: slideIn 0.3s ease-out;
+}
+
+.feedback.correct {
+  background: rgba(50, 212, 137, 0.15);
+  border: 1px solid rgba(50, 212, 137, 0.5);
+  color: var(--accent-success);
+}
+
+.feedback.wrong {
+  background: rgba(255, 79, 106, 0.15);
+  border: 1px solid rgba(255, 79, 106, 0.5);
+  color: var(--accent-danger);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .question {
+    font-size: 1.2rem;
+    padding: var(--space-lg);
+  }
+  
+  .options {
+    grid-template-columns: 1fr;
+  }
+  
+  .trainer-card .emoji {
+    font-size: 2.5rem;
+  }
+}

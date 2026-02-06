@@ -1,0 +1,40 @@
+{
+  "id": 8,
+  "title": "Урок 8: Согласные J, W",
+  "emoji": "🍯",
+  "rule": "J[dʒ] и W[w] - новые звуки",
+  "description": "Изучаем буквы J и W",
+  "phonemesSet": ["j", "a", "m", "u", "p", "w", "i", "n", "d", "s"],
+  "wordCount": 4,
+  "estimatedTime": 6,
+  "words": [
+    {
+      "word": "jam",
+      "phonemes": ["j", "a", "m"],
+      "translation": "джем, варенье",
+      "transcription": "[dʒæm]",
+      "emoji": "🍯"
+    },
+    {
+      "word": "jump",
+      "phonemes": ["j", "u", "m", "p"],
+      "translation": "прыгать",
+      "transcription": "[dʒʌmp]",
+      "emoji": "🦘"
+    },
+    {
+      "word": "wind",
+      "phonemes": ["w", "i", "n", "d"],
+      "translation": "ветер",
+      "transcription": "[wɪnd]",
+      "emoji": "💨"
+    },
+    {
+      "word": "swim",
+      "phonemes": ["s", "w", "i", "m"],
+      "translation": "плавать",
+      "transcription": "[swɪm]",
+      "emoji": "🏊"
+    }
+  ]
+}

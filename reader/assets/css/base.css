@@ -1,0 +1,290 @@
+:root {
+  /* Apple-inspired spacing system */
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-3: 4px;
+  --space-4: 6px;
+  --space-5: 8px;
+  --space-6: 10px;
+  --space-7: 12px;
+  --space-8: 16px;
+  --space-9: 20px;
+  --space-10: 24px;
+  --space-11: 32px;
+  --space-12: 40px;
+  --space-13: 48px;
+
+  /* Modern glassmorphism color palette */
+  --glass-bg-primary: rgba(255, 255, 255, 0.25);
+  --glass-bg-secondary: rgba(255, 255, 255, 0.15);
+  --glass-bg-tertiary: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  /* Gradient backgrounds */
+  --hero-gradient: linear-gradient(135deg,
+    rgba(138, 43, 226, 0.1) 0%,   /* Purple */
+    rgba(30, 144, 255, 0.1) 25%,  /* Blue */
+    rgba(0, 255, 128, 0.1) 50%,   /* Green */
+    rgba(255, 165, 0, 0.1) 75%,   /* Orange */
+    rgba(255, 20, 147, 0.1) 100%  /* Pink */
+  );
+
+  /* Accent colors */
+  --accent-primary: #8a2be2;    /* Blue Violet */
+  --accent-secondary: #1e90ff;  /* Dodger Blue */
+  --accent-tertiary: #00ff80;   /* Spring Green */
+
+  /* Legacy Apple colors (for compatibility) */
+  --apple-blue: #007AFF;
+  --apple-green: #34C759;
+  --apple-red: #FF3B30;
+  --apple-orange: #FF9500;
+  --apple-yellow: #FFCC00;
+  --apple-purple: #AF52DE;
+  --apple-teal: #30D158;
+  --apple-pink: #FF2D55;
+
+  /* System colors */
+  --primary-color: var(--apple-blue);
+  --accent-color: var(--apple-green);
+  --danger-color: var(--apple-red);
+  --warning-color: var(--apple-orange);
+  --success-color: var(--apple-green);
+
+  /* Background hierarchy - Eye comfort optimized */
+  --bg-primary: #FAFAFA;      /* Scientific reading background (#fafafa) */
+  --bg-secondary: #F5F5F7;    /* Slightly warmer secondary */
+  --bg-tertiary: #F0F0F2;     /* Tertiary for cards */
+  --bg-quaternary: #FFFFFF;  /* Pure white for accents */
+
+  /* Surface colors - Optimized for reading */
+  --card-bg: #FFFFFF;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+
+  /* Border system - Subtle for eye comfort */
+  --border-color: #E5E5EA;
+  --border-color-secondary: #F0F0F2;
+  --separator-color: #E5E5EA;
+
+  /* Text hierarchy - Scientifically optimized for eye comfort */
+  --text-primary: #2C2C2C;      /* Dark gray (#2c2c2c) for ~7:1 contrast */
+  --text-secondary: #5A5A5F;    /* Medium gray for secondary text */
+  --text-tertiary: #7C7C80;     /* Light gray for tertiary text */
+  --text-quaternary: #9B9B9F;   /* Very light gray for quaternary */
+  --text-placeholder: #C7C7CC;  /* Placeholder text */
+
+  /* Typography - SF Pro inspired */
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+
+  /* Serif fonts for reading */
+  --font-serif-georgia: 'Georgia', 'Times New Roman', serif;
+  --font-serif-times: 'Times New Roman', serif;
+  --font-serif-garamond: 'Garamond', 'Hoefler Text', serif;
+  --font-serif-baskerville: 'Baskerville', serif;
+  --font-serif-crimson: 'Crimson Text', serif;
+
+  /* Sans-serif fonts for reading */
+  --font-sans-arial: Arial, Helvetica, sans-serif;
+  --font-sans-verdana: Verdana, sans-serif;
+  --font-sans-tahoma: Tahoma, sans-serif;
+  --font-sans-helvetica: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Monospace fonts */
+  --font-mono-courier: 'Courier New', Courier, monospace;
+  --font-mono-consolas: Consolas, Monaco, monospace;
+  --font-mono-menlo: 'Menlo', Monaco, monospace;
+
+  /* Default serif for reading */
+  --font-serif: var(--font-serif-georgia);
+
+  /* Dynamic font selection based on settings */
+  --selected-font: var(--font-serif-georgia); /* Will be overridden by JS */
+
+  --fs-large-title: 34px;
+  --fs-title-1: 28px;
+  --fs-title-2: 22px;
+  --fs-title-3: 20px;
+  --fs-headline: 17px;
+  --fs-body: 17px;
+  --fs-callout: 16px;
+  --fs-subhead: 15px;
+  --fs-footnote: 13px;
+  --fs-caption-1: 12px;
+  --fs-caption-2: 11px;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.6;
+
+  /* Layout */
+  --max-width-xs: 375px;
+  --max-width-sm: 640px;
+  --max-width-md: 768px;
+  --max-width-lg: 1024px;
+  --max-width-xl: 1280px;
+  --max-width-2xl: 1536px;
+
+  /* Reader specific - Scientifically optimized for reading performance */
+  --reader-max-width: 42rem;     /* 672px - Optimal reading width */
+  --reader-font-size: 18px;      /* Base reading font size */
+  --reader-line-height: 1.65;    /* Scientifically proven optimal line height */
+  --reader-letter-spacing: 0.01em; /* Subtle letter spacing for readability */
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+
+  /* Settings-controlled variables */
+  --app-bg-color: var(--bg-primary);
+  --app-text-color: var(--text-primary);
+
+  /* Compatibility aliases (used by simplified flashcards) */
+  --background-primary: var(--card-bg);
+  --background-secondary: var(--bg-secondary);
+  --success-light: #e8f5e8;
+  --success-dark: #2d5a2d;
+
+  --settings-font-size: var(--reader-font-size);
+  --settings-line-height: var(--reader-line-height);
+
+  /* Eye comfort variables - Blue light filter integration */
+  --blue-light-filter-intensity: 0; /* 0-1, controlled by system preference */
+  --reading-temperature: 6500;     /* Color temperature in Kelvin */
+  --eye-strain-reduction: 0.1;     /* Subtle background warmth */
+
+  /* Animations - Apple-like spring curves */
+  --ms-duration-fast: 150ms;
+  --ms-duration-normal: 300ms;
+  --ms-duration-slow: 500ms;
+
+  --curve-spring: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --curve-spring-fast: cubic-bezier(0.16, 1, 0.3, 1);
+  --curve-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --curve-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Focus and interaction */
+  --focus-ring: 0 0 0 3px rgba(0, 122, 255, 0.12);
+  --focus-ring-error: 0 0 0 3px rgba(255, 59, 48, 0.12);
+
+  /* Elevation system */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Eye comfort themes - Blue light reduction */
+[data-eye-comfort="warm"] {
+  --blue-light-filter-intensity: 0.15;
+  --bg-primary: #fdfbf7;    /* Warmer background */
+  --text-primary: #2a2a2a;  /* Slightly adjusted text */
+}
+
+[data-eye-comfort="evening"] {
+  --blue-light-filter-intensity: 0.3;
+  --bg-primary: #faf7f0;    /* Evening warm tone */
+  --text-primary: #292929;
+  --reading-temperature: 4000; /* Warm white */
+}
+
+/* Theme variations - controlled by settings */
+[data-theme="sepia"] {
+  --app-bg-color: #f4ecd8;
+  --app-text-color: #5b4636;
+  --bg-primary: #f4ecd8;
+  --bg-secondary: #ede3c8;
+  --bg-tertiary: #e6dab9;
+  --bg-quaternary: #dfd1aa;
+
+  --card-bg: #ede3c8;
+  --card-shadow: 0 1px 3px rgba(91, 70, 54, 0.08), 0 1px 2px rgba(91, 70, 54, 0.04);
+  --card-shadow-hover: 0 4px 12px rgba(91, 70, 54, 0.12), 0 2px 4px rgba(91, 70, 54, 0.08);
+
+  --border-color: #c4b69a;
+  --border-color-secondary: #d4c6aa;
+  --separator-color: #c4b69a;
+
+  --text-primary: #5b4636;
+  --text-secondary: #7a6a51;
+  --text-tertiary: #9a8a6d;
+  --text-quaternary: #b8a889;
+  --text-placeholder: #d4c6aa;
+}
+
+[data-theme="dark"] {
+  --app-bg-color: #0a0a0a;
+  --app-text-color: #f0f0f0;
+  --bg-primary: #000000;
+  --bg-secondary: #1C1C1E;
+  --bg-tertiary: #2C2C2E;
+
+  /* Compatibility aliases (used by simplified flashcards) */
+  --background-primary: var(--bg-tertiary);
+  --background-secondary: var(--bg-secondary);
+  --success-light: #1c3a1c;
+  --success-dark: #7fd87f;
+
+  /* Dark glassmorphism */
+  --glass-bg-primary: rgba(28, 28, 30, 0.25);
+  --glass-bg-secondary: rgba(44, 44, 46, 0.15);
+  --glass-bg-tertiary: rgba(58, 58, 60, 0.1);
+  --glass-border: rgba(142, 142, 147, 0.3);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Dark gradient */
+  --hero-gradient: linear-gradient(135deg,
+    rgba(138, 43, 226, 0.15) 0%,
+    rgba(30, 144, 255, 0.15) 25%,
+    rgba(0, 255, 128, 0.15) 50%,
+    rgba(255, 165, 0, 0.15) 75%,
+    rgba(255, 20, 147, 0.15) 100%
+  );
+  --bg-quaternary: #3A3A3C;
+
+  --card-bg: #1C1C1E;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.12);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.32), 0 2px 4px rgba(0, 0, 0, 0.24);
+
+  --border-color: #38383A;
+  --border-color-secondary: #48484A;
+  --separator-color: #38383A;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #EBEBF5;
+  --text-tertiary: #EBEBF5;
+  --text-quaternary: #8E8E93;
+  --text-placeholder: #48484A;
+}
+
+[data-theme="navy"] {
+  --app-bg-color: #0f1419;
+  --app-text-color: #e6f3ff;
+  --bg-primary: #0f1419;
+  --bg-secondary: #1a2332;
+  --bg-tertiary: #253040;
+  --bg-quaternary: #30404d;
+
+  --card-bg: #1a2332;
+  --card-shadow: 0 1px 3px rgba(0, 21, 41, 0.24), 0 1px 2px rgba(0, 21, 41, 0.12);
+  --card-shadow-hover: 0 4px 12px rgba(0, 21, 41, 0.32), 0 2px 4px rgba(0, 21, 41, 0.24);
+
+  --border-color: #2a3a4a;
+  --border-color-secondary: #344556;
+  --separator-color: #2a3a4a;
+
+  --text-primary: #e6f3ff;
+  --text-secondary: #b8d4f0;
+  --text-tertiary: #8ab0d8;
+  --text-quaternary: #5c8cc0;
+  --text-placeholder: #344556;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  background-color: var(--app-bg-color);
+  color: var(--app-text-color);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}

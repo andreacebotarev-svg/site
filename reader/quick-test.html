@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quick Reader Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .interactive-word { color: blue; cursor: pointer; padding: 2px; }
+        .interactive-word:hover { background: rgba(0,0,255,0.1); }
+        .reading-paragraph { margin-bottom: 16px; line-height: 1.6; }
+        .fact-box { margin: 16px 0; padding: 12px; background: #e3f2fd; border-left: 3px solid #2196f3; border-radius: 4px; }
+        .card-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 16px; }
+        .reading-controls { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 12px; background: white; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Reader: Lesson Renderer Approach - Quick Test</h1>
+
+    <div id="content">
+        <!-- Content will be rendered here -->
+    </div>
+
+    <script>
+        // Simple test of the new rendering approach
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function makeWordsInteractive(text) {
+            const wordRegex = /\b([a-zA-Z]+(?:'[a-zA-Z]+)?)\b/g;
+
+            return text.replace(wordRegex, (match, word) => {
+                if (word.length <= 2) {
+                    return escapeHtml(match);
+                }
+
+                return `<span class="interactive-word" onclick="alert('Word: ${word}')">${escapeHtml(match)}</span>`;
+            });
+        }
+
+        function renderReadingContent(content) {
+            const reading = content.content?.reading;
+
+            if (!reading || !Array.isArray(reading)) {
+                return '<p>No content available</p>';
+            }
+
+            const allText = reading.map(para => para.text).join(' ');
+            const wordCount = allText.split(/\s+/).length;
+
+            const processedParagraphs = reading.map((para, index) => {
+                let paraHTML = '';
+
+                if (para.type === 'list') {
+                    const items = para.text.split('\n').filter(line => line.trim());
+                    paraHTML = `<ul>${items.map(item => `<li>${makeWordsInteractive(item)}</li>`).join('')}</ul>`;
+                } else if (para.type === 'fact') {
+                    paraHTML = `
+                        <div class="fact-box">
+                            ${para.title ? `<div style="font-weight: bold; color: #2196f3; margin-bottom: 8px;">${escapeHtml(para.title)}</div>` : ''}
+                            <p style="margin: 0;">${makeWordsInteractive(para.text)}</p>
+                        </div>
+                    `;
+                } else {
+                    paraHTML = `
+                        ${para.title ? `<h3>${escapeHtml(para.title)}</h3>` : ''}
+                        <p class="reading-paragraph">${makeWordsInteractive(para.text)}</p>
+                    `;
+                }
+
+                return paraHTML;
+            }).join('');
+
+            return `
+                <div class="card-title">📖 Reading</div>
+                <div class="reading-controls">
+                    <div><button onclick="alert('Audio not implemented')">🔊 Play audio</button></div>
+                    <div>${wordCount} words</div>
+                </div>
+                <div>${processedParagraphs}</div>
+            `;
+        }
+
+        // Test data
+        const testContent = {
+            content: {
+                reading: [
+                    {
+                        text: "Welcome to the new reader approach. This paragraph demonstrates interactive words.",
+                        type: "regular"
+                    },
+                    {
+                        text: "English has over 170,000 words in current use!",
+                        type: "fact",
+                        title: "Fun Fact"
+                    },
+                    {
+                        text: "- Click on any word\n- See interactive behavior\n- Test different content types",
+                        type: "list"
+                    }
+                ]
+            }
+        };
+
+        // Render content
+        document.getElementById('content').innerHTML = renderReadingContent(testContent);
+
+        console.log('Quick test loaded. Click on blue words!');
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Интерактивный тренажер неправильных глаголов английского языка. 100+ глаголов, 10 паттернов, 3 режима обучения.">
+  <meta name="keywords" content="irregular verbs, неправильные глаголы, английский, тренажер, обучение">
+  <title>Неправильные глаголы | English Trainers</title>
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/effects.css">
+  <link rel="stylesheet" href="assets/css/irregular-verbs.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  
+  <style>
+    /* Critical CSS for fast first paint */
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    .loading-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .loading-icon {
+      font-size: 4rem;
+      animation: bounce 1s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    
+    .loading-text {
+      font-size: 1.25rem;
+      margin-top: 1rem;
+      opacity: 0.9;
+    }
+    
+    .loading-dots::after {
+      content: '';
+      animation: dots 1.5s infinite;
+    }
+    
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+  </style>
+  <script src="../assets/js/analytics.js"></script>
+</head>
+<body>
+  <!-- App Container -->
+  <div id="app" class="iv-container">
+    <!-- Loading Screen (replaced by JS) -->
+    <div class="loading-screen">
+      <div class="loading-icon">🎯</div>
+      <div class="loading-text">Загрузка тренажера<span class="loading-dots"></span></div>
+    </div>
+  </div>
+  
+  <!-- Back to Hub Link -->
+  <a href="index.html" class="back-to-hub" title="Назад к тренажерам" style="
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  ">
+    ←
+  </a>
+  
+  <!-- Effects System -->
+  <script src="assets/js/effects/AuroraEffect.js"></script>
+  <script src="assets/js/effects/AudioEffectsManager.js"></script>
+  <script src="assets/js/effects/HapticFeedback.js"></script>
+  <script src="assets/js/effects/EffectsManager.js"></script>
+  
+  <!-- Main Module (ES6) -->
+  <script type="module">
+    import { IrregularVerbsTrainer } from './assets/js/modules/irregular-verbs.js';
+    
+    // Initialize trainer when DOM is ready
+    document.addEventListener('DOMContentLoaded', async () => {
+      const container = document.getElementById('app');
+      
+      // Create trainer instance
+      const trainer = new IrregularVerbsTrainer(container, {
+        mode: 'hybrid' // Default: progressive hybrid mode
+      });
+      
+      // Initialize (includes audio loading)
+      await trainer.init();
+      
+      // Expose to window for debugging
+      window.trainer = trainer;
+      
+      console.log('🎯 Irregular Verbs Trainer initialized with audio');
+    });
+  </script>
+  
+  <!-- Fallback for non-module browsers -->
+  <script nomodule>
+    document.getElementById('app').innerHTML = `
+      <div class="loading-screen">
+        <div class="loading-icon">⚠️</div>
+        <div class="loading-text">
+          Ваш браузер не поддерживает современные функции.<br>
+          Пожалуйста, обновите браузер или используйте Chrome/Firefox/Safari.
+        </div>
+      </div>
+    `;
+  </script>
+  
+  <!-- Analytics (optional) -->
+  <script>
+    // Track trainer usage
+    if (typeof gtag === 'function') {
+      gtag('event', 'page_view', {
+        page_title: 'Irregular Verbs Trainer',
+        page_location: window.location.href
+      });
+    }
+  </script>
+</body>
+</html>

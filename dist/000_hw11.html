@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Tenses Quiz</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #eef2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .quiz-wrapper {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .question-card {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .question-text {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+        .btn-nav {
+            background-color: #95a5a6;
+            color: white;
+        }
+        .btn-nav:hover { background-color: #7f8c8d; }
+        .btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .btn-check {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .progress {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #95a5a6;
+        }
+        
+        /* Feedback styles */
+        .correct-text { color: #27ae60; font-weight: bold; font-size: 14px; margin-left: 25px; }
+        .incorrect-text { color: #c0392b; font-weight: bold; font-size: 14px; margin-left: 25px; }
+        
+        .error-message {
+            color: red;
+            text-align: center;
+            padding: 20px;
+            border: 2px dashed red;
+            background: #fff0f0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-wrapper">
+        <!-- Ошибка загрузки банка -->
+        <div id="load-error" class="error-message">
+            <strong>Ошибка!</strong> Не найден файл de>tenses.js</code>.<br>
+            Убедитесь, что файлы de>000.11.html</code> и de>tenses.js</code> лежат в одной папке.
+        </div>
+
+        <div id="quiz-content">
+            <h1>Grammar Practice</h1>
+            <div class="subtitle">Present Simple • Continuous • Perfect</div>
+
+            <div id="questions-container">
+                <!-- Вопросы (по 3 штуки) появятся здесь -->
+            </div>
+
+            <div class="nav-buttons">
+                <button id="prev-btn" class="btn-nav" onclick="changePage(-1)">Назад</button>
+                <div id="action-area">
+                    <button id="check-btn" class="btn-check" onclick="checkCurrentPage()">Проверить страницу</button>
+                </div>
+                <button id="next-btn" class="btn-nav" onclick="changePage(1)">Далее</button>
+            </div>
+
+            <div class="progress" id="page-indicator"></div>
+        </div>
+    </div>
+
+    <!-- Подключаем Банк Вопросов -->
+    <script src="tenses.js" onerror="document.getElementById('load-error').style.display='block'; document.getElementById('quiz-content').style.display='none';"></script>
+
+    <script>
+        // Конфигурация
+        const ITEMS_PER_PAGE = 3;
+        let currentPage = 0;
+        let userAnswers = {}; // Хранит ответы пользователя { 0: "answer", 1: "answer"... }
+        let checkedPages = {}; // Хранит информацию, проверена ли страница { 0: true, ... }
+
+        function initQuiz() {
+            if (typeof quizData === 'undefined') return; // Остановить, если файл не загрузился
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            const start = currentPage * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageQuestions = quizData.slice(start, end);
+            const isPageChecked = checkedPages[currentPage];
+
+            pageQuestions.forEach((item, index) => {
+                const globalIndex = start + index;
+                
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                
+                // Текст вопроса
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerHTML = `${globalIndex + 1}. ${item.q}`;
+                card.appendChild(qText);
+
+                // Варианты ответов
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+
+                item.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `q_${globalIndex}`;
+                    input.value = opt;
+                    
+                    // Восстанавливаем выбор пользователя
+                    if (userAnswers[globalIndex] === opt) {
+                        input.checked = true;
+                    }
+                    
+                    // Если страница проверена, блокируем радиокнопки
+                    if (isPageChecked) {
+                        input.disabled = true;
+                    }
+
+                    // Сохраняем ответ при клике (если еще не проверено)
+                    input.onclick = () => {
+                        if (!isPageChecked) {
+                            userAnswers[globalIndex] = opt;
+                            // Скрываем старый результат, если пользователь передумал (хотя кнопки заблокированы после проверки)
+                        }
+                    };
+
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(opt));
+                    optionsDiv.appendChild(label);
+                });
+                card.appendChild(optionsDiv);
+
+                // Если страница уже была проверена, сразу показываем результат
+                if (isPageChecked) {
+                    const feedback = document.createElement('div');
+                    if (userAnswers[globalIndex] === item.answer) {
+                        feedback.className = 'correct-text';
+                        feedback.innerHTML = '✓ Верно';
+                    } else {
+                        feedback.className = 'incorrect-text';
+                        feedback.innerHTML = `✗ Ошибка. Правильно: ${item.answer}`;
+                    }
+                    card.appendChild(feedback);
+                }
+
+                container.appendChild(card);
+            });
+
+            updateControls(start, end);
+        }
+
+        function updateControls(start, end) {
+            const totalPages = Math.ceil(quizData.length / ITEMS_PER_PAGE);
+            
+            document.getElementById('prev-btn').disabled = currentPage === 0;
+            
+            const nextBtn = document.getElementById('next-btn');
+            if (currentPage === totalPages - 1) {
+                nextBtn.style.display = 'none'; // Скрываем "Далее" на последней странице
+            } else {
+                nextBtn.style.display = 'block';
+                nextBtn.disabled = false;
+            }
+
+            document.getElementById('page-indicator').textContent = 
+                `Страница ${currentPage + 1} из ${totalPages} (Вопросы ${start + 1}-${Math.min(end, quizData.length)})`;
+
+            // Кнопка проверки
+            const checkBtn = document.getElementById('check-btn');
+            if (checkedPages[currentPage]) {
+                checkBtn.style.display = 'none'; // Скрыть, если уже проверено
+            } else {
+                checkBtn.style.display = 'inline-block';
+            }
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            renderPage();
+            window.scrollTo(0, 0);
+        }
+
+        function checkCurrentPage() {
+            const start = currentPage * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            let allAnswered = true;
+
+            // Проверка: ответил ли пользователь на все вопросы на странице?
+            for (let i = start; i < end && i < quizData.length; i++) {
+                if (!userAnswers[i]) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (!allAnswered) {
+                alert("Пожалуйста, ответьте на все вопросы на странице перед проверкой.");
+                return;
+            }
+
+            // Помечаем страницу как проверенную
+            checkedPages[currentPage] = true;
+            renderPage(); // Перерисовываем, чтобы показать цвета и галочки
+        }
+
+        // Запуск после загрузки страницы и скрипта tenses.js
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

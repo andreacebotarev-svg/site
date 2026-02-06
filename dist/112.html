@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta name="referrer" content="no-referrer">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>It's My Life: Interactive Lesson</title>
+    <style>
+        :root {
+            /* Цвета из "Charlie's Life" перенесены в стиль "paste.txt" */
+            --primary-orange: #D95D39;   /* Оранжевый из заголовка */
+            --accent-blue: #2196F3;      /* Яркий синий для акцентов */
+            --vocab-green: #8DB600;      /* Зеленый из вокабуляра */
+            --bg-beige: #FDFBF7;         /* Цвет "бумаги" */
+            --text-dark: #2C3E50;
+            --text-light: #666666;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --success-green: #4CAF50;
+            --error-red: #F44336;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-beige);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- HEADER STYLE (как в примере) --- */
+        header {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            border-left: 6px solid var(--primary-orange);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-text h1 {
+            font-size: 2rem;
+            color: var(--primary-orange);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 900;
+        }
+
+        .header-text p { color: var(--text-light); font-size: 1.1rem; }
+
+        .header-badge {
+            background: var(--accent-blue);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 5px;
+            scrollbar-width: none;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 20px;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover { background: #f5f5f5; transform: translateY(-2px); }
+
+        .nav-tab.active {
+            background: var(--primary-orange);
+            color: white;
+            box-shadow: 0 4px 10px rgba(217, 93, 57, 0.3);
+        }
+
+        /* --- CONTENT AREA --- */
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            animation: fadeIn 0.4s ease-out;
+            min-height: 400px;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2.section-title {
+            color: var(--text-dark);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2.section-title span { color: var(--accent-blue); }
+
+        /* --- READING LAYOUT --- */
+        .story-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Текст слева, Факты справа */
+            gap: 30px;
+        }
+
+        .story-text p {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        /* Интерактивные слова */
+        .highlight {
+            background-color: #E3F2FD;
+            border-bottom: 2px solid var(--accent-blue);
+            cursor: pointer;
+            padding: 0 2px;
+            transition: background 0.2s;
+            font-weight: 500;
+            position: relative;
+        }
+        .highlight:hover { background-color: #BBDEFB; }
+        
+        /* Tooltip (всплывающий перевод) */
+        .highlight::after {
+            content: attr(data-trans);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 100;
+        }
+        .highlight:hover::after { opacity: 1; }
+
+        /* Боковая карточка */
+        .character-card {
+            background: #FFF3E0; /* Светло-оранжевый */
+            border: 1px solid #FFE0B2;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .character-card h3 { color: var(--primary-orange); margin-bottom: 10px; }
+        
+        /* True/False Check */
+        .check-box {
+            margin-top: 40px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid #eee;
+        }
+        .check-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .check-options { display: flex; gap: 10px; }
+        .check-btn {
+            padding: 6px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .check-btn:hover { background: #f5f5f5; }
+        .check-btn.selected-true { background: #E8F5E9; border-color: #4CAF50; color: #2E7D32; }
+        .check-btn.selected-false { background: #FFEBEE; border-color: #F44336; color: #C62828; }
+
+        @media(max-width: 768px) {
+            .story-grid { grid-template-columns: 1fr; }
+            .nav-tab { min-width: 100px; padding: 10px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="header-text">
+            <h1>It's My Life</h1>
+            <p>Unit 1: My things, family & friends</p>
+        </div>
+        <div class="header-badge">Level: Elementary</div>
+    </header>
+
+    <!-- Navigation -->
+    <div class="nav-container">
+        <button class="nav-tab active" data-tab="reading">📖 Reading</button>
+        <button class="nav-tab" data-tab="vocabulary">📚 Vocabulary</button>
+        <button class="nav-tab" data-tab="grammar">✏️ Grammar</button>
+        <button class="nav-tab" data-tab="quiz">⚡ Practice</button>
+    </div>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper">
+        
+        <!-- READING TAB -->
+        <div id="reading" class="tab-content active">
+            <h2 class="section-title">Charlie's Blog: <span>My Best Friend</span></h2>
+            
+            <div class="story-grid">
+                <!-- Main Text -->
+                <div class="story-text">
+                    <p>
+                        I've got a lot of <span class="highlight" data-trans="хороших друзей" onclick="speak('good friends')">good friends</span>. This is a photo of my <span class="highlight" data-trans="лучший друг" onclick="speak('best friend')">best friend</span>, Lily. Lily's <span class="highlight" data-trans="шестнадцать" onclick="speak('sixteen')">sixteen</span> and she's from Brighton. She's British but her dad's from <span class="highlight" data-trans="Ямайка" onclick="speak('Jamaica')">Jamaica</span>. Lily's got a <span class="highlight" data-trans="брат" onclick="speak('brother')">brother</span>, Andrew. He's <span class="highlight" data-trans="одиннадцать" onclick="speak('eleven')">eleven</span>.
+                    </p>
+                    <p>
+                        Lily's got two <span class="highlight" data-trans="интересы" onclick="speak('interests')">interests</span>: music and ... music! She's <span class="highlight" data-trans="помешана на музыке" onclick="speak('music mad')">music mad</span>. Her <span class="highlight" data-trans="любимая вещь" onclick="speak('favourite thing')">favourite thing</span> is her <span class="highlight" data-trans="MP3 плеер" onclick="speak('MP3 player')">MP3 player</span>. She's got 500 songs on it and 50 of them are by The Kaiser Chiefs! My <span class="highlight" data-trans="любимая группа" onclick="speak('favourite band')">favourite band</span> is The Kooks. So we haven't got the <span class="highlight" data-trans="одинаковые песни" onclick="speak('same songs')">same songs</span> on our MP3 players.
+                    </p>
+                    <p>
+                        She's got an <span class="highlight" data-trans="электрогитара" onclick="speak('electric guitar')">electric guitar</span> and she's in a <span class="highlight" data-trans="группа" onclick="speak('band')">band</span> with her <span class="highlight" data-trans="одноклассники" onclick="speak('classmates')">classmates</span>. They are all <span class="highlight" data-trans="девочки" onclick="speak('girls')">girls</span>! They've got a lot of <span class="highlight" data-trans="фанаты" onclick="speak('fans')">fans</span> at school.
+                    </p>
+                    <p>
+                        Lily has got a <span class="highlight" data-trans="мобильный телефон" onclick="speak('mobile phone')">mobile phone</span> and a <span class="highlight" data-trans="компьютер" onclick="speak('computer')">computer</span> but she hasn't got a <span class="highlight" data-trans="игровая приставка" onclick="speak('games console')">games console</span> – computer games aren't her thing.
+                    </p>
+                    <p>
+                        Lily's got two <span class="highlight" data-trans="питомцы" onclick="speak('pets')">pets</span> – a <span class="highlight" data-trans="кот" onclick="speak('cat')">cat</span> called Lyra and a <span class="highlight" data-trans="золотая рыбка" onclick="speak('goldfish')">goldfish</span> called Moby Dick.
+                    </p>
+                    <p>
+                        Oh and Lily's got a <span class="highlight" data-trans="прозвище" onclick="speak('nickname')">nickname</span>. It's Lulu. My nickname's Spider. Lily isn't my <span class="highlight" data-trans="девушка" onclick="speak('girlfriend')">girlfriend</span> – she's my best friend.
+                    </p>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <div class="character-card">
+                        <h3>👤 Profile: Lily</h3>
+                        <ul style="padding-left: 20px; margin-bottom:0;">
+                            <li><strong>Age:</strong> 16</li>
+                            <li><strong>From:</strong> Brighton, UK</li>
+                            <li><strong>Origin:</strong> Dad is from Jamaica</li>
+                            <li><strong>Nick:</strong> Lulu</li>
+                            <li><strong>Brother:</strong> Andrew (11)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="character-card" style="background: #E3F2FD; border-color: #BBDEFB;">
+                        <h3 style="color: #1976D2;">🎵 Interests</h3>
+                        <p><strong>Music Mad!</strong></p>
+                        <p>Band: Kaiser Chiefs</p>
+                        <p>Instrument: Electric Guitar</p>
+                        <p>Band members: All girls</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integrated True/False Check -->
+            <div class="check-box">
+                <h3 style="margin-bottom: 15px; color: var(--primary-orange);">✅ Reading Check</h3>
+                
+                <div class="check-item">
+                    <span>1. Lily is Jamaican.</span>
+                    <div class="check-options">
+                        <button class="check-btn" onclick="checkStory(this, false, 'False. Her dad is from Jamaica, but she is British.')">True</button>
+                        <button class="check-btn" onclick="checkStory(this, true, 'Correct! She is British.')">False</button>
+                    </div>
+                    <div class="feedback" style="display:none; width:100%; margin-top:5px; font-size:0.9rem; font-weight:bold;"></div>
+                </div>
+
+                <div class="check-item">
+                    <span>2. Her favourite thing is her MP3 player.</span>
+                    <div class="check-options">
+                        <button class="check-btn" onclick="checkStory(this, true, 'Correct! It is her favourite thing.')">True</button>
+                        <button class="check-btn" onclick="checkStory(this, false, 'Look at paragraph 2 again.')">False</button>
+                    </div>
+                    <div class="feedback" style="display:none; width:100%; margin-top:5px; font-size:0.9rem; font-weight:bold;"></div>
+                </div>
+
+                <div class="check-item">
+                    <span>3. Lily and Charlie have the same songs.</span>
+                    <div class="check-options">
+                        <button class="check-btn" onclick="checkStory(this, false, 'False. They have different favourite bands.')">True</button>
+                        <button class="check-btn" onclick="checkStory(this, true, 'Correct! They haven\'t got the same songs.')">False</button>
+                    </div>
+                    <div class="feedback" style="display:none; width:100%; margin-top:5px; font-size:0.9rem; font-weight:bold;"></div>
+                </div>
+
+                 <div class="check-item">
+                    <span>4. Lyra is her cat.</span>
+                    <div class="check-options">
+                        <button class="check-btn" onclick="checkStory(this, true, 'Correct! A cat called Lyra.')">True</button>
+                        <button class="check-btn" onclick="checkStory(this, false, 'Check the pets paragraph.')">False</button>
+                    </div>
+                    <div class="feedback" style="display:none; width:100%; margin-top:5px; font-size:0.9rem; font-weight:bold;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- VOCABULARY TAB (Drag & Drop Style) -->
+        <div id="vocabulary" class="tab-content">
+            <h2 class="section-title">Words 2 Know: <span>My Things</span></h2>
+            <p style="margin-bottom: 20px; color: #666;">Drag the English word to the correct Russian translation.</p>
+
+            <div id="drag-game-area" style="display: flex; flex-wrap: wrap; gap: 30px;">
+                <!-- Draggable Words (Source) -->
+                <div id="word-bank" style="flex: 1; min-width: 250px; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 2px dashed #ccc;">
+                    <h4 style="margin-bottom: 15px; color: var(--text-light);">English Words</h4>
+                    <div class="draggable-word" draggable="true" data-match="tv" onclick="speak('a TV')">a TV</div>
+                    <div class="draggable-word" draggable="true" data-match="guitar" onclick="speak('a guitar')">a guitar</div>
+                    <div class="draggable-word" draggable="true" data-match="camera" onclick="speak('a camera')">a camera</div>
+                    <div class="draggable-word" draggable="true" data-match="phone" onclick="speak('a mobile phone')">a mobile phone</div>
+                    <div class="draggable-word" draggable="true" data-match="bike" onclick="speak('a bicycle')">a bicycle</div>
+                    <div class="draggable-word" draggable="true" data-match="pet" onclick="speak('a pet')">a pet</div>
+                </div>
+
+                <!-- Drop Zones (Targets) -->
+                <div id="drop-zones" style="flex: 1; min-width: 250px;">
+                    <h4 style="margin-bottom: 15px; color: var(--text-light);">Russian Meanings</h4>
+                    
+                    <div class="drop-zone" data-match="guitar">
+                        <span>Гитара</span>
+                    </div>
+                    <div class="drop-zone" data-match="phone">
+                        <span>Мобильный телефон</span>
+                    </div>
+                    <div class="drop-zone" data-match="tv">
+                        <span>Телевизор</span>
+                    </div>
+                    <div class="drop-zone" data-match="camera">
+                        <span>Камера</span>
+                    </div>
+                    <div class="drop-zone" data-match="pet">
+                        <span>Питомец</span>
+                    </div>
+                    <div class="drop-zone" data-match="bike">
+                        <span>Велосипед</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extra Styling for Drag & Drop (Internal style for this component) -->
+            <style>
+                .draggable-word {
+                    background: white;
+                    border: 1px solid #ddd;
+                    padding: 8px 15px;
+                    margin-bottom: 8px;
+                    border-radius: 20px;
+                    cursor: grab;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    display: inline-block;
+                    margin-right: 8px;
+                }
+                .draggable-word:active { cursor: grabbing; }
+                
+                .drop-zone {
+                    background: white;
+                    border: 2px solid #eee;
+                    padding: 15px;
+                    margin-bottom: 10px;
+                    border-radius: 8px;
+                    min-height: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    transition: 0.2s;
+                }
+                .drop-zone.drag-over { background: #E3F2FD; border-color: var(--accent-blue); }
+                .drop-zone.correct { background: #E8F5E9; border-color: #4CAF50; }
+            </style>
+        </div>
+
+        <!-- GRAMMAR TAB -->
+        <div id="grammar" class="tab-content">
+            <h2 class="section-title">Grammar Focus: <span>have got</span></h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                
+                <!-- Positive Rule -->
+                <div class="grammar-card" style="background: white; border-left: 5px solid #4CAF50; padding: 20px; box-shadow: var(--card-shadow); border-radius: 8px;">
+                    <h3 style="color: #2E7D32; margin-bottom: 10px;">(+) Affirmative</h3>
+                    <div style="margin-bottom: 10px;">
+                        <strong>I / You / We / They</strong> <span style="color: #4CAF50; font-weight:bold;">have got</span> ('ve got)
+                    </div>
+                    <div style="font-style: italic; color: #666; margin-bottom: 15px;">"I've got a lot of good friends."</div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <strong>He / She / It</strong> <span style="color: #4CAF50; font-weight:bold;">has got</span> ('s got)
+                    </div>
+                    <div style="font-style: italic; color: #666;">"Lily's got two interests."</div>
+                </div>
+
+                <!-- Negative Rule -->
+                <div class="grammar-card" style="background: white; border-left: 5px solid #F44336; padding: 20px; box-shadow: var(--card-shadow); border-radius: 8px;">
+                    <h3 style="color: #C62828; margin-bottom: 10px;">(-) Negative</h3>
+                    <div style="margin-bottom: 10px;">
+                        <strong>I / You / We / They</strong> <span style="color: #F44336; font-weight:bold;">haven't got</span>
+                    </div>
+                    <div style="font-style: italic; color: #666; margin-bottom: 15px;">"We haven't got the same songs."</div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <strong>He / She / It</strong> <span style="color: #F44336; font-weight:bold;">hasn't got</span>
+                    </div>
+                    <div style="font-style: italic; color: #666;">"She hasn't got a games console."</div>
+                </div>
+
+                <!-- Question Rule -->
+                <div class="grammar-card" style="background: white; border-left: 5px solid #2196F3; padding: 20px; box-shadow: var(--card-shadow); border-radius: 8px;">
+                    <h3 style="color: #1565C0; margin-bottom: 10px;">(?) Questions</h3>
+                    <div style="margin-bottom: 10px;">
+                        <span style="color: #2196F3; font-weight:bold;">Have</span> you <span style="color: #2196F3; font-weight:bold;">got</span> a camera?
+                        <br><span style="color:#666;">Yes, I have. / No, I haven't.</span>
+                    </div>
+                    <div>
+                        <span style="color: #2196F3; font-weight:bold;">Has</span> she <span style="color: #2196F3; font-weight:bold;">got</span> a pet?
+                        <br><span style="color:#666;">Yes, she has. / No, she hasn't.</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- QUIZ TAB placeholder -->
+        <div id="quiz" class="tab-content">
+            <h2 class="section-title">Practice Quiz</h2>
+            <div id="quiz-container-new">
+                <!-- Quiz content will be injected by JS in Part 3 -->
+            </div>
+        </div>
+
+    </div> <!-- End content-wrapper -->
+</div> <!-- End container -->
+<script>
+    // --- 1. TAB NAVIGATION ---
+    const tabs = document.querySelectorAll('.nav-tab');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab).classList.add('active');
+        });
+    });
+
+    // --- 2. GOOGLE TTS (AUDIO) ---
+    // Используем неофициальный Google Translate API для озвучки
+    function speak(text) {
+        // Создаем iframe для воспроизведения (скрытый), чтобы не перезагружать страницу
+        let audioFrame = document.getElementById('tts-frame');
+        if (!audioFrame) {
+            audioFrame = document.createElement('iframe');
+            audioFrame.id = 'tts-frame';
+            audioFrame.style.display = 'none';
+            document.body.appendChild(audioFrame);
+        }
+        
+        // Очистка текста от лишних символов
+        const cleanText = encodeURIComponent(text);
+        // URL для Google TTS
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=  ${cleanText}&tl=en&client=tw-ob`;
+        
+        // Воспроизведение через создание аудио элемента (более надежно для современных браузеров)
+        const audio = new Audio(url);
+        audio.play().catch(e => console.log("Audio play error:", e));
+    }
+
+    // --- 3. READING CHECK LOGIC ---
+    function checkStory(btn, isCorrect, feedbackText) {
+        const container = btn.closest('.check-item');
+        const feedbackEl = container.querySelector('.feedback');
+        const buttons = container.querySelectorAll('.check-btn');
+
+        // Reset styles
+        buttons.forEach(b => {
+            b.classList.remove('selected-true', 'selected-false');
+            b.style.opacity = '0.5';
+        });
+        
+        // Apply selection
+        btn.style.opacity = '1';
+        if(isCorrect) {
+            btn.classList.add('selected-true');
+            feedbackEl.style.color = '#2E7D32';
+            feedbackEl.textContent = "✅ " + feedbackText;
+        } else {
+            btn.classList.add('selected-false');
+            feedbackEl.style.color = '#C62828';
+            feedbackEl.textContent = "❌ " + feedbackText;
+        }
+        feedbackEl.style.display = 'block';
+    }
+
+    // --- 4. DRAG AND DROP VOCABULARY ---
+    const draggables = document.querySelectorAll('.draggable-word');
+    const dropZones = document.querySelectorAll('.drop-zone');
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', () => {
+            draggable.classList.add('dragging');
+        });
+
+        draggable.addEventListener('dragend', () => {
+            draggable.classList.remove('dragging');
+        });
+    });
+
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', e => {
+            e.preventDefault(); // Разрешить drop
+            if(!zone.classList.contains('correct')) {
+                zone.classList.add('drag-over');
+            }
+        });
+
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('drag-over');
+        });
+
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            
+            const draggable = document.querySelector('.dragging');
+            if (!draggable) return;
+
+            const wordMatch = draggable.dataset.match;
+            const zoneMatch = zone.dataset.match;
+
+            if (wordMatch === zoneMatch) {
+                // Correct Match
+                zone.classList.add('correct');
+                zone.innerHTML = `<span style="text-decoration: line-through; color: #aaa;">${zone.innerText}</span> 
+                                  <span style="font-weight:bold; color:#2E7D32; margin-left:10px;">${draggable.innerText} ✅</span>`;
+                draggable.style.display = 'none'; // Hide used word
+                speak("Correct! " + draggable.innerText);
+            } else {
+                // Wrong Match
+                zone.style.borderColor = '#F44336';
+                setTimeout(() => zone.style.borderColor = '#eee', 500);
+                speak("Try again");
+            }
+        });
+    });
+
+    // --- 5. QUIZ LOGIC (Dynamic) ---
+    const quizData = [
+        // Reading Comprehension
+        { q: "How old is Lily?", options: ["11", "16", "15"], ans: 1 },
+        { q: "Whose favourite band is The Kooks?", options: ["Lily's", "Charlie's", "Andrew's"], ans: 1 },
+        { q: "Lily has got a...", options: ["games console", "pet snake", "cat called Lyra"], ans: 2 },
+        { q: "They ___ got a games console.", options: ["hasn't", "haven't", "don't"], ans: 1 },
+        { q: "Lily is in a band with...", options: ["her brother", "boys", "her classmates"], ans: 2 },
+        // Grammar: have got
+        { q: "Charlie ___ got a lot of good friends.", options: ["has", "have", "hasn't"], ans: 0 },
+        { q: "___ Lily got two interests?", options: ["Have", "Has", "Do"], ans: 1 },
+        { q: "Andrew ___ got a mobile phone.", options: ["has", "have", "hasn't"], ans: 2 },
+        { q: "___ they got the same songs?", options: ["Has", "Have", "Do"], ans: 1 },
+        { q: "She ___ got an electric guitar.", options: ["hasn't", "have", "has"], ans: 2 },
+        { q: "I ___ got a computer.", options: ["hasn't", "haven't", "have"], ans: 2 },
+        { q: "___ she got a nickname?", options: ["Has", "Have", "Do"], ans: 0 },
+        { q: "We ___ got the same songs.", options: ["has", "haven't", "hasn't"], ans: 1 },
+        { q: "___ you got a pet?", options: ["Has", "Do", "Have"], ans: 2 },
+        { q: "It ___ got a games console.", options: ["has", "have", "hasn't"], ans: 2 },
+        // Vocabulary
+        { q: "What is 'interests' in Russian?", options: ["Интересы", "Интернет", "Интерьер"], ans: 0 },
+        { q: "What is 'favourite band' in Russian?", options: ["Любимый стиль", "Любимая группа", "Любимое место"], ans: 1 },
+        { q: "What is 'nickname' in Russian?", options: ["Настоящее имя", "Фамилия", "Прозвище"], ans: 2 },
+        { q: "What is 'classmates' in Russian?", options: ["Одноклассники", "Соседи", "Коллеги"], ans: 0 },
+        { q: "What is 'pets' in Russian?", options: ["Птицы", "Питомцы", "Птицы"], ans: 1 }
+    ];
+
+    const quizContainer = document.getElementById('quiz-container-new');
+    let currentQ = 0;
+    let score = 0;
+
+    function loadQuiz() {
+        if (currentQ >= quizData.length) {
+            quizContainer.innerHTML = `<div style="text-align:center; font-size:1.5rem; padding:40px;">
+                                        <h3>🎉 Quiz Finished!</h3>
+                                        <p>Your score: ${score} / ${quizData.length}</p>
+                                        <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; cursor:pointer;">Restart</button>
+                                       </div>`;
+            return;
+        }
+
+        const q = quizData[currentQ];
+        let html = `<div style="background:#f9f9f9; padding:25px; border-radius:10px; border:1px solid #eee;">
+                        <h3 style="margin-bottom:20px;">${currentQ + 1}. ${q.q}</h3>
+                        <div style="display:flex; flex-direction:column; gap:10px;">`;
+        
+        q.options.forEach((opt, idx) => {
+            html += `<button class="quiz-opt-btn" onclick="checkQuiz(this, ${idx})" 
+                     style="padding:12px; text-align:left; border:1px solid #ddd; background:white; cursor:pointer; border-radius:6px;">
+                     ${opt}</button>`;
+        });
+        
+        html += `</div><div id="q-feedback" style="margin-top:15px; font-weight:bold;"></div>
+                 <button id="q-next" onclick="nextQ()" style="display:none; margin-top:15px; background:var(--primary-orange); color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">Next →</button>
+                 </div>`;
+        
+        quizContainer.innerHTML = html;
+    }
+
+    function checkQuiz(btn, idx) {
+        const q = quizData[currentQ];
+        const allBtns = document.querySelectorAll('.quiz-opt-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        const feedback = document.getElementById('q-feedback');
+        const nextBtn = document.getElementById('q-next');
+
+        if (idx === q.ans) {
+            btn.style.background = '#E8F5E9';
+            btn.style.borderColor = '#4CAF50';
+            feedback.innerHTML = '<span style="color:green;">Correct! ✅</span>';
+            score++;
+        } else {
+            btn.style.background = '#FFEBEE';
+            btn.style.borderColor = '#F44336';
+            feedback.innerHTML = `<span style="color:red;">Wrong! The answer was: ${q.options[q.ans]} ❌</span>`;
+        }
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function nextQ() {
+        currentQ++;
+        loadQuiz();
+    }
+
+    // --- 6. MAGIC WORD HOVER (Make all text readable) ---
+    // This scans the reading text and wraps every plain word in a span that speaks on click
+    function initMagicReader() {
+        const textContainer = document.querySelector('.story-text');
+        // Helper to process text nodes
+        function processNode(node) {
+            if (node.nodeType === 3) { // Text node
+                const words = node.nodeValue.split(/(\s+)/); // Split by whitespace keeping separators
+                const frag = document.createDocumentFragment();
+                words.forEach(word => {
+                    if (word.trim().length > 0) {
+                        const span = document.createElement('span');
+                        span.textContent = word;
+                        span.style.cursor = "pointer";
+                        span.className = "hover-word";
+                        span.onclick = function(e) {
+                            e.stopPropagation();
+                            // Speak plain word without punctuation
+                            speak(word.replace(/[.,!?;:]/g, '')); 
+                            // Visual highlight
+                            this.style.backgroundColor = "#FFE0B2";
+                            setTimeout(() => this.style.backgroundColor = "transparent", 500);
+                        };
+                        frag.appendChild(span);
+                    } else {
+                        frag.appendChild(document.createTextNode(word));
+                    }
+                });
+                node.parentNode.replaceChild(frag, node);
+            } else if (node.nodeType === 1 && !node.classList.contains('highlight')) {
+                // Recurse for child elements unless it's already our special "highlight" span
+                Array.from(node.childNodes).forEach(processNode);
+            }
+        }
+        
+        // Apply to paragraphs inside story-text
+        textContainer.querySelectorAll('p').forEach(p => {
+            Array.from(p.childNodes).forEach(processNode);
+        });
+    }
+
+    // --- INITIALIZATION ---
+    window.addEventListener('DOMContentLoaded', () => {
+        loadQuiz();
+        initMagicReader();
+    });
+
+</script>
+</body>
+</html>

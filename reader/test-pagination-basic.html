@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Pagination Basic</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        .test-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .test-paragraph {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-content">
+        <h1>Pagination Test</h1>
+
+        <div class="reading-mode-switcher" style="margin: 1rem 0; text-align: center;">
+            <button class="btn btn-secondary mode-btn" data-mode="scroll" style="margin-right: 0.5rem;">
+                📜 Scroll
+            </button>
+            <button class="btn btn-secondary mode-btn" data-mode="pages">
+                📖 Pages
+            </button>
+        </div>
+
+        <div class="book-content reader-text" id="reading-content">
+            <div class="lesson-content">
+                <p class="reading-paragraph test-paragraph">This is the first paragraph of test content. It contains some text that should be displayed on the first page of our pagination system. The word <strong>system</strong> should be interactive.</p>
+
+                <p class="reading-paragraph test-paragraph">This is the second paragraph. It also contains some text and should help us test the pagination functionality. Words like <em>pagination</em> and <em>functionality</em> should remain clickable.</p>
+
+                <p class="reading-paragraph test-paragraph">The third paragraph continues the content. We need enough text to create multiple pages for testing. Make sure words like <strong>content</strong> and <em>testing</em> work properly.</p>
+
+                <p class="reading-paragraph test-paragraph">Fourth paragraph here. The pagination engine should split these paragraphs into appropriate pages based on viewport height. Test words such as <em>engine</em> and <strong>viewport</strong>.</p>
+
+                <p class="reading-paragraph test-paragraph">Fifth paragraph with more content. This will help ensure that our page splitting algorithm works correctly. Interactive words like <strong>algorithm</strong> should be preserved.</p>
+
+                <p class="reading-paragraph test-paragraph">Sixth paragraph continues the test. We want to make sure that words remain interactive even when moved between pages. This is crucial for the <em>pagination</em> feature.</p>
+
+                <p class="reading-paragraph test-paragraph">Seventh paragraph. This should be enough content to create at least 2-3 pages depending on screen size. Words such as <strong>content</strong> and <em>pages</em> need testing.</p>
+
+                <p class="reading-paragraph test-paragraph">Eighth paragraph for additional content. Testing pagination with multiple blocks. Ensure <strong>testing</strong> and <em>pagination</em> words work across page changes.</p>
+
+                <p class="reading-paragraph test-paragraph">Ninth paragraph. The system should handle this content appropriately. Words like <em>system</em> and <strong>content</strong> should maintain interactivity.</p>
+
+                <p class="reading-paragraph test-paragraph">Tenth and final paragraph. This completes our test content for basic pagination functionality. Final words to test: <strong>final</strong>, <em>pagination</em>, and <strong>functionality</strong>.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { PaginationEngine } from './assets/js/reader/pagination-engine.js';
+
+        // Mock makeElementInteractive for testing
+        window.readerView = {
+            makeElementInteractive: function(rootElement) {
+                console.log('Mock makeElementInteractive called on:', rootElement);
+
+                // Simple word processing for testing
+                const textNodes = [];
+                const walker = document.createTreeWalker(
+                    rootElement,
+                    NodeFilter.SHOW_TEXT,
+                    {
+                        acceptNode: (node) => {
+                            if (!node.textContent || !node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+                            const parent = node.parentElement;
+                            if (!parent || parent.closest('.interactive-word')) return NodeFilter.FILTER_REJECT;
+                            return NodeFilter.FILTER_ACCEPT;
+                        }
+                    }
+                );
+
+                while (walker.nextNode()) {
+                    textNodes.push(walker.currentNode);
+                }
+
+                textNodes.forEach(textNode => {
+                    const text = textNode.textContent;
+                    const words = text.split(/(\s+)/);
+
+                    if (words.some(word => word.length > 3)) {
+                        const fragment = document.createDocumentFragment();
+
+                        words.forEach(word => {
+                            if (word.length > 3 && /^[a-zA-Z]+$/.test(word)) {
+                                const span = document.createElement('span');
+                                span.className = 'interactive-word';
+                                span.dataset.word = word.toLowerCase();
+                                span.textContent = word;
+                                span.style.cssText = 'color: blue; cursor: pointer; text-decoration: underline;';
+                                span.onclick = () => alert(`Clicked word: ${word}`);
+                                fragment.appendChild(span);
+                            } else {
+                                fragment.appendChild(document.createTextNode(word));
+                            }
+                        });
+
+                        textNode.parentNode.replaceChild(fragment, textNode);
+                    }
+                });
+
+                console.log('Mock processing completed');
+            }
+        };
+
+        let paginationEngine = null;
+        let currentMode = 'scroll';
+
+        // Initialize mode switcher
+        function initModeSwitcher() {
+            const buttons = document.querySelectorAll('.mode-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const mode = e.target.dataset.mode;
+                    switchMode(mode);
+                });
+            });
+            updateModeSwitcher();
+        }
+
+        async function switchMode(mode) {
+            if (currentMode === mode) return;
+
+            console.log(`Switching mode: ${currentMode} → ${mode}`);
+            currentMode = mode;
+
+            if (mode === 'pages') {
+                await initPagesMode();
+            } else {
+                destroyPagesMode();
+                initScrollMode();
+            }
+
+            updateModeSwitcher();
+        }
+
+        async function initPagesMode() {
+            const readingContent = document.querySelector('#reading-content');
+
+            // Create and mount pagination engine
+            paginationEngine = new PaginationEngine(readingContent);
+            paginationEngine.mount(readingContent);
+
+            // Paginate content (now async)
+            const totalPages = await paginationEngine.paginate(readingContent);
+
+            if (totalPages > 0) {
+                paginationEngine.showPage(0);
+            }
+
+            console.log(`Pages mode initialized: ${totalPages} pages`);
+        }
+
+        function destroyPagesMode() {
+            if (paginationEngine) {
+                paginationEngine.destroy();
+                paginationEngine = null;
+            }
+        }
+
+        function initScrollMode() {
+            // Restore original content
+            const readingContent = document.querySelector('#reading-content');
+            readingContent.innerHTML = `
+                <div class="lesson-content">
+                    <p class="reading-paragraph test-paragraph">This is the first paragraph of test content. It contains some text that should be displayed on the first page of our pagination system.</p>
+                    <p class="reading-paragraph test-paragraph">This is the second paragraph. It also contains some text and should help us test the pagination functionality.</p>
+                    <p class="reading-paragraph test-paragraph">The third paragraph continues the content. We need enough text to create multiple pages for testing.</p>
+                    <p class="reading-paragraph test-paragraph">Fourth paragraph here. The pagination engine should split these paragraphs into appropriate pages based on viewport height.</p>
+                    <p class="reading-paragraph test-paragraph">Fifth paragraph with more content. This will help ensure that our page splitting algorithm works correctly.</p>
+                    <p class="reading-paragraph test-paragraph">Sixth paragraph continues the test. We want to make sure that words remain interactive even when moved between pages.</p>
+                    <p class="reading-paragraph test-paragraph">Seventh paragraph. This should be enough content to create at least 2-3 pages depending on screen size.</p>
+                    <p class="reading-paragraph test-paragraph">Eighth paragraph for additional content. Testing pagination with multiple blocks.</p>
+                    <p class="reading-paragraph test-paragraph">Ninth paragraph. The system should handle this content appropriately.</p>
+                    <p class="reading-paragraph test-paragraph">Tenth and final paragraph. This completes our test content for basic pagination functionality.</p>
+                </div>
+            `;
+
+            console.log('Scroll mode restored');
+        }
+
+        function updateModeSwitcher() {
+            const buttons = document.querySelectorAll('.mode-btn');
+            buttons.forEach(btn => {
+                const isActive = btn.dataset.mode === currentMode;
+                if (isActive) {
+                    btn.style.backgroundColor = '#007AFF';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#007AFF';
+                } else {
+                    btn.style.backgroundColor = '#F2F2F7';
+                    btn.style.color = '#1C1C1E';
+                    btn.style.borderColor = '#C6C6C8';
+                }
+            });
+        }
+
+        // Test function to check interactive words
+        window.testInteractiveWords = function() {
+            const words = document.querySelectorAll('.interactive-word');
+            console.log(`Found ${words.length} interactive words`);
+
+            words.forEach((word, index) => {
+                console.log(`${index + 1}. "${word.textContent}" (data-word: "${word.dataset.word}")`);
+                word.style.border = '2px solid red'; // Visual indicator
+            });
+
+            return words.length;
+        };
+
+        // Add test button
+        const testButton = document.createElement('button');
+        testButton.textContent = 'Test Interactive Words';
+        testButton.style.cssText = 'margin: 1rem; padding: 0.5rem 1rem; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;';
+        testButton.onclick = () => {
+            const count = window.testInteractiveWords();
+            alert(`Found ${count} interactive words on current page`);
+        };
+        document.querySelector('.test-content').appendChild(testButton);
+
+        // Initialize
+        initModeSwitcher();
+        console.log('Pagination test initialized');
+    </script>
+</body>
+</html>

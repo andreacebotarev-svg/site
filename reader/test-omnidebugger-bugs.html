@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniDebugger Bug Control Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-header {
+            color: #333;
+            border-bottom: 2px solid #007AFF;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background: #0056CC;
+        }
+        .btn-danger {
+            background: #FF3B30;
+        }
+        .btn-danger:hover {
+            background: #CC2E24;
+        }
+        .btn-warning {
+            background: #FF9500;
+        }
+        .btn-warning:hover {
+            background: #CC7700;
+        }
+        .btn-success {
+            background: #34C759;
+        }
+        .btn-success:hover {
+            background: #28A745;
+        }
+        .btn-secondary {
+            background: #8E8E93;
+        }
+        .btn-secondary:hover {
+            background: #6C6C70;
+        }
+        .bug-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .bug-title {
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .bug-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-open { background: #ffc107; color: #000; }
+        .status-investigating { background: #17a2b8; color: #fff; }
+        .status-fixing { background: #fd7e14; color: #fff; }
+        .status-closed { background: #28a745; color: #fff; }
+        .severity-high { color: #dc3545; }
+        .severity-medium { color: #ffc107; }
+        .severity-low { color: #17a2b8; }
+        .severity-critical { color: #dc3545; font-weight: bold; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007AFF;
+        }
+        .console-output {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .input-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐛 OmniDebugger Bug Control System Test</h1>
+
+    <div class="test-section">
+        <h2 class="test-header">📊 Bug Statistics</h2>
+        <div id="bug-stats" class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-bugs">0</div>
+                <div>Total Bugs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="open-bugs">0</div>
+                <div>Open Bugs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="recent-bugs">0</div>
+                <div>Recent (7 days)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-header">🚨 Generate Test Bugs</h2>
+        <button class="btn btn-danger" onclick="generateTestError()">Generate JavaScript Error</button>
+        <button class="btn btn-warning" onclick="generateNetworkError()">Generate Network Error</button>
+        <button class="btn btn-danger" onclick="generatePromiseError()">Generate Promise Error</button>
+        <button class="btn" onclick="generateCustomBug()">Generate Custom Bug</button>
+        <button class="btn btn-secondary" onclick="clearAllBugs()">Clear All Bugs</button>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-header">🐛 Manual Bug Report</h2>
+        <form id="bug-form">
+            <div class="input-group">
+                <label for="bug-title">Title:</label>
+                <input type="text" id="bug-title" placeholder="Brief bug description" required>
+            </div>
+            <div class="input-group">
+                <label for="bug-description">Description:</label>
+                <textarea id="bug-description" placeholder="Detailed bug description" required></textarea>
+            </div>
+            <div class="input-group">
+                <label for="bug-severity">Severity:</label>
+                <select id="bug-severity">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                    <option value="critical">Critical</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Report Bug</button>
+        </form>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-header">📋 Bug List</h2>
+        <button class="btn" onclick="refreshBugList()">Refresh List</button>
+        <button class="btn btn-secondary" onclick="exportBugs()">Export Bugs</button>
+        <div id="bug-list">
+            <p>No bugs reported yet.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-header">💻 Console Commands</h2>
+        <p>Use browser console for advanced bug management:</p>
+        <div class="console-output">
+            <div>bug.help() - Show available commands</div>
+            <div>bug.list() - List all bugs</div>
+            <div>bug.report("Test Bug", "Description", "high") - Report bug</div>
+            <div>bug.status(1, "closed", "Fixed") - Update bug status</div>
+            <div>bug.stats() - Show statistics</div>
+            <div>bug.export() - Download bugs as JSON</div>
+        </div>
+        <button class="btn" onclick="showConsoleHelp()">Execute Help Command</button>
+    </div>
+
+    <!-- Load OmniDebugger -->
+    <script type="module">
+        import { OmniDebugger } from './assets/js/core/OmniDebugger.js';
+
+        // Initialize debugger
+        const debugger = new OmniDebugger({ enabled: true });
+
+        // Make available globally for testing
+        window.testDebugger = debugger;
+
+        // UI Functions
+        window.generateTestError = function() {
+            try {
+                // Generate a JavaScript error
+                nonexistentVariable.someMethod();
+            } catch (error) {
+                console.error('Test error generated:', error);
+            }
+        };
+
+        window.generateNetworkError = function() {
+            // Generate a network error
+            fetch('http://nonexistent-domain-that-will-fail.com')
+                .catch(error => console.error('Network error test:', error));
+        };
+
+        window.generatePromiseError = function() {
+            // Generate an unhandled promise rejection
+            new Promise((resolve, reject) => {
+                setTimeout(() => reject(new Error('Test promise rejection')), 100);
+            });
+        };
+
+        window.generateCustomBug = function() {
+            debugger.reportBug(
+                'Custom Test Bug',
+                'This is a manually generated test bug to verify the bug reporting system.',
+                'medium',
+                { source: 'test_ui', component: 'bug_control_test' }
+            );
+            refreshBugList();
+        };
+
+        window.clearAllBugs = function() {
+            if (confirm('Are you sure you want to clear all bugs?')) {
+                // Clear from debugger
+                debugger.bugs.clear();
+                debugger.saveBugsToStorage();
+                refreshBugList();
+                updateStats();
+            }
+        };
+
+        window.refreshBugList = function() {
+            const bugs = debugger.getBugs();
+            const container = document.getElementById('bug-list');
+
+            if (bugs.length === 0) {
+                container.innerHTML = '<p>No bugs reported yet.</p>';
+                return;
+            }
+
+            container.innerHTML = bugs.map(bug => `
+                <div class="bug-item">
+                    <div class="bug-title">
+                        #${bug.id}: ${bug.title}
+                        <span class="bug-status status-${bug.status}">${bug.status}</span>
+                        <span class="severity-${bug.severity}">(${bug.severity})</span>
+                    </div>
+                    <div>${bug.description}</div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                        Created: ${new Date(bug.createdAt).toLocaleString()}
+                        ${bug.events.length > 0 ? ` | Events: ${bug.events.length}` : ''}
+                        ${bug.comments.length > 0 ? ` | Comments: ${bug.comments.length}` : ''}
+                    </div>
+                    <div style="margin-top: 5px;">
+                        <button class="btn btn-secondary" onclick="updateBugStatus(${bug.id}, 'investigating')" style="font-size: 12px; padding: 5px 10px;">Investigate</button>
+                        <button class="btn btn-warning" onclick="updateBugStatus(${bug.id}, 'fixing')" style="font-size: 12px; padding: 5px 10px;">Fixing</button>
+                        <button class="btn btn-success" onclick="updateBugStatus(${bug.id}, 'closed')" style="font-size: 12px; padding: 5px 10px;">Close</button>
+                        <button class="btn btn-danger" onclick="deleteBug(${bug.id})" style="font-size: 12px; padding: 5px 10px;">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        window.updateBugStatus = function(bugId, status) {
+            const comment = prompt(`Comment for status change to "${status}":`);
+            if (comment !== null) {
+                debugger.updateBugStatus(bugId, status, comment);
+                refreshBugList();
+            }
+        };
+
+        window.deleteBug = function(bugId) {
+            if (confirm(`Delete bug #${bugId}?`)) {
+                debugger.deleteBug(bugId);
+                refreshBugList();
+                updateStats();
+            }
+        };
+
+        window.exportBugs = function() {
+            debugger.downloadBugs();
+        };
+
+        window.showConsoleHelp = function() {
+            if (window.bug && window.bug.help) {
+                window.bug.help();
+            }
+        };
+
+        window.updateStats = function() {
+            const stats = debugger.getBugStats();
+            document.getElementById('total-bugs').textContent = stats.total;
+            document.getElementById('open-bugs').textContent = stats.open;
+            document.getElementById('recent-bugs').textContent = stats.recent;
+        };
+
+        // Form handling
+        document.getElementById('bug-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('bug-title').value;
+            const description = document.getElementById('bug-description').value;
+            const severity = document.getElementById('bug-severity').value;
+
+            debugger.reportBug(title, description, severity, {
+                source: 'manual_report',
+                userAgent: navigator.userAgent
+            });
+
+            // Clear form
+            this.reset();
+
+            // Refresh UI
+            refreshBugList();
+            updateStats();
+
+            alert('Bug reported successfully!');
+        });
+
+        // Initial load
+        refreshBugList();
+        updateStats();
+
+        // Auto-refresh every 5 seconds
+        setInterval(() => {
+            updateStats();
+        }, 5000);
+
+        console.log('🐛 Bug Control Test initialized. Use browser console with bug.* commands!');
+    </script>
+</body>
+</html>

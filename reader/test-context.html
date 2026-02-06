@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Extraction Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .interactive-word {
+            background: #e3f2fd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .result { margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Context Extraction Test</h1>
+
+    <div class="book-content">
+        <p>This is the first sentence with some <span class="interactive-word" data-word="words">words</span> that should be extracted.</p>
+        <p>Another paragraph with <span class="interactive-word" data-word="different">different</span> content and more text here.</p>
+        <p>The quick brown <span class="interactive-word" data-word="fox">fox</span> jumps over the lazy dog in this example.</p>
+    </div>
+
+    <div class="result" id="result">
+        Click on a highlighted word to see the context extraction result.
+    </div>
+
+    <script type="module">
+        import { ContextExtractor } from './assets/js/utils/context-extractor.js';
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('interactive-word')) {
+                const context = ContextExtractor.getSentenceContext(e.target);
+                document.getElementById('result').innerHTML = `
+                    <h3>Context Extraction Result:</h3>
+                    <p><strong>Word:</strong> ${context.word}</p>
+                    <p><strong>Sentence:</strong> "${context.sentence}"</p>
+                    <p><strong>Before:</strong> "${context.before}"</p>
+                    <p><strong>After:</strong> "${context.after}"</p>
+                    <p><strong>Method:</strong> ${context.method}</p>
+                `;
+            }
+        });
+
+        console.log('Context extraction test loaded');
+    </script>
+</body>
+</html>

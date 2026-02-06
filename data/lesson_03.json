@@ -1,0 +1,116 @@
+{
+  "id": "lesson_03",
+  "title": "Уровень 3: Сложные звуки (SH, CH, CK)",
+  "description": "Изучаем сочетания букв sh, ch, ck и звуки [dʒ], [w].",
+  "order": 3,
+  "words": [
+    {
+      "id": "jam",
+      "text": "jam",
+      "transcription": "[dʒæm]",
+      "translation": "джем",
+      "phonemes": ["j", "a", "m"],
+      "image": "🍯",
+      "difficulty": 1
+    },
+    {
+      "id": "jump",
+      "text": "jump",
+      "transcription": "[dʒʌmp]",
+      "translation": "прыгать",
+      "phonemes": ["j", "u", "m", "p"],
+      "image": "🤾",
+      "difficulty": 2
+    },
+    {
+      "id": "wind",
+      "text": "wind",
+      "transcription": "[wɪnd]",
+      "translation": "ветер",
+      "phonemes": ["w", "i", "n", "d"],
+      "image": "💨",
+      "difficulty": 2
+    },
+    {
+      "id": "swim",
+      "text": "swim",
+      "transcription": "[swɪm]",
+      "translation": "плавать",
+      "phonemes": ["s", "w", "i", "m"],
+      "image": "🏊",
+      "difficulty": 2
+    },
+    {
+      "id": "ship",
+      "text": "ship",
+      "transcription": "[ʃɪp]",
+      "translation": "корабль",
+      "phonemes": ["sh", "i", "p"],
+      "image": "🚢",
+      "difficulty": 1
+    },
+    {
+      "id": "fish",
+      "text": "fish",
+      "transcription": "[fɪʃ]",
+      "translation": "рыба",
+      "phonemes": ["f", "i", "sh"],
+      "image": "🐟",
+      "difficulty": 1
+    },
+    {
+      "id": "brush",
+      "text": "brush",
+      "transcription": "[brʌʃ]",
+      "translation": "щётка",
+      "phonemes": ["b", "r", "u", "sh"],
+      "image": "🖌️",
+      "difficulty": 2
+    },
+    {
+      "id": "chin",
+      "text": "chin",
+      "transcription": "[tʃɪn]",
+      "translation": "подбородок",
+      "phonemes": ["ch", "i", "n"],
+      "image": "🤔",
+      "difficulty": 1
+    },
+    {
+      "id": "duck",
+      "text": "duck",
+      "transcription": "[dʌk]",
+      "translation": "утка",
+      "phonemes": ["d", "u", "ck"],
+      "image": "🦆",
+      "difficulty": 1
+    },
+    {
+      "id": "clock",
+      "text": "clock",
+      "transcription": "[klɔk]",
+      "translation": "часы",
+      "phonemes": ["c", "l", "o", "ck"],
+      "image": "⏰",
+      "difficulty": 2
+    },
+    {
+      "id": "black",
+      "text": "black",
+      "transcription": "[blæk]",
+      "translation": "чёрный",
+      "phonemes": ["b", "l", "a", "ck"],
+      "image": "⬛",
+      "difficulty": 2
+    },
+    {
+      "id": "truck",
+      "text": "truck",
+      "transcription": "[trʌk]",
+      "translation": "грузовик",
+      "phonemes": ["t", "r", "u", "ck"],
+      "image": "🚛",
+      "difficulty": 2
+    }
+  ]
+}

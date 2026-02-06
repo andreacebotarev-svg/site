@@ -1,0 +1,269 @@
+{
+  "title": "Flying",
+  "subtitle": "Cheap travel – a good or bad thing?",
+  "meta": {
+    "level": "Pre-Intermediate",
+    "duration": 45,
+    "topic": "Travel"
+  },
+  "content": {
+    "reading": [
+      {
+        "type": "paragraph",
+        "text": "Cheap travel – a good or bad thing?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Twenty years ago the price of a one-way plane ticket from Warsaw to London was around $300. Now a return flight can cost just $90 ... cheaper than the train! More and more people are flying – on business, to visit friends or just to enjoy a weekend break. Travel experts say that in a few years, Europeans will be able to fly to destinations like China and Australia for less than $100! But are cheap flights a good thing for our future? Here are the arguments for and against."
+      },
+      {
+        "type": "paragraph",
+        "text": "For"
+      },
+      {
+        "type": "paragraph",
+        "text": "• Young people and other people on low incomes will be able to travel more."
+      },
+      {
+        "type": "paragraph",
+        "text": "• People will definitely work abroad more in the future. They will have to go home to visit relatives, fly to meetings, etc."
+      },
+      {
+        "type": "paragraph",
+        "text": "• People will probably learn more about other cultures as they travel more. This might create a more peaceful world in the future."
+      },
+      {
+        "type": "paragraph",
+        "text": "Against"
+      },
+      {
+        "type": "paragraph",
+        "text": "• There are too many tourists already. In a few years' time, there will be many more visitors to interesting cities like Prague, Seville and Florence. Many historic places won't be special any more."
+      },
+      {
+        "type": "paragraph",
+        "text": "• More flights will mean more pollution and noise."
+      },
+      {
+        "type": "paragraph",
+        "text": "• Pollution from planes may increase global warming."
+      }
+    ]
+  },
+  "vocabulary": {
+    "words": [
+      {
+        "en": "check-in desk",
+        "transcription": "[ˈtʃek ɪn desk]",
+        "ru": "стойка регистрации",
+        "example": "You find the check-in desk for your airline.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "airline",
+        "transcription": "[ˈeəlaɪn]",
+        "ru": "авиакомпания",
+        "example": "Which airline are you flying with?",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "passport control",
+        "transcription": "[ˈpɑːspɔːt kənˈtrəʊl]",
+        "ru": "паспортный контроль",
+        "example": "You go through passport control.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "security",
+        "transcription": "[sɪˈkjʊərɪti]",
+        "ru": "служба безопасности (досмотр)",
+        "example": "You go through security with your hand luggage.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "hand luggage",
+        "transcription": "[hænd ˈlʌɡɪdʒ]",
+        "ru": "ручная кладь",
+        "example": "You take your hand luggage onto the plane.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "duty-free shop",
+        "transcription": "[ˌdjuːti ˈfriː ʃɒp]",
+        "ru": "магазин беспошлинной торговли",
+        "example": "You do some shopping in the duty-free shop.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "departures board",
+        "transcription": "[dɪˈpɑːtʃəz bɔːd]",
+        "ru": "табло вылета",
+        "example": "You check the departures board.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "flight",
+        "transcription": "[flaɪt]",
+        "ru": "рейс",
+        "example": "See if your flight is delayed.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "delayed",
+        "transcription": "[dɪˈleɪd]",
+        "ru": "задержан",
+        "example": "The flight is delayed.",
+        "part_of_speech": "adjective"
+      },
+      {
+        "en": "board",
+        "transcription": "[bɔːd]",
+        "ru": "садиться (в самолет)",
+        "example": "You board the plane.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "take off",
+        "transcription": "[teɪk ɒf]",
+        "ru": "взлетать",
+        "example": "The plane takes off.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "land",
+        "transcription": "[lænd]",
+        "ru": "приземляться",
+        "example": "The plane lands at your destination.",
+        "part_of_speech": "verb"
+      },
+      {
+        "en": "destination",
+        "transcription": "[ˌdestɪˈneɪʃn]",
+        "ru": "пункт назначения",
+        "example": "We arrived at our destination.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "arrivals gate",
+        "transcription": "[əˈraɪvlz ɡeɪt]",
+        "ru": "выход для прибывающих",
+        "example": "You go through the arrivals gate.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "seat belt",
+        "transcription": "[ˈsiːt belt]",
+        "ru": "ремень безопасности",
+        "example": "Fasten your seat belt.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "boarding card",
+        "transcription": "[ˈbɔːdɪŋ kɑːd]",
+        "ru": "посадочный талон",
+        "example": "Get your boarding card.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "departure gate",
+        "transcription": "[dɪˈpɑːtʃə ɡeɪt]",
+        "ru": "выход на посадку",
+        "example": "Find the departure gate.",
+        "part_of_speech": "noun"
+      },
+      {
+        "en": "luggage",
+        "transcription": "[ˈlʌɡɪdʒ]",
+        "ru": "багаж",
+        "example": "Collect your luggage.",
+        "part_of_speech": "noun"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "fasten your seat belt",
+        "ru": "пристегнуть ремень безопасности"
+      },
+      {
+        "en": "check in your luggage",
+        "ru": "сдать багаж"
+      },
+      {
+        "en": "get on the plane",
+        "ru": "сесть в самолет"
+      },
+      {
+        "en": "get off the plane",
+        "ru": "выйти из самолета"
+      }
+    ]
+  },
+  "grammar": {
+    "title": "may, might and will",
+    "explanation": "We use different modal verbs to talk about the future depending on how sure we are.",
+    "rules": [
+      {
+        "rule": "Use <strong>will ('ll)</strong> to show that we think something is sure to happen.",
+        "examples": ["Europeans <strong>will be</strong> able to fly to China..."]
+      },
+      {
+        "rule": "Use <strong>will not (won't)</strong> to show that we think something is sure not to happen.",
+        "examples": ["Many historic places <strong>won't be</strong> special any more."]
+      },
+      {
+        "rule": "Use <strong>might</strong> or <strong>may</strong> to show that we think something is possible in the future.",
+        "examples": ["This <strong>might create</strong> a more peaceful world in the future."]
+      },
+      {
+        "rule": "Use <strong>will + definitely</strong> or <strong>probably</strong> to show how sure we feel.",
+        "examples": [
+          "<strong>definitely</strong> (= very sure): People <strong>will definitely work</strong> abroad.",
+          "<strong>probably</strong> (= quite sure): People <strong>will probably learn</strong> more about other cultures."
+        ]
+      },
+      {
+        "rule": "Word order in negative sentences:",
+        "examples": ["People <strong>definitely won't work</strong> abroad."]
+      },
+      {
+        "rule": "Future forms of <em>can</em> and <em>have to</em>:",
+        "examples": [
+          "The future of <em>can</em> is <strong>will be able to</strong>.",
+          "The future of <em>have to</em> is <strong>will have to</strong>."
+        ]
+      }
+    ],
+    "examples": {
+      "affirmative": ["It will rain."],
+      "negative": ["It won't rain."],
+      "questions": ["Will it rain?"]
+    }
+  },
+  "quiz": [
+    {
+      "question": "What phrase is used when the plane goes up into the air?",
+      "options": ["Lands", "Takes off", "Boards", "Checks in"],
+      "correct": 1
+    },
+    {
+      "question": "Which sentence means you are VERY SURE something will happen?",
+      "options": ["It might happen.", "It will probably happen.", "It will definitely happen.", "It may happen."],
+      "correct": 2
+    },
+    {
+      "question": "According to the text, what is a potential NEGATIVE effect of cheap travel?",
+      "options": ["Young people travelling more", "More pollution and noise", "Working abroad", "Learning about other cultures"],
+      "correct": 1
+    },
+    {
+      "question": "The future form of 'can' is...",
+      "options": ["will can", "will be able to", "can will", "could"],
+      "correct": 1
+    },
+    {
+      "question": "Where do you show your passport?",
+      "options": ["Duty-free shop", "Passport control", "Departures board", "Luggage reclaim"],
+      "correct": 1
+    }
+  ]
+}

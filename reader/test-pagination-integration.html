@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagination Integration Test</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .test-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .test-controls {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .progress-display {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            font-family: monospace;
+        }
+
+        .diagnostic-results {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .diagnostic-results h3 {
+            color: #495057;
+            margin-top: 0;
+        }
+
+        .diagnostic-summary {
+            background: #e9ecef;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .diagnostic-issues ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .diagnostic-issues li {
+            margin-bottom: 0.25rem;
+        }
+
+        .critical-bugs {
+            margin-top: 1rem;
+        }
+
+        .bug-item {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bug-item strong {
+            color: #856404;
+        }
+
+        .bug-item p {
+            margin: 0.25rem 0;
+            color: #856404;
+        }
+
+        .bug-item em {
+            color: #495057;
+        }
+
+        /* ===== VISUAL PAGE STYLING ===== */
+
+        /* Scroll mode page dividers */
+        .page-divider {
+            border: 0;
+            border-top: 1px dashed #ccc;
+            margin: 2rem 0;
+            position: relative;
+            clear: both;
+        }
+
+        .page-divider::after {
+            content: attr(data-page);
+            position: absolute;
+            right: 10px;
+            top: -12px;
+            font-size: 11px;
+            color: #666;
+            background: #f5f5f5;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+
+        /* Pages mode visual styling - PAPER EFFECT */
+        .pagination-page-host {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            padding: 24px;
+            position: relative;
+            transition: all 0.2s ease-out;
+        }
+
+        /* Page transition animations */
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .page-enter-right {
+            animation: slideInFromRight 0.25s ease-out;
+        }
+
+        .page-enter-left {
+            animation: slideInFromLeft 0.25s ease-out;
+        }
+
+        /* Enhanced navigation buttons */
+        .pagination-nav {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .pagination-info {
+            font-weight: 500;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>📖 Pagination Integration Test</h1>
+            <p>Test complete pagination functionality with ReaderView integration</p>
+        </div>
+
+        <div class="test-controls">
+            <h3>Test Controls</h3>
+            <button id="test-pages-mode" class="btn btn-primary">Switch to Pages Mode</button>
+            <button id="test-scroll-mode" class="btn btn-secondary">Switch to Scroll Mode</button>
+            <button id="test-save-progress" class="btn btn-secondary">Save Progress Manually</button>
+            <button id="test-load-progress" class="btn btn-secondary">Load Progress</button>
+            <button id="test-clear-progress" class="btn btn-danger">Clear Progress</button>
+            <button id="test-go-to-page-2" class="btn btn-info">Go to Page 2</button>
+        </div>
+
+        <div class="progress-display" id="progress-display">
+            Progress: Not loaded
+        </div>
+
+        <!-- Mock ReaderView container -->
+        <div id="reader-container" class="reader-container">
+            <div style="max-width: var(--reader-max-width, 800px); margin: 0 auto; padding: 24px;">
+                <div style="margin-bottom: 32px;">
+                    <a href="#" class="btn btn-secondary" style="margin-bottom: 12px; display: inline-block;">
+                        ← Back to Library
+                    </a>
+                    <h1 style="font-size: 32px; margin-bottom: 8px; color: #1c1c1e; font-weight: 700;">
+                        Test Book Title
+                    </h1>
+                    <p style="font-size: 18px; color: #636366; font-weight: 500;">
+                        Test Author
+                    </p>
+
+                    <!-- Mode Switcher -->
+                    <div class="reading-mode-switcher" style="margin: 16px 0; text-align: center;">
+                        <button class="btn btn-secondary mode-btn" data-mode="scroll" style="margin-right: 8px;">
+                            📜 Scroll
+                        </button>
+                        <button class="btn btn-secondary mode-btn" data-mode="pages">
+                            📖 Pages
+                        </button>
+                    </div>
+                </div>
+
+        <div class="reader-viewer">
+          <div class="book-content reader-text" id="reading-content">
+            <div class="lesson-content">
+                <p class="reading-paragraph">This is the first paragraph of our integration test. The pagination system should work seamlessly with the existing ReaderView architecture. Words like <strong>system</strong> should be interactive.</p>
+
+                <p class="reading-paragraph">The second paragraph contains more content to ensure proper page breaking. Interactive words like <em>test</em> and <strong>content</strong> should remain clickable across mode switches.</p>
+
+                <p class="reading-paragraph">Third paragraph here. We need sufficient content to create multiple pages and test the pagination engine thoroughly. The <em>pagination</em> should preserve word interactions.</p>
+
+                <p class="reading-paragraph">Fourth paragraph with additional text. The system should handle page transitions smoothly without losing word interactions. This tests <strong>zero side effects</strong> architecture.</p>
+
+                <p class="reading-paragraph">Fifth paragraph continues the test content. Progress should be saved automatically when switching pages. The <em>progress</em> tracking works across both modes.</p>
+
+                <p class="reading-paragraph">Sixth paragraph for more testing. The resize observer should handle viewport changes appropriately. This ensures <strong>responsive</strong> pagination behavior.</p>
+
+                <p class="reading-paragraph">Seventh paragraph. This provides enough content for comprehensive pagination testing across different screen sizes. The <em>architecture</em> supports both scroll and pages seamlessly.</p>
+
+                <p class="reading-paragraph">Eighth paragraph completes our test content. The integration should work perfectly with both scroll and pages modes. This validates the <strong>deterministic DOM restoration</strong>.</p>
+            </div>
+        </div>
+        </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Mock bookService for testing
+        window.bookService = {
+            async saveReadingProgress(bookId, progress) {
+                const key = `test_progress_${bookId}`;
+                localStorage.setItem(key, JSON.stringify(progress));
+                console.log('Progress saved:', progress);
+                updateProgressDisplay();
+                return Promise.resolve();
+            },
+
+            async getReadingProgress(bookId) {
+                const key = `test_progress_${bookId}`;
+                const stored = localStorage.getItem(key);
+                if (stored) {
+                    const progress = JSON.parse(stored);
+                    console.log('Progress loaded:', progress);
+                    return progress;
+                }
+                return null;
+            },
+
+            async clearReadingProgress(bookId) {
+                const key = `test_progress_${bookId}`;
+                localStorage.removeItem(key);
+                console.log('Progress cleared');
+                updateProgressDisplay();
+            }
+        };
+
+        // Mock makeElementInteractive
+        window.readerView = {
+            makeElementInteractive: function(container) {
+                console.log('Processing interactive words in container');
+
+                // Simple word processing for testing
+                const textNodes = [];
+                const walker = document.createTreeWalker(
+                    container,
+                    NodeFilter.SHOW_TEXT,
+                    {
+                        acceptNode: (node) => {
+                            if (!node.textContent || !node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+                            const parent = node.parentElement;
+                            if (!parent || parent.closest('.interactive-word')) return NodeFilter.FILTER_REJECT;
+                            return NodeFilter.FILTER_ACCEPT;
+                        }
+                    }
+                );
+
+                while (walker.nextNode()) {
+                    textNodes.push(walker.currentNode);
+                }
+
+                textNodes.forEach(textNode => {
+                    const text = textNode.textContent;
+                    const words = text.split(/(\s+)/);
+
+                    if (words.some(word => word.length > 3)) {
+                        const fragment = document.createDocumentFragment();
+
+                        words.forEach(word => {
+                            if (word.length > 3 && /^[a-zA-Z]+$/.test(word)) {
+                                const span = document.createElement('span');
+                                span.className = 'interactive-word';
+                                span.dataset.word = word.toLowerCase();
+                                span.textContent = word;
+                                span.style.cssText = 'color: #007AFF; cursor: pointer; text-decoration: underline;';
+                                span.onclick = () => {
+                                    alert(`Interactive word clicked: "${word}"`);
+                                    console.log('Word clicked:', word);
+                                };
+                                fragment.appendChild(span);
+                            } else {
+                                fragment.appendChild(document.createTextNode(word));
+                            }
+                        });
+
+                        textNode.parentNode.replaceChild(fragment, textNode);
+                    }
+                });
+            }
+        };
+
+        let paginationEngine = null;
+        let currentMode = 'scroll';
+        const bookId = 'test-book-123';
+
+        function updateProgressDisplay() {
+            const display = document.getElementById('progress-display');
+            bookService.getReadingProgress(bookId).then(progress => {
+                if (progress) {
+                    display.textContent = `Progress: ${JSON.stringify(progress, null, 2)}`;
+                } else {
+                    display.textContent = 'Progress: Not saved yet';
+                }
+            });
+        }
+
+        async function switchMode(mode) {
+            if (currentMode === mode) return;
+
+            console.log(`Switching mode: ${currentMode} → ${mode}`);
+            currentMode = mode;
+
+            if (mode === 'pages') {
+                await initPagesMode();
+            } else {
+                await destroyPagesMode();
+                initScrollMode();
+            }
+
+            updateModeSwitcher();
+        }
+
+        async function initPagesMode() {
+            const readerContainer = document.getElementById('reader-container');
+            const readingContent = document.getElementById('reading-content');
+            const paginationHost = document.querySelector('.pagination-page-host');
+
+            // Import and create pagination engine
+            const { PaginationEngine } = await import('./assets/js/reader/pagination-engine.js');
+            paginationEngine = new PaginationEngine();
+            paginationEngine.setBookId(bookId);
+
+            // Mount with scroll-snap system
+            const readerViewer = document.querySelector('.reader-viewer');
+            paginationEngine.mount({ readerViewerEl: readerViewer });
+
+            // Paginate content
+            const totalPages = await paginationEngine.paginate(readingContent);
+
+            if (totalPages > 0) {
+                // Render page stack
+                paginationEngine.renderPagesStack();
+
+                // Load saved progress and navigate with proper timing
+                const savedPage = await paginationEngine.loadProgress();
+
+                // Mark as restoring to prevent IntersectionObserver interference
+                paginationEngine.startProgressRestoration();
+
+                // Triple-timing: layout + paint + snap-cache clear
+                await new Promise(resolve => requestAnimationFrame(resolve)); // 1st rAF: layout
+                await new Promise(resolve => setTimeout(resolve, 50));        // 2nd: paint + snap-cache
+
+                // Temporarily disable snap to bypass Safari/iOS cache issues
+                const viewer = paginationEngine.readerViewer;
+                const originalSnapType = viewer.style.scrollSnapType;
+                viewer.style.scrollSnapType = 'none';
+
+                // Instant restoration (no animation)
+                paginationEngine.goToPage(savedPage, { instant: true });
+
+                // Wait for scroll to complete and force snap recalculation
+                const onScrollEnd = () => {
+                    // Re-enable snap
+                    viewer.style.scrollSnapType = originalSnapType;
+
+                    // Force snap recalculation (scrollBy hack for Safari/iOS)
+                    viewer.scrollBy(0, 1);
+                    viewer.scrollBy(0, -1);
+
+                    // Re-enable normal tracking
+                    setTimeout(() => {
+                        paginationEngine.endProgressRestoration();
+                    }, 100);
+
+                    viewer.removeEventListener('scrollend', onScrollEnd);
+                };
+
+                viewer.addEventListener('scrollend', onScrollEnd, { once: true });
+            }
+
+            // Setup auto-save
+            paginationEngine.setupAutoSave();
+
+            console.log(`Pages mode initialized: ${totalPages} pages`);
+        }
+
+        async function destroyPagesMode() {
+            if (paginationEngine) {
+                await paginationEngine.saveProgressImmediately();
+                paginationEngine.unmount();
+                paginationEngine = null;
+            }
+        }
+
+        function initScrollMode() {
+            // FIXED: No re-rendering! Rely on PaginationEngine.destroy() DOM restoration
+            // Original content should already be restored with interactive words intact
+
+            const readingContent = document.getElementById('reading-content');
+            readingContent.style.display = ''; // Ensure visibility
+
+            // Restore scroll position (if progress tracking is available)
+            if (bookService.getReadingProgress) {
+                bookService.getReadingProgress('test-book-123').then(progress => {
+                    if (progress && progress.mode === 'scroll' && progress.scrollTop) {
+                        readingContent.scrollTop = progress.scrollTop;
+                    }
+                });
+            }
+
+            console.log('Scroll mode restored (DOM intact)');
+        }
+
+        function updateModeSwitcher() {
+            const buttons = document.querySelectorAll('.mode-btn');
+            buttons.forEach(btn => {
+                const isActive = btn.dataset.mode === currentMode;
+                if (isActive) {
+                    btn.style.backgroundColor = '#007AFF';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#007AFF';
+                } else {
+                    btn.style.backgroundColor = '#F2F2F7';
+                    btn.style.color = '#1C1C1E';
+                    btn.style.borderColor = '#C6C6C8';
+                }
+            });
+        }
+
+        // Setup event listeners
+        document.getElementById('test-pages-mode').addEventListener('click', () => switchMode('pages'));
+        document.getElementById('test-scroll-mode').addEventListener('click', () => switchMode('scroll'));
+        document.getElementById('test-save-progress').addEventListener('click', async () => {
+            if (paginationEngine) {
+                await paginationEngine.saveProgressImmediately();
+                updateProgressDisplay();
+            }
+        });
+        document.getElementById('test-load-progress').addEventListener('click', updateProgressDisplay);
+        document.getElementById('test-clear-progress').addEventListener('click', () => {
+            bookService.clearReadingProgress(bookId);
+        });
+
+        document.getElementById('test-go-to-page-2').addEventListener('click', () => {
+            if (paginationEngine) {
+                paginationEngine.goToPage(1);
+                console.log('Manually navigated to page 2');
+            }
+        });
+
+        // Initialize content with interactive words (simulate ReaderView.renderBookContent)
+        function initializeContent() {
+            const readingContent = document.getElementById('reading-content');
+
+            // Make words interactive (simulate TreeWalker in ReaderView)
+            if (window.readerView && window.readerView.makeElementInteractive) {
+                window.readerView.makeElementInteractive(readingContent);
+            }
+
+            console.log('Content initialized with interactive words');
+        }
+
+        // ===== COMPREHENSIVE DIAGNOSTIC SUITE =====
+
+        /**
+         * Run full diagnostic suite to identify restore logic issues
+         */
+        window.runFullDiagnostic = async function() {
+            console.log('🔍 RUNNING FULL DIAGNOSTIC SUITE 🔍');
+            console.log('=====================================');
+
+            const results = {
+                localStorage: await testLocalStorage(),
+                indexedDB: await testIndexedDB(),
+                paginationState: await testPaginationState(),
+                loadProgress: await testLoadProgress(),
+                intersectionObserver: await testIntersectionObserver(),
+                summary: null
+            };
+
+            results.summary = generateDiagnosticSummary(results);
+            displayDiagnosticResults(results);
+
+            return results;
+        };
+
+        /**
+         * Test 1: LocalStorage state
+         */
+        async function testLocalStorage() {
+            console.log('\n1️⃣ Testing LocalStorage state...');
+
+            const bookId = 'test-book';
+            const key = `reader_progress_${bookId}`;
+
+            try {
+                const stored = localStorage.getItem(key);
+                if (stored) {
+                    const progress = JSON.parse(stored);
+                    console.log('✅ LocalStorage has saved progress:', progress);
+                    return { status: 'filled', data: progress };
+                } else {
+                    console.log('❌ LocalStorage is empty - no saved progress found');
+                    return { status: 'empty', data: null };
+                }
+            } catch (error) {
+                console.error('❌ LocalStorage test failed:', error);
+                return { status: 'error', error: error.message };
+            }
+        }
+
+        /**
+         * Test 2: IndexedDB state
+         */
+        async function testIndexedDB() {
+            console.log('\n2️⃣ Testing IndexedDB state...');
+
+            try {
+                // Try to access the actual bookService
+                const { bookService } = await import('./assets/js/services/book-service.js');
+                const progress = await bookService.getReadingProgress('test-book');
+
+                if (progress) {
+                    console.log('✅ IndexedDB has saved progress:', progress);
+                    return { status: 'filled', data: progress };
+                } else {
+                    console.log('❌ IndexedDB is empty - no saved progress found');
+                    return { status: 'empty', data: null };
+                }
+            } catch (error) {
+                console.error('❌ IndexedDB test failed:', error);
+                // Fallback to mock service
+                return { status: 'mock_fallback', data: null };
+            }
+        }
+
+        /**
+         * Test 3: PaginationEngine state
+         */
+        async function testPaginationState() {
+            console.log('\n3️⃣ Testing PaginationEngine state...');
+
+            if (!paginationEngine) {
+                console.log('⚠️ PaginationEngine not initialized - initializing for test...');
+                try {
+                    await initPagesMode();
+                } catch (error) {
+                    console.error('❌ Failed to initialize PaginationEngine:', error);
+                    return { status: 'initialization_failed', error: error.message };
+                }
+            }
+
+            if (!paginationEngine) {
+                console.log('❌ PaginationEngine still not initialized after init attempt');
+                return { status: 'not_initialized', data: null };
+            }
+
+            const state = {
+                bookId: paginationEngine.bookId,
+                currentIndex: paginationEngine.currentIndex,
+                pagesCount: paginationEngine.pages?.length || 0,
+                isRestoring: paginationEngine.isRestoring,
+                pageElementsCount: paginationEngine.pageElements?.length || 0,
+                intersectionObserver: !!paginationEngine.intersectionObserver
+            };
+
+            console.log('📊 PaginationEngine state:', state);
+
+            // Check DOM state
+            const readerViewer = document.querySelector('.reader-viewer');
+            if (readerViewer) {
+                state.domState = {
+                    readerViewer: !!readerViewer,
+                    pagesCount: readerViewer.querySelectorAll('.page').length,
+                    currentScrollTop: readerViewer.scrollTop,
+                    scrollHeight: readerViewer.scrollHeight
+                };
+                console.log('🎯 DOM state:', state.domState);
+            }
+
+            return { status: 'analyzed', data: state };
+        }
+
+        /**
+         * Test 4: loadProgress method
+         */
+        async function testLoadProgress() {
+            console.log('\n4️⃣ Testing loadProgress method...');
+
+            if (!paginationEngine) {
+                console.log('⚠️ PaginationEngine not available - initializing for test...');
+                try {
+                    await initPagesMode();
+                } catch (error) {
+                    console.error('❌ Failed to initialize PaginationEngine:', error);
+                    return { status: 'initialization_failed', error: error.message };
+                }
+            }
+
+            if (!paginationEngine) {
+                console.log('❌ PaginationEngine not available');
+                return { status: 'no_engine', data: null };
+            }
+
+            try {
+                const savedPage = await paginationEngine.loadProgress();
+                console.log(`📊 loadProgress result: ${savedPage} (should restore to page ${savedPage + 1})`);
+
+                // Test goToPage behavior
+                const initialScrollTop = paginationEngine.readerViewer?.scrollTop || 0;
+                await paginationEngine.goToPage(savedPage, { instant: true });
+
+                setTimeout(() => {
+                    const finalScrollTop = paginationEngine.readerViewer?.scrollTop || 0;
+                    console.log(`🔄 Scroll test: ${initialScrollTop} -> ${finalScrollTop} ${finalScrollTop === initialScrollTop ? '(NO SCROLL!)' : '(scrolled)'}`);
+                }, 100);
+
+                return { status: 'success', data: { savedPage, scrollChanged: null } };
+            } catch (error) {
+                console.error('❌ loadProgress test failed:', error);
+                return { status: 'error', error: error.message };
+            }
+        }
+
+        /**
+         * Test 5: IntersectionObserver behavior
+         */
+        async function testIntersectionObserver() {
+            console.log('\n5️⃣ Testing IntersectionObserver...');
+
+            if (!paginationEngine) {
+                console.log('⚠️ PaginationEngine not available - initializing for test...');
+                try {
+                    await initPagesMode();
+                } catch (error) {
+                    console.error('❌ Failed to initialize PaginationEngine:', error);
+                    return { status: 'initialization_failed', error: error.message };
+                }
+            }
+
+            if (!paginationEngine) {
+                console.log('❌ PaginationEngine not available');
+                return { status: 'no_engine', data: null };
+            }
+
+            const observer = paginationEngine.intersectionObserver;
+            if (!observer) {
+                console.log('❌ IntersectionObserver not active');
+                return { status: 'inactive', data: null };
+            }
+
+            console.log('✅ IntersectionObserver is active');
+
+            const observedElements = paginationEngine.pageElements?.length || 0;
+            console.log(`👁️ Observing ${observedElements} page elements`);
+
+            // Test observer disconnect/reconnect during restore
+            const wasRestoring = paginationEngine.isRestoring;
+            console.log(`🔄 isRestoring flag: ${wasRestoring}`);
+
+            return {
+                status: 'active',
+                data: {
+                    observerActive: true,
+                    observedElements,
+                    isRestoring: wasRestoring
+                }
+            };
+        }
+
+        /**
+         * Generate diagnostic summary
+         */
+        function generateDiagnosticSummary(results) {
+            console.log('\n📋 DIAGNOSTIC SUMMARY');
+
+            const issues = [];
+
+            // Check LocalStorage vs IndexedDB
+            if (results.localStorage.status === 'empty' && results.indexedDB.status === 'filled') {
+                issues.push('LocalStorage empty but IndexedDB has data - using wrong storage mechanism');
+            }
+
+            // Check pagination state
+            if (results.paginationState.status === 'analyzed') {
+                const state = results.paginationState.data;
+                if (state.currentIndex === 0 && state.isRestoring === false) {
+                    issues.push('Pagination currentIndex is 0 after reload - restore failed');
+                }
+                if (state.domState?.currentScrollTop === 0) {
+                    issues.push('DOM scrollTop is 0 - page not scrolled to saved position');
+                }
+            }
+
+            // Check timing issues
+            if (results.intersectionObserver.status === 'active' && results.intersectionObserver.data.isRestoring === false) {
+                issues.push('IntersectionObserver active during restore - may interfere with currentIndex');
+            }
+
+            return {
+                totalTests: 5,
+                passed: Object.values(results).filter(r => r && (r.status === 'success' || r.status === 'filled' || r.status === 'active' || r.status === 'analyzed')).length,
+                issues: issues,
+                criticalBugs: identifyCriticalBugs(results)
+            };
+        }
+
+        /**
+         * Identify critical bugs based on results
+         */
+        function identifyCriticalBugs(results) {
+            const bugs = [];
+
+            // Bug 1: No disconnect in goToPage
+            if (results.intersectionObserver.status === 'active' && results.paginationState.data?.currentIndex === 0) {
+                bugs.push({
+                    id: 'bug_1',
+                    title: 'Missing IntersectionObserver disconnect in goToPage',
+                    description: 'Observer immediately overwrites currentIndex after goToPage sets it',
+                    severity: 'critical',
+                    fix: 'Add disconnect/reconnect logic in goToPage method'
+                });
+            }
+
+            // Bug 2: Timing issues
+            if (results.paginationState.data?.domState?.currentScrollTop === 0) {
+                bugs.push({
+                    id: 'bug_2',
+                    title: 'Timing issues in progress restoration',
+                    description: 'goToPage called too early, before DOM is ready',
+                    severity: 'critical',
+                    fix: 'Implement triple-timing: layout + paint + snap-cache clear'
+                });
+            }
+
+            // Bug 3: Missing isRestoring flag
+            if (!results.paginationState.data?.hasOwnProperty('isRestoring')) {
+                bugs.push({
+                    id: 'bug_3',
+                    title: 'Missing isRestoring flag',
+                    description: 'No protection against IntersectionObserver during restore',
+                    severity: 'critical',
+                    fix: 'Add isRestoring flag and check in observer callback'
+                });
+            }
+
+            return bugs;
+        }
+
+        /**
+         * Display diagnostic results in UI
+         */
+        function displayDiagnosticResults(results) {
+            const output = document.createElement('div');
+            output.className = 'diagnostic-results';
+            output.innerHTML = `
+                <h3>🔍 Diagnostic Results</h3>
+                <div class="diagnostic-summary">
+                    <strong>Tests Passed: ${results.summary.passed}/${results.summary.totalTests}</strong>
+                </div>
+                <div class="diagnostic-issues">
+                    <h4>Issues Found:</h4>
+                    <ul>
+                        ${results.summary.issues.map(issue => `<li>⚠️ ${issue}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="critical-bugs">
+                    <h4>Critical Bugs:</h4>
+                    ${results.summary.criticalBugs.length > 0 ?
+                        results.summary.criticalBugs.map(bug => `
+                            <div class="bug-item">
+                                <strong>${bug.title}</strong>
+                                <p>${bug.description}</p>
+                                <p><em>Fix: ${bug.fix}</em></p>
+                            </div>
+                        `).join('') :
+                        '<p>✅ No critical bugs detected</p>'
+                    }
+                </div>
+            `;
+
+            // Add to page
+            const container = document.querySelector('.test-container');
+            const existing = container.querySelector('.diagnostic-results');
+            if (existing) existing.remove();
+            container.appendChild(output);
+        }
+
+        // Initialize mode switcher
+        function initModeSwitcher() {
+            const pagesBtn = document.getElementById('test-pages-mode');
+            const scrollBtn = document.getElementById('test-scroll-mode');
+
+            if (pagesBtn) {
+                pagesBtn.addEventListener('click', async () => {
+                    if (paginationEngine) {
+                        await paginationEngine.switchToPagesMode();
+                        console.log('Switched to pages mode');
+                    }
+                });
+            }
+
+            if (scrollBtn) {
+                scrollBtn.addEventListener('click', async () => {
+                    if (paginationEngine) {
+                        await paginationEngine.switchToScrollMode();
+                        console.log('Switched to scroll mode');
+                    }
+                });
+            }
+        }
+
+        // Add diagnostic button to UI
+        function addDiagnosticButton() {
+            const controls = document.querySelector('.test-controls');
+            const button = document.createElement('button');
+            button.textContent = '🔍 Run Full Diagnostic';
+            button.onclick = () => window.runFullDiagnostic();
+            button.style.marginTop = '1rem';
+            button.style.padding = '0.5rem 1rem';
+            button.style.background = '#007bff';
+            button.style.color = 'white';
+            button.style.border = 'none';
+            button.style.borderRadius = '4px';
+            button.style.cursor = 'pointer';
+            controls.appendChild(button);
+        }
+
+        // Initialize
+        initializeContent();
+        initModeSwitcher();
+        updateProgressDisplay();
+        addDiagnosticButton();
+
+        console.log('Pagination integration test initialized');
+        console.log('💡 Click "Run Full Diagnostic" to analyze restore logic issues');
+    </script>
+</body>
+</html>

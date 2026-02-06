@@ -1,0 +1,105 @@
+/* Card Components - Apple-inspired */
+
+.card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: var(--space-6);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
+  transition: all var(--ms-duration-normal) var(--curve-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Interactive cards */
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Card sections */
+.card-header {
+  margin-bottom: var(--space-5);
+}
+
+.card-title {
+  font-size: var(--fs-title-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+  letter-spacing: 0.01em;
+}
+
+.card-subtitle {
+  font-size: var(--fs-subhead);
+  color: var(--text-secondary);
+  margin: var(--space-2) 0 0 0;
+  line-height: var(--line-height-normal);
+}
+
+.card-content {
+  color: var(--text-primary);
+  line-height: var(--line-height-normal);
+}
+
+.card-footer {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--separator-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Card variants */
+.card-compact {
+  padding: var(--space-5);
+}
+
+.card-large {
+  padding: var(--space-8);
+}
+
+/* Card with media */
+.card-media {
+  margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) var(--space-6) calc(-1 * var(--space-6));
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+
+.card-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Focus states */
+.card:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Dark theme adjustments */
+[data-theme='dark'] .card {
+  border-color: var(--border-color);
+}
+
+[data-theme='dark'] .card-footer {
+  border-top-color: var(--separator-color);
+}
+

@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
+    <meta name="theme-color" content="#0f0f12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Loading Lesson...</title>
+    
+    <style>
+/* ================================================================
+   1. CSS VARIABLES
+   ================================================================ */
+:root {
+    /* ===== COLORS ===== */
+    /* Background */
+    --bg-primary: #0f0f12;
+    --bg-secondary: #1C1C1E;
+    --bg-tertiary: #2C2C2E;
+    
+    /* Text */
+    --text-primary: #E5E5EA;
+    --text-secondary: #8E8E93;
+    --text-muted: #636366;
+    
+    /* Accent colors (будут заменены из JSON) */
+    --accent-1: #00838F;
+    --accent-2: #E0F7FA;
+    
+    /* Semantic colors */
+    --success: #34C759;
+    --success-bg: rgba(52, 199, 89, 0.15);
+    --error: #FF3B30;
+    --error-bg: rgba(255, 59, 48, 0.15);
+    --warning: #FF9500;
+    --info: #0A84FF;
+    
+    /* ===== SPACING ===== */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+    
+    /* ===== TYPOGRAPHY ===== */
+    --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", 
+                   "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 2rem;
+    
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+    
+    /* ===== BORDERS ===== */
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 20px;
+    --border-radius-full: 9999px;
+    
+    /* ===== SHADOWS ===== */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+    
+    /* ===== TRANSITIONS ===== */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* ===== Z-INDEX ===== */
+    --z-base: 1;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-sidebar: 300;
+    --z-modal: 400;
+    --z-loader: 500;
+}
+
+/* ================================================================
+   2. RESET & BASE STYLES
+   ================================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 2px solid var(--accent-1);
+    outline-offset: 2px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-bold);
+}
+
+p {
+    margin-bottom: var(--space-md);
+}
+
+a {
+    color: var(--accent-1);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--accent-2);
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: var(--border-radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* ================================================================
+   3. LAYOUT
+   ================================================================ */
+#app {
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+}
+
+#app.loaded {
+    opacity: 1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+.main-content {
+    padding-bottom: 80px;
+}
+
+/* ================================================================
+   4. HEADER
+   ================================================================ */
+header {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    padding: var(--space-xl) var(--space-md);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: headerPulse 15s ease-in-out infinite;
+}
+
+@keyframes headerPulse {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(5%, 5%) scale(1.1); }
+}
+
+.lesson-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    margin-bottom: var(--space-sm);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.lesson-subtitle {
+    font-size: var(--font-size-lg);
+    color: rgba(255,255,255,0.9);
+    font-weight: var(--font-weight-medium);
+    position: relative;
+    z-index: 1;
+}
+
+.lesson-meta {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    margin-top: var(--space-md);
+    position: relative;
+    z-index: 1;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-xs) var(--space-md);
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* ================================================================
+   5. NAVIGATION TABS
+   ================================================================ */
+.nav-container {
+    display: flex;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--bg-tertiary);
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    backdrop-filter: blur(10px);
+    -webkit-overflow-scrolling: touch;
+}
+
+.nav-container::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-tab {
+    flex-shrink: 0;
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    color: var(--text-secondary);
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nav-tab:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.nav-tab.active {
+    background: var(--accent-1);
+    color: white;
+    border-color: var(--accent-1);
+    box-shadow: 0 4px 12px rgba(0, 131, 143, 0.3);
+}
+
+.nav-tab:active {
+    transform: scale(0.96);
+}
+
+/* ================================================================
+   6. CONTENT SECTIONS
+   ================================================================ */
+.content-section {
+    display: none;
+    padding: var(--space-lg);
+    animation: fadeInUp var(--transition-base);
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================================================
+   7. READING SECTION
+   ================================================================ */
+.reading-block {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    border-left: 4px solid var(--accent-1);
+}
+
+.reading-block[data-type="fact"] {
+    background: linear-gradient(135deg, rgba(0,131,143,0.1), rgba(224,247,250,0.05));
+    border-left-color: var(--accent-2);
+}
+
+.reading-block h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-md);
+    color: var(--accent-1);
+}
+
+.reading-text {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-primary);
+}
+
+.reading-text .word {
+    display: inline;
+    padding: 2px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.reading-text .word.clickable {
+    color: var(--accent-1);
+    font-weight: var(--font-weight-semibold);
+    position: relative;
+}
+
+.reading-text .word.clickable:hover {
+    background: rgba(0,131,143,0.15);
+    transform: translateY(-1px);
+}
+
+.reading-text .word.clickable:active {
+    transform: translateY(0);
+}
+
+/* Tooltip для слов при наведении */
+.reading-text .word.clickable::after {
+    content: attr(data-translation);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+}
+
+.reading-text .word.clickable::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-2px);
+    border: 5px solid transparent;
+    border-top-color: var(--bg-tertiary);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+    z-index: 10;
+}
+
+.reading-text .word.clickable:hover::after,
+.reading-text .word.clickable:hover::before {
+    opacity: 1;
+}
+
+.listen-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--accent-1);
+    color: white;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-md);
+    transition: all var(--transition-base);
+}
+
+.listen-btn:hover {
+    background: var(--accent-2);
+    color: #333;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.listen-btn:active {
+    transform: translateY(0);
+}
+
+.listen-btn.playing {
+    background: var(--error);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Изображения в Reading секции */
+.reading-image-container {
+    margin: var(--space-xl) 0;
+}
+
+.reading-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: var(--border-radius-lg);
+    margin: 0 auto;
+    display: block;
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--transition-base);
+}
+
+.reading-image:hover {
+    transform: scale(1.02);
+}
+
+/* ================================================================
+   8. VOCABULARY SECTION
+   ================================================================ */
+.vocab-controls {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    justify-content: center;
+}
+
+.mode-btn {
+    padding: var(--space-sm) var(--space-xl);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+}
+
+.mode-btn.active {
+    background: var(--accent-1);
+    color: white;
+}
+
+.vocab-mode {
+    display: none;
+}
+
+.vocab-mode.active {
+    display: block;
+}
+
+.vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.vocab-card {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    border: 2px solid transparent;
+}
+
+.vocab-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-1);
+}
+
+.word-en {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--accent-1);
+    margin-bottom: var(--space-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.phonetic {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-normal);
+}
+
+.word-ru {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+}
+
+.word-example {
+    font-size: var(--font-size-base);
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-md);
+    border-left: 2px solid var(--bg-tertiary);
+}
+
+.word-meta {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.pos {
+    display: inline-block;
+    padding: 2px var(--space-sm);
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.save-btn {
+    width: 100%;
+    padding: var(--space-sm);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+}
+
+.save-btn:hover {
+    background: var(--success);
+    color: white;
+}
+
+.save-btn.saved {
+    background: var(--success);
+    color: white;
+    pointer-events: none;
+}
+
+.flashcard {
+    display: none;
+    width: 100%;
+    max-width: 500px;
+    height: 350px;
+    margin: 0 auto var(--space-xl);
+    perspective: 1000px;
+}
+
+.flashcard.active {
+    display: block;
+}
+
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl);
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-xl);
+}
+
+.flashcard-back {
+    transform: rotateY(180deg);
+}
+
+.flashcard-word {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--accent-1);
+    text-align: center;
+}
+
+.flashcard-hint {
+    margin-top: var(--space-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.flashcard-translation {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--space-md);
+}
+
+.flashcard-example {
+    font-size: var(--font-size-base);
+    font-style: italic;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.flashcard-controls {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    align-items: center;
+}
+
+.flashcard-controls button {
+    padding: var(--space-md) var(--space-xl);
+    background: var(--accent-1);
+    color: white;
+    border-radius: var(--border-radius-md);
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+}
+
+.flashcard-controls button:hover {
+    background: var(--accent-2);
+    color: #333;
+    transform: scale(1.05);
+}
+
+#cardCounter {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+}
+
+.phrases-section {
+    margin-top: var(--space-xxl);
+}
+
+.phrases-section h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-lg);
+    color: var(--accent-1);
+}
+
+.phrase-item {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.phrase-item:hover {
+    background: var(--bg-tertiary);
+    transform: translateX(5px);
+}
+
+.phrase-en {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--accent-1);
+    margin-bottom: var(--space-xs);
+}
+
+.phrase-ru {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+}
+
+.phrase-context {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* ================================================================
+   9. QUIZ SECTION
+   ================================================================ */
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+}
+
+.quiz-header h2 {
+    font-size: var(--font-size-2xl);
+    color: var(--accent-1);
+}
+
+.quiz-score {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+}
+
+.quiz-question {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.question-number {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.question-text {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+    line-height: var(--line-height-relaxed);
+}
+
+.question-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.quiz-option {
+    width: 100%;
+    padding: var(--space-lg);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.quiz-option:hover:not(:disabled) {
+    background: var(--bg-primary);
+    border-color: var(--accent-1);
+    transform: translateX(5px);
+}
+
+.quiz-option:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.quiz-option:disabled {
+    cursor: not-allowed;
+}
+
+.quiz-option.correct {
+    background: var(--success-bg);
+    border-color: var(--success);
+    color: var(--success);
+    animation: correctAnswer 0.5s ease;
+}
+
+.quiz-option.incorrect {
+    background: var(--error-bg);
+    border-color: var(--error);
+    color: var(--error);
+    animation: shake 0.5s ease;
+}
+
+@keyframes correctAnswer {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.question-feedback {
+    display: none;
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    animation: fadeIn 0.3s ease;
+}
+
+.question-feedback.show {
+    display: block;
+}
+
+.feedback-correct {
+    background: var(--success-bg);
+    color: var(--success);
+    border-left: 4px solid var(--success);
+}
+
+.feedback-incorrect {
+    background: var(--error-bg);
+    color: var(--error);
+    border-left: 4px solid var(--error);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================================================
+   10. SIDEBAR (MY WORDS)
+   ================================================================ */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 320px;
+    height: 100vh;
+    background: var(--bg-secondary);
+    box-shadow: var(--shadow-xl);
+    transition: right var(--transition-base);
+    z-index: var(--z-sidebar);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.open {
+    right: 0;
+}
+
+.sidebar-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--accent-1);
+    color: white;
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    box-shadow: var(--shadow-md);
+    z-index: var(--z-sidebar);
+    transition: all var(--transition-base);
+}
+
+.sidebar-toggle:hover {
+    background: var(--accent-2);
+    color: #333;
+    transform: scale(1.05);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-xl) var(--space-lg);
+}
+
+.saved-words-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.saved-word {
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-md);
+    position: relative;
+}
+
+.saved-word-en {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--accent-1);
+    margin-bottom: var(--space-xs);
+    cursor: pointer;
+}
+
+.saved-word-ru {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+}
+
+.remove-word-btn {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--error);
+    color: white;
+    border-radius: 50%;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.remove-word-btn:hover {
+    transform: scale(1.1);
+    background: #ff1a1a;
+}
+
+.no-words {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: var(--font-size-base);
+    padding: var(--space-xl);
+}
+
+/* ================================================================
+   11. LOADER
+   ================================================================ */
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    z-index: var(--z-loader);
+    transition: opacity var(--transition-slow);
+}
+
+.loader-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255,255,255,0.1);
+    border-top-color: var(--accent-1);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loader-text {
+    margin-top: var(--space-lg);
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.error-container {
+    text-align: center;
+    padding: var(--space-xl);
+}
+
+.error-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-lg);
+}
+
+.error-container h2 {
+    font-size: var(--font-size-2xl);
+    color: var(--error);
+    margin-bottom: var(--space-md);
+}
+
+.error-container p {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
+
+.error-container button {
+    padding: var(--space-md) var(--space-xl);
+    background: var(--accent-1);
+    color: white;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+}
+
+.error-container button:hover {
+    background: var(--accent-2);
+    color: #333;
+    transform: scale(1.05);
+}
+
+/* ================================================================
+   12. UTILITY CLASSES
+   ================================================================ */
+.hidden { display: none !important; }
+.block { display: block !important; }
+.flex { display: flex !important; }
+.inline-flex { display: inline-flex !important; }
+
+.text-center { text-align: center !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+
+.text-primary { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-muted { color: var(--text-muted) !important; }
+.text-success { color: var(--success) !important; }
+.text-error { color: var(--error) !important; }
+
+.notification {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: var(--space-md) var(--space-xl);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: var(--border-radius-full);
+    box-shadow: var(--shadow-xl);
+    z-index: var(--z-modal);
+    transition: bottom var(--transition-base);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+}
+
+.notification.show {
+    bottom: 20px;
+}
+
+/* ================================================================
+   13. RESPONSIVE DESIGN
+   ================================================================ */
+@media (max-width: 768px) {
+    :root {
+        --font-size-3xl: 1.75rem;
+        --font-size-2xl: 1.25rem;
+        --font-size-xl: 1.125rem;
+    }
+    
+    header {
+        padding: var(--space-lg) var(--space-md);
+    }
+    
+    .lesson-title {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .nav-tab {
+        padding: var(--space-sm) var(--space-md);
+        font-size: var(--font-size-sm);
+    }
+    
+    .content-section {
+        padding: var(--space-md);
+    }
+    
+    .vocab-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .flashcard {
+        height: 300px;
+    }
+    
+    .quiz-option {
+        padding: var(--space-md);
+    }
+    
+    .sidebar {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .reading-image {
+        max-width: 100%;
+    }
+    
+    .reading-text .word.clickable::after {
+        font-size: var(--font-size-xs);
+        max-width: 200px;
+        white-space: normal;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .quiz-header {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+    }
+    
+    .flashcard {
+        height: 250px;
+    }
+    
+    .flashcard-word {
+        font-size: var(--font-size-2xl);
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- ================================================================
+         LOADER
+         ================================================================ -->
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
+        <div class="loader-text">Loading lesson...</div>
+    </div>
+
+    <!-- ================================================================
+         MAIN APP CONTAINER
+         ================================================================ -->
+    <div id="app"></div>
+
+    <!-- ================================================================
+         SIDEBAR (MY WORDS)
+         ================================================================ -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        💾 My Words (<span id="wordCount">0</span>)
+    </button>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content" id="sidebarContent">
+            <p class="no-words">No saved words yet. Click 💾 to save!</p>
+        </div>
+    </aside>
+
+    <script>
+/* ================================================================
+   1. GLOBAL VARIABLES
+   ================================================================ */
+let lessonData = null;
+let lessonId = null;
+let myWords = [];
+let currentFlashcard = 0;
+let quizScore = { correct: 0, total: 0 };
+
+/* ================================================================
+   2. EXTRACT LESSON ID FROM URL
+   ================================================================ */
+(function initLessonId() {
+    const match = window.location.pathname.match(/(\d+)\.html$/);
+    if (match) {
+        lessonId = match[1];
+    } else {
+        showError('Unable to determine lesson number from URL');
+    }
+})();
+
+/* ================================================================
+   3. LOAD LESSON DATA
+   ================================================================ */
+async function loadLesson() {
+    if (!lessonId) {
+        showError('Lesson ID is not defined');
+        return;
+    }
+
+    try {
+        const response = await fetch(`../data/${lessonId}.json`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        lessonData = await response.json();
+        initLesson(lessonData);
+        
+    } catch (error) {
+        showError(`Failed to load lesson: ${error.message}`);
+    }
+}
+
+/* ================================================================
+   4. INITIALIZE LESSON
+   ================================================================ */
+function initLesson(data) {
+    // Set document title
+    document.title = `${data.title} - English Lesson`;
+    
+    // Apply accent colors from JSON
+    if (data.colors && data.colors.length >= 2) {
+        document.documentElement.style.setProperty('--accent-1', data.colors[0]);
+        document.documentElement.style.setProperty('--accent-2', data.colors[1]);
+    }
+    
+    // Apply theme if specified
+    if (data.meta && data.meta.theme) {
+        document.body.setAttribute('data-theme', data.meta.theme);
+    }
+    
+    // Build interface
+    const app = document.getElementById('app');
+    app.innerHTML = buildInterface(data);
+    
+    // Load saved words
+    loadMyWords();
+    
+    // Hide loader
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        app.classList.add('loaded');
+    }, 300);
+}
+
+/* ================================================================
+   5. BUILD INTERFACE
+   ================================================================ */
+function buildInterface(data) {
+    const hasGrammar = data.content.grammar && data.content.grammar.title;
+    
+    return `
+        <header>
+            <h1 class="lesson-title">${escapeJS(data.title)}</h1>
+            ${data.subtitle ? `<p class="lesson-subtitle">${escapeJS(data.subtitle)}</p>` : ''}
+            <div class="lesson-meta">
+                ${data.meta.level ? `<span class="badge">${data.meta.level}</span>` : ''}
+                ${data.meta.duration ? `<span class="badge">${data.meta.duration} min</span>` : ''}
+            </div>
+        </header>
+        
+        <nav class="nav-container">
+            <button class="nav-tab active" onclick="switchTab('reading')">📖 Reading</button>
+            <button class="nav-tab" onclick="switchTab('vocabulary')">📚 Vocabulary</button>
+            ${hasGrammar ? `<button class="nav-tab" onclick="switchTab('grammar')">✏️ Grammar</button>` : ''}
+            <button class="nav-tab" onclick="switchTab('quiz')">⚡ Quiz</button>
+        </nav>
+        
+        <main class="main-content">
+            <section class="content-section active" id="section-reading">
+                ${renderReading(data.content.reading)}
+            </section>
+            
+            <section class="content-section" id="section-vocabulary">
+                ${renderVocabulary(data.content.vocabulary)}
+            </section>
+            
+            ${hasGrammar ? `
+                <section class="content-section" id="section-grammar">
+                    ${renderGrammar(data.content.grammar)}
+                </section>
+            ` : ''}
+            
+            <section class="content-section" id="section-quiz">
+                ${renderQuiz(data.quiz)}
+            </section>
+        </main>
+    `;
+}
+
+/* ================================================================
+   6. RENDER READING SECTION
+   ================================================================ */
+function renderReading(readingData) {
+    if (!readingData || readingData.length === 0) {
+        return '<p class="text-center text-secondary">No reading content available.</p>';
+    }
+    
+    let html = '';
+    let imageCounter = 1; // Счётчик изображений
+    
+    readingData.forEach((block, index) => {
+        const blockType = block.type || 'paragraph';
+        const hasAudio = block.audio_paragraph === true;
+        
+        html += `
+            <div class="reading-block" data-type="${blockType}">
+                ${block.title ? `<h3>${escapeJS(block.title)}</h3>` : ''}
+                
+                ${hasAudio ? `
+                    <button class="listen-btn" onclick="speakText('${escapeJS(block.text).replace(/'/g, "\\'")}', this)">
+                        🔊 Listen
+                    </button>
+                ` : ''}
+                
+                <div class="reading-text">
+                    ${highlightWords(block.text, block.highlight || [])}
+                </div>
+            </div>
+        `;
+        
+        // Вставляем изображение ТОЛЬКО после параграфов (не фактов)
+        if (blockType === 'paragraph') {
+            html += `
+                <div class="reading-image-container">
+                    <img class="reading-image" 
+                         src="../images/${lessonId}(${imageCounter}).jpg" 
+                         alt="Illustration ${imageCounter}"
+                         onerror="this.parentElement.style.display='none'"
+                         loading="lazy">
+                </div>
+            `;
+            imageCounter++;
+        }
+    });
+    
+    return html;
+}
+
+function highlightWords(text, wordsToHighlight) {
+    if (!wordsToHighlight || wordsToHighlight.length === 0) {
+        return escapeJS(text);
+    }
+    
+    let result = escapeJS(text);
+    
+    // Получаем словарь для переводов
+    const vocabulary = lessonData?.content?.vocabulary?.words || [];
+    
+    wordsToHighlight.forEach(word => {
+        // Ищем перевод слова в словаре
+        const vocabEntry = vocabulary.find(v => v.en.toLowerCase() === word.toLowerCase());
+        const translation = vocabEntry ? vocabEntry.ru : '';
+        
+        const regex = new RegExp(`\\b(${word})\\b`, 'gi');
+        result = result.replace(regex, 
+            `<span class="word clickable" data-translation="${translation}" onclick="speakWord('$1')">$1</span>`
+        );
+    });
+    
+    return result;
+}
+
+/* ================================================================
+   7. RENDER VOCABULARY SECTION
+   ================================================================ */
+function renderVocabulary(vocabData) {
+    if (!vocabData || !vocabData.words) {
+        return '<p class="text-center text-secondary">No vocabulary available.</p>';
+    }
+    
+    const words = vocabData.words || [];
+    const phrases = vocabData.phrases || [];
+    
+    let html = `
+        <div class="vocab-controls">
+            <button class="mode-btn active" onclick="switchVocabMode('list')">📝 List</button>
+            <button class="mode-btn" onclick="switchVocabMode('flashcards')">🎴 Flashcards</button>
+        </div>
+    `;
+    
+    // ===== LIST MODE =====
+    html += '<div class="vocab-mode active" id="vocab-list"><div class="vocab-grid">';
+    
+    words.forEach((word, index) => {
+        html += `
+            <div class="vocab-card">
+                <div class="word-en" onclick="speakWord('${escapeJS(word.en).replace(/'/g, "\\'")}')">
+                    ${escapeJS(word.en)}
+                    ${word.transcription ? `<span class="phonetic">${escapeJS(word.transcription)}</span>` : ''}
+                </div>
+                <div class="word-ru">${escapeJS(word.ru)}</div>
+                ${word.example ? `<div class="word-example">"${escapeJS(word.example)}"</div>` : ''}
+                ${word.part_of_speech ? `
+                    <div class="word-meta">
+                        <span class="pos">${escapeJS(word.part_of_speech)}</span>
+                    </div>
+                ` : ''}
+                <button class="save-btn" onclick="saveWord('${escapeJS(word.en).replace(/'/g, "\\'")}', '${escapeJS(word.ru).replace(/'/g, "\\'")}', '${escapeJS(word.example || '').replace(/'/g, "\\'")}')">
+                    💾 Save
+                </button>
+            </div>
+        `;
+    });
+    
+    html += '</div></div>';
+    
+    // ===== FLASHCARDS MODE =====
+    html += '<div class="vocab-mode" id="vocab-flashcards">';
+    
+    words.forEach((word, index) => {
+        html += `
+            <div class="flashcard ${index === 0 ? 'active' : ''}" data-index="${index}">
+                <div class="flashcard-inner" onclick="flipCard(${index})">
+                    <div class="flashcard-front">
+                        <div class="flashcard-word">${escapeJS(word.en)}</div>
+                        <div class="flashcard-hint">Click to reveal translation</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="flashcard-translation">${escapeJS(word.ru)}</div>
+                        ${word.example ? `<div class="flashcard-example">"${escapeJS(word.example)}"</div>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `
+        <div class="flashcard-controls">
+            <button onclick="previousCard()">← Previous</button>
+            <span id="cardCounter">1 / ${words.length}</span>
+            <button onclick="nextCard()">Next →</button>
+        </div>
+    `;
+    html += '</div>';
+    
+    // ===== PHRASES =====
+    if (phrases.length > 0) {
+        html += `
+            <div class="phrases-section">
+                <h3>📝 Useful Phrases</h3>
+                ${phrases.map(phrase => `
+                    <div class="phrase-item" onclick="speakPhrase(event, '${escapeJS(phrase.en).replace(/'/g, "\\'")}')">
+                        <div class="phrase-en">${escapeJS(phrase.en)}</div>
+                        <div class="phrase-ru">${escapeJS(phrase.ru)}</div>
+                        ${phrase.context ? `<div class="phrase-context">${escapeJS(phrase.context)}</div>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    return html;
+}
+
+/* ================================================================
+   8. RENDER GRAMMAR SECTION
+   ================================================================ */
+function renderGrammar(grammar) {
+    if (!grammar || !grammar.title) {
+        return '<p class="text-center text-secondary">No grammar content for this lesson.</p>';
+    }
+    
+    let html = `
+        <div class="grammar-container">
+            <h2>${escapeJS(grammar.title)}</h2>
+            
+            ${grammar.explanation_ru ? `
+                <div class="reading-block">
+                    <h3>📖 Explanation</h3>
+                    <div class="reading-text">${escapeJS(grammar.explanation_ru)}</div>
+                </div>
+            ` : ''}
+    `;
+    
+    // Rules
+    if (grammar.rules && grammar.rules.length > 0) {
+        grammar.rules.forEach(rule => {
+            html += `
+                <div class="reading-block">
+                    <h3>${escapeJS(rule.pattern)}</h3>
+                    ${rule.description ? `<p class="text-secondary">${escapeJS(rule.description)}</p>` : ''}
+                    
+                    ${rule.examples_positive && rule.examples_positive.length > 0 ? `
+                        <div style="margin-top: var(--space-md);">
+                            <h4 style="color: var(--success); margin-bottom: var(--space-sm);">✅ Affirmative</h4>
+                            ${rule.examples_positive.map(ex => `
+                                <div style="padding: var(--space-sm); background: var(--bg-tertiary); 
+                                     border-radius: var(--border-radius-sm); margin-bottom: var(--space-xs);">
+                                    ${escapeJS(ex)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    ${rule.examples_negative && rule.examples_negative.length > 0 ? `
+                        <div style="margin-top: var(--space-md);">
+                            <h4 style="color: var(--error); margin-bottom: var(--space-sm);">❌ Negative</h4>
+                            ${rule.examples_negative.map(ex => `
+                                <div style="padding: var(--space-sm); background: var(--bg-tertiary); 
+                                     border-radius: var(--border-radius-sm); margin-bottom: var(--space-xs);">
+                                    ${escapeJS(ex)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    ${rule.examples_question && rule.examples_question.length > 0 ? `
+                        <div style="margin-top: var(--space-md);">
+                            <h4 style="color: var(--info); margin-bottom: var(--space-sm);">❓ Questions</h4>
+                            ${rule.examples_question.map(ex => `
+                                <div style="padding: var(--space-sm); background: var(--bg-tertiary); 
+                                     border-radius: var(--border-radius-sm); margin-bottom: var(--space-xs);">
+                                    ${escapeJS(ex)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+    }
+    
+    // Common Mistakes
+    if (grammar.common_mistakes && grammar.common_mistakes.length > 0) {
+        html += `
+            <div class="reading-block">
+                <h3>⚠️ Common Mistakes</h3>
+                ${grammar.common_mistakes.map(mistake => `
+                    <div style="margin-bottom: var(--space-md);">
+                        <div style="color: var(--error); margin-bottom: var(--space-xs);">
+                            ❌ ${escapeJS(mistake.wrong)}
+                        </div>
+                        <div style="color: var(--success); margin-bottom: var(--space-xs);">
+                            ✅ ${escapeJS(mistake.correct)}
+                        </div>
+                        ${mistake.explanation ? `
+                            <div style="color: var(--text-secondary); font-size: var(--font-size-sm);">
+                                ${escapeJS(mistake.explanation)}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+/* ================================================================
+   9. RENDER QUIZ SECTION
+   ================================================================ */
+function renderQuiz(questions) {
+    if (!questions || questions.length === 0) {
+        return '<p class="text-center text-secondary">No quiz questions available.</p>';
+    }
+    
+    quizScore.total = questions.length;
+    
+    let html = `
+        <div class="quiz-header">
+            <h2>Practice Quiz</h2>
+            <div class="quiz-score">
+                Score: <span id="quizScore">0 / ${questions.length}</span>
+            </div>
+        </div>
+    `;
+    
+    questions.forEach((q, qIndex) => {
+        html += `
+            <div class="quiz-question" id="question-${qIndex}">
+                <div class="question-number">Question ${qIndex + 1} / ${questions.length}</div>
+                <div class="question-text">${escapeJS(q.q)}</div>
+                <div class="question-options">
+        `;
+        
+        q.opts.forEach((option, oIndex) => {
+            html += `
+                <button class="quiz-option" onclick="checkAnswer(${qIndex}, ${oIndex}, ${q.correct})">
+                    ${escapeJS(option)}
+                </button>
+            `;
+        });
+        
+        html += `
+                </div>
+                <div class="question-feedback" id="feedback-${qIndex}"></div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
+function checkAnswer(qIndex, selectedIndex, correctIndex) {
+    const questionEl = document.getElementById(`question-${qIndex}`);
+    const options = questionEl.querySelectorAll('.quiz-option');
+    const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+    
+    // Disable all options
+    options.forEach(btn => btn.disabled = true);
+    
+    const isCorrect = (selectedIndex === correctIndex);
+    
+    if (isCorrect) {
+        options[selectedIndex].classList.add('correct');
+        feedbackEl.innerHTML = `
+            <div class="feedback-correct">
+                ✅ ${escapeJS(lessonData.quiz[qIndex].fb || 'Correct!')}
+            </div>
+        `;
+        quizScore.correct++;
+        vibrate(200);
+    } else {
+        options[selectedIndex].classList.add('incorrect');
+        options[correctIndex].classList.add('correct');
+        feedbackEl.innerHTML = `
+            <div class="feedback-incorrect">
+                ❌ ${escapeJS(lessonData.quiz[qIndex].fb || 'Incorrect. Try again!')}
+            </div>
+        `;
+        vibrate([100, 50, 100]);
+    }
+    
+    feedbackEl.classList.add('show');
+    updateQuizScore();
+}
+
+function updateQuizScore() {
+    const scoreEl = document.getElementById('quizScore');
+    if (scoreEl) {
+        scoreEl.textContent = `${quizScore.correct} / ${quizScore.total}`;
+    }
+}
+
+/* ================================================================
+   10. TEXT-TO-SPEECH (TTS)
+   ================================================================ */
+function speakWord(text) {
+    const cleanText = text.trim();
+    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(cleanText)}`;
+    
+    const audio = new Audio(audioUrl);
+    audio.play().catch(err => {
+        console.warn('Google TTS failed, using fallback:', err);
+        speakWithBrowserAPI(cleanText);
+    });
+}
+
+function speakText(text, button) {
+    const cleanText = text.trim();
+    
+    if (button) {
+        button.classList.add('playing');
+        setTimeout(() => button.classList.remove('playing'), 2000);
+    }
+    
+    if (cleanText.length > 200) {
+        speakWithBrowserAPI(cleanText, button);
+    } else {
+        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(cleanText)}`;
+        const audio = new Audio(audioUrl);
+        
+        audio.play().catch(err => {
+            console.warn('Google TTS failed, using fallback:', err);
+            speakWithBrowserAPI(cleanText, button);
+        });
+    }
+}
+
+function speakPhrase(event, text) {
+    event.stopPropagation(); // Предотвращаем всплытие события
+    speakText(text);
+    vibrate(50);
+}
+
+function speakWithBrowserAPI(text, button) {
+    if ('speechSynthesis' in window) {
+        speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        
+        const voices = speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => 
+            v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('Google'))
+        );
+        
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
+        }
+        
+        if (button) {
+            utterance.onend = () => button.classList.remove('playing');
+        }
+        
+        speechSynthesis.speak(utterance);
+    } else {
+        console.warn('Speech synthesis not supported');
+    }
+}
+
+// Initialize voices for Chrome
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+    };
+}
+
+/* ================================================================
+   11. MY WORDS (LOCALSTORAGE)
+   ================================================================ */
+function loadMyWords() {
+    const saved = localStorage.getItem('myWords');
+    myWords = saved ? JSON.parse(saved) : [];
+    updateWordsSidebar();
+}
+
+function saveWord(word, translation, example) {
+    if (myWords.some(w => w.word === word)) {
+        showNotification(`"${word}" already saved!`);
+        return;
+    }
+    
+    const wordObj = {
+        id: `word_${Date.now()}`,
+        word: word,
+        translation: translation,
+        example: example,
+        savedAt: new Date().toISOString()
+    };
+    
+    myWords.push(wordObj);
+    localStorage.setItem('myWords', JSON.stringify(myWords));
+    
+    updateWordsSidebar();
+    showNotification(`"${word}" saved!`);
+    vibrate(100);
+}
+
+function removeWord(wordId) {
+    myWords = myWords.filter(w => w.id !== wordId);
+    localStorage.setItem('myWords', JSON.stringify(myWords));
+    updateWordsSidebar();
+    showNotification('Word removed');
+}
+
+function updateWordsSidebar() {
+    const countEl = document.getElementById('wordCount');
+    const containerEl = document.getElementById('sidebarContent');
+    
+    if (countEl) {
+        countEl.textContent = myWords.length;
+    }
+    
+    if (!containerEl) return;
+    
+    if (myWords.length === 0) {
+        containerEl.innerHTML = '<p class="no-words">No saved words yet. Click 💾 to save!</p>';
+        return;
+    }
+    
+    let html = '<div class="saved-words-list">';
+    myWords.forEach(item => {
+        html += `
+            <div class="saved-word">
+                <div class="saved-word-en" onclick="speakWord('${escapeJS(item.word).replace(/'/g, "\\'")}')">
+                    ${escapeJS(item.word)}
+                </div>
+                <div class="saved-word-ru">${escapeJS(item.translation)}</div>
+                <button class="remove-word-btn" onclick="removeWord('${item.id}')">🗑️</button>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    containerEl.innerHTML = html;
+}
+
+/* ================================================================
+   12. NAVIGATION & UI FUNCTIONS
+   ================================================================ */
+function switchTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    const activeTab = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+    
+    // Update content sections
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    const activeSection = document.getElementById(`section-${tabName}`);
+    if (activeSection) {
+        activeSection.classList.add('active');
+    }
+}
+
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+}
+
+function switchVocabMode(mode) {
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const activeBtn = document.querySelector(`[onclick="switchVocabMode('${mode}')"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+    
+    if (mode === 'list') {
+        document.getElementById('vocab-list').classList.add('active');
+        document.getElementById('vocab-flashcards').classList.remove('active');
+    } else {
+        document.getElementById('vocab-list').classList.remove('active');
+        document.getElementById('vocab-flashcards').classList.add('active');
+    }
+}
+
+function flipCard(index) {
+    const card = document.querySelector(`.flashcard[data-index="${index}"]`);
+    if (card) {
+        card.classList.toggle('flipped');
+    }
+}
+
+function nextCard() {
+    const totalCards = lessonData.content.vocabulary.words.length;
+    currentFlashcard = (currentFlashcard + 1) % totalCards;
+    updateFlashcard();
+}
+
+function previousCard() {
+    const totalCards = lessonData.content.vocabulary.words.length;
+    currentFlashcard = (currentFlashcard - 1 + totalCards) % totalCards;
+    updateFlashcard();
+}
+
+function updateFlashcard() {
+    document.querySelectorAll('.flashcard').forEach((card, index) => {
+        card.classList.toggle('active', index === currentFlashcard);
+        card.classList.remove('flipped');
+    });
+    
+    const totalCards = lessonData.content.vocabulary.words.length;
+    const counterEl = document.getElementById('cardCounter');
+    if (counterEl) {
+        counterEl.textContent = `${currentFlashcard + 1} / ${totalCards}`;
+    }
+}
+
+/* ================================================================
+   13. UTILITY FUNCTIONS
+   ================================================================ */
+function escapeJS(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function vibrate(pattern) {
+    if ('vibrate' in navigator) {
+        navigator.vibrate(pattern);
+    }
+}
+
+function showNotification(message) {
+    const notif = document.createElement('div');
+    notif.className = 'notification';
+    notif.textContent = message;
+    document.body.appendChild(notif);
+    
+    setTimeout(() => {
+        notif.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        notif.classList.remove('show');
+        setTimeout(() => notif.remove(), 300);
+    }, 2000);
+}
+
+function showError(message) {
+    const loader = document.getElementById('loader');
+    loader.innerHTML = `
+        <div class="error-container">
+            <div class="error-icon">⚠️</div>
+            <h2>Error Loading Lesson</h2>
+            <p>${escapeJS(message)}</p>
+            <button onclick="location.reload()">Try Again</button>
+        </div>
+    `;
+}
+
+/* ================================================================
+   14. INITIALIZATION
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', loadLesson);
+    </script>
+</body>
+</html>

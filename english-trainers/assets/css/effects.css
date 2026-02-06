@@ -1,0 +1,65 @@
+/**
+ * TRAINER EFFECTS CSS
+ * Extracted from JS for CSP compliance and better caching.
+ */
+
+/* Flash effect on correct answer */
+@keyframes correctFlash {
+  0% { box-shadow: 0 0 0 rgba(48, 209, 88, 0); }
+  50% { box-shadow: 0 0 30px rgba(48, 209, 88, 0.8); }
+  100% { box-shadow: 0 0 0 rgba(48, 209, 88, 0); }
+}
+
+.correct-flash {
+  animation: correctFlash 0.5s ease-out;
+}
+
+/* Confetti animation */
+@keyframes confettiFall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  top: -10px;
+  z-index: 9999;
+  animation: confettiFall linear forwards;
+  will-change: transform; /* GPU acceleration */
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .confetti {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* Particle burst animation */
+@keyframes particleBurst {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(50px) scale(0);
+    opacity: 0;
+  }
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #FFD60A;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  animation: particleBurst 0.6s ease-out forwards;
+  will-change: transform;
+}

@@ -1,0 +1,40 @@
+{
+  "id": 7,
+  "title": "Урок 7: Согласные F, L, G",
+  "emoji": "🦊",
+  "rule": "Изучаем новые согласные F[f], L[l], G[g]",
+  "description": "Новые слова с буквами F и L",
+  "phonemesSet": ["f", "o", "x", "l", "a", "m", "p", "g", "r"],
+  "wordCount": 4,
+  "estimatedTime": 6,
+  "words": [
+    {
+      "word": "fox",
+      "phonemes": ["f", "o", "x"],
+      "translation": "лиса",
+      "transcription": "[fɒks]",
+      "emoji": "🦊"
+    },
+    {
+      "word": "lamp",
+      "phonemes": ["l", "a", "m", "p"],
+      "translation": "лампа",
+      "transcription": "[læmp]",
+      "emoji": "💡"
+    },
+    {
+      "word": "flag",
+      "phonemes": ["f", "l", "a", "g"],
+      "translation": "флаг",
+      "transcription": "[flæg]",
+      "emoji": "🇷🇺"
+    },
+    {
+      "word": "frog",
+      "phonemes": ["f", "r", "o", "g"],
+      "translation": "лягушка",
+      "transcription": "[frɒg]",
+      "emoji": "🐸"
+    }
+  ]
+}

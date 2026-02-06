@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер: Глагол 'To Be' (A0)</title>
+    <style>
+        :root {
+            /* Палитра: Яркий фиолетовый, бирюзовый акцент, чистые серые тона */
+            --primary: #6C5CE7;
+            --primary-dark: #5649C0;
+            --secondary: #00CEC9;
+            --accent: #FD79A8;
+            --bg: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --text: #2D3436;
+            --text-light: #636E72;
+            
+            --success: #00B894;
+            --error: #FF7675;
+            
+            --radius: 20px;
+            --shadow: 0 10px 30px rgba(108, 92, 231, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+        }
+
+        header {
+            padding: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-bottom: 4px solid rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: #E0E0E0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-content {
+            flex: 1;
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+
+        .start-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .intro-text {
+            text-align: center;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: auto;
+            padding-top: 20px;
+        }
+
+        .question-number {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #F8F9FA;
+            border: 2px solid #E9ECEF;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #F4F3FF;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background: #E6FFFA;
+            border-color: var(--success);
+            color: #00664F;
+        }
+        
+        .option-btn.incorrect {
+            background: #FFF5F5;
+            border-color: var(--error);
+            color: #C53030;
+            animation: shake 0.4s;
+        }
+
+        .feedback-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #F1F3F5;
+            border-radius: 12px;
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.3s;
+        }
+
+        .feedback-title {
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: var(--success);
+        }
+        
+        .feedback-area.incorrect .feedback-title {
+             color: var(--error);
+        }
+
+        .feedback-text {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.1s, background-color 0.2s;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .primary-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .primary-btn.next-btn {
+            display: none;
+            background: var(--text);
+        }
+        
+        .primary-btn.next-btn:hover {
+            background: #000;
+        }
+
+        .result-screen-content {
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-score {
+            font-size: 5rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+            margin: 20px 0 10px;
+        }
+        
+        .result-msg {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .result-details {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>Глагол 'To Be'</h1>
+            <div class="subtitle">Am / Is / Are — Тренажер для начинающих</div>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="quiz-content">
+            
+            <div id="startScreen" class="screen active">
+                <div class="start-icon">🎓</div>
+                <div class="intro-text">
+                    <p>Проверьте свои знания глагола <b>'to be'</b>. <br>Вам будет предложено 30 вопросов.</p>
+                </div>
+                <button class="primary-btn" onclick="startQuiz()">Начать квиз</button>
+            </div>
+
+            <div id="quizScreen" class="screen">
+                <div class="question-number" id="qNumber"></div>
+                <div class="question-text" id="qText"></div>
+                <div class="options-grid" id="optionsContainer"></div>
+                <div class="feedback-area" id="feedbackArea">
+                    <div class="feedback-title" id="feedbackTitle"></div>
+                    <div class="feedback-text" id="feedbackText"></div>
+                </div>
+                <button class="primary-btn next-btn" id="nextBtn" onclick="nextQuestion()">Далее ➜</button>
+            </div>
+
+            <div id="resultScreen" class="screen">
+                <div class="result-screen-content">
+                    <div class="start-icon">🏆</div>
+                    <h2 class="result-msg">Квиз завершен!</h2>
+                    <div class="result-details" id="resultDetails"></div>
+                    <div class="result-score" id="finalScore"></div>
+                </div>
+                <button class="primary-btn" onclick="restartQuiz()">Попробовать снова ↺</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+      {
+  "id": "001",
+  "title": "Charlie's Blog: My Best Friend",
+  "subtitle": "Learning about possessions and friendship",
+  "theme": "blog",
+  "colors": ["#87CEEB", "#FFFFFF"],
+  "content": [
+    {
+      "type": "block",
+      "title": "Charlie's Blog Post",
+      "text": "I've got a lot of good friends. This is a photo of my best friend, Lily. Lily's sixteen and she's from Brighton. She's British but her dad's from Jamaica. Lily's got a brother, Andrew. He's eleven. Lily's got two interests: music and ... music! She's music mad. Her favourite thing is her MP3 player. She's got 500 songs on it and 50 of them are by The Kaiser Chiefs! My favourite band is The Kooks. So we haven't got the same songs on our MP3 players. She's got an electric guitar and she's in a band with her classmates. They are all girls! They've got a lot of fans at school. Lily has got a mobile phone and a computer but she hasn't got a games console – computer games aren't her thing. Lily's got two pets – a cat called Lyra and a goldfish called Moby Dick. Oh and Lily's got a nickname. It's Lulu. My nickname's Spider. Lily isn't my girlfriend – she's my best friend."
+    },
+    {
+      "type": "fact",
+      "text": "FACT! Lily has 500 songs on her MP3 player and 50 of them are by The Kaiser Chiefs!"
+    },
+    {
+      "type": "fact",
+      "text": "FACT! Lily's band is made up entirely of girls and they have lots of fans at school!"
+    },
+    {
+      "type": "reading_check",
+      "questions": [
+        {
+          "statement": "Lily is Charlie's girlfriend.",
+          "answer": false,
+          "feedback": "False! Charlie says 'Lily isn't my girlfriend – she's my best friend.'"
+        },
+        {
+          "statement": "Lily is from Jamaica.",
+          "answer": false,
+          "feedback": "False! Lily is from Brighton. Her dad is from Jamaica."
+        },
+        {
+          "statement": "Lily has got a brother called Andrew.",
+          "answer": true,
+          "feedback": "True! The text says 'Lily's got a brother, Andrew. He's eleven.'"
+        },
+        {
+          "statement": "Lily and Charlie like the same band.",
+          "answer": false,
+          "feedback": "False! Lily likes The Kaiser Chiefs, but Charlie's favourite band is The Kooks."
+        },
+        {
+          "statement": "Lily has got a games console.",
+          "answer": false,
+          "feedback": "False! The text says 'she hasn't got a games console – computer games aren't her thing.'"
+        },
+        {
+          "statement": "Lily is in a band with her classmates.",
+          "answer": true,
+          "feedback": "True! The text says 'she's in a band with her classmates. They are all girls!'"
+        },
+        {
+          "statement": "Lily's nickname is Spider.",
+          "answer": false,
+          "feedback": "False! Lily's nickname is Lulu. Spider is Charlie's nickname."
+        },
+        {
+          "statement": "Lily has two pets.",
+          "answer": true,
+          "feedback": "True! Lily has a cat called Lyra and a goldfish called Moby Dick."
+        },
+        {
+          "statement": "Lily has 50 songs by The Kooks on her MP3 player.",
+          "answer": false,
+          "feedback": "False! She has 50 songs by The Kaiser Chiefs, not The Kooks."
+        },
+        {
+          "statement": "Lily has got a mobile phone and a computer.",
+          "answer": true,
+          "feedback": "True! The text says 'Lily has got a mobile phone and a computer.'"
+        }
+      ]
+    },
+    {
+      "type": "vocab",
+      "items": [
+        { "en": "a guitar", "ru": "гитара" },
+        { "en": "an MP3 player", "ru": "МП3-плеер" },
+        { "en": "a TV", "ru": "телевизор" },
+        { "en": "a camera", "ru": "фотоаппарат" },
+        { "en": "a mobile phone", "ru": "мобильный телефон" },
+        { "en": "a skateboard", "ru": "скейтборд" },
+        { "en": "a bicycle", "ru": "велосипед" },
+        { "en": "a pet", "ru": "домашнее животное" },
+        { "en": "a computer", "ru": "компьютер" },
+        { "en": "a games console", "ru": "игровая приставка" },
+        { "en": "a DVD player", "ru": "DVD-плеер" }
+      ]
+    },
+    {
+      "type": "phrase",
+      "items": [
+        { "en": "I've got a lot of good friends.", "ru": "У меня много хороших друзей." },
+        { "en": "She's music mad.", "ru": "Она помешана на музыке." },
+        { "en": "That's not my thing.", "ru": "Это не моё." },
+        { "en": "We haven't got the same songs.", "ru": "У нас нет одинаковых песен." },
+        { "en": "She's got a nickname.", "ru": "У неё есть прозвище." }
+      ]
+    },
+    {
+      "type": "grammar",
+      "rule": "have got",
+      "explanation": "Use 'have got' to talk about possession.",
+      "examples": [
+        {
+          "form": "Positive",
+          "subject": "I/You/We/They",
+          "examples": ["have got a camera.", "'ve got a camera."]
+        },
+        {
+          "form": "Positive",
+          "subject": "He/She/It",
+          "examples": ["has got a camera.", "'s got a camera."]
+        },
+        {
+          "form": "Negative",
+          "subject": "I/You/We/They",
+          "examples": ["have not got a camera.", "haven't got a camera."]
+        },
+        {
+          "form": "Negative",
+          "subject": "He/She/It",
+          "examples": ["has not got a camera.", "hasn't got a camera."]
+        },
+        {
+          "form": "Question",
+          "subject": "Have I/you/we/they got a camera?",
+          "examples": ["Yes, I/you/we/they have.", "No, I/you/we/they haven't."]
+        },
+        {
+          "form": "Question",
+          "subject": "Has he/she/it got a camera?",
+          "examples": ["Yes, he/she/it has.", "No, he/she/it hasn't."]
+        },
+        {
+          "form": "WH-Question",
+          "subject": "What has Lily got?",
+          "examples": ["She's got an electric guitar."]
+        }
+      ]
+    },
+    {
+      "type": "quiz",
+      "question": "Complete: Lily ___ got an electric guitar.",
+      "options": ["have", "has", "is"],
+      "answer": 1,
+      "feedback": "Correct! We use 'has got' with he/she/it."
+    },
+    {
+      "type": "quiz",
+      "question": "What is Lily's nickname?",
+      "options": ["Spider", "Lulu", "Charlie"],
+      "answer": 1,
+      "feedback": "Correct! Lily's nickname is Lulu."
+    },
+    {
+      "type": "quiz",
+      "question": "How old is Lily's brother Andrew?",
+      "options": ["Ten", "Eleven", "Sixteen"],
+      "answer": 1,
+      "feedback": "Correct! Andrew is eleven years old."
+    },
+    {
+      "type": "quiz",
+      "question": "What is Lily's cat called?",
+      "options": ["Moby Dick", "Lyra", "Lulu"],
+      "answer": 1,
+      "feedback": "Correct! Lily's cat is called Lyra."
+    },
+    {
+      "type": "quiz",
+      "question": "Complete the negative: She ___ got a games console.",
+      "options": ["hasn't", "haven't", "isn't"],
+      "answer": 0,
+      "feedback": "Correct! We use 'hasn't got' for negative with he/she/it."
+    },
+    {
+      "type": "quiz",
+      "question": "Which band does Lily like?",
+      "options": ["The Kooks", "The Kaiser Chiefs", "Both bands"],
+      "answer": 1,
+      "feedback": "Correct! 50 of her songs are by The Kaiser Chiefs."
+    },
+    {
+      "type": "quiz",
+      "question": "Where is Lily from?",
+      "options": ["Jamaica", "Brighton", "London"],
+      "answer": 1,
+      "feedback": "Correct! Lily is from Brighton."
+    },
+    {
+      "type": "quiz",
+      "question": "What is NOT mentioned as something Lily has?",
+      "options": ["A computer", "A skateboard", "A mobile phone"],
+      "answer": 1,
+      "feedback": "Correct! A skateboard is not mentioned in the text."
+    },
+    {
+      "type": "quiz",
+      "question": "Complete the question: ___ they got a lot of fans?",
+      "options": ["Has", "Have", "Are"],
+      "answer": 1,
+      "feedback": "Correct! We use 'Have' with they in questions."
+    },
+    {
+      "type": "quiz",
+      "question": "What is Lily's goldfish called?",
+      "options": ["Lyra", "Moby Dick", "Lulu"],
+      "answer": 1,
+      "feedback": "Correct! The goldfish is called Moby Dick."
+    },
+    {
+      "type": "quiz",
+      "question": "How many songs does Lily have on her MP3 player?",
+      "options": ["50", "500", "5000"],
+      "answer": 1,
+      "feedback": "Correct! Lily has 500 songs on her MP3 player."
+    },
+    {
+      "type": "quiz",
+      "question": "Complete: ___ Lily got a brother?",
+      "options": ["Have", "Has", "Is"],
+      "answer": 1,
+      "feedback": "Correct! We use 'Has' with he/she/it in questions."
+    },
+    {
+      "type": "quiz",
+      "question": "Who is in Lily's band?",
+      "options": ["Only boys", "Only girls", "Boys and girls"],
+      "answer": 1,
+      "feedback": "Correct! The text says 'They are all girls!'"
+    },
+    {
+      "type": "quiz",
+      "question": "What are Lily's two interests?",
+      "options": ["Music and sports", "Music and music", "Games and music"],
+      "answer": 1,
+      "feedback": "Correct! The text says 'music and ... music!'"
+    },
+    {
+      "type": "quiz",
+      "question": "Complete the short answer: Has Lily got a computer? Yes, she ___.",
+      "options": ["have", "has", "is"],
+      "answer": 1,
+      "feedback": "Correct! The short answer is 'Yes, she has.'"
+    }
+  ]
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "id": 5,
+  "title": "Урок 5: Буква I в закрытом слоге",
+  "emoji": "🧊",
+  "rule": "Буква I в закрытом слоге читается как [ɪ]",
+  "description": "Изучаем букву I и новые согласные B, K, X",
+  "phonemesSet": ["i", "b", "g", "s", "x", "k", "d", "n", "p"],
+  "wordCount": 4,
+  "estimatedTime": 5,
+  "words": [
+    {
+      "word": "big",
+      "phonemes": ["b", "i", "g"],
+      "translation": "большой",
+      "transcription": "[bɪg]",
+      "emoji": "�"
+    },
+    {
+      "word": "six",
+      "phonemes": ["s", "i", "x"],
+      "translation": "шесть",
+      "transcription": "[sɪks]",
+      "emoji": "6️⃣"
+    },
+    {
+      "word": "kid",
+      "phonemes": ["k", "i", "d"],
+      "translation": "малыш, ребёнок",
+      "transcription": "[kɪd]",
+      "emoji": "🧒"
+    },
+    {
+      "word": "kiss",
+      "phonemes": ["k", "i", "ss"],
+      "translation": "поцелуй",
+      "transcription": "[kɪs]",
+      "emoji": "�"
+    }
+  ]
+}

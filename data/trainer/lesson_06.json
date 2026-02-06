@@ -1,0 +1,40 @@
+{
+  "id": 6,
+  "title": "Урок 6: Гласные в закрытом слоге",
+  "emoji": "🌈",
+  "rule": "Повторение: A[æ], E[e], I[ɪ], O[ɒ], U[ʌ]",
+  "description": "Практикуем разные гласные звуки",
+  "phonemesSet": ["r", "u", "g", "e", "d", "m", "o", "p", "a"],
+  "wordCount": 4,
+  "estimatedTime": 6,
+  "words": [
+    {
+      "word": "rug",
+      "phonemes": ["r", "u", "g"],
+      "translation": "ковёр",
+      "transcription": "[rʌg]",
+      "emoji": "🧶"
+    },
+    {
+      "word": "red",
+      "phonemes": ["r", "e", "d"],
+      "translation": "красный",
+      "transcription": "[red]",
+      "emoji": "🔴"
+    },
+    {
+      "word": "drum",
+      "phonemes": ["d", "r", "u", "m"],
+      "translation": "барабан",
+      "transcription": "[drʌm]",
+      "emoji": "🥁"
+    },
+    {
+      "word": "drop",
+      "phonemes": ["d", "r", "o", "p"],
+      "translation": "капля",
+      "transcription": "[drɒp]",
+      "emoji": "💧"
+    }
+  ]
+}

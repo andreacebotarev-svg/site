@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
+    <meta name="color-scheme" content="light dark">
+    <title>REAL TIME - Asking for directions</title>
+    <style>
+        /* --------------------------------------------------------------------------
+           1. CSS VARIABLES & RESET
+           -------------------------------------------------------------------------- */
+        :root {
+            /* Цвета из JSON */
+            --p: #FFB300;       /* Primary */
+            --s: #0288D1;       /* Secondary */
+            
+            /* Базовая палитра */
+            --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --bg-page: #F5F5F7;
+            --bg-card: #FFFFFF;
+            --bg-muted: #FFF8E1; /* Светлый оттенок Primary */
+            --text-main: #1D1D1F;
+            --text-sub: #86868B;
+            --text-invert: #FFFFFF;
+            --border-subtle: 1px solid rgba(0,0,0,0.06);
+            
+            /* UI элементы */
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-pill: 999px;
+            --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            
+            /* Quiz цвета */
+            --accent-success-bg: #E8F8EA;
+            --accent-success: #34C759;
+            --accent-error-bg: #FFF0F0;
+            --accent-error: #FF3B30;
+            
+            /* Анимации */
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-page: #000000;
+                --bg-card: #1C1C1E;
+                --bg-muted: #2C2200;
+                --text-main: #F5F5F7;
+                --text-sub: #9E9EA4;
+                --border-subtle: 1px solid #2C2C2E;
+            }
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 100px;
+            font-family: var(--font-main);
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 { margin: 0 0 0.5em; font-weight: 700; letter-spacing: -0.02em; }
+        p { margin: 0 0 1em; }
+
+        /* --------------------------------------------------------------------------
+           2. LAYOUT & HEADER
+           -------------------------------------------------------------------------- */
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--p), var(--s));
+            color: white;
+            padding: 30px 20px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            transform: rotate(-15deg);
+            pointer-events: none;
+        }
+
+        .lesson-title { font-size: 2rem; margin-bottom: 5px; position: relative; z-index: 2; }
+        .lesson-subtitle { font-size: 1rem; opacity: 0.9; font-weight: 500; position: relative; z-index: 2; }
+
+        /* --------------------------------------------------------------------------
+           3. NAVIGATION TABS
+           -------------------------------------------------------------------------- */
+        .tabs-nav {
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            margin-bottom: 25px;
+            padding: 5px;
+            background: rgba(255,255,255,0.0); /* Transparent backdrop */
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 5px;
+        }
+        .tabs-container::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            background: var(--bg-card);
+            padding: 12px 20px;
+            border-radius: 100px;
+            border: var(--border-subtle);
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            color: var(--text-sub);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s var(--ease-smooth);
+        }
+
+        .tab-btn.active {
+            background: var(--p);
+            color: white;
+            border-color: var(--p);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.4s var(--ease-smooth);
+        }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* --------------------------------------------------------------------------
+           4. CONTENT BLOCKS (Reading Section)
+           -------------------------------------------------------------------------- */
+        .block {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-soft);
+            border: var(--border-subtle);
+        }
+
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: var(--border-subtle);
+        }
+
+        .block-title {
+            font-size: 1.3rem;
+            color: var(--p);
+            margin: 0;
+        }
+
+        .listen-btn {
+            background: var(--bg-muted);
+            color: var(--p);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .listen-btn:hover { background: var(--p); color: white; }
+        .listen-btn.playing { background: var(--p); color: white; }
+
+        /* Interactive Highlight Words */
+        .hl {
+            background: transparent;
+            border-bottom: 2px solid var(--p);
+            color: var(--text-main);
+            padding: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .hl:active {
+            background: var(--p);
+            color: white;
+            transform: scale(0.96);
+        }
+
+        /* Profile/Message Boxes */
+        .profile {
+            background: var(--bg-muted);
+            border-left: 4px solid var(--p);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .profile strong {
+            color: var(--p);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .profile p {
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+
+        /* Map Container */
+        .map-container {
+            background: var(--bg-muted);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .map-placeholder {
+            background: #E3F2FD;
+            padding: 30px 20px;
+            border-radius: 12px;
+            border: 2px dashed var(--s);
+            color: var(--s);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* --------------------------------------------------------------------------
+           5. VOCABULARY GRID
+           -------------------------------------------------------------------------- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 14px;
+        }
+
+        .v-item {
+            background: var(--bg-card);
+            padding: 18px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.06);
+            transition: all 0.3s var(--ease-bounce);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            position: relative;
+        }
+
+        .v-item:active {
+            transform: scale(0.95);
+            background: var(--bg-muted);
+        }
+
+        .en {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .ru {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+
+        .v-item::after {
+            content: '🔊';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .v-item:active::after {
+            opacity: 1;
+        }
+
+        /* --------------------------------------------------------------------------
+           6. PHRASES LIST (iOS Style)
+           -------------------------------------------------------------------------- */
+        .p-list {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+        }
+
+        .p-item {
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .p-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: calc(100% - 18px);
+            height: 1px;
+            background: rgba(0,0,0,0.08);
+        }
+
+        .p-item:active {
+            background: var(--bg-muted);
+        }
+
+        .p-text-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .p-en {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .p-ru {
+            color: var(--text-sub);
+            font-size: 0.8rem;
+        }
+
+        .p-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--bg-muted);
+            color: var(--p);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .p-item:active .p-icon {
+            background: var(--p);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* --------------------------------------------------------------------------
+           7. QUIZ STYLES
+           -------------------------------------------------------------------------- */
+        .q-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .q-txt {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .opts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid transparent;
+            background: var(--bg-muted);
+            color: var(--text-main);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-bounce);
+            position: relative;
+        }
+
+        .opt-btn:hover {
+            background: rgba(255, 179, 0, 0.15);
+        }
+
+        .opt-btn.good {
+            background: var(--accent-success-bg);
+            border-color: var(--accent-success);
+            color: #15803d;
+        }
+
+        .opt-btn.good::after {
+            content: '✓';
+            position: absolute;
+            right: 16px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .opt-btn.bad {
+            background: var(--accent-error-bg);
+            border-color: var(--accent-error);
+            color: #b91c1c;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+            40%, 60% { transform: translate3d(3px, 0, 0); }
+        }
+
+        .fb {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .fb.show { display: block; }
+
+        /* --------------------------------------------------------------------------
+           8. RESPONSIVE
+           -------------------------------------------------------------------------- */
+        @media (max-width: 600px) {
+            body { padding: 14px; padding-bottom: 80px; }
+            .lesson-title { font-size: 1.6rem; }
+            .block { padding: 18px; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1 class="lesson-title">REAL TIME</h1>
+        <div class="lesson-subtitle">Asking for directions</div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+        <div class="tabs-container">
+            <button class="tab-btn active" data-tab="read">📖 Read</button>
+            <button class="tab-btn" data-tab="vocab">📚 Vocabulary</button>
+            <button class="tab-btn" data-tab="phrases">💬 Phrases</button>
+            <button class="tab-btn" data-tab="quiz">✏️ Quiz</button>
+        </div>
+    </div>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        
+        <!-- TAB 1: READING -->
+        <div id="tab-read" class="tab-content active">
+            <!-- Block 1 -->
+            <div class="block">
+                <div class="block-header">
+                    <h3 class="block-title">Where is Lena?</h3>
+                    <button class="listen-btn" onclick="readBlock(this)">▶ Listen</button>
+                </div>
+                <div class="reading-text">Jessica and Luke are at <span class="hl" onclick="speakWord('Urbis', this)">Urbis</span>, Manchester's <span class="hl" onclick="speakWord('museum', this)">museum</span> of city life. But where is Lena?<br><br><div class="profile"><strong>📱 Text Message</strong><p>From: Jessica<br>To: Lena<br>"Where R U? U R L8!"</p></div><br><h3 style="color: var(--p); margin-top: 30px;">Lena asks for directions</h3><p><strong>Lena:</strong> Excuse me. How do I get to the Urbis <span class="hl" onclick="speakWord('museum', this)">museum</span>?</p><p><strong>Woman:</strong> Um. Let me see. You go <span class="hl" onclick="speakWord('straight on', this)">straight on</span> into Market Street. Then you take the <span class="hl" onclick="speakWord('second left', this)">second left</span> into Cross Street. Go straight on. Urbis is on the <span class="hl" onclick="speakWord('left', this)">left</span> near Exchange Square. You can't miss it! It's a big glass triangle!</p><p><strong>Lena:</strong> Thank you very much.</p><div class="map-container"><div class="map-placeholder">📍 Map: Stevenson's Square → Market Street → Cross Street → Urbis</div></div></div>
+            </div>
+            <!-- Block 2 -->
+            <div class="block">
+                <div class="block-header">
+                    <h3 class="block-title">Jessica's Note</h3>
+                    <button class="listen-btn" onclick="readBlock(this)">▶ Listen</button>
+                </div>
+                <div class="reading-text"><div class="profile"><strong>✉️ To: Lena</strong><p>Let's go to the <span class="hl" onclick="speakWord('cinema', this)">cinema</span> this afternoon. There's a good film on at the <span class="hl" onclick="speakWord('Embassy', this)">Embassy</span> in Oxford Road.</p><p>See you at the cinema at <strong>4.00 p.m.</strong></p><p>Can you come? Send me a text!</p><p>Here's a <span class="hl" onclick="speakWord('map', this)">map</span>.</p><p style="text-align: right;">Jessica</p></div><div class="map-container"><div class="map-placeholder">🗺️ Map: Piccadilly Train Station → Portland Street → Cinema (Embassy)</div></div></div>
+            </div>
+            <!-- Block 3 (Copy) -->
+            <div class="block">
+                <div class="block-header">
+                    <h3 class="block-title">Where is Lena? (Copy)</h3>
+                    <button class="listen-btn" onclick="readBlock(this)">▶ Listen</button>
+                </div>
+                <div class="reading-text">Jessica and Luke are at <span class="hl" onclick="speakWord('Urbis', this)">Urbis</span>, Manchester's <span class="hl" onclick="speakWord('museum', this)">museum</span> of city life. But where is Lena?<br><br><div class="profile"><strong>📱 Text Message</strong><p>From: Jessica<br>To: Lena<br>"Where R U? U R L8!"</p></div><br><h3 style="color: var(--p); margin-top: 30px;">Lena asks for directions</h3><p><strong>Lena:</strong> Excuse me. How do I get to the Urbis <span class="hl" onclick="speakWord('museum', this)">museum</span>?</p><p><strong>Woman:</strong> Um. Let me see. You go <span class="hl" onclick="speakWord('straight on', this)">straight on</span> into Market Street. Then you take the <span class="hl" onclick="speakWord('second left', this)">second left</span> into Cross Street. Go straight on. Urbis is on the <span class="hl" onclick="speakWord('left', this)">left</span> near Exchange Square. You can't miss it! It's a big glass triangle!</p><p><strong>Lena:</strong> Thank you very much.</p><div class="map-container"><div class="map-placeholder">📍 Map: Stevenson's Square → Market Street → Cross Street → Urbis</div></div></div>
+            </div>
+            <!-- Block 4 (Copy) -->
+            <div class="block">
+                <div class="block-header">
+                    <h3 class="block-title">Jessica's Note (Copy)</h3>
+                    <button class="listen-btn" onclick="readBlock(this)">▶ Listen</button>
+                </div>
+                <div class="reading-text"><div class="profile"><strong>✉️ To: Lena</strong><p>Let's go to the <span class="hl" onclick="speakWord('cinema', this)">cinema</span> this afternoon. There's a good film on at the <span class="hl" onclick="speakWord('Embassy', this)">Embassy</span> in Oxford Road.</p><p>See you at the cinema at <strong>4.00 p.m.</strong></p><p>Can you come? Send me a text!</p><p>Here's a <span class="hl" onclick="speakWord('map', this)">map</span>.</p><p style="text-align: right;">Jessica</p></div><div class="map-container"><div class="map-placeholder">🗺️ Map: Piccadilly Train Station → Portland Street → Cinema (Embassy)</div></div></div>
+            </div>
+        </div>
+
+        <!-- TAB 2: VOCABULARY -->
+        <div id="tab-vocab" class="tab-content">
+            <div class="block">
+                <div class="block-header"><h3 class="block-title">Key Words</h3></div>
+                <div class="grid">
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">directions</span><span class="ru">указания (как пройти)</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">straight on</span><span class="ru">прямо</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">turn left</span><span class="ru">повернуть налево</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">turn right</span><span class="ru">повернуть направо</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">take the second left</span><span class="ru">второй поворот налево</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">take the third right</span><span class="ru">третий поворот направо</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">can't miss it</span><span class="ru">невозможно не заметить</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">cinema</span><span class="ru">кинотеатр</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">museum</span><span class="ru">музей</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">map</span><span class="ru">карта</span></div>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-header"><h3 class="block-title">Key Words (Copy)</h3></div>
+                <div class="grid">
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">directions</span><span class="ru">указания (как пройти)</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">straight on</span><span class="ru">прямо</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">turn left</span><span class="ru">повернуть налево</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">turn right</span><span class="ru">повернуть направо</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">take the second left</span><span class="ru">второй поворот налево</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">take the third right</span><span class="ru">третий поворот направо</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">can't miss it</span><span class="ru">невозможно не заметить</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">cinema</span><span class="ru">кинотеатр</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">museum</span><span class="ru">музей</span></div>
+                    <div class="v-item" onclick="speakVocab(this)"><span class="en">map</span><span class="ru">карта</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: PHRASES -->
+        <div id="tab-phrases" class="tab-content">
+            <div class="block">
+                <div class="block-header"><h3 class="block-title">Phrases2know - Asking for directions</h3></div>
+                <div class="p-list">
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Excuse me, how do I get to the Urbis museum?</div><div class="p-ru">Извините, как мне добраться до музея Урбис?</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Is the Urbis museum near here?</div><div class="p-ru">Музей Урбис рядом?</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Can you say that again, please?</div><div class="p-ru">Не могли бы вы повторить?</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Thank you very much.</div><div class="p-ru">Большое спасибо.</div></div><div class="p-icon">▶</div></div>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-header"><h3 class="block-title">Phrases2know - Giving directions</h3></div>
+                <div class="p-list">
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Turn left into Market Street.</div><div class="p-ru">Поверните налево на Маркет-стрит.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Go straight on.</div><div class="p-ru">Идите прямо.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Take the second left into Cross Street.</div><div class="p-ru">Поверните на втором повороте налево на Кросс-стрит.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Urbis is on the left.</div><div class="p-ru">Урбис находится слева.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">You can't miss it!</div><div class="p-ru">Вы не пропустите!</div></div><div class="p-icon">▶</div></div>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-header"><h3 class="block-title">Making suggestions</h3></div>
+                <div class="p-list">
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Let's go to the cinema.</div><div class="p-ru">Давай пойдем в кино.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Let's watch a DVD.</div><div class="p-ru">Давай посмотрим DVD.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">See you at the cinema.</div><div class="p-ru">Увидимся в кинотеатре.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">See you at 4.00 p.m.</div><div class="p-ru">Увидимся в 16:00.</div></div><div class="p-icon">▶</div></div>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-header"><h3 class="block-title">Phrases2know - Asking for directions (Copy)</h3></div>
+                <div class="p-list">
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Excuse me, how do I get to the Urbis museum?</div><div class="p-ru">Извините, как мне добраться до музея Урбис?</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Is the Urbis museum near here?</div><div class="p-ru">Музей Урбис рядом?</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Can you say that again, please?</div><div class="p-ru">Не могли бы вы повторить?</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Thank you very much.</div><div class="p-ru">Большое спасибо.</div></div><div class="p-icon">▶</div></div>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-header"><h3 class="block-title">Phrases2know - Giving directions (Copy)</h3></div>
+                <div class="p-list">
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Turn left into Market Street.</div><div class="p-ru">Поверните налево на Маркет-стрит.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Go straight on.</div><div class="p-ru">Идите прямо.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Take the second left into Cross Street.</div><div class="p-ru">Поверните на втором повороте налево на Кросс-стрит.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Urbis is on the left.</div><div class="p-ru">Урбис находится слева.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">You can't miss it!</div><div class="p-ru">Вы не пропустите!</div></div><div class="p-icon">▶</div></div>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-header"><h3 class="block-title">Making suggestions (Copy)</h3></div>
+                <div class="p-list">
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Let's go to the cinema.</div><div class="p-ru">Давай пойдем в кино.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">Let's watch a DVD.</div><div class="p-ru">Давай посмотрим DVD.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">See you at the cinema.</div><div class="p-ru">Увидимся в кинотеатре.</div></div><div class="p-icon">▶</div></div>
+                    <div class="p-item" onclick="speakPhrase(this)"><div class="p-text-group"><div class="p-en">See you at 4.00 p.m.</div><div class="p-ru">Увидимся в 16:00.</div></div><div class="p-icon">▶</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: QUIZ -->
+        <div id="tab-quiz" class="tab-content">
+            <div class="q-item" data-answer="0" data-feedback="Correct! They are at Urbis, Manchester's museum of city life.">
+                <span class="q-txt">Where are Jessica and Luke?</span>
+                <div class="opts">
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At Urbis museum</button>
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At the cinema</button>
+                </div>
+                <div class="fb"></div>
+            </div>
+            <div class="q-item" data-answer="0" data-feedback="The woman tells her to take the second left into Cross Street.">
+                <span class="q-txt">How does Lena get to Urbis from Market Street?</span>
+                <div class="opts">
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">She takes the second left into Cross Street.</button>
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">She takes the third right into Cross Street.</button>
+                </div>
+                <div class="fb"></div>
+            </div>
+            <div class="q-item" data-answer="0" data-feedback="Jessica writes that there is a good film at the Embassy cinema.">
+                <span class="q-txt">Where does Jessica want to meet Lena in the afternoon?</span>
+                <div class="opts">
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At the Embassy cinema</button>
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At the museum</button>
+                </div>
+                <div class="fb"></div>
+            </div>
+            <div class="q-item" data-answer="0" data-feedback="In the note Jessica says: See you at the cinema at 4.00 p.m.">
+                <span class="q-txt">What time does Jessica want to meet at the cinema?</span>
+                <div class="opts">
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At 4.00 p.m.</button>
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At 6.00 p.m.</button>
+                </div>
+                <div class="fb"></div>
+            </div>
+            <div class="q-item" data-answer="0" data-feedback="Correct! They are at Urbis, Manchester's museum of city life.">
+                <span class="q-txt">Where are Jessica and Luke? (Copy)</span>
+                <div class="opts">
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At Urbis museum</button>
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At the cinema</button>
+                </div>
+                <div class="fb"></div>
+            </div>
+            <div class="q-item" data-answer="0" data-feedback="The woman tells her to take the second left into Cross Street.">
+                <span class="q-txt">How does Lena get to Urbis from Market Street? (Copy)</span>
+                <div class="opts">
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">She takes the second left into Cross Street.</button>
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">She takes the third right into Cross Street.</button>
+                </div>
+                <div class="fb"></div>
+            </div>
+            <div class="q-item" data-answer="0" data-feedback="Jessica writes that there is a good film at the Embassy cinema.">
+                <span class="q-txt">Where does Jessica want to meet Lena in the afternoon? (Copy)</span>
+                <div class="opts">
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At the Embassy cinema</button>
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At the museum</button>
+                </div>
+                <div class="fb"></div>
+            </div>
+            <div class="q-item" data-answer="0" data-feedback="In the note Jessica says: See you at the cinema at 4.00 p.m.">
+                <span class="q-txt">What time does Jessica want to meet at the cinema? (Copy)</span>
+                <div class="opts">
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At 4.00 p.m.</button>
+                    <button class="opt-btn" onclick="checkQuiz(this, 0)">At 6.00 p.m.</button>
+                </div>
+                <div class="fb"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    /* --------------------------------------------------------------------------
+       9. JAVASCRIPT ENGINE
+       -------------------------------------------------------------------------- */
+    
+    // --- Tab Switching Logic ---
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 1. Remove active class from all buttons & contents
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            // 2. Add active class to clicked button & target content
+            btn.classList.add('active');
+            const targetId = `tab-${btn.dataset.tab}`;
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    // --- Text-to-Speech Utility (Robust) ---
+    let currentUtterance = null;
+
+    function speak(text, lang = 'en-US', onEndCallback = null) {
+        if (!window.speechSynthesis) {
+            console.warn("Speech Synthesis not supported");
+            return;
+        }
+
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        u.rate = 0.9; // Slightly slower for educational purposes
+        u.pitch = 1;
+
+        // Attempt to find a better English voice
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => v.name.includes("Google US English")) ||
+                               voices.find(v => v.name.includes("Samantha")) ||
+                               voices.find(v => v.lang.startsWith("en"));
+        
+        if (preferredVoice) {
+            u.voice = preferredVoice;
+        }
+
+        if (onEndCallback) {
+            u.onend = onEndCallback;
+        }
+
+        u.onerror = (e) => console.error("TTS Error:", e);
+
+        window.speechSynthesis.speak(u);
+        currentUtterance = u;
+    }
+
+    // Ensure voices are loaded (Chrome quirk)
+    if (window.speechSynthesis && window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+    }
+
+    // --- Interaction Functions ---
+
+    // 1. Read entire block
+    window.readBlock = function(btn) {
+        const block = btn.closest('.block');
+        // Get text but ignore button text itself
+        const clone = block.cloneNode(true);
+        const btnInClone = clone.querySelector('.listen-btn');
+        if(btnInClone) btnInClone.remove();
+        
+        // Extract clean text
+        const textToRead = clone.innerText.replace(/\n/g, '. ');
+
+        if (btn.classList.contains('playing')) {
+            window.speechSynthesis.cancel();
+            btn.classList.remove('playing');
+            btn.innerText = "▶ Listen";
+        } else {
+            // Reset all other buttons
+            document.querySelectorAll('.listen-btn').forEach(b => {
+                b.classList.remove('playing');
+                b.innerText = "▶ Listen";
+            });
+
+            btn.classList.add('playing');
+            btn.innerText = "⏹ Stop";
+
+            speak(textToRead, 'en-US', () => {
+                btn.classList.remove('playing');
+                btn.innerText = "▶ Listen";
+            });
+        }
+    };
+
+    // 2. Clickable highlighted words
+    window.speakWord = function(word, el) {
+        // Animation
+        el.style.backgroundColor = 'var(--p)';
+        el.style.color = 'white';
+        
+        speak(word, 'en-US', () => {
+            // Reset style after speaking
+            el.style.backgroundColor = '';
+            el.style.color = '';
+        });
+    };
+
+    // 3. Vocabulary Items
+    window.speakVocab = function(el) {
+        const enText = el.querySelector('.en').innerText;
+        
+        // Visual Feedback
+        el.style.transform = "scale(0.96)";
+        el.style.borderColor = "var(--p)";
+
+        speak(enText, 'en-US', () => {
+            el.style.transform = "";
+            el.style.borderColor = "";
+        });
+    };
+
+    // 4. Phrases
+    window.speakPhrase = function(el) {
+        const enText = el.querySelector('.p-en').innerText;
+        const icon = el.querySelector('.p-icon');
+        
+        const originalIcon = icon.innerText;
+        icon.innerText = "🔊";
+        icon.style.backgroundColor = "var(--p)";
+        icon.style.color = "white";
+
+        speak(enText, 'en-US', () => {
+            icon.innerText = originalIcon;
+            icon.style.backgroundColor = "";
+            icon.style.color = "";
+        });
+    };
+
+    // 5. Quiz Logic
+    window.checkQuiz = function(btn, correctIndex) {
+        const parent = btn.closest('.q-item');
+        const allBtns = parent.querySelectorAll('.opt-btn');
+        const feedbackEl = parent.querySelector('.fb');
+        
+        // Get index of clicked button among siblings
+        const clickedIndex = Array.from(allBtns).indexOf(btn);
+        const targetIndex = parseInt(parent.dataset.answer || 0); // Default to 0 if missing
+
+        // Reset UI
+        allBtns.forEach(b => b.classList.remove('good', 'bad'));
+        feedbackEl.classList.remove('show');
+        feedbackEl.style.background = "";
+        feedbackEl.style.color = "";
+
+        // Check answer
+        if (clickedIndex === targetIndex) {
+            // Correct
+            btn.classList.add('good');
+            const fbText = parent.dataset.feedback;
+            feedbackEl.innerText = fbText;
+            feedbackEl.style.background = "var(--accent-success-bg)";
+            feedbackEl.style.color = "#15803d";
+            feedbackEl.classList.add('show');
+            
+            // Play sound effect (optional, using TTS for "Correct")
+            // speak("Correct!"); 
+        } else {
+            // Wrong
+            btn.classList.add('bad');
+            feedbackEl.innerText = "Try again!";
+            feedbackEl.style.background = "var(--accent-error-bg)";
+            feedbackEl.style.color = "#b91c1c";
+            feedbackEl.classList.add('show');
+            
+            // Vibrate on mobile
+            if (navigator.vibrate) navigator.vibrate(200);
+        }
+    };
+
+</script>
+</html>

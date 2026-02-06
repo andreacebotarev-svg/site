@@ -1,0 +1,114 @@
+/**
+ * QUESTION TYPES STYLES
+ * Visual styling for 5 different question formats.
+ */
+
+/* Error correction highlights */
+.error-highlight {
+  background: rgba(255, 55, 95, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #FF375F;
+  font-weight: 600;
+  text-decoration: underline wavy;
+}
+
+.error-sentence {
+  font-size: 1.1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border-left: 4px solid #FF375F;
+  margin: 1rem 0;
+}
+
+/* Dialogue context */
+.dialogue {
+  background: rgba(10, 132, 255, 0.1);
+  border-left: 4px solid #0A84FF;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 1.05rem;
+}
+
+.dialogue p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.dialogue strong {
+  color: #0A84FF;
+  font-weight: 600;
+}
+
+/* Transformation source sentence */
+.transformation-sentence {
+  font-size: 1.1rem;
+  padding: 1rem;
+  background: rgba(48, 209, 88, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #30D158;
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+/* Question type badge (optional) */
+.question-type-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.badge-recognition {
+  background: rgba(255, 214, 10, 0.2);
+  color: #FFD60A;
+}
+
+.badge-fill-in {
+  background: rgba(10, 132, 255, 0.2);
+  color: #0A84FF;
+}
+
+.badge-error-correction {
+  background: rgba(255, 55, 95, 0.2);
+  color: #FF375F;
+}
+
+.badge-transformation {
+  background: rgba(48, 209, 88, 0.2);
+  color: #30D158;
+}
+
+.badge-context {
+  background: rgba(191, 90, 242, 0.2);
+  color: #BF5AF2;
+}
+
+/* Blank highlight (existing, enhanced) */
+.blank {
+  color: var(--accent);
+  font-weight: 700;
+  padding: 0 4px;
+  background: rgba(10, 132, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .error-sentence,
+  .dialogue,
+  .transformation-sentence {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  .dialogue p {
+    line-height: 1.5;
+  }
+}
