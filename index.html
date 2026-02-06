@@ -1668,35 +1668,61 @@
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
 
-      /* Mobile Menu Logic */
+      /* Mobile Menu Logic - iOS scroll fix */
       const navToggle = document.querySelector('.nav-toggle');
       const mobileMenu = document.querySelector('.mobile-menu');
       const mobileLinks = document.querySelectorAll('.mobile-link');
+      let scrollPosition = 0;
+
+      function openMobileMenu() {
+        scrollPosition = window.pageYOffset;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollPosition}px`;
+        document.body.style.width = '100%';
+        mobileMenu.classList.add('is-open');
+        navToggle.classList.add('is-active');
+        navToggle.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeMobileMenu() {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollPosition);
+        mobileMenu.classList.remove('is-open');
+        navToggle.classList.remove('is-active');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
 
       if (navToggle && mobileMenu) {
         navToggle.addEventListener('click', () => {
           const isOpen = mobileMenu.classList.contains('is-open');
-          
           if (isOpen) {
-            mobileMenu.classList.remove('is-open');
-            navToggle.classList.remove('is-active');
-            navToggle.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
+            closeMobileMenu();
           } else {
-            mobileMenu.classList.add('is-open');
-            navToggle.classList.add('is-active');
-            navToggle.setAttribute('aria-expanded', 'true');
-            document.body.style.overflow = 'hidden';
+            openMobileMenu();
           }
         });
 
         // Close on link click
         mobileLinks.forEach(link => {
           link.addEventListener('click', () => {
-            mobileMenu.classList.remove('is-open');
-            navToggle.classList.remove('is-active');
-            document.body.style.overflow = '';
+            closeMobileMenu();
           });
+        });
+
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && mobileMenu.classList.contains('is-open')) {
+            closeMobileMenu();
+          }
+        });
+
+        // Close on overlay click (outside content)
+        mobileMenu.addEventListener('click', (e) => {
+          if (e.target === mobileMenu) {
+            closeMobileMenu();
+          }
         });
       }
 
