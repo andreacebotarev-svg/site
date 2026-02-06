@@ -18,19 +18,13 @@
   --font-sans: "Outfit", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
-  /* Fluid typography - Tuned for geometric sans */
-  --fs-0: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
-  /* 14-16px */
-  --fs-1: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
-  /* 16-18px */
-  --fs-2: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
-  /* 20-24px */
-  --fs-3: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
-  /* 28-36px */
-  --fs-4: clamp(2.5rem, 2rem + 2vw, 3.5rem);
-  /* 40-56px */
-  --fs-5: clamp(3.5rem, 3rem + 3vw, 5rem);
-  /* 56-80px */
+  /* Fluid typography - Optimized for mobile readability */
+  --fs-0: clamp(0.75rem, 3.5vw, 0.9rem);    /* 12-14.4px small text */
+  --fs-1: clamp(0.95rem, 4.2vw, 1.125rem);  /* 15.2-18px body text - increased for legibility */
+  --fs-2: clamp(1.15rem, 4.8vw, 1.35rem);   /* 18.4-21.6px subheadings */
+  --fs-3: clamp(1.5rem, 6vw, 2rem);         /* 24-32px h3 */
+  --fs-4: clamp(2rem, 8vw, 2.75rem);        /* 32-44px h2 */
+  --fs-5: clamp(2.75rem, 11vw, 4.5rem);     /* 44-72px h1 - reduced min for standard phones */
 
   --lh-tight: 1.1;
   --lh-normal: 1.5;
@@ -38,8 +32,8 @@
   /* Layout */
   --container: 1200px;
   /* Slightly wider for modern feel */
-  --pad: max(1.5rem, env(safe-area-inset-left, 1.5rem));
-  --pad-block: clamp(2rem, 5vw, 4rem);
+  --pad: max(1.25rem, env(safe-area-inset-left, 1.25rem)); /* Slightly reduced side padding for more content width */
+  --pad-block: clamp(3rem, 10vw, 5rem); /* Increased minimum vertical spacing for sections */
 
   --space-1: 0.5rem;
   --space-2: 1rem;

@@ -24,6 +24,7 @@
 
     <link rel="stylesheet" href="assets/css/styles.css" />
     <link rel="stylesheet" href="assets/css/chat.css" />
+    <link rel="stylesheet" href="assets/css/mobile-menu.css" />
 
     <!-- Open Graph -->
     <meta
@@ -144,6 +145,21 @@
           <a href="#faq">FAQ</a>
           <a href="#lead" class="btn btn-primary btn-lg">Бесплатный урок</a>
         </nav>
+      </div>
+      
+      <!-- Mobile Menu Overlay -->
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu__content">
+           <a href="#about" class="mobile-link">Почему я</a>
+           <a href="#method" class="mobile-link">Методика</a>
+           <a href="#qualifications" class="mobile-link">Квалификация</a>
+           <a href="#pricing" class="mobile-link">Цена</a>
+           <a href="#faq" class="mobile-link">FAQ</a>
+           <div class="mobile-menu__actions">
+             <a href="#lead" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center;">Бесплатный урок</a>
+           </div>
+        </div>
+      </div>
       </div>
     </header>
 
@@ -1652,6 +1668,38 @@
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
+
+      /* Mobile Menu Logic */
+      const navToggle = document.querySelector('.nav-toggle');
+      const mobileMenu = document.querySelector('.mobile-menu');
+      const mobileLinks = document.querySelectorAll('.mobile-link');
+
+      if (navToggle && mobileMenu) {
+        navToggle.addEventListener('click', () => {
+          const isOpen = mobileMenu.classList.contains('is-open');
+          
+          if (isOpen) {
+            mobileMenu.classList.remove('is-open');
+            navToggle.classList.remove('is-active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+          } else {
+            mobileMenu.classList.add('is-open');
+            navToggle.classList.add('is-active');
+            navToggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+          }
+        });
+
+        // Close on link click
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            mobileMenu.classList.remove('is-open');
+            navToggle.classList.remove('is-active');
+            document.body.style.overflow = '';
+          });
+        });
+      }
 
       // Lightbox функциональность
       const certificates = [

@@ -45,6 +45,24 @@ body {
   margin: 0 auto;
 }
 
+@media (max-width: 1200px) {
+  .workspace {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+    padding-bottom: 80px; /* Space for fixed button */
+  }
+  
+  .workspace {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
 /* Base Card Style */
 .insta-card {
   width: 1080px;      /* Fixed High-Res Width */
