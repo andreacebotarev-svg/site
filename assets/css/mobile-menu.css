@@ -54,7 +54,7 @@
 
 /* Nav Toggle Button */
 .nav-toggle {
-  display: flex;
+  display: none; /* Hidden by default, shown on mobile */
   flex-direction: column;
   gap: 6px;
   background: none;
@@ -62,6 +62,7 @@
   cursor: pointer;
   z-index: 110;
   padding: 10px;
+  position: relative;
 }
 
 .nav-toggle span {
@@ -71,15 +72,17 @@
   background-color: var(--text);
   border-radius: 2px;
   transition: all 0.3s ease;
+  transform-origin: center;
 }
 
-/* Toggled State for Hamburger */
+/* Toggled State for Hamburger -> X */
 .nav-toggle.is-active span:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
 }
 
 .nav-toggle.is-active span:nth-child(2) {
   opacity: 0;
+  transform: scaleX(0);
 }
 
 .nav-toggle.is-active span:nth-child(3) {
@@ -88,11 +91,15 @@
 
 @media (min-width: 769px) {
   .nav-toggle, .mobile-menu {
-    display: none;
+    display: none !important;
   }
 }
 
 @media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+  }
+  
   .nav-links {
     display: none;
   }
