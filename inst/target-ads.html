@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Target Ads Generator — Stories & Posts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/html2canvas.min.js" defer></script>
+  <style>
+    body {
+      background: #0a0b0d;
+      min-height: 100vh;
+    }
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn-download {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: opacity 0.2s;
+    }
+    .btn-download:hover { opacity: 0.9; }
+    .btn-download:disabled { background: #555; cursor: wait; }
+    
+    .workspace {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      padding: 40px;
+      justify-content: center;
+    }
+    
+    .section-title {
+      width: 100%;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      margin: 40px 0 20px 0;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .section-title:first-child {
+      border-top: none;
+      margin-top: 0;
+    }
+    
+    /* Stories format 9:16 (1080x1920) */
+    .story-card {
+      width: 1080px;
+      height: 1920px;
+      background: linear-gradient(180deg, #030508 0%, #0a0f18 100%);
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transform-origin: top left;
+    }
+    
+    /* Square post 1:1 (1080x1080) */
+    .square-card {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(180deg, #030508 0%, #0a0f18 100%);
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transform-origin: top left;
+    }
+    
+    .card-wrapper-story {
+      width: 270px;
+      height: 480px;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    
+    .card-wrapper-square {
+      width: 350px;
+      height: 350px;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    
+    .story-card h1, .square-card h1 {
+      font-size: 72px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+    
+    .story-card .lead, .square-card .lead {
+      font-size: 36px;
+      color: var(--muted);
+      line-height: 1.4;
+      max-width: 90%;
+    }
+    
+    .story-card .pill, .square-card .pill {
+      font-size: 24px;
+      padding: 16px 32px;
+      margin-bottom: 40px;
+    }
+    
+    .cta-button {
+      background: var(--primary);
+      color: white;
+      font-size: 32px;
+      font-weight: 800;
+      padding: 28px 56px;
+      border-radius: 100px;
+      margin-top: 48px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .arrow-down {
+      font-size: 120px;
+      animation: bounce 2s infinite;
+      margin-top: 40px;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+    
+    .gradient-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, rgba(79, 142, 255, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
+      z-index: 0;
+    }
+    
+    .story-card > *, .square-card > * {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <button class="btn-download" onclick="downloadStories()">📱 Скачать Stories</button>
+    <button class="btn-download" onclick="downloadSquares()">🟦 Скачать Посты</button>
+  </div>
+
+  <div class="workspace" id="capture-area">
+    
+    <h2 class="section-title">📱 Stories (9:16)</h2>
+    
+    <!-- STORY 1: Hook -->
+    <div class="card-wrapper-story">
+      <div class="story-card" data-type="story">
+        <div class="gradient-bg"></div>
+        <div class="pill">Английский для детей</div>
+        <h1>Оценки есть,<br>а знаний<br><span style="color: var(--accent);">нет?</span></h1>
+        <p class="lead">Пройди бесплатную<br>диагностику и узнай<br>реальный уровень</p>
+        <div class="arrow-down">👇</div>
+        <div class="cta-button">Узнать больше</div>
+      </div>
+    </div>
+    
+    <!-- STORY 2: Pain -->
+    <div class="card-wrapper-story">
+      <div class="story-card" data-type="story">
+        <div class="gradient-bg"></div>
+        <div class="pill" style="background: rgba(255,95,95,0.2); border-color: rgba(255,95,95,0.4);">Проблема</div>
+        <h1 style="font-size: 64px;"><span style="color: #FF5F5F;">90%</span><br>школьников</h1>
+        <p class="lead" style="font-size: 42px;">боятся говорить<br>на английском</p>
+        <div style="margin-top: 60px; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 24px;">
+          <p class="lead" style="font-size: 32px; color: var(--text);">😱 Языковой барьер<br>📚 Зубрежка без практики<br>😩 Потеря мотивации</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- STORY 3: Solution -->
+    <div class="card-wrapper-story">
+      <div class="story-card" data-type="story">
+        <div class="gradient-bg"></div>
+        <div class="pill" style="background: rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.4);">Решение</div>
+        <h1>Методика<br><span style="color: var(--good);">TBLT</span></h1>
+        <p class="lead">Учим через реальные<br>задачи и игры,<br>а не зубрежку</p>
+        <div style="margin-top: 48px; display: flex; flex-direction: column; gap: 24px;">
+          <div style="display: flex; align-items: center; gap: 24px; background: rgba(255,255,255,0.05); padding: 24px 32px; border-radius: 20px;">
+            <span style="font-size: 48px;">🎮</span>
+            <span style="font-size: 28px; color: var(--text);">Интерактивная платформа</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 24px; background: rgba(255,255,255,0.05); padding: 24px 32px; border-radius: 20px;">
+            <span style="font-size: 48px;">🤖</span>
+            <span style="font-size: 28px; color: var(--text);">AI-помощник 24/7</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 24px; background: rgba(255,255,255,0.05); padding: 24px 32px; border-radius: 20px;">
+            <span style="font-size: 48px;">📊</span>
+            <span style="font-size: 28px; color: var(--text);">Отчеты для родителей</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- STORY 4: CTA -->
+    <div class="card-wrapper-story">
+      <div class="story-card" data-type="story">
+        <div class="gradient-bg"></div>
+        <div style="width: 200px; height: 200px; background: url('../assets/img/tutor-portrait.jpg'); background-size: cover; border-radius: 50%; margin-bottom: 40px; border: 6px solid var(--primary);"></div>
+        <h1 style="font-size: 64px;">Первый урок<br><span style="color: var(--primary);">бесплатно</span></h1>
+        <p class="lead">60 минут диагностики +<br>персональный план<br>обучения</p>
+        <div class="arrow-down">👇</div>
+        <div class="cta-button">Записаться</div>
+      </div>
+    </div>
+    
+    <h2 class="section-title">🟦 Квадратные посты (1:1)</h2>
+    
+    <!-- SQUARE 1: Main Offer -->
+    <div class="card-wrapper-square">
+      <div class="square-card" data-type="square">
+        <div class="gradient-bg"></div>
+        <div class="pill">Английский 2-11 класс</div>
+        <h1>Первый урок<br><span style="color: var(--primary);">бесплатно</span></h1>
+        <p class="lead">Диагностика + план обучения<br>на 2 месяца</p>
+        <div class="cta-button" style="font-size: 28px; padding: 20px 40px;">Подробнее в профиле</div>
+      </div>
+    </div>
+    
+    <!-- SQUARE 2: Pain Point -->
+    <div class="card-wrapper-square">
+      <div class="square-card" data-type="square">
+        <div class="gradient-bg"></div>
+        <h1 style="font-size: 56px;">Ребенок<br>не хочет<br>учить<br><span style="color: var(--accent);">английский?</span></h1>
+        <p class="lead" style="margin-top: 24px;">Превращаю урок в игру.<br>TBLT + IT-платформа</p>
+      </div>
+    </div>
+    
+    <!-- SQUARE 3: Promo -->
+    <div class="card-wrapper-square">
+      <div class="square-card" data-type="square">
+        <div class="gradient-bg"></div>
+        <div class="pill" style="background: rgba(79, 142, 255, 0.2); border-color: var(--primary);">Акция</div>
+        <h1 style="font-size: 80px; color: var(--primary);">-15%</h1>
+        <p class="lead" style="font-size: 40px; color: var(--text);">на первые 3 месяца<br>обучения</p>
+        <div style="margin-top: 40px; padding: 24px 48px; background: rgba(255,255,255,0.1); border-radius: 16px; border: 2px dashed var(--primary);">
+          <span style="font-size: 48px; font-weight: 800; color: var(--primary); letter-spacing: 0.1em;">2026</span>
+        </div>
+        <p class="lead" style="font-size: 24px; margin-top: 24px;">промокод при записи</p>
+      </div>
+    </div>
+    
+    <!-- SQUARE 4: Credentials -->
+    <div class="card-wrapper-square">
+      <div class="square-card" data-type="square">
+        <div class="gradient-bg"></div>
+        <div style="display: flex; gap: 32px; margin-bottom: 40px;">
+          <div style="background: rgba(255,255,255,0.05); padding: 32px; border-radius: 20px; text-align: center;">
+            <div style="font-size: 56px; font-weight: 800; color: var(--text);">C2</div>
+            <div style="font-size: 20px; color: var(--muted);">PROFICIENCY</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.05); padding: 32px; border-radius: 20px; text-align: center;">
+            <div style="font-size: 56px; font-weight: 800; color: var(--text);">TEFL</div>
+            <div style="font-size: 20px; color: var(--muted);">CERTIFIED</div>
+          </div>
+        </div>
+        <h1 style="font-size: 48px;">5+ лет опыта</h1>
+        <p class="lead">University of London<br>Science of Reading</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Scale stories
+      document.querySelectorAll('.card-wrapper-story').forEach(wrapper => {
+        const card = wrapper.querySelector('.story-card');
+        const scale = wrapper.clientWidth / 1080;
+        card.style.transform = `scale(${scale})`;
+      });
+      
+      // Scale squares
+      document.querySelectorAll('.card-wrapper-square').forEach(wrapper => {
+        const card = wrapper.querySelector('.square-card');
+        const scale = wrapper.clientWidth / 1080;
+        card.style.transform = `scale(${scale})`;
+      });
+    });
+    
+    async function downloadCards(selector, prefix, width, height) {
+      const cards = document.querySelectorAll(selector);
+      
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const wrapper = card.parentElement;
+        
+        // Save and reset transform
+        const savedTransform = card.style.transform;
+        card.style.transform = 'none';
+        
+        await new Promise(r => setTimeout(r, 300));
+        
+        const canvas = await html2canvas(card, {
+          scale: 2,
+          width: width,
+          height: height,
+          backgroundColor: '#030508',
+          useCORS: true,
+          logging: false
+        });
+        
+        // Restore
+        card.style.transform = savedTransform;
+        
+        // Download
+        const link = document.createElement('a');
+        link.download = `${prefix}-${String(i + 1).padStart(2, '0')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        await new Promise(r => setTimeout(r, 500));
+      }
+    }
+    
+    async function downloadStories() {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = '⏳ Загрузка...';
+      
+      try {
+        await downloadCards('.story-card', 'story', 1080, 1920);
+        btn.textContent = '✅ Готово!';
+      } catch (e) {
+        console.error(e);
+        btn.textContent = '❌ Ошибка';
+      }
+      
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = '📱 Скачать Stories';
+      }, 2000);
+    }
+    
+    async function downloadSquares() {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = '⏳ Загрузка...';
+      
+      try {
+        await downloadCards('.square-card', 'post', 1080, 1080);
+        btn.textContent = '✅ Готово!';
+      } catch (e) {
+        console.error(e);
+        btn.textContent = '❌ Ошибка';
+      }
+      
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = '🟦 Скачать Посты';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

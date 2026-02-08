@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Reels Templates — Vertical Video Covers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/html2canvas.min.js" defer></script>
+  <style>
+    body {
+      background: #0a0b0d;
+      min-height: 100vh;
+    }
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .btn-download {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    
+    .workspace {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      padding: 40px;
+      justify-content: center;
+    }
+    
+    /* Reels cover 9:16 */
+    .reels-card {
+      width: 1080px;
+      height: 1920px;
+      background: linear-gradient(180deg, #030508 0%, #0a0f18 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transform-origin: top left;
+    }
+    
+    .card-wrapper {
+      width: 216px;
+      height: 384px;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    
+    .reels-card h1 {
+      font-size: 80px;
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--text);
+    }
+    
+    .reels-card .subtitle {
+      font-size: 40px;
+      color: var(--muted);
+      margin-top: 32px;
+    }
+    
+    .gradient-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, rgba(79, 142, 255, 0.2) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
+      z-index: 0;
+    }
+    
+    .reels-card > * {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .play-icon {
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.1);
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+    
+    .play-icon::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 32px solid white;
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      margin-left: 8px;
+    }
+    
+    .badge {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: white;
+      font-size: 28px;
+      font-weight: 700;
+      padding: 16px 40px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    .bottom-cta {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      color: #000;
+      font-size: 32px;
+      font-weight: 800;
+      padding: 24px 56px;
+      border-radius: 100px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <button class="btn-download" onclick="downloadAll()">📥 Скачать обложки</button>
+  </div>
+
+  <div class="workspace">
+    
+    <!-- Reels Cover 1: Hook -->
+    <div class="card-wrapper">
+      <div class="reels-card" data-type="reels">
+        <div class="gradient-bg"></div>
+        <div class="badge">Английский</div>
+        <div class="play-icon"></div>
+        <h1>Почему<br>оценки<br><span style="color: var(--accent);">врут</span>?</h1>
+        <p class="subtitle">Смотри до конца 👇</p>
+        <div class="bottom-cta">Узнать</div>
+      </div>
+    </div>
+    
+    <!-- Reels Cover 2: Tips -->
+    <div class="card-wrapper">
+      <div class="reels-card" data-type="reels">
+        <div class="gradient-bg"></div>
+        <div class="badge">Лайфхак</div>
+        <div class="play-icon"></div>
+        <h1 style="font-size: 72px;">3 ошибки<br>которые<br><span style="color: var(--primary);">убивают</span><br>мотивацию</h1>
+        <div class="bottom-cta">Смотреть</div>
+      </div>
+    </div>
+    
+    <!-- Reels Cover 3: Result -->
+    <div class="card-wrapper">
+      <div class="reels-card" data-type="reels">
+        <div class="gradient-bg"></div>
+        <div class="badge" style="background: var(--good);">Результат</div>
+        <div class="play-icon"></div>
+        <h1>От <span style="color: #FF5F5F;">тройки</span><br>до<br><span style="color: var(--good);">пятёрки</span></h1>
+        <p class="subtitle">История ученика</p>
+        <div class="bottom-cta">Смотреть</div>
+      </div>
+    </div>
+    
+    <!-- Reels Cover 4: Method -->
+    <div class="card-wrapper">
+      <div class="reels-card" data-type="reels">
+        <div class="gradient-bg"></div>
+        <div class="badge" style="background: var(--accent);">Методика</div>
+        <div class="play-icon"></div>
+        <h1>Что такое<br><span style="color: var(--good);">TBLT</span>?</h1>
+        <p class="subtitle">Объясняю за 60 сек</p>
+        <div class="bottom-cta">Узнать</div>
+      </div>
+    </div>
+    
+    <!-- Reels Cover 5: Promo -->
+    <div class="card-wrapper">
+      <div class="reels-card" data-type="reels">
+        <div class="gradient-bg"></div>
+        <div class="badge" style="background: linear-gradient(90deg, var(--primary), var(--accent));">Акция</div>
+        <div class="play-icon"></div>
+        <h1 style="font-size: 120px; color: var(--primary);">-15%</h1>
+        <p class="subtitle" style="font-size: 36px;">Промокод<br><span style="color: var(--text); font-weight: 700;">2026</span></p>
+        <div class="bottom-cta">Подробнее</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.card-wrapper').forEach(wrapper => {
+        const card = wrapper.querySelector('.reels-card');
+        const scale = wrapper.clientWidth / 1080;
+        card.style.transform = `scale(${scale})`;
+      });
+    });
+    
+    async function downloadAll() {
+      const btn = document.querySelector('.btn-download');
+      btn.disabled = true;
+      btn.textContent = '⏳ Загрузка...';
+      
+      const cards = document.querySelectorAll('.reels-card');
+      
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const wrapper = card.parentElement;
+        
+        const savedTransform = card.style.transform;
+        card.style.transform = 'none';
+        
+        await new Promise(r => setTimeout(r, 300));
+        
+        const canvas = await html2canvas(card, {
+          scale: 2,
+          width: 1080,
+          height: 1920,
+          backgroundColor: '#030508',
+          useCORS: true,
+          logging: false
+        });
+        
+        card.style.transform = savedTransform;
+        
+        const link = document.createElement('a');
+        link.download = `reels-cover-${String(i + 1).padStart(2, '0')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        await new Promise(r => setTimeout(r, 500));
+      }
+      
+      btn.textContent = '✅ Готово!';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = '📥 Скачать обложки';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
