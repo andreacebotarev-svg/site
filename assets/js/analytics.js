@@ -84,3 +84,37 @@
   }
 })();
 
+// --- Отслеживание кликов по контактам ---
+document.addEventListener('DOMContentLoaded', () => {
+  const YANDEX_ID = '106683416';
+  
+  // Конфигурация кнопок для отслеживания
+  const trackableButtons = [
+    { id: 'contact-telegram', goal: 'click_telegram', label: 'Telegram' },
+    { id: 'contact-email', goal: 'click_email', label: 'Email' },
+    { id: 'contact-phone', goal: 'click_phone', label: 'Phone' },
+    { id: 'leadForm', goal: 'form_submit', label: 'Lead Form', event: 'submit' }
+  ];
+
+  trackableButtons.forEach(({ id, goal, label, event = 'click' }) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.addEventListener(event, () => {
+        // Yandex Metrica
+        if (typeof ym === 'function') {
+          ym(YANDEX_ID, 'reachGoal', goal);
+          console.log(`📊 [Analytics] Yandex Goal: ${goal}`);
+        }
+        // Google Analytics
+        if (typeof gtag === 'function') {
+          gtag('event', goal, {
+            event_category: 'contact',
+            event_label: label
+          });
+          console.log(`📊 [Analytics] GA Event: ${goal}`);
+        }
+      });
+      console.log(`🎯 [Analytics] Tracking enabled for: ${id}`);
+    }
+  });
+});
