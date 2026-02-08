@@ -1396,38 +1396,26 @@
               <form
                 class="form"
                 id="leadForm"
-                action="https://api.web3forms.com/submit"
-                method="POST"
+                onsubmit="handleFormSubmit(event)"
               >
-                <!-- Web3Forms: Access Key (публичный ключ, безопасно использовать в коде) -->
+                <!-- Web3Forms: Access Key -->
                 <input
                   type="hidden"
                   name="access_key"
                   value="702470cb-beb9-4faa-93e7-595495a5f4da"
                 />
-
-                <!-- Тема письма -->
                 <input
                   type="hidden"
                   name="subject"
                   value="🎓 Новая заявка с лендинга englishlessons"
                 />
-
-                <!-- Отправитель (для удобства идентификации в письме) -->
                 <input
                   type="hidden"
                   name="from_name"
                   value="Лендинг английского"
                 />
-
-                <!-- Перенаправление после успешной отправки -->
-                <input
-                  type="hidden"
-                  name="redirect"
-                  value="https://andreacebotarev-svg.github.io/englishlessons/#lead"
-                />
-
-                <!-- Honeypot-защита от спам-ботов (скрытое поле, боты его заполняют) -->
+                
+                <!-- Botspam check -->
                 <input
                   type="checkbox"
                   name="botcheck"
@@ -1435,80 +1423,134 @@
                   style="display: none"
                 />
 
-                <label class="label" for="name">
-                  Ваше имя
+                <div class="input-group stack" style="gap: 0.5rem; margin-bottom: 1rem;">
+                  <label for="name" class="label">Как к вам обращаться?</label>
                   <input
-                    class="input"
+                    type="text"
                     id="name"
                     name="name"
-                    type="text"
-                    autocomplete="name"
-                    required
-                    placeholder="Анна"
-                  />
-                </label>
-
-                <label class="label" for="email">
-                  Email или телефон
-                  <input
                     class="input"
-                    id="email"
-                    name="email"
-                    type="text"
-                    autocomplete="email"
+                    placeholder="Имя / Имя ребёнка"
                     required
-                    placeholder="+7 900 123-45-67 или email@example.com"
+                    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);"
                   />
-                </label>
+                </div>
 
-                <label class="label" for="goal">
-                  Класс или цель обучения
+                <div class="input-group stack" style="gap: 0.5rem; margin-bottom: 1rem;">
+                  <label for="contact" class="label">Контакт для связи</label>
                   <input
-                    class="input"
-                    id="goal"
-                    name="goal"
                     type="text"
+                    id="contact"
+                    name="contact"
+                    class="input"
+                    placeholder="Telegram / WhatsApp / Телефон"
                     required
-                    placeholder="5 класс, подготовка к ВПР или Adult B1"
+                    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);"
                   />
-                </label>
+                </div>
 
-                <label class="label" for="message">
-                  Удобное время (необязательно)
+                <div class="input-group stack" style="gap: 0.5rem; margin-bottom: 1rem;">
+                  <label for="message" class="label">Ваш запрос (необязательно)</label>
                   <textarea
-                    class="textarea"
                     id="message"
                     name="message"
-                    placeholder="Например: будни после 18:00 или выходные утром"
+                    class="input"
+                    rows="3"
+                    placeholder="Например: Хотим подтянуть оценки 5 класс / Подготовка к ОГЭ"
+                    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);"
                   ></textarea>
-                </label>
+                </div>
+                
+                <!-- Согласие -->
+                <div class="checkbox-group" style="margin-bottom: 1.5rem; display: flex; align-items: start; gap: 8px;">
+                      <input type="checkbox" required checked style="margin-top: 4px;">
+                      <span class="small" style="font-size: 0.85rem; color: var(--muted); line-height: 1.4;">
+                        Согласен на обработку персональных данных
+                      </span>
+                </div>
 
-                <label
-                  class="label"
-                  style="display: flex; align-items: flex-start; gap: 0.5rem"
-                >
-                  <input
-                    type="checkbox"
-                    name="consent"
-                    required
-                    style="margin-top: 0.25rem"
-                  />
-                  <span class="small">
-                    Я даю согласие на
-                    <a href="consent.html" target="_blank"
-                      >обработку персональных данных</a
-                    >
-                    и ознакомлен(а) с
-                    <a href="privacy.html" target="_blank"
-                      >Политикой конфиденциальности</a
-                    >.
-                  </span>
-                </label>
-
-                <button class="btn btn-primary btn-lg" type="submit">
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; cursor: pointer;">
                   Отправить заявку
                 </button>
+                
+                <!-- Сообщение о статусе -->
+                <div id="form-status" style="margin-top: 15px; display: none; padding: 10px; border-radius: 8px; text-align: center; font-weight: 500;"></div>
               </form>
+
+              <script>
+                function handleFormSubmit(event) {
+                  event.preventDefault(); // Остановить перезагрузку страницы
+                  
+                  const form = event.target;
+                  const status = document.getElementById('form-status');
+                  const btn = form.querySelector('button[type="submit"]');
+                  
+                  // UI: Loading state
+                  const originalBtnText = btn.innerText;
+                  btn.innerText = "Отправка...";
+                  btn.disabled = true;
+                  btn.style.opacity = "0.7";
+                  status.style.display = 'none';
+
+                  const formData = new FormData(form);
+                  const object = Object.fromEntries(formData);
+                  const json = JSON.stringify(object);
+
+                  fetch('https://api.web3forms.com/submit', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Accept': 'application/json'
+                      },
+                      body: json
+                  })
+                  .then(async (response) => {
+                      let json = await response.json();
+                      if (response.status == 200) {
+                          // 1. Успех UI
+                          status.innerText = "✅ Заявка отправлена! Я свяжусь с вами в ближайшее время.";
+                          status.style.color = "#155724";
+                          status.style.backgroundColor = "#d4edda";
+                          status.style.display = "block";
+                          form.reset();
+                          
+                          // 2. ОТПРАВКА ЦЕЛИ В МЕТРИКУ (Критически важно для рекламы)
+                          if (typeof ym !== 'undefined') {
+                            // ID 106683416 взят из analytics.js (предположительно) или будет общий
+                            // Используем try-catch для надежности
+                            try {
+                                ym(99648600, 'reachGoal', 'form_sent'); // ЗАМЕНИТЕ 99648600 НА ВАШ РЕАЛЬНЫЙ ID СЧЕТЧИКА ЕСЛИ ОН ДРУГОЙ
+                                console.log('🎯 Mетрика: цель form_sent отправлена');
+                            } catch (e) { console.error('Ошибка отправки цели:', e); }
+                          } else {
+                            console.warn('⚠️ Метрика не загружена');
+                          }
+
+                      } else {
+                          console.log(response);
+                          status.innerText = json.message || "Ошибка отправки. Попробуйте еще раз.";
+                          status.style.color = "#721c24";
+                          status.style.backgroundColor = "#f8d7da";
+                          status.style.display = "block";
+                      }
+                  })
+                  .catch(error => {
+                      console.log(error);
+                      status.innerText = "Произошла ошибка соединения.";
+                      status.style.color = "#721c24";
+                      status.style.backgroundColor = "#f8d7da";
+                      status.style.display = "block";
+                  })
+                  .finally(() => {
+                      btn.innerText = originalBtnText;
+                      btn.disabled = false;
+                      btn.style.opacity = "1";
+                      setTimeout(() => {
+                        status.style.display = 'none';
+                      }, 10000);
+                  });
+                }
+              </script>
             </div>
           </div>
 
