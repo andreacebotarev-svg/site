@@ -4,7 +4,7 @@
    * АНАЛИТИКА + ДИАГНОСТИКА
    * -------------------------------------------------------------------------
    */
-  const YANDEX_METRICA_ID = '106683416'; 
+  const YANDEX_METRICA_ID = '106782821'; 
   const GOOGLE_ANALYTICS_ID = 'G-22HQE6ZH46';
 
   const hostname = window.location.hostname;
