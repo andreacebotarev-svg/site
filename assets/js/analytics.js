@@ -76,6 +76,35 @@
             trackLinks: true
        });
        console.log('🚀 [Analytics] Yandex Metrica initialized');
+
+       // === ДОКАЗАТЕЛЬСТВА РАБОТЫ МЕТРИКИ ===
+       console.log('%c═══════════════════════════════════════', 'color: #ff0; font-weight: bold');
+       console.log('%c  YANDEX METRICA — ДИАГНОСТИКА', 'color: #ff0; font-size: 14px; font-weight: bold');
+       console.log('%c═══════════════════════════════════════', 'color: #ff0; font-weight: bold');
+       console.log('📌 Counter ID:', YANDEX_METRICA_ID);
+       console.log('🌐 Page URL:', location.href);
+       console.log('📎 Referrer:', document.referrer || '(прямой заход)');
+       console.log('⏰ Init time:', new Date().toLocaleTimeString());
+       console.log('🔧 ym function exists:', typeof window.ym === 'function');
+       console.log('📋 ym queue:', window.ym && window.ym.a ? window.ym.a.length + ' commands queued' : 'direct mode');
+
+       // Отложенная проверка (через 3 сек скрипт точно загрузится)
+       setTimeout(() => {
+         console.log('%c═══ YANDEX METRICA — ПРОВЕРКА ЧЕРЕЗ 3 сек ═══', 'color: #0f0; font-weight: bold');
+         console.log('✅ ym function active:', typeof window.ym === 'function');
+         console.log('✅ tag.js loaded:', !!document.querySelector('script[src*="mc.yandex.ru/metrika/tag.js"]'));
+         
+         // Проверяем что счётчик создал свои объекты
+         const counterKey = 'yaCounter' + YANDEX_METRICA_ID;
+         console.log('✅ Counter object (' + counterKey + '):', !!window[counterKey]);
+         
+         if (window[counterKey]) {
+           console.log('%c🎉 МЕТРИКА РАБОТАЕТ! Счётчик ' + YANDEX_METRICA_ID + ' активен и отправляет данные.', 'color: #0f0; font-size: 14px; font-weight: bold');
+         } else {
+           console.warn('⚠️ Counter object не найден. Возможные причины: AdBlock, блокировка mc.yandex.ru, или счётчик ещё загружается.');
+         }
+       }, 3000);
+
     } catch (e) {
        console.error('❌ [Analytics] Yandex Metrica initialization error:', e);
     }
