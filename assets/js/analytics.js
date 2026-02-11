@@ -17,8 +17,8 @@
   console.log('Yandex ID:', YANDEX_METRICA_ID || 'НЕ УКАЗАН');
   console.groupEnd();
 
-  // --- Google Analytics (DISABLED) ---
-  if (false && GOOGLE_ANALYTICS_ID && GOOGLE_ANALYTICS_ID !== 'G-YOUR_GOOGLE_ID') {
+  // --- Google Analytics ---
+  if (GOOGLE_ANALYTICS_ID && GOOGLE_ANALYTICS_ID !== 'G-YOUR_GOOGLE_ID') {
     try {
       const script = document.createElement('script');
       script.async = true;
