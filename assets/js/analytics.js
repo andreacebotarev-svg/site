@@ -17,8 +17,8 @@
   console.log('Yandex ID:', YANDEX_METRICA_ID || 'НЕ УКАЗАН');
   console.groupEnd();
 
-  // --- Google Analytics ---
-  if (GOOGLE_ANALYTICS_ID && GOOGLE_ANALYTICS_ID !== 'G-YOUR_GOOGLE_ID') {
+  // --- Google Analytics (DISABLED) ---
+  if (false && GOOGLE_ANALYTICS_ID && GOOGLE_ANALYTICS_ID !== 'G-YOUR_GOOGLE_ID') {
     try {
       const script = document.createElement('script');
       script.async = true;
@@ -63,7 +63,7 @@
        k.onload = () => console.log('✅ [Analytics] Yandex Metrica script loaded');
        k.onerror = () => console.error('❌ [Analytics] Yandex Metrica script FAILED to load');
        a.parentNode.insertBefore(k,a)})
-       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=106782821", "ym");
 
        ym(YANDEX_METRICA_ID, "init", {
             ssr: true,
@@ -86,7 +86,7 @@
 
 // --- Отслеживание кликов по контактам ---
 document.addEventListener('DOMContentLoaded', () => {
-  const YANDEX_ID = '106683416';
+  const YANDEX_ID = '106782821';
   
   // Конфигурация кнопок для отслеживания
   const trackableButtons = [
