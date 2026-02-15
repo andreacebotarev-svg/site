@@ -4,7 +4,7 @@
    * АНАЛИТИКА + ДИАГНОСТИКА
    * -------------------------------------------------------------------------
    */
-  const YANDEX_METRICA_ID = '106782821'; 
+  const YANDEX_METRICA_ID = '106683416'; 
   const GOOGLE_ANALYTICS_ID = 'G-22HQE6ZH46';
 
   const hostname = window.location.hostname;
@@ -63,7 +63,7 @@
        k.onload = () => console.log('✅ [Analytics] Yandex Metrica script loaded');
        k.onerror = () => console.error('❌ [Analytics] Yandex Metrica script FAILED to load');
        a.parentNode.insertBefore(k,a)})
-       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=106782821", "ym");
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=106683416", "ym");
 
        ym(YANDEX_METRICA_ID, "init", {
             ssr: true,
@@ -115,7 +115,7 @@
 
 // --- Отслеживание кликов по контактам ---
 document.addEventListener('DOMContentLoaded', () => {
-  const YANDEX_ID = '106782821';
+  const YANDEX_ID = '106683416';
   
   // Конфигурация кнопок для отслеживания
   const trackableButtons = [
