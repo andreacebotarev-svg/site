@@ -2003,6 +2003,18 @@ a:hover {
   z-index: 5;
 }
 
+/* Clickable review card (a-tag) */
+a.review-card {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+a.review-card:hover .review-external-link {
+  color: var(--primary);
+  transform: translate(2px, -2px);
+}
+
 .review-header {
   display: flex;
   align-items: center;
