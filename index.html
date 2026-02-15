@@ -151,6 +151,7 @@
     <!-- Mobile Menu Overlay (outside header for proper z-index stacking) -->
     <div class="mobile-menu" id="mobile-menu">
       <div class="mobile-menu__content">
+        <a href="#top" class="mobile-link" style="font-size: 1rem; opacity: 0.6;">↑ Наверх</a>
         <a href="#about" class="mobile-link">Почему я</a>
         <a href="#method" class="mobile-link">Методика</a>
         <a href="#qualifications" class="mobile-link">Квалификация</a>
@@ -1727,11 +1728,14 @@
         navToggle.setAttribute('aria-expanded', 'true');
       }
 
-      function closeMobileMenu() {
+      function closeMobileMenu(restoreScroll) {
         document.body.style.position = '';
         document.body.style.top = '';
         document.body.style.width = '';
-        window.scrollTo(0, scrollPosition);
+        // Restore scroll only when closing without navigation
+        if (restoreScroll !== false) {
+          window.scrollTo(0, scrollPosition);
+        }
         mobileMenu.classList.remove('is-open');
         navToggle.classList.remove('is-active');
         navToggle.setAttribute('aria-expanded', 'false');
@@ -1747,10 +1751,19 @@
           }
         });
 
-        // Close on link click
+        // Close on link click — don't restore old scroll, let anchor navigation handle it
         mobileLinks.forEach(link => {
-          link.addEventListener('click', () => {
-            closeMobileMenu();
+          link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            // For #top link, scroll to top
+            if (href === '#top') {
+              e.preventDefault();
+              closeMobileMenu(false);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return;
+            }
+            // For other anchors, close without restoring old position
+            closeMobileMenu(false);
           });
         });
 
