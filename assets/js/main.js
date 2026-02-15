@@ -99,34 +99,37 @@
   }
 
   /* -----------------------------
-     4. Sticky CTA Logic
-     Show button after Hero, Hide when near Footer/Lead Form
+     4. Sticky CTA Logic + Back to Top
+     Show buttons after Hero, Hide when near Footer/Lead Form
   ----------------------------- */
   const stickyCta = document.getElementById('stickyCta');
+  const backToTop = document.getElementById('backToTop');
   const leadSection = document.getElementById('lead');
   
-  if (stickyCta && leadSection) {
+  if (leadSection) {
     let isLeadVisible = false;
     
     // Observer to detect if we can see the lead form
     const leadObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         isLeadVisible = entry.isIntersecting;
-        updateStickyVisibility();
+        updateFloatingButtons();
       });
     }, { threshold: 0.1 }); // Trigger when 10% of form is visible
 
     leadObserver.observe(leadSection);
     
     // Updates visibility based on scroll pos + lead visibility
-    function updateStickyVisibility() {
+    function updateFloatingButtons() {
       const scrollY = window.scrollY;
       const threshold = 600; // Show after scrolling 600px
+      const show = scrollY > threshold && !isLeadVisible;
       
-      if (scrollY > threshold && !isLeadVisible) {
-        stickyCta.classList.add('is-visible');
-      } else {
-        stickyCta.classList.remove('is-visible');
+      if (stickyCta) {
+        stickyCta.classList.toggle('is-visible', show);
+      }
+      if (backToTop) {
+        backToTop.classList.toggle('is-visible', show);
       }
     }
     
@@ -135,12 +138,19 @@
     window.addEventListener('scroll', () => {
       if (!isScrolling) {
         window.requestAnimationFrame(() => {
-          updateStickyVisibility();
+          updateFloatingButtons();
           isScrolling = false;
         });
         isScrolling = true;
       }
     }, { passive: true });
+  }
+
+  // Back to top click handler
+  if (backToTop) {
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   /* -----------------------------

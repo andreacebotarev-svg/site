@@ -1703,6 +1703,13 @@
       Записаться на урок
     </a>
 
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Наверх">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
     <script src="assets/js/crypto.js"></script>
     <script src="assets/js/geo-router.js"></script>
     <script src="assets/js/chat.js" defer></script>
@@ -1760,12 +1767,30 @@
               e.preventDefault();
               closeMobileMenu(false);
               window.scrollTo({ top: 0, behavior: 'smooth' });
+              ensureBurgerVisible();
               return;
             }
             // For other anchors, close without restoring old position
             closeMobileMenu(false);
+            ensureBurgerVisible();
           });
         });
+
+        // Force burger button to be visible after 3 seconds
+        // Fixes iOS/mobile bug where the button disappears after navigation
+        function ensureBurgerVisible() {
+          setTimeout(() => {
+            if (navToggle) {
+              navToggle.style.display = 'none';
+              navToggle.offsetHeight; // force reflow
+              navToggle.style.display = '';
+              // Ensure it's visible by forcing styles
+              navToggle.style.opacity = '1';
+              navToggle.style.visibility = 'visible';
+              navToggle.style.pointerEvents = 'auto';
+            }
+          }, 3000);
+        }
 
         // Close on escape key
         document.addEventListener('keydown', (e) => {

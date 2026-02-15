@@ -537,7 +537,59 @@ a:hover {
   }
 }
 
-/* Р‘РµР№РґР¶ DEMO */
+/* --------------------------------
+   Back to Top Button
+-------------------------------- */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 88px;
+  z-index: 90;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(6, 10, 18, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.9);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  background: rgba(79, 142, 255, 0.2);
+  border-color: var(--primary);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.back-to-top:active {
+  transform: translateY(0) scale(0.95);
+}
+
+@media (max-width: 767px) {
+  .back-to-top {
+    bottom: 80px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+}/* Р‘РµР№РґР¶ DEMO */
 .platform-badge {
   position: absolute;
   bottom: var(--space-2);
