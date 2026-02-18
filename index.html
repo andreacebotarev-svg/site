@@ -1462,6 +1462,23 @@
                   ></textarea>
                 </div>
                 
+                <!-- Anti-Bot: Honeypot (Invisible to humans) -->
+                <input type="text" name="website" style="display:none !important" tabindex="-1" autocomplete="off">
+                
+                <!-- Anti-Bot: Math Captcha -->
+                <div class="input-group stack" style="gap: 0.5rem; margin-bottom: 1rem;">
+                  <label for="math_answer" class="label" id="math_label">Сколько будет ...?</label>
+                  <input
+                    type="number"
+                    id="math_answer"
+                    class="input"
+                    placeholder="Введите число"
+                    required
+                    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);"
+                  />
+                  <span class="small" style="color: var(--muted); font-size: 0.8rem;">Проверка на человека</span>
+                </div>
+                
                 <!-- Согласие -->
                 <div class="checkbox-group" style="margin-bottom: 1.5rem; display: flex; align-items: start; gap: 8px;">
                       <input type="checkbox" required checked style="margin-top: 4px;">
@@ -1478,80 +1495,7 @@
                 <div id="form-status" style="margin-top: 15px; display: none; padding: 10px; border-radius: 8px; text-align: center; font-weight: 500;"></div>
               </form>
 
-              <script>
-                function handleFormSubmit(event) {
-                  event.preventDefault(); // Остановить перезагрузку страницы
-                  
-                  const form = event.target;
-                  const status = document.getElementById('form-status');
-                  const btn = form.querySelector('button[type="submit"]');
-                  
-                  // UI: Loading state
-                  const originalBtnText = btn.innerText;
-                  btn.innerText = "Отправка...";
-                  btn.disabled = true;
-                  btn.style.opacity = "0.7";
-                  status.style.display = 'none';
 
-                  const formData = new FormData(form);
-                  const object = Object.fromEntries(formData);
-                  const json = JSON.stringify(object);
-
-                  fetch('https://api.web3forms.com/submit', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'Accept': 'application/json'
-                      },
-                      body: json
-                  })
-                  .then(async (response) => {
-                      let json = await response.json();
-                      if (response.status == 200) {
-                          // 1. Успех UI
-                          status.innerText = "✅ Заявка отправлена! Я свяжусь с вами в ближайшее время.";
-                          status.style.color = "#155724";
-                          status.style.backgroundColor = "#d4edda";
-                          status.style.display = "block";
-                          form.reset();
-                          
-                          // 2. ОТПРАВКА ЦЕЛИ В МЕТРИКУ (Критически важно для рекламы)
-                          if (typeof ym !== 'undefined') {
-                            // ID 106683416 взят из analytics.js
-                            // Используем try-catch для надежности
-                            try {
-                                ym(106683416, 'reachGoal', 'form_sent'); 
-                                console.log('🎯 Mетрика: цель form_sent отправлена');
-                            } catch (e) { console.error('Ошибка отправки цели:', e); }
-                          } else {
-                            console.warn('⚠️ Метрика не загружена');
-                          }
-
-                      } else {
-                          console.log(response);
-                          status.innerText = json.message || "Ошибка отправки. Попробуйте еще раз.";
-                          status.style.color = "#721c24";
-                          status.style.backgroundColor = "#f8d7da";
-                          status.style.display = "block";
-                      }
-                  })
-                  .catch(error => {
-                      console.log(error);
-                      status.innerText = "Произошла ошибка соединения.";
-                      status.style.color = "#721c24";
-                      status.style.backgroundColor = "#f8d7da";
-                      status.style.display = "block";
-                  })
-                  .finally(() => {
-                      btn.innerText = originalBtnText;
-                      btn.disabled = false;
-                      btn.style.opacity = "1";
-                      setTimeout(() => {
-                        status.style.display = 'none';
-                      }, 10000);
-                  });
-                }
-              </script>
             </div>
           </div>
 
