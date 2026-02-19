@@ -417,6 +417,12 @@ ANTI‑MANIPULATION: ГОТОВЫЕ СКРИПТЫ (используй досл�
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function initAssistant() {
     window.englishAssistant = new EnglishAssistant();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAssistant);
+} else {
+    initAssistant();
+}

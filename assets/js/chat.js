@@ -57,7 +57,6 @@ class EnglishAssistant {
                         <div class="status-dot"></div>
                         <h3>English Guru Sales ✨</h3>
                     </div>
-                    <!-- Mobile Close Button (Hidden by default via CSS, shown on mobile) -->
                     <button id="chatCloseMobile" class="mobile-close-btn" style="display:none; background:none; border:none; color:white; padding:5px; cursor:pointer;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -65,8 +64,21 @@ class EnglishAssistant {
                         </svg>
                     </button>
                 </div>
+                <!-- Extra Header Actions -->
+                <div style="padding: 0 16px 12px 16px; display:flex; gap:8px;">
+                    <button class="btn-header-action" id="btnLeaveRequest" style="width:100%; justify-content:center;">
+                        📝 Оставить заявку
+                    </button>
+                </div>
                 <div class="chat-messages" id="chatMessages">
-                    <div class="message ai">Привет! Я помогу тебе выбрать лучший формат обучения. Готов начать говорить на английском? ✨🚀</div>
+                    <div class="message ai">
+                        Привет! Я помогу тебе выбрать лучший формат обучения. Готов начать говорить на английском? ✨🚀
+                        <div class="chat-contact-footer">
+                            📲 Telegram: <a href="https://t.me/English24fk" target="_blank">@English24fk</a><br>
+                            ✉️ Email: <a href="mailto:andreacebotarev@gmail.com">andreacebotarev@gmail.com</a><br>
+                            📞 Тел: <a href="tel:+79243942682">8-924-394-26-82</a>
+                        </div>
+                    </div>
                 </div>
                 <div id="typingIndicator" class="typing-indicator">Manager is thinking...</div>
                 <div class="chat-suggestions" id="chatSuggestions"></div>
@@ -78,6 +90,10 @@ class EnglishAssistant {
                             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                         </svg>
                     </button>
+                </div>
+                <!-- Bottom Swipe Handle Visual -->
+                <div class="chat-swipe-area bottom" id="swipeAreaBottom">
+                    <div class="chat-swipe-handle"></div>
                 </div>
             </div>
         `;
@@ -93,19 +109,163 @@ class EnglishAssistant {
       suggestions: document.getElementById("chatSuggestions"),
       badge: document.getElementById("chatBadge"),
       closeBtn: document.getElementById("chatCloseMobile"),
+      btnLeaveRequest: document.getElementById("btnLeaveRequest"),
+      swipeArea: document.getElementById("swipeArea"),
+      swipeAreaBottom: document.getElementById("swipeAreaBottom"),
+      suggestions: document.getElementById("chatSuggestions"),
+      inputArea: widget.querySelector(".chat-input-area"),
+      header: widget.querySelector(".chat-header"),
     };
 
     this.renderSuggestions(this.suggestions.initial);
+    this.initSwipeGestures();
+  }
+
+  initSwipeGestures() {
+    // Logic: Swipe DOWN to close (Standard Sheet behavior)
+    // Handle is at top or user pulls down on header/content when at top
+    
+    let startY = 0;
+    let currentY = 0;
+    let isDragging = false;
+    let isAtTop = false;
+    let isAtBottom = false;
+
+    const handleTouchStart = (e) => {
+        if (window.innerWidth > 600) return;
+
+        const touch = e.touches[0];
+        startY = touch.clientY;
+        
+        // Check if scrolled to limits
+        const el = this.elements.messages;
+        const scrollBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+        isAtTop = el.scrollTop <= 5;
+        isAtBottom = scrollBottom <= 10;
+        
+        // Force gesture if touching handles or UI areas at ends
+        if (this.elements.swipeArea.contains(e.target) || this.elements.header.contains(e.target)) {
+            isAtTop = true;
+        }
+        
+        if (this.elements.swipeAreaBottom && this.elements.swipeAreaBottom.contains(e.target)) {
+            isAtBottom = true;
+        }
+
+        // Context: If touching input or suggestions, also allow swipe UP to close if at bottom
+        if (this.elements.suggestions.contains(e.target) || this.elements.inputArea.contains(e.target)) {
+            // Force allow bottom drag because these are fixed elements at bottom visually
+            isAtBottom = true; 
+        }
+
+        isDragging = false;
+    };
+
+    const handleTouchMove = (e) => {
+        if (window.innerWidth > 600) return;
+        // if (!isAtTop) return; // REMOVED: This blocked bottom-up swipes if not at top!
+
+        const touch = e.touches[0];
+        currentY = touch.clientY;
+        const diff = currentY - startY; 
+
+        // Allow dragging DOWN at Top, or UP at Bottom, or ANYWHERE on handle
+        let allowDrag = false;
+        
+        // 1. Swipe DOWN (diff > 0) -> Only if at TOP
+        if (diff > 0 && isAtTop) allowDrag = true;
+        
+        // 2. Swipe UP (diff < 0) -> Only if at BOTTOM
+        if (diff < 0 && isAtBottom) allowDrag = true;
+
+        if (allowDrag) {
+            e.preventDefault(); 
+            
+            isDragging = true;
+            this.elements.window.classList.add('is-dragging');
+            
+            // Visuals: Slide
+            const opacity = 1 - (Math.abs(diff) / 700); 
+            this.elements.window.style.transform = `translateY(${diff}px)`;
+            this.elements.window.style.opacity = opacity;
+        }
+    };
+
+    const handleTouchEnd = (e) => {
+        if (window.innerWidth > 600) return;
+        if (!isDragging) return;
+
+        this.elements.window.classList.remove('is-dragging');
+        isDragging = false;
+
+        const diff = currentY - startY;
+        const threshold = 150; // Pixels to trigger close
+
+        if (Math.abs(diff) > threshold) {
+
+            // If Swipe UP (diff < 0), scroll to the lead form
+            if (diff < 0) {
+                const leadForm = document.getElementById('lead');
+                if (leadForm) {
+                    leadForm.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
+            // Close (Use a smooth exit animation)
+            this.elements.window.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease';
+            this.elements.window.style.transform = `translateY(${diff > 0 ? '100dvh' : '-100dvh'})`;
+            this.elements.window.style.opacity = '0';
+            
+            setTimeout(() => {
+                this.toggleChat(false);
+                this.elements.window.style.transform = '';
+                this.elements.window.style.opacity = '';
+                this.elements.window.style.transition = '';
+            }, 300);
+        } else {
+            // Restore
+            this.elements.window.classList.add('animate-restore');
+            this.elements.window.style.transform = '';
+            this.elements.window.style.opacity = '';
+            
+            setTimeout(() => {
+                this.elements.window.classList.remove('animate-restore');
+            }, 300);
+        }
+    };
+
+    // Attach to window for global capture or chat window
+    this.elements.window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    this.elements.window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    this.elements.window.addEventListener('touchend', handleTouchEnd);
   }
 
   bindEvents() {
     this.elements.toggle.addEventListener("click", () => this.toggleChat());
-    // Bind close button
+    
+    // Bind close button with touchstart for instant reaction
     if (this.elements.closeBtn) {
-      this.elements.closeBtn.addEventListener("click", (e) => {
-        e.stopPropagation(); // prevent triggering other clicks
-        this.toggleChat(false); // Force close
-      });
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleChat(false);
+      };
+      this.elements.closeBtn.addEventListener("touchstart", closeHandler, { passive: false });
+      this.elements.closeBtn.addEventListener("click", closeHandler);
+    }
+
+
+    if (this.elements.btnLeaveRequest) {
+        this.elements.btnLeaveRequest.addEventListener("click", () => {
+             this.toggleChat(false);
+             // Wait for chat close and scroll restore, then scroll to form
+             setTimeout(() => {
+                 const leadForm = document.getElementById('lead');
+                 if(leadForm) {
+                     leadForm.scrollIntoView({ behavior: 'smooth' });
+                 }
+             }, 100);
+        });
     }
 
     this.elements.send.addEventListener("click", () => this.sendMessage());
@@ -166,12 +326,14 @@ class EnglishAssistant {
     if (newState) {
       this.elements.window.classList.add("active");
       this.elements.input.focus();
-      if (this.elements.badge) this.elements.badge.style.display = "none";
+      if (this.elements.badge) this.elements.badge.style.setProperty('display', 'none', 'important');
       // Lock body scroll for mobile full screen experience
       if (window.innerWidth <= 600) {
+        this.savedScrollY = window.scrollY;
         document.body.style.position = "fixed";
+        document.body.style.top = `-${this.savedScrollY}px`;
         document.body.style.width = "100%";
-        document.body.style.height = "100%";
+        document.body.style.height = "100%"; // Prevent bounce
         if (window.visualViewport) {
           this.elements.window.style.height = `${window.visualViewport.height}px`;
         }
@@ -180,9 +342,15 @@ class EnglishAssistant {
       this.elements.window.classList.remove("active");
       // Restore body scroll
       document.body.style.position = "";
+      document.body.style.top = "";
       document.body.style.width = "";
       document.body.style.height = "";
       this.elements.window.style.height = "";
+      
+      if (this.savedScrollY !== undefined) {
+          window.scrollTo(0, this.savedScrollY);
+          this.savedScrollY = undefined;
+      }
     }
   }
 
@@ -295,7 +463,11 @@ class EnglishAssistant {
     } catch (error) {
       console.error('🔴 Chat API Error:', error);
       console.error('🔴 Error details:', error.message, error.stack);
-      this.addMessage("Произошла ошибка. Попробуй позже! 🛠️", "ai");
+      this.addMessage(`Произошла ошибка. Но я всегда на связи!<br><div class="chat-contact-footer">
+                            📲 Telegram: <a href="https://t.me/English24fk" target="_blank">@English24fk</a><br>
+                            ✉️ Email: <a href="mailto:andreacebotarev@gmail.com">andreacebotarev@gmail.com</a><br>
+                            📞 Тел: <a href="tel:+79243942682">8-924-394-26-82</a>
+                        </div>`, "ai");
     } finally {
       this.elements.typing.style.display = "none";
     }

@@ -511,20 +511,17 @@ a:hover {
 @media (max-width: 767px) {
   .sticky-cta {
     bottom: 20px;
-    right: auto;
+    right: 15px;
     left: 15px;
-    width: calc(100% - 85px);
+    width: auto; /* Let it stretch via left/right instead of calc */
     transform: translateY(20px) scale(0.95); 
-    white-space: normal;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
-    padding: 10px 16px;
+    white-space: nowrap;
+    font-size: 16px;
+    padding: 14px 24px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    line-height: 1.3;
   }
   
   .sticky-cta:hover {
@@ -584,10 +581,11 @@ a:hover {
 
 @media (max-width: 767px) {
   .back-to-top {
-    bottom: 80px;
+    bottom: 150px; /* Above sticky CTA and chat */
     right: 15px;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
+    z-index: 95;
   }
 }/* Р‘РµР№РґР¶ DEMO */
 .platform-badge {
@@ -1521,6 +1519,24 @@ a:hover {
   user-select: none;
   -webkit-user-drag: none;
   -webkit-user-select: none;
+}
+
+.platform-modal-content {
+  width: 96% !important;
+  height: 90vh !important;
+  max-width: none !important;
+  background: white;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  user-select: auto !important; /* Allow interaction in iframe */
+}
+
+@media (min-width: 768px) {
+  .platform-modal-content {
+    width: 90% !important;
+    max-width: 1200px !important;
+    height: 80vh !important;
+  }
 }
 
 @media (min-width: 768px) {

@@ -13,13 +13,7 @@ function isMobile() {
 function openSpokePreview(url, title = 'Пример') {
   if (!url) return;
 
-  // Mobile: new tab
-  if (isMobile()) {
-    window.open(url, '_blank', 'noopener');
-    return;
-  }
-
-  // Desktop: modal iframe
+  // Desktop/Mobile: modal iframe
   const modal = document.getElementById('platformModal');
   const iframe = document.getElementById('platformIframe');
 
@@ -64,5 +58,10 @@ window.addEventListener('DOMContentLoaded', function () {
     if (btn.tagName === 'A') e.preventDefault(); 
     
     openSpokePreview(btn.dataset.url, btn.dataset.title);
+  });
+
+  // Handle close messages from iframes
+  window.addEventListener('message', (e) => {
+    if (e.data === 'closeModal') closePlatformPreview();
   });
 });

@@ -466,7 +466,7 @@
                   <!-- Trainer 1: Much/Many (Arcade) -->
                   <button
                     class="tool-card tool-card--sims js-spoke"
-                    data-url="../english-trainers/much-many.html"
+                    data-url="english-trainers/much-many.html"
                     data-title="Much vs Many Arcade"
                   >
                     <div class="tool-card__icon">
@@ -509,7 +509,7 @@
                   <!-- Trainer 2: Mixed Tenses (Progressive) -->
                   <button
                     class="tool-card tool-card--trainer js-spoke"
-                    data-url="../english-trainers/mixed-tenses.html"
+                    data-url="english-trainers/mixed-tenses.html"
                     data-title="Mixed Tenses Master"
                   >
                     <div class="tool-card__icon">
@@ -552,7 +552,7 @@
                   <!-- Trainer 3: Present Simple (Basics) -->
                   <button
                     class="tool-card tool-card--reader js-spoke"
-                    data-url="../english-trainers/present-simple.html"
+                    data-url="english-trainers/present-simple.html"
                     data-title="Present Simple Trainer"
                   >
                     <div class="tool-card__icon">
@@ -924,7 +924,7 @@
 
           <div class="reviews-grid">
             <!-- Review 1: Илья -->
-            <a href="https://profi.ru/profile/ChebotarevAD4/" target="_blank" rel="noopener noreferrer" class="glass card reveal review-card">
+            <a href="#" data-url="https://profi.ru/profile/ChebotarevAD4/" data-title="Профиль на Profi.ru" class="glass card reveal review-card js-spoke">
               <div class="review-header">
                 <div class="review-avatar">И</div>
                 <div class="review-meta">
@@ -946,7 +946,7 @@
             </a>
 
             <!-- Review 2: Ольга -->
-            <a href="https://profi.ru/profile/ChebotarevAD4/" target="_blank" rel="noopener noreferrer" class="glass card reveal review-card">
+            <a href="#" data-url="https://profi.ru/profile/ChebotarevAD4/" data-title="Профиль на Profi.ru" class="glass card reveal review-card js-spoke">
               <div class="review-header">
                 <div class="review-avatar" style="background: linear-gradient(135deg, #a855f7, #ec4899);">О</div>
                 <div class="review-meta">
@@ -967,7 +967,7 @@
             </a>
 
             <!-- Review 3: Максим -->
-            <a href="https://profi.ru/profile/ChebotarevAD4/" target="_blank" rel="noopener noreferrer" class="glass card reveal review-card">
+            <a href="#" data-url="https://profi.ru/profile/ChebotarevAD4/" data-title="Профиль на Profi.ru" class="glass card reveal review-card js-spoke">
               <div class="review-header">
                 <div class="review-avatar" style="background: linear-gradient(135deg, #22c55e, #10b981);">М</div>
                 <div class="review-meta">
@@ -988,7 +988,7 @@
             </a>
 
             <!-- Review 4: Елена -->
-            <a href="https://profi.ru/profile/ChebotarevAD4/" target="_blank" rel="noopener noreferrer" class="glass card reveal review-card">
+            <a href="#" data-url="https://profi.ru/profile/ChebotarevAD4/" data-title="Профиль на Profi.ru" class="glass card reveal review-card js-spoke">
               <div class="review-header">
                 <div class="review-avatar" style="background: linear-gradient(135deg, #f59e0b, #f97316);">Е</div>
                 <div class="review-meta">
@@ -1009,7 +1009,7 @@
             </a>
 
             <!-- Review 5: Анвар -->
-            <a href="https://profi.ru/profile/ChebotarevAD4/" target="_blank" rel="noopener noreferrer" class="glass card reveal review-card">
+            <a href="#" data-url="https://profi.ru/profile/ChebotarevAD4/" data-title="Профиль на Profi.ru" class="glass card reveal review-card js-spoke">
               <div class="review-header">
                 <div class="review-avatar" style="background: linear-gradient(135deg, #3b82f6, #6366f1);">А</div>
                 <div class="review-meta">
@@ -1032,10 +1032,10 @@
           <!-- Profi.ru Link -->
           <div class="center mt-4">
             <a 
-              href="https://profi.ru/profile/ChebotarevAD4" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="profi-link"
+              href="#" 
+              data-url="https://profi.ru/profile/ChebotarevAD4" 
+              data-title="Все отзывы на Profi.ru"
+              class="profi-link js-spoke"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -1594,15 +1594,7 @@
         >&times;</span
       >
       <div
-        class="lightbox-content"
-        style="
-          width: 90%;
-          max-width: 1200px;
-          height: 80%;
-          background: white;
-          border-radius: 12px;
-          overflow: hidden;
-        "
+        class="lightbox-content platform-modal-content"
       >
         <iframe
           id="platformIframe"
@@ -1748,6 +1740,76 @@
           if (e.target === mobileMenu) {
             closeMobileMenu();
           }
+        });
+
+        // --- Swipe Gesture Logic (Like AI Agent) ---
+        let touchStartY = 0;
+        let touchCurrentY = 0;
+        let isSwipeDragging = false;
+        
+        mobileMenu.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+            isSwipeDragging = false;
+            // Clear any lingering requestAnimationFrame if we had one
+        }, { passive: true });
+        
+        mobileMenu.addEventListener('touchmove', (e) => {
+            if (!mobileMenu.classList.contains('is-open')) return;
+            
+            const touch = e.touches[0];
+            touchCurrentY = touch.clientY;
+            const diff = touchCurrentY - touchStartY;
+            
+            // Allow dragging BOTH UP AND DOWN logic
+            // Allow small buffer before kicking in
+            if (Math.abs(diff) > 10) {
+                isSwipeDragging = true;
+                e.preventDefault(); // Prevent native scroll
+                
+                const content = mobileMenu.querySelector('.mobile-menu__content');
+                
+                // Disable CSS transitions for direct 1:1 movement
+                content.style.transition = 'none';
+                mobileMenu.style.transition = 'none';
+                
+                // Move content
+                content.style.transform = `translateY(${diff}px)`;
+                
+                // Fade out background slightly
+                const opacity = 1 - (Math.abs(diff) / (window.innerHeight * 0.8));
+                mobileMenu.style.opacity = Math.max(0, opacity);
+            }
+        }, { passive: false }); // non-passive to allow preventDefault
+        
+        mobileMenu.addEventListener('touchend', (e) => {
+            if (!isSwipeDragging) return;
+            isSwipeDragging = false;
+            
+            const diff = touchCurrentY - touchStartY;
+            const content = mobileMenu.querySelector('.mobile-menu__content');
+            const threshold = 120; // Swipe threshold to close
+            
+            // Restore CSS transitions
+            content.style.transition = ''; 
+            mobileMenu.style.transition = '';
+            
+            if (Math.abs(diff) > threshold) {
+                // Swipe successful - close menu
+                // Animate out in the direction of the swipe
+                content.style.transform = `translateY(${diff > 0 ? '100vh' : '-100vh'})`;
+                mobileMenu.style.opacity = '0';
+
+                setTimeout(() => {
+                    closeMobileMenu();
+                    // Clean up inline styles after close
+                    content.style.transform = '';
+                    mobileMenu.style.opacity = '';
+                }, 300);
+            } else {
+                // Swipe canceled - bounce back
+                content.style.transform = '';
+                mobileMenu.style.opacity = '';
+            }
         });
       }
 

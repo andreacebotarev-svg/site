@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Master Present Simple tense with do/does practice. Subject-verb agreement, irregular verbs, adaptive difficulty.">
-  <title>Present Simple Trainer | English Trainers</title>
+  <meta name="description" content="Try our interactive English grammar trainer. This is a 6-second demonstration mode.">
+  <title>Demonstration Mode | English Trainers</title>
   
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,8 +27,8 @@
       <a href="../index.html" class="back-btn" aria-label="Back to main portal">
         ← Portal
       </a>
-      <h1>🟢 Present Simple Trainer</h1>
-      <p class="subtitle">Master do/does & verb forms</p>
+      <h1>⏳ Demonstration Mode</h1>
+      <p class="subtitle">Try it out! (6 seconds limit)</p>
     </div>
   </header>
 
@@ -55,31 +55,15 @@
       <div id="question-container" class="question-wrapper">
         <!-- Start Screen -->
         <div class="start-screen" style="text-align: center;">
-          <div class="emoji" style="font-size: 5rem; margin-bottom: 1.5rem;">⚙️</div>
-          <h2 style="margin-bottom: 1rem;">Ready to Master Present Simple?</h2>
+          <div class="emoji" style="font-size: 5rem; margin-bottom: 1.5rem;">⚡</div>
+          <h2 style="margin-bottom: 1rem;">Rapid Fire Demo</h2>
           <p style="color: var(--text-muted); margin-bottom: 2rem;">
-            Choose the correct verb form or auxiliary (do/does) for each sentence.<br>
-            Covers positive, negative, and question forms.
+            Experience our interactive learning system.<br>
+            You have <strong>6 seconds</strong> to try it out!
           </p>
           
-          <div class="rules card" style="text-align: left; max-width: 550px; margin: 0 auto 2rem; padding: 1.5rem;">
-            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">📜 What You'll Practice</h3>
-            <ul style="list-style: none; padding: 0; margin: 0; line-height: 2.2;">
-              <li>✅ <strong>Subject-Verb Agreement</strong> — he/she/it + -s/-es</li>
-              <li>🔄 <strong>Irregular Verbs</strong> — go→goes, have→has, do→does</li>
-              <li>❌ <strong>Negatives</strong> — do not / does not + base form</li>
-              <li>❓ <strong>Questions</strong> — Do/Does + subject + base verb</li>
-            </ul>
-            
-            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
-                🎮 Difficulty adapts automatically: Positive → Negative → Questions
-              </p>
-            </div>
-          </div>
-
           <button class="btn btn-primary btn-lg" onclick="window.trainer.start()">
-            🚀 Start Training
+            🚀 Start Demo
           </button>
         </div>
       </div>
@@ -103,30 +87,16 @@
   <script src="assets/js/trainer-dom-events-utils.js"></script>
   <script src="assets/js/modules/present-simple.js"></script>
 
-  <script>
-    // Debug hook
-    window.debugEffects = (event, data) => {
-      console.log(`[Effects] ${event}`, data);
-    };
+  <!-- Global Nav & Demo Logic -->
+  <script src="../assets/js/common-nav.js"></script>
+  <script src="assets/js/demo-logic.js"></script>
 
+  <script>
     // Init trainer
     window.trainer = new PresentSimpleTrainer({
       maxLives: 3,
       streakBonus: 10
     });
-
-    // Load audio assets
-    let audioLoaded = false;
-    document.addEventListener('click', () => {
-      if (!audioLoaded && trainer._effects) {
-        audioLoaded = true;
-        trainer._effects.loadAudioAssets({
-          correct: 'assets/audio/correct.mp3',
-          milestone: 'assets/audio/milestone.mp3',
-          error: 'assets/audio/error.mp3'
-        }).then(() => console.log('🔊 Audio loaded'));
-      }
-    }, { once: false });
 
     // Auto-init
     if (document.readyState === 'loading') {
@@ -134,11 +104,6 @@
     } else {
       window.trainer.init();
     }
-
-    // Event hooks
-    trainer.on('start', () => console.log('🎮 Present Simple started'));
-    trainer.on('end', (stats) => console.log('🏁 Final stats:', stats));
   </script>
-  <script src="../assets/js/common-nav.js"></script>
 </body>
 </html>

@@ -94,8 +94,8 @@
   flex-direction: column;
   overflow: hidden;
   transform-origin: bottom right;
-  transform: scale(0.9) translateY(20px);
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -103,6 +103,7 @@
 .chat-window.active {
   transform: scale(1) translateY(0);
   opacity: 1;
+  visibility: visible;
   pointer-events: all;
 }
 
@@ -131,6 +132,32 @@
   color: white;
   font-weight: 600;
   letter-spacing: 0.5px;
+}
+
+.chat-header-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+}
+
+.btn-header-action {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-header-action:hover {
+    background: var(--ai-primary);
+    border-color: var(--ai-primary);
 }
 
 /* --- Chat Area --- */
@@ -179,13 +206,15 @@
 }
 
 .chat-contact-footer a {
-  color: var(--ai-primary);
+  color: var(--ai-secondary);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  border-bottom: 1px dashed rgba(99, 102, 241, 0.5);
 }
 
 .chat-contact-footer a:hover {
-  text-decoration: underline;
+  color: var(--ai-primary);
+  border-bottom-style: solid;
 }
 
 .message.user {
@@ -387,15 +416,19 @@
      */
 
   /* 1. Hide chat badge on mobile - clutter */
+  /* 1. Hide chat badge on mobile - clutter */
   .chat-badge {
     display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: scale(0) !important;
   }
 
-  /* 2. Position Chat Toggle next to Sticky App Bar */
+  /* 2. Position Chat Toggle away from Sticky App Bar */
   .ai-chat-widget {
-    bottom: 18px; /* Adjusted to align center-to-center with Sticky CTA */
-    right: 15px;
-    z-index: 10000; /* Higher than sticky CTA (99) */
+    bottom: 90px; /* Move UP to avoid sticky CTA */
+    right: 20px;
+    z-index: 10000;
   }
 
   .chat-toggle {
@@ -472,4 +505,69 @@
   .chat-messages {
     -webkit-overflow-scrolling: touch;
   }
+}
+
+.chat-swipe-area {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10002;
+    touch-action: none;
+    cursor: grab;
+}
+
+.chat-swipe-area:not(.bottom) {
+    top: 0;
+}
+
+.chat-swipe-area.bottom {
+    bottom: 0;
+    height: 30px; /* Thinner handle at bottom */
+}
+
+.chat-swipe-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    transition: background 0.2s, width 0.2s;
+}
+
+.chat-swipe-area.bottom .chat-swipe-handle {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.chat-swipe-area:active .chat-swipe-handle {
+    background: rgba(255, 255, 255, 0.6);
+    width: 50px;
+}
+
+/* Animation Classes */
+.chat-window.is-dragging {
+    transition: none !important;
+    will-change: transform;
+}
+
+.chat-window.animate-close {
+    /* Standard close animation (handled by JS toggling class, but if needed) */
+    pointer-events: none;
+}
+
+.chat-window.animate-restore {
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    transform: translateY(0) !important;
+}
+
+@media (max-width: 600px) {
+    .mobile-close-btn {
+        z-index: 10003; /* Ensure above swipe area */
+        position: relative;
+        padding: 10px; /* Increase hit area */
+        margin: -10px; /* Compensate padding */
+    }
 }
