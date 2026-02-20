@@ -44,6 +44,7 @@ function openSpokePreview(url, title = 'Пример') {
           let currentY = 0;
           let isDragging = false;
           let isAtTop = false;
+          let isAtBottom = false;
 
           iframeDoc.addEventListener('touchstart', (e) => {
               if (window.innerWidth > 768) return;
@@ -51,28 +52,29 @@ function openSpokePreview(url, title = 'Пример') {
               const touch = e.touches[0];
               startY = touch.clientY;
               
-              // Figure out if the target is scrollable and we are at the top
-              // If it's a scrollable container, only allow pull-to-close if we are at scrollTop === 0
               let target = e.target;
               isAtTop = true;
+              isAtBottom = true;
               
               while (target && target !== iframeDoc.body && target !== iframeDoc.documentElement) {
                   const overflowY = window.getComputedStyle(target).overflowY;
                   if (overflowY === 'auto' || overflowY === 'scroll') {
-                      if (target.scrollTop > 5) {
-                          isAtTop = false;
-                          break;
-                      }
+                      if (target.scrollTop > 5) isAtTop = false;
+                      const scrollBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
+                      if (scrollBottom > 5) isAtBottom = false;
+                      break;
                   }
                   target = target.parentElement;
               }
 
-              // Also check document scroll
-              if (iframeDoc.documentElement.scrollTop > 5 || iframeDoc.body.scrollTop > 5) {
-                  isAtTop = false;
-              }
+              const docScrollTop = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
+              const docScrollHeight = iframeDoc.documentElement.scrollHeight || iframeDoc.body.scrollHeight;
+              const docClientHeight = iframeDoc.documentElement.clientHeight || window.innerHeight;
 
-              isDragging = isAtTop;
+              if (docScrollTop > 5) isAtTop = false;
+              if (docScrollHeight - docScrollTop - docClientHeight > 5) isAtBottom = false;
+
+              isDragging = isAtTop || isAtBottom;
           }, { passive: true });
 
           iframeDoc.addEventListener('touchmove', (e) => {
@@ -80,8 +82,7 @@ function openSpokePreview(url, title = 'Пример') {
               currentY = e.touches[0].clientY;
               const diff = currentY - startY;
 
-              if (diff > 0 && isAtTop) {
-                  // e.preventDefault() cannot be called reliably on passive listeners, but we can animate our parent container
+              if ((diff > 0 && isAtTop) || (diff < 0 && isAtBottom)) {
                   if (content) {
                       content.style.transition = 'none';
                       content.style.transform = `translateY(${diff}px)`;
@@ -100,6 +101,9 @@ function openSpokePreview(url, title = 'Пример') {
                   
                   if (diff > 120 && isAtTop) {
                       content.style.transform = 'translateY(100vh)';
+                      setTimeout(() => closePlatformPreview(), 300);
+                  } else if (diff < -120 && isAtBottom) {
+                      content.style.transform = 'translateY(-100vh)';
                       setTimeout(() => closePlatformPreview(), 300);
                   } else {
                       content.style.transform = 'translateY(0)';
@@ -128,7 +132,7 @@ function openSpokePreview(url, title = 'Пример') {
           outerCurrentY = e.touches[0].clientY;
           const diff = outerCurrentY - outerStartY;
 
-          if (diff > 0) {
+          if (diff !== 0) {
               content.style.transition = 'none';
               content.style.transform = `translateY(${diff}px)`;
           }
@@ -142,6 +146,9 @@ function openSpokePreview(url, title = 'Пример') {
           content.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
           if (diff > 120) {
               content.style.transform = 'translateY(100vh)';
+              setTimeout(() => closePlatformPreview(), 300);
+          } else if (diff < -120) {
+              content.style.transform = 'translateY(-100vh)';
               setTimeout(() => closePlatformPreview(), 300);
           } else {
               content.style.transform = 'translateY(0)';
