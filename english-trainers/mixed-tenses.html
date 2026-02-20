@@ -1,544 +1,963 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Mixed Tenses Trainer - Master Present Simple, Continuous & Perfect together. Progressive difficulty with 5 levels.">
-  <title>Mixed Tenses Trainer | English Trainers</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Mixed Tenses Trainer — Master all 12 English tenses: Present, Past & Future (Simple, Continuous, Perfect, Perfect Continuous). 10 progressive levels."
+    />
+    <title>Mixed Tenses Trainer | English Trainers</title>
 
-  <!-- Preconnect -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/core.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/trainers.css">
-  <link rel="stylesheet" href="assets/css/effects.css">
-  <link rel="stylesheet" href="assets/css/mixed-tenses.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/core.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/trainers.css" />
+    <link rel="stylesheet" href="assets/css/mixed-tenses.css" />
+    <link rel="stylesheet" href="assets/css/textbook.css" /> <!-- Textbook Styles -->
+    <link rel="stylesheet" href="assets/css/effects.css" />
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="../assets/js/analytics.js"></script>
-</head>
-<body>
-  <!-- Header -->
-  <header class="trainer-header">
-    <div class="container">
-      <a href="index.html" class="back-btn" aria-label="Back to main portal">
-        ← Portal
-      </a>
-      <h1>🎯 Mixed Tenses Trainer</h1>
-      <p class="subtitle">Master all tenses together</p>
-    </div>
-  </header>
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="trainer-header">
+      <div class="container">
+        <a href="index.html" class="back-btn" aria-label="Назад в портал">
+          ← Портал
+        </a>
+        <h1>🎯 Тренажер Времен</h1>
+        <button class="btn btn-secondary" id="open-textbook-btn" title="Открыть учебник" style="margin-left: auto; gap: 0.5rem;">
+          📖 Теория
+        </button>
+        <p class="subtitle">Мастер всех 12 английских времен</p>
+      </div>
+    </header>
 
-  <!-- Stats Bar -->
-  <div class="stats-bar" role="region" aria-label="Game statistics">
-    <div class="container">
-      <div class="stat">
-        <span class="label">Score</span>
-        <span id="score" class="value">0</span>
-      </div>
-      <div id="streak" class="stat hidden">
-        <span class="value">🔥 0</span>
-      </div>
-      <div class="stat">
-        <span class="label">Lives</span>
-        <span id="lives" class="value">❤️❤️❤️</span>
-      </div>
-      <div class="stat">
-        <span class="label">Level</span>
-        <span id="level" class="value">1</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <main class="container">
-    <!-- Level Info -->
-    <div id="level-info" class="level-info">
-      <h2 id="level-title">Level 1: Basics</h2>
-      <p id="level-description">Only affirmative sentences (+)</p>
-      <div class="progress-bar">
-        <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
-      </div>
-      <div class="quota-display">
-        <span id="quota-text">PS: 5, PC: 5, PP: 5</span>
+    <!-- Stats Bar -->
+    <div class="stats-bar" role="region" aria-label="Game statistics">
+      <div class="container">
+        <div class="stat">
+          <span class="label">Очки</span>
+          <span id="score" class="value">0</span>
+        </div>
+        <div id="streak" class="stat hidden">
+          <span class="value">🔥 0</span>
+        </div>
+        <div class="stat">
+          <span class="label">Жизни</span>
+          <span id="lives" class="value">❤️❤️❤️</span>
+        </div>
+        <div class="stat">
+          <span class="label">Уровень</span>
+          <span id="level" class="value">1</span>
+        </div>
       </div>
     </div>
 
-    <!-- Question Area -->
-    <div id="question-container" class="question-container">
-      <!-- Start Screen -->
-      <div id="start-screen" class="start-screen">
-        <div class="start-content">
-          <div class="emoji" style="font-size: 4rem;">🎯</div>
-          <h2>Ready to Mix Tenses?</h2>
-          <p style="color: var(--text-muted); margin: 1rem 0;">
-            Master Present Simple, Continuous & Perfect together!<br>
-            Progressive difficulty across 5 levels.
-          </p>
+    <!-- Main Content -->
+    <main class="container">
+      <!-- Level Info -->
+      <div id="level-info" class="level-info">
+        <h2 id="level-title">Level 1: Basics</h2>
+        <p id="level-description">Only affirmative sentences (+)</p>
+        <div class="quota-display">
+          <span id="quota-text">PS: 5, PC: 5, PP: 5</span>
+        </div>
+      </div>
 
-          <div class="level-selector">
-            <h3>Choose Starting Level:</h3>
-            <div class="level-buttons">
-              <button class="btn btn-secondary" data-level="1">Level 1<br><small>Basics (+)</small></button>
-              <button class="btn btn-secondary" data-level="2">Level 2<br><small>Negation (-)</small></button>
-              <button class="btn btn-secondary" data-level="3">Level 3<br><small>Master (+/-/?)</small></button>
-              <button class="btn btn-secondary" data-level="hard">Hardcore<br><small>Advanced</small></button>
-              <button class="btn btn-primary" data-level="exam">FINAL EXAM<br><small>60 Questions</small></button>
+      <!-- Question Area -->
+      <div id="question-container" class="question-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="start-screen">
+          <div class="start-content">
+            <div class="emoji" style="font-size: 4rem">🎯</div>
+            <h2>Готовы к тренировке?</h2>
+            <p style="color: var(--text-muted); margin: 0.5rem 0 1.5rem">
+              Освойте все 12 английских времен!
+            </p>
+
+            <!-- TAB SWITCHER -->
+            <div class="tab-switcher">
+              <button class="tab-btn active" data-tab="levels">📋 Уровни</button>
+              <button class="tab-btn" data-tab="custom">🛠️ Свой режим</button>
+            </div>
+
+            <!-- TAB 1: PRESET LEVELS -->
+            <div id="tab-levels" class="tab-content active">
+              <div class="level-selector">
+                <h3>Настоящее (Present):</h3>
+                <div class="level-buttons">
+                  <button class="btn btn-secondary" data-level="present-simple" style="border: 2px solid var(--primary); background: rgba(59, 130, 246, 0.1);">
+                    Только<br>Present Simple<br /><small>Базовый старт (+/-/?)<br><span style="opacity:0.7; font-size:0.8em">Факты, привычки</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="1">
+                    Уровень 1<br /><small>Основы Present (+)<br><span style="opacity:0.7; font-size:0.8em">PS, PC, PP (только утверждения)</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="2">
+                    Уровень 2<br /><small>Отрицания (-)<br><span style="opacity:0.7; font-size:0.8em">Present: Утверждения + Отрицания</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="3">
+                    Уровень 3<br /><small>Мастер Present<br><span style="opacity:0.7; font-size:0.8em">Полный микс (+ / - / ?)</span></small>
+                  </button>
+                </div>
+
+                <h3 style="margin-top: 1rem">Прошедшее (Past):</h3>
+                <div class="level-buttons">
+                  <button class="btn btn-secondary" data-level="past-simple" style="border: 2px solid var(--primary); background: rgba(59, 130, 246, 0.1);">
+                    Только<br>Past Simple<br /><small>Базовый старт V2/Did<br><span style="opacity:0.7; font-size:0.8em">Завершенные действия</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="4">
+                    Уровень 4<br /><small>Основы Past (+)<br><span style="opacity:0.7; font-size:0.8em">PaS, PaC (только утверждения)</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="5">
+                    Уровень 5<br /><small>Мастер Past<br><span style="opacity:0.7; font-size:0.8em">PaS, PaC, PaP (+ / - / ?)</span></small>
+                  </button>
+                </div>
+
+                <h3 style="margin-top: 1rem">Будущее (Future):</h3>
+                <div class="level-buttons">
+                  <button class="btn btn-secondary" data-level="future-simple" style="border: 2px solid var(--primary); background: rgba(59, 130, 246, 0.1);">
+                    Только<br>Future Simple<br /><small>Базовый старт Will<br><span style="opacity:0.7; font-size:0.8em">Предсказания, решения</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="6">
+                    Уровень 6<br /><small>Основы Future (+)<br><span style="opacity:0.7; font-size:0.8em">FS, FC (только утверждения)</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="7">
+                    Уровень 7<br /><small>Мастер Future<br><span style="opacity:0.7; font-size:0.8em">FS, FC, FP (+ / - / ?)</span></small>
+                  </button>
+                </div>
+
+                <h3 style="margin-top: 1rem">Продвинутый (Perfect):</h3>
+                <div class="level-buttons">
+                  <button class="btn btn-secondary" data-level="8">
+                    Уровень 8<br /><small>Введение в Profi (+)<br><span style="opacity:0.7; font-size:0.8em">PPC, PaPC (Perfect Continuous)</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="9">
+                    Уровень 9<br /><small>Мастер Profi<br><span style="opacity:0.7; font-size:0.8em">Все сложные времена (Hard)</span></small>
+                  </button>
+                </div>
+
+                <h3 style="margin-top: 1rem">Испытание:</h3>
+                <div class="level-buttons">
+                  <button class="btn btn-secondary" data-level="10">
+                    Уровень 10<br /><small>Grand Mix 🌀<br><span style="opacity:0.7; font-size:0.8em">Все 12 времен сразу</span></small>
+                  </button>
+                  <button class="btn btn-secondary" data-level="hard">
+                    Hardcore<br /><small>Сложный режим 🔥<br><span style="opacity:0.7; font-size:0.8em">Только (?) и (-), сложные типы</span></small>
+                  </button>
+                  <button class="btn btn-primary" data-level="exam">
+                    ЭКЗАМЕН<br /><small>60 Вопросов 🏆</small>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: CUSTOM BUILDER -->
+            <div id="tab-custom" class="tab-content">
+              <div class="custom-builder">
+                <!-- TENSE SELECTION GRID -->
+                <div class="builder-section">
+                  <h3>🎯 Выберите времена <span class="tense-counter" id="tense-counter">(0)</span></h3>
+                  <div class="tense-grid">
+                    <!-- Header row -->
+                    <div class="tense-grid-header"></div>
+                    <div class="tense-grid-header">Simple</div>
+                    <div class="tense-grid-header">Cont.</div>
+                    <div class="tense-grid-header">Perfect</div>
+                    <div class="tense-grid-header">Perf. Cont.</div>
+
+                    <!-- Present row -->
+                    <div class="tense-row-label">Present</div>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="present-simple" />
+                      <span class="check-label">PS</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="present-continuous" />
+                      <span class="check-label">PC</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="present-perfect" />
+                      <span class="check-label">PP</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="present-perfect-continuous" />
+                      <span class="check-label">PPC</span>
+                    </label>
+
+                    <!-- Past row -->
+                    <div class="tense-row-label">Past</div>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="past-simple" />
+                      <span class="check-label">PaS</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="past-continuous" />
+                      <span class="check-label">PaC</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="past-perfect" />
+                      <span class="check-label">PaP</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="past-perfect-continuous" />
+                      <span class="check-label">PaPC</span>
+                    </label>
+
+                    <!-- Future row -->
+                    <div class="tense-row-label">Future</div>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="future-simple" />
+                      <span class="check-label">FS</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="future-continuous" />
+                      <span class="check-label">FC</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="future-perfect" />
+                      <span class="check-label">FP</span>
+                    </label>
+                    <label class="tense-check">
+                      <input type="checkbox" name="tense" value="future-perfect-continuous" />
+                      <span class="check-label">FPC</span>
+                    </label>
+                  </div>
+
+                  <!-- Quick select buttons -->
+                  <div class="quick-select">
+                    <button type="button" class="qs-btn" data-select="all-present">Все Present</button>
+                    <button type="button" class="qs-btn" data-select="all-past">Все Past</button>
+                    <button type="button" class="qs-btn" data-select="all-future">Все Future</button>
+                    <button type="button" class="qs-btn" data-select="all-simple">Simple</button>
+                    <button type="button" class="qs-btn" data-select="all-continuous">Continuous</button>
+                    <button type="button" class="qs-btn" data-select="all-perfect">Perfect</button>
+                    <button type="button" class="qs-btn" data-select="all">Выбрать все</button>
+                    <button type="button" class="qs-btn qs-btn-clear" data-select="none">Сброс</button>
+                  </div>
+                </div>
+
+                <!-- SENTENCE TYPES -->
+                <div class="builder-section">
+                  <h3>📝 Типы предложений</h3>
+                  <div class="toggle-row">
+                    <label class="toggle-check">
+                      <input type="checkbox" name="stype" value="affirmative" checked />
+                      <span class="toggle-label">✅ Утверждение (+)</span>
+                    </label>
+                    <label class="toggle-check">
+                      <input type="checkbox" name="stype" value="negative" checked />
+                      <span class="toggle-label">❌ Отрицание (-)</span>
+                    </label>
+                    <label class="toggle-check">
+                      <input type="checkbox" name="stype" value="question" checked />
+                      <span class="toggle-label">❓ Вопрос (?)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- TASK TYPES -->
+                <div class="builder-section">
+                  <h3>🧩 Типы заданий</h3>
+                  <div class="toggle-row">
+                    <label class="toggle-check">
+                      <input type="checkbox" name="ttype" value="gap" checked />
+                      <span class="toggle-label">📝 Вписать слово</span>
+                    </label>
+                    <label class="toggle-check">
+                      <input type="checkbox" name="ttype" value="choice" checked />
+                      <span class="toggle-label">🔘 Выбор ответа</span>
+                    </label>
+                    <label class="toggle-check">
+                      <input type="checkbox" name="ttype" value="error" checked />
+                      <span class="toggle-label">🔍 Найти ошибку</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- QUESTIONS PER TENSE -->
+                <div class="builder-section">
+                  <h3>🔢 Вопросов на каждое время: <span id="qpt-value" class="slider-value">5</span></h3>
+                  <input type="range" id="qpt-slider" min="2" max="15" value="5" class="custom-slider" />
+                  <div class="slider-labels">
+                    <span>2</span><span>5</span><span>10</span><span>15</span>
+                  </div>
+                </div>
+
+                <!-- SUMMARY & START -->
+                <div class="builder-summary" id="builder-summary">
+                  <span id="summary-text">Выберите хотя бы 2 времени</span>
+                </div>
+                <button class="btn btn-primary btn-custom-start" id="custom-start-btn" disabled>
+                  🚀 Запустить тренировку
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="game-screen" style="display: none">
+          <div class="question-card">
+            <div id="question-text" class="question-text"></div>
+
+            <!-- Standard Options -->
+            <div id="options-standard" class="options-grid">
+              <button class="option-btn" data-option="0"></button>
+              <button class="option-btn" data-option="1"></button>
+              <button class="option-btn" data-option="2"></button>
+            </div>
+
+            <!-- Find Error Options -->
+            <div id="options-error" class="error-options" style="display: none">
+              <p class="error-instruction">
+                Click on the word that has a mistake:
+              </p>
+              <div id="error-words" class="error-words"></div>
+            </div>
+
+            <!-- Feedback -->
+            <div id="feedback" class="feedback" style="display: none">
+              <div id="feedback-icon" class="feedback-icon"></div>
+              <div id="feedback-text" class="feedback-text"></div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="game-controls">
+            <button class="control-btn hint-btn" id="hint-btn">
+              💡 Подсказка
+            </button>
+            <button class="control-btn next-btn" id="next-btn" style="display: none">
+              Далее →
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="results-screen" style="display: none">
+          <div class="results-card">
+            <h2>🎉 Уровень Пройден!</h2>
+            
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">Вопросы</span>
+                <span id="results-questions" class="stat-value">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Правильно</span>
+                <span id="results-correct" class="stat-value">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Точность</span>
+                <span id="results-accuracy" class="stat-value">0%</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Серия</span>
+                <span id="results-streak" class="stat-value">0</span>
+              </div>
+            </div>
+
+            <div class="results-actions">
+              <button class="btn btn-secondary" id="finish-btn">Меню</button>
+              <button class="btn btn-primary" id="retry-btn">Повторить ↺</button>
+              <button class="btn btn-primary" id="next-level-btn">Далее →</button>
             </div>
           </div>
         </div>
       </div>
+    </main>
 
-      <!-- Game Screen -->
-      <div id="game-screen" class="game-screen" style="display: none;">
-        <div class="question-card">
-          <div id="question-text" class="question-text"></div>
+    <!-- Scripts -->
+    <script src="assets/js/trainer-core.js"></script>
+    <script src="assets/js/trainer-ui.js"></script>
+    <script src="assets/js/trainer-timer-tts.js"></script>
+    <script src="assets/js/trainer-dom-events-utils.js"></script>
+    <script src="assets/js/effects/EffectsManager.js"></script>
+    <script src="assets/js/effects/AuroraEffect.js"></script>
+    <script src="assets/js/effects/AudioEffectsManager.js"></script>
+    <script src="assets/js/effects/HapticFeedback.js"></script>
 
-          <!-- Standard Options -->
-          <div id="options-standard" class="options-grid">
-            <button class="option-btn" data-option="0"></button>
-            <button class="option-btn" data-option="1"></button>
-            <button class="option-btn" data-option="2"></button>
-          </div>
+    <script type="module">
+      import MixedTrainer from "./assets/js/modules/mixed-tenses.js";
+      import { TextbookModal } from "./assets/js/modules/textbook.js";
 
-          <!-- Find Error Options -->
-          <div id="options-error" class="error-options" style="display: none;">
-            <p class="error-instruction">Click on the word that has a mistake:</p>
-            <div id="error-words" class="error-words"></div>
-          </div>
-
-          <!-- Feedback -->
-          <div id="feedback" class="feedback" style="display: none;">
-            <div id="feedback-icon" class="feedback-icon"></div>
-            <div id="feedback-text" class="feedback-text"></div>
-          </div>
-        </div>
-
-        <!-- Controls -->
-        <div class="game-controls">
-          <button id="hint-btn" class="btn btn-secondary">💡 Hint</button>
-          <button id="next-btn" class="btn btn-primary" style="display: none;">Next Question →</button>
-        </div>
-      </div>
-
-      <!-- Results Screen -->
-      <div id="results-screen" class="results-screen" style="display: none;">
-        <div class="results-card">
-          <h2>🎉 Level Complete!</h2>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">Questions</span>
-              <span id="results-questions" class="stat-value">0</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">Correct</span>
-              <span id="results-correct" class="stat-value">0</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">Accuracy</span>
-              <span id="results-accuracy" class="stat-value">0%</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">Best Streak</span>
-              <span id="results-streak" class="stat-value">0</span>
-            </div>
-          </div>
-
-          <div class="results-actions">
-            <button id="retry-btn" class="btn btn-secondary">🔄 Retry Level</button>
-            <button id="next-level-btn" class="btn btn-primary">Next Level →</button>
-            <button id="finish-btn" class="btn btn-primary">🏆 Finish</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Scripts -->
-  <script src="assets/js/trainer-core.js"></script>
-  <script src="assets/js/trainer-ui.js"></script>
-  <script src="assets/js/trainer-timer-tts.js"></script>
-  <script src="assets/js/trainer-dom-events-utils.js"></script>
-  <script src="assets/js/effects/EffectsManager.js"></script>
-  <script src="assets/js/effects/AuroraEffect.js"></script>
-  <script src="assets/js/effects/AudioEffectsManager.js"></script>
-  <script src="assets/js/effects/HapticFeedback.js"></script>
-
-  <script type="module">
-    import MixedTrainer from './assets/js/modules/mixed-tenses.js';
-
-    class MixedTensesUI {
-      constructor() {
-        this.trainer = null;
-        this.currentQuestion = null;
-        this.elements = this.cacheElements();
-        this.bindEvents();
-      }
-
-      cacheElements() {
-        return {
-          startScreen: document.getElementById('start-screen'),
-          gameScreen: document.getElementById('game-screen'),
-          resultsScreen: document.getElementById('results-screen'),
-          levelInfo: document.getElementById('level-info'),
-          levelTitle: document.getElementById('level-title'),
-          levelDesc: document.getElementById('level-description'),
-          progressFill: document.getElementById('progress-fill'),
-          quotaText: document.getElementById('quota-text'),
-          questionText: document.getElementById('question-text'),
-          optionsStandard: document.getElementById('options-standard'),
-          optionsError: document.getElementById('options-error'),
-          errorWords: document.getElementById('error-words'),
-          feedback: document.getElementById('feedback'),
-          feedbackIcon: document.getElementById('feedback-icon'),
-          feedbackText: document.getElementById('feedback-text'),
-          hintBtn: document.getElementById('hint-btn'),
-          nextBtn: document.getElementById('next-btn'),
-          score: document.getElementById('score'),
-          lives: document.getElementById('lives'),
-          level: document.getElementById('level'),
-          streak: document.getElementById('streak')
-        };
-      }
-
-      bindEvents() {
-        // Level selection
-        document.querySelectorAll('[data-level]').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const level = e.target.closest('[data-level]').dataset.level;
-            this.startGame(level);
-          });
-        });
-
-        // Answer buttons
-        this.elements.optionsStandard.addEventListener('click', (e) => {
-          if (e.target.classList.contains('option-btn')) {
-            const optionIndex = parseInt(e.target.dataset.option);
-            this.submitAnswer(optionIndex);
-          }
-        });
-
-        // Error finding buttons
-        this.elements.errorWords.addEventListener('click', (e) => {
-          if (e.target.classList.contains('error-word')) {
-            const optionIndex = parseInt(e.target.dataset.option);
-            this.submitAnswer(optionIndex);
-          }
-        });
-
-        // Control buttons
-        this.elements.hintBtn.addEventListener('click', () => this.showHint());
-        this.elements.nextBtn.addEventListener('click', () => this.nextQuestion());
-
-        // Results buttons
-        document.getElementById('retry-btn').addEventListener('click', () => this.retryLevel());
-        document.getElementById('next-level-btn').addEventListener('click', () => this.nextLevel());
-        document.getElementById('finish-btn').addEventListener('click', () => this.finishGame());
-      }
-
-      async startGame(level) {
-        try {
-          this.trainer = new MixedTrainer(level);
+      class MixedTensesUI {
+        constructor() {
+          this.trainer = null;
+          this.elements = {};
+          this.currentQuestion = null;
+          this.startConfig = null;
+          this.textbook = new TextbookModal();
           
-          // Load Audio Assets
-          await this.trainer._effects.loadAudioAssets({
-            correct: 'assets/audio/correct.mp3',
-            milestone: 'assets/audio/milestone.mp3',
-            error: 'assets/audio/error.mp3'
-          });
-          
-          this.elements.startScreen.style.display = 'none';
-          this.elements.gameScreen.style.display = 'block';
-          this.updateLevelInfo();
-          await this.loadNextQuestion();
-        } catch (error) {
-          console.error('Error starting game:', error);
-          alert('Failed to start game: ' + error.message);
+          this.init();
         }
-      }
 
-      async loadNextQuestion() {
-        try {
-          this.currentQuestion = await this.trainer.generateQuestion();
+        init() {
+          this.elements = this.cacheElements();
+          this.bindEvents();
+          
+          this.textbook.init();
+          this.textbook.onStartPractice = (config) => {
+               this.startGame(config);
+          };
+        }
+        cacheElements() {
+          return {
+            startScreen: document.getElementById("start-screen"),
+            gameScreen: document.getElementById("game-screen"),
+            resultsScreen: document.getElementById("results-screen"),
+            levelInfo: document.getElementById("level-info"),
+            levelTitle: document.getElementById("level-title"),
+            levelDesc: document.getElementById("level-description"),
 
-          if (this.currentQuestion.finished) {
-            this.showResults(this.currentQuestion.stats);
-            return;
+            quotaText: document.getElementById("quota-text"),
+            questionText: document.getElementById("question-text"),
+            optionsStandard: document.getElementById("options-standard"),
+            optionsError: document.getElementById("options-error"),
+            errorWords: document.getElementById("error-words"),
+            feedback: document.getElementById("feedback"),
+            feedbackIcon: document.getElementById("feedback-icon"),
+            feedbackText: document.getElementById("feedback-text"),
+            hintBtn: document.getElementById("hint-btn"),
+            nextBtn: document.getElementById("next-btn"),
+            score: document.getElementById("score"),
+            lives: document.getElementById("lives"),
+            level: document.getElementById("level"),
+            streak: document.getElementById("streak"),
+          };
+        }
+
+        bindEvents() {
+          // ══════════ TAB SWITCHING ══════════
+          const tabBtns = document.querySelectorAll('.tab-btn');
+          const tabContents = document.querySelectorAll('.tab-content');
+          tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+              tabBtns.forEach(b => b.classList.remove('active'));
+              tabContents.forEach(c => c.classList.remove('active'));
+              btn.classList.add('active');
+              document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+            });
+          });
+
+          // Textbook Button
+          const tbBtn = document.getElementById('open-textbook-btn');
+          if (tbBtn) {
+            tbBtn.addEventListener('click', () => {
+                console.log("Textbook button clicked, attempting to open present-simple");
+                // Default to present-simple for now, or detect context
+                this.textbook.open('present-simple');
+            });
           }
 
-          this.renderQuestion();
-          this.updateUI();
-        } catch (error) {
-          console.error('Error loading question:', error);
-          this.showError('Failed to load question');
+          // ══════════ LEVEL SELECTION (preset) ══════════
+          document.querySelectorAll("[data-level]").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              const level = e.target.closest("[data-level]").dataset.level;
+              this.startGame(level);
+            });
+          });
+
+          // ══════════ CUSTOM BUILDER ══════════
+          const tenseCheckboxes = document.querySelectorAll('input[name="tense"]');
+          const stypeCheckboxes = document.querySelectorAll('input[name="stype"]');
+          const ttypeCheckboxes = document.querySelectorAll('input[name="ttype"]');
+          const qptSlider = document.getElementById('qpt-slider');
+          const qptValue = document.getElementById('qpt-value');
+          const summaryText = document.getElementById('summary-text');
+          const customStartBtn = document.getElementById('custom-start-btn');
+          const tenseCounter = document.getElementById('tense-counter');
+
+          const updateSummary = () => {
+            const selected = [...tenseCheckboxes].filter(c => c.checked).map(c => c.value);
+            const stypes = [...stypeCheckboxes].filter(c => c.checked).map(c => c.value);
+            const ttypes = [...ttypeCheckboxes].filter(c => c.checked).map(c => c.value);
+            const qpt = parseInt(qptSlider.value);
+
+            tenseCounter.textContent = `(${selected.length} selected)`;
+            qptValue.textContent = qpt;
+
+            if (selected.length < 1) {
+              summaryText.textContent = 'Выберите хотя бы 1 время';
+              customStartBtn.disabled = true;
+              return;
+            }
+            if (stypes.length === 0) {
+              summaryText.textContent = 'Выберите хотя бы 1 тип предложений';
+              customStartBtn.disabled = true;
+              return;
+            }
+            if (ttypes.length === 0) {
+              summaryText.textContent = 'Выберите хотя бы 1 тип заданий';
+              customStartBtn.disabled = true;
+              return;
+            }
+
+            const total = selected.length * qpt;
+            summaryText.innerHTML = `<strong>${selected.length}</strong> времен × <strong>${qpt}</strong> вопросов = <strong>${total} всего</strong>`;
+            customStartBtn.disabled = false;
+          };
+
+          tenseCheckboxes.forEach(c => c.addEventListener('change', updateSummary));
+          stypeCheckboxes.forEach(c => c.addEventListener('change', updateSummary));
+          ttypeCheckboxes.forEach(c => c.addEventListener('change', updateSummary));
+          qptSlider.addEventListener('input', updateSummary);
+
+          // Quick Select buttons
+          document.querySelectorAll('.qs-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const action = btn.dataset.select;
+              const GROUPS = {
+                'all-present': v => v.startsWith('present'),
+                'all-past': v => v.startsWith('past'),
+                'all-future': v => v.startsWith('future'),
+                'all-simple': v => v.endsWith('-simple'),
+                'all-continuous': v => v.includes('continuous') && !v.includes('perfect'),
+                'all-perfect': v => v.includes('perfect'),
+                'all': () => true,
+                'none': () => false,
+              };
+              const filterFn = GROUPS[action];
+              if (!filterFn) return;
+
+              if (action === 'none') {
+                tenseCheckboxes.forEach(c => c.checked = false);
+              } else {
+                tenseCheckboxes.forEach(c => {
+                  if (filterFn(c.value)) c.checked = true;
+                });
+              }
+              updateSummary();
+            });
+          });
+
+          // Custom Start button
+          customStartBtn.addEventListener('click', () => {
+            const selected = [...tenseCheckboxes].filter(c => c.checked).map(c => c.value);
+            const stypes = [...stypeCheckboxes].filter(c => c.checked).map(c => c.value);
+            const ttypes = [...ttypeCheckboxes].filter(c => c.checked).map(c => c.value);
+            const qpt = parseInt(qptSlider.value);
+
+            const quota = {};
+            selected.forEach(t => quota[t] = qpt);
+
+            const ABBR = {
+              'present-simple': 'PS', 'present-continuous': 'PC',
+              'present-perfect': 'PP', 'present-perfect-continuous': 'PPC',
+              'past-simple': 'PaS', 'past-continuous': 'PaC',
+              'past-perfect': 'PaP', 'past-perfect-continuous': 'PaPC',
+              'future-simple': 'FS', 'future-continuous': 'FC',
+              'future-perfect': 'FP', 'future-perfect-continuous': 'FPC',
+            };
+            const tenseNames = selected.map(t => ABBR[t] || t).join(' + ');
+
+            this.startGame({
+              custom: true,
+              title: `Свой режим: ${tenseNames}`,
+              description: `${selected.length} Времен × ${qpt} Вопросов`,
+              quota,
+              allowedTypes: stypes,
+              allowedTasks: ttypes,
+            });
+          });
+
+          // ══════════ ANSWER / CONTROL BUTTONS ══════════
+          // Answer buttons
+          this.elements.optionsStandard.addEventListener("click", (e) => {
+            if (e.target.classList.contains("option-btn")) {
+              const optionIndex = parseInt(e.target.dataset.option);
+              this.submitAnswer(optionIndex);
+            }
+          });
+
+          // Error finding buttons
+          this.elements.errorWords.addEventListener("click", (e) => {
+            if (e.target.classList.contains("error-word")) {
+              const optionIndex = parseInt(e.target.dataset.option);
+              this.submitAnswer(optionIndex);
+            }
+          });
+
+          // Control buttons
+          this.elements.hintBtn.addEventListener("click", () =>
+            this.showHint(),
+          );
+          this.elements.nextBtn.addEventListener("click", () =>
+            this.nextQuestion(),
+          );
+
+          // Results buttons
+          document
+            .getElementById("retry-btn")
+            .addEventListener("click", () => this.retryLevel());
+          document
+            .getElementById("next-level-btn")
+            .addEventListener("click", () => this.nextLevel());
+          document
+            .getElementById("finish-btn")
+            .addEventListener("click", () => this.finishGame());
         }
-      }
 
-      renderQuestion() {
-        const q = this.currentQuestion;
 
-        // Clean up and localize instructions
-        let instruction = '';
-        let questionText = q.question;
 
-        // Clean up raw generator output
-        if (q.type === 'choice') {
-           instruction = 'Choose the correct option:';
-           questionText = questionText.replace(/^Choose correct[^:]*:\s*/i, '');
-        } else if (q.type === 'gap') {
-           instruction = 'Complete the sentence:';
-        } else if (q.type === 'find_error') {
-           instruction = 'Find the mistake:';
-           // questionText now contains the full sentence from generator
+        async loadNextQuestion() {
+          try {
+            this.currentQuestion = await this.trainer.generateQuestion();
+
+            if (this.currentQuestion.finished) {
+              this.showResults(this.currentQuestion.stats);
+              return;
+            }
+
+            this.renderQuestion();
+            this.updateUI();
+          } catch (error) {
+            console.error("Error loading question:", error);
+            this.showError("Failed to load question");
+          }
         }
 
-        // Render with proper hierarchy
-        this.elements.questionText.innerHTML = 
-          `<span style="display:block; font-size: 0.9em; color: var(--text-muted); margin-bottom: 0.5rem;">${instruction}</span>` +
-          `<span style="display:block; font-size: 1.4em; font-weight: bold;">${questionText}</span>`;
+        renderQuestion() {
+          const q = this.currentQuestion;
 
-        // Hide feedback
-        this.elements.feedback.style.display = 'none';
-        this.elements.nextBtn.style.display = 'none';
-        this.elements.hintBtn.style.display = 'inline-block';
+          // Clean up and localize instructions
+          let instruction = "";
+          let questionText = q.question;
 
-        if (q.type === 'find_error') {
-          // Find error mode
-          this.elements.optionsStandard.style.display = 'none';
-          this.elements.optionsError.style.display = 'block';
+          // Clean up raw generator output
+          if (q.type === "choice") {
+            instruction = "Выберите правильный вариант:";
+            questionText = questionText.replace(
+              /^Choose correct[^:]*:\s*/i,
+              "",
+            );
+          } else if (q.type === "gap") {
+            instruction = "Дополните предложение:";
+          } else if (q.type === "find_error") {
+            instruction = "Найдите ошибку:";
+            // questionText now contains the full sentence from generator
+          }
 
-          this.elements.errorWords.innerHTML = q.options.map((option, index) => `
+          // Render with proper hierarchy
+          this.elements.questionText.innerHTML =
+            `<span style="display:block; font-size: 0.9em; color: var(--text-muted); margin-bottom: 0.5rem;">${instruction}</span>` +
+            `<span style="display:block; font-size: 1.4em; font-weight: bold;">${questionText}</span>`;
+
+          // Hide feedback
+          this.elements.feedback.style.display = "none";
+          this.elements.nextBtn.style.display = "none";
+          this.elements.hintBtn.style.display = "inline-block";
+
+          if (q.type === "find_error") {
+            // Find error mode
+            this.elements.optionsStandard.style.display = "none";
+            this.elements.optionsError.style.display = "block";
+
+            this.elements.errorWords.innerHTML = q.options
+              .map(
+                (option, index) => `
             <button class="error-word" data-option="${index}">
               ${option.text}
             </button>
-          `).join('');
-        } else {
-          // Standard mode
-          this.elements.optionsStandard.style.display = 'grid';
-          this.elements.optionsError.style.display = 'none';
-
-          const buttons = this.elements.optionsStandard.querySelectorAll('.option-btn');
-          q.options.forEach((option, index) => {
-            if (buttons[index]) {
-              buttons[index].textContent = option;
-              buttons[index].disabled = false;
-              buttons[index].classList.remove('correct', 'wrong');
-            }
-          });
-        }
-      }
-
-      async submitAnswer(answerIndex) {
-        const q = this.currentQuestion;
-        let isCorrect = false;
-
-        if (q.type === 'find_error') {
-          isCorrect = q.options[answerIndex].correct;
-        } else {
-          isCorrect = q.options[answerIndex] === q.correct;
-        }
-
-        // Update trainer state
-        if (isCorrect) {
-          this.trainer.state.score += 10;
-          this.trainer.state.correctAnswers++;
-          this.trainer.state.streak++;
-          if (this.trainer.state.streak > this.trainer.state.maxStreak) {
-            this.trainer.state.maxStreak = this.trainer.state.streak;
-          }
-        } else {
-          this.trainer.state.lives--;
-          this.trainer.state.streak = 0;
-        }
-
-        this.trainer.state.questionsAnswered++;
-
-        // Visual feedback
-        this.showFeedback(isCorrect, answerIndex);
-
-        // Effects
-        if (isCorrect) {
-          this.trainer._effects.triggerSuccessEffects(this.trainer.state.streak, document.getElementById('question-container'));
-        } else {
-          this.trainer._effects.triggerErrorEffects();
-        }
-
-        // Update UI
-        this.updateUI();
-
-        // Check game over
-        if (this.trainer.state.lives <= 0) {
-          setTimeout(() => {
-            this.showResults(this.trainer.getStats());
-          }, 2000);
-          return;
-        }
-
-        // Show next button after delay
-        setTimeout(() => {
-          this.elements.nextBtn.style.display = 'inline-block';
-        }, 1500);
-      }
-
-      showFeedback(isCorrect, selectedIndex) {
-        this.elements.feedback.style.display = 'block';
-
-        if (isCorrect) {
-          this.elements.feedbackIcon.textContent = '✅';
-          this.elements.feedbackText.textContent = 'Correct!';
-          this.elements.feedback.className = 'feedback correct';
-
-          // Highlight correct answer
-          if (this.currentQuestion.type === 'find_error') {
-            const correctBtn = this.elements.errorWords.querySelector(`[data-option="${selectedIndex}"]`);
-            if (correctBtn) correctBtn.classList.add('correct');
+          `,
+              )
+              .join("");
           } else {
-            const correctBtn = this.elements.optionsStandard.querySelector(`[data-option="${selectedIndex}"]`);
-            if (correctBtn) correctBtn.classList.add('correct');
-          }
-        } else {
-          this.elements.feedbackIcon.textContent = '❌';
-          this.elements.feedbackText.textContent = 'Incorrect!';
-          this.elements.feedback.className = 'feedback wrong';
+            // Standard mode
+            this.elements.optionsStandard.style.display = "grid";
+            this.elements.optionsError.style.display = "none";
 
-          // Highlight wrong answer and show correct one
-          if (this.currentQuestion.type === 'find_error') {
-            const wrongBtn = this.elements.errorWords.querySelector(`[data-option="${selectedIndex}"]`);
-            if (wrongBtn) wrongBtn.classList.add('wrong');
-
-            // Show correct answer
-            this.currentQuestion.options.forEach((option, index) => {
-              if (option.correct) {
-                const correctBtn = this.elements.errorWords.querySelector(`[data-option="${index}"]`);
-                if (correctBtn) correctBtn.classList.add('correct');
+            const buttons =
+              this.elements.optionsStandard.querySelectorAll(".option-btn");
+            q.options.forEach((option, index) => {
+              if (buttons[index]) {
+                buttons[index].textContent = option;
+                buttons[index].disabled = false;
+                buttons[index].classList.remove("correct", "wrong");
               }
             });
-          } else {
-            const wrongBtn = this.elements.optionsStandard.querySelector(`[data-option="${selectedIndex}"]`);
-            if (wrongBtn) wrongBtn.classList.add('wrong');
-
-            // Show correct answer
-            const correctIndex = this.currentQuestion.options.indexOf(this.currentQuestion.correct);
-            const correctBtn = this.elements.optionsStandard.querySelector(`[data-option="${correctIndex}"]`);
-            if (correctBtn) correctBtn.classList.add('correct');
           }
         }
-      }
 
-      showHint() {
-        // Simple hint implementation
-        const hints = {
-          'present-simple': 'Present Simple: habits, facts, schedules',
-          'present-continuous': 'Present Continuous: actions happening now',
-          'present-perfect': 'Present Perfect: experience, completed actions'
-        };
+        async submitAnswer(answerIndex) {
+          const q = this.currentQuestion;
+          let isCorrect = false;
 
-        const tense = this.currentQuestion.metadata?.tense;
-        const hint = hints[tense] || 'Check the tense carefully!';
+          if (q.type === "find_error") {
+            isCorrect = q.options[answerIndex].correct;
+          } else {
+            isCorrect = q.options[answerIndex] === q.correct;
+          }
 
-        alert(`💡 Hint: ${hint}`);
-        this.trainer.state.score -= 2; // Penalty for hint
-        this.updateUI();
-      }
+          // Update trainer state
+          if (isCorrect) {
+            this.trainer.state.score += 10;
+            this.trainer.state.correctAnswers++;
+            this.trainer.state.streak++;
+            if (this.trainer.state.streak > this.trainer.state.maxStreak) {
+              this.trainer.state.maxStreak = this.trainer.state.streak;
+            }
+          } else {
+            this.trainer.state.lives--;
+            this.trainer.state.streak = 0;
+          }
 
-      async nextQuestion() {
-        await this.loadNextQuestion();
-      }
+          this.trainer.state.questionsAnswered++;
 
-      updateUI() {
-        // Update stats
-        this.elements.score.textContent = this.trainer.state.score;
-        this.elements.level.textContent = this.trainer.currentLevelId;
+          // Visual feedback
+          this.showFeedback(isCorrect, answerIndex);
 
-        // Update lives
-        const hearts = '❤️'.repeat(this.trainer.state.lives) +
-                      '🖤'.repeat(3 - this.trainer.state.lives);
-        this.elements.lives.textContent = hearts;
+          // Effects
+          if (isCorrect) {
+            this.trainer._effects.triggerSuccessEffects(
+              this.trainer.state.streak,
+              document.getElementById("question-container"),
+            );
+          } else {
+            this.trainer._effects.triggerErrorEffects();
+          }
 
-        // Update streak
-        if (this.trainer.state.streak > 0) {
-          this.elements.streak.classList.remove('hidden');
-          this.elements.streak.querySelector('.value').textContent = `🔥 ${this.trainer.state.streak}`;
-        } else {
-          this.elements.streak.classList.add('hidden');
+          // Update UI
+          this.updateUI();
+
+          // Check game over
+          if (this.trainer.state.lives <= 0) {
+            setTimeout(() => {
+              this.showResults(this.trainer.getStats());
+            }, 2000);
+            return;
+          }
+
+          // Show next button after delay
+          setTimeout(() => {
+            this.elements.nextBtn.style.display = "inline-block";
+          }, 1500);
         }
 
-        // Update level info
-        this.updateLevelInfo();
-      }
+        showFeedback(isCorrect, selectedIndex) {
+          this.elements.feedback.style.display = "block";
 
-      updateLevelInfo() {
-        if (!this.trainer?.config) return;
+          if (isCorrect) {
+            this.elements.feedbackIcon.textContent = "✅";
+            this.elements.feedbackText.textContent = "Correct!";
+            this.elements.feedback.className = "feedback correct";
 
-        this.elements.levelTitle.textContent = this.trainer.config.title;
-        this.elements.levelDesc.textContent = this.trainer.config.description;
+            // Highlight correct answer
+            if (this.currentQuestion.type === "find_error") {
+              const correctBtn = this.elements.errorWords.querySelector(
+                `[data-option="${selectedIndex}"]`,
+              );
+              if (correctBtn) correctBtn.classList.add("correct");
+            } else {
+              const correctBtn = this.elements.optionsStandard.querySelector(
+                `[data-option="${selectedIndex}"]`,
+              );
+              if (correctBtn) correctBtn.classList.add("correct");
+            }
+          } else {
+            this.elements.feedbackIcon.textContent = "❌";
+            this.elements.feedbackText.textContent = "Incorrect!";
+            this.elements.feedback.className = "feedback wrong";
 
-        // Update quota display
-        const quota = this.trainer.quota;
-        if (this.trainer.config.mode === 'strict_count') {
-          this.elements.quotaText.textContent =
-            `+: ${quota.affirmative || 0}, -: ${quota.negative || 0}, ?: ${quota.question || 0}`;
-        } else {
-          this.elements.quotaText.textContent =
-            `PS: ${quota['present-simple'] || 0}, PC: ${quota['present-continuous'] || 0}, PP: ${quota['present-perfect'] || 0}`;
+            // Highlight wrong answer and show correct one
+            if (this.currentQuestion.type === "find_error") {
+              const wrongBtn = this.elements.errorWords.querySelector(
+                `[data-option="${selectedIndex}"]`,
+              );
+              if (wrongBtn) wrongBtn.classList.add("wrong");
+
+              // Show correct answer
+              this.currentQuestion.options.forEach((option, index) => {
+                if (option.correct) {
+                  const correctBtn = this.elements.errorWords.querySelector(
+                    `[data-option="${index}"]`,
+                  );
+                  if (correctBtn) correctBtn.classList.add("correct");
+                }
+              });
+            } else {
+              const wrongBtn = this.elements.optionsStandard.querySelector(
+                `[data-option="${selectedIndex}"]`,
+              );
+              if (wrongBtn) wrongBtn.classList.add("wrong");
+
+              // Show correct answer
+              const correctIndex = this.currentQuestion.options.indexOf(
+                this.currentQuestion.correct,
+              );
+              const correctBtn = this.elements.optionsStandard.querySelector(
+                `[data-option="${correctIndex}"]`,
+              );
+              if (correctBtn) correctBtn.classList.add("correct");
+            }
+          }
         }
 
-        // Update progress
-        const total = Object.values(this.trainer.config.quota || this.trainer.config.totalQuota || {}).reduce((a, b) => a + b, 15);
-        const remaining = Object.values(this.trainer.quota).reduce((a, b) => a + b, 0);
-        const progress = ((total - remaining) / total) * 100;
-        this.elements.progressFill.style.width = `${progress}%`;
-      }
+        showHint() {
+          const hints = {
+            'present-simple':               'Present Simple: факты, привычки, расписание. V1 (+s).',
+            'present-continuous':           'Present Continuous: происходит ПРЯМО СЕЙЧАС. am/is/are + Ving.',
+            'present-perfect':              'Present Perfect: результат СЕЙЧАС. have/has + V3.',
+            'present-perfect-continuous':   'Present Perfect Continuous: началось в прошлом, длится до сих пор. have/has been + Ving.',
+            'past-simple':                  'Past Simple: факт в прошлом. V2 (ed).',
+            'past-continuous':              'Past Continuous: процесс в момент в прошлом. was/were + Ving.',
+            'past-perfect':                 'Past Perfect: действие ДО другого прошлого действия. had + V3.',
+            'past-perfect-continuous':      'Past Perfect Continuous: длилось ДО момента в прошлом. had been + Ving.',
+            'future-simple':                'Future Simple: решение, обещание, прогноз. will + V1.',
+            'future-continuous':            'Future Continuous: процесс в момент в будущем. will be + Ving.',
+            'future-perfect':               'Future Perfect: закончится К моменту в будущем. will have + V3.',
+            'future-perfect-continuous':    'Future Perfect Continuous: будет длиться ДО момента в будущем. will have been + Ving.',
+          };
 
-      showResults(stats) {
-        this.elements.gameScreen.style.display = 'none';
-        this.elements.resultsScreen.style.display = 'block';
+          const tense = this.currentQuestion.metadata?.tense;
+          const hint = hints[tense] || "Внимательно проверьте время!";
 
-        document.getElementById('results-questions').textContent = stats.totalQuestions;
-        document.getElementById('results-correct').textContent = stats.correctAnswers;
-        document.getElementById('results-accuracy').textContent = `${stats.accuracy}%`;
-        document.getElementById('results-streak').textContent = stats.bestStreak;
-      }
+          alert(`💡 Подсказка: ${hint}`);
+          this.trainer.state.score -= 2; // Penalty for hint
+          this.updateUI();
+        }
 
-      retryLevel() {
-        this.trainer.initLevel(this.trainer.currentLevelId);
-        this.elements.resultsScreen.style.display = 'none';
-        this.elements.gameScreen.style.display = 'block';
-        this.loadNextQuestion();
-      }
+        async nextQuestion() {
+          await this.loadNextQuestion();
+        }
 
-      nextLevel() {
-        const nextLevel = this.trainer.config.nextLevel;
-        if (nextLevel && nextLevel !== 'win') {
-          this.trainer.initLevel(nextLevel);
-          this.elements.resultsScreen.style.display = 'none';
-          this.elements.gameScreen.style.display = 'block';
-          this.loadNextQuestion();
-        } else {
-          this.finishGame();
+        updateUI() {
+          // Update stats
+          this.elements.score.textContent = this.trainer.state.score;
+          this.elements.level.textContent = this.trainer.currentLevelId;
+
+          // Update lives
+          const hearts =
+            "❤️".repeat(this.trainer.state.lives) +
+            "🖤".repeat(3 - this.trainer.state.lives);
+          this.elements.lives.textContent = hearts;
+
+          // Update streak
+          if (this.trainer.state.streak > 0) {
+            this.elements.streak.classList.remove("hidden");
+            this.elements.streak.querySelector(".value").textContent =
+              `🔥 ${this.trainer.state.streak}`;
+          } else {
+            this.elements.streak.classList.add("hidden");
+          }
+
+          // Update level info
+          this.updateLevelInfo();
+        }
+
+        updateLevelInfo() {
+          if (!this.trainer?.config) return;
+
+          this.elements.levelTitle.textContent = this.trainer.config.title;
+          this.elements.levelDesc.textContent = this.trainer.config.description;
+
+          // Update quota display — dynamic for any tenses in the level
+          const quota = this.trainer.quota;
+          if (this.trainer.config.mode === "strict_count") {
+            this.elements.quotaText.textContent = `+: ${quota.affirmative || 0}, -: ${quota.negative || 0}, ?: ${quota.question || 0}`;
+          } else {
+            const TENSE_ABBR = {
+              'present-simple': 'PS', 'present-continuous': 'PC', 'present-perfect': 'PP', 'present-perfect-continuous': 'PPC',
+              'past-simple': 'PaS', 'past-continuous': 'PaC', 'past-perfect': 'PaP', 'past-perfect-continuous': 'PaPC',
+              'future-simple': 'FS', 'future-continuous': 'FC', 'future-perfect': 'FP', 'future-perfect-continuous': 'FPC',
+            };
+            const parts = Object.entries(quota)
+              .map(
+                ([tense, count]) => `${TENSE_ABBR[tense] || tense}: ${count}`,
+              )
+              .join(", ");
+            this.elements.quotaText.textContent = parts;
+          }
+
+
+        }
+
+        showResults(stats) {
+          this.elements.gameScreen.style.display = "none";
+          this.elements.resultsScreen.style.display = "block";
+
+          document.getElementById("results-questions").textContent =
+            stats.totalQuestions;
+          document.getElementById("results-correct").textContent =
+            stats.correctAnswers;
+          document.getElementById("results-accuracy").textContent =
+            `${stats.accuracy}%`;
+          document.getElementById("results-streak").textContent =
+            stats.bestStreak;
+        }
+
+        async startGame(levelOrConfig) {
+          this.startConfig = levelOrConfig; // Save for retry
+
+          try {
+            this.trainer = new MixedTrainer(levelOrConfig);
+
+            // Load Audio Assets
+            await this.trainer._effects.loadAudioAssets({
+              correct: "assets/audio/correct.mp3",
+              milestone: "assets/audio/milestone.mp3",
+              error: "assets/audio/error.mp3",
+            });
+
+            this.elements.startScreen.style.display = "none";
+            this.elements.gameScreen.style.display = "block";
+            this.updateLevelInfo();
+            await this.loadNextQuestion();
+          } catch (error) {
+            console.error("Error starting game:", error);
+            alert("Не удалось запустить игру: " + error.message);
+          }
+        }
+
+        retryLevel() {
+            if (this.startConfig && this.startConfig.custom) {
+                this.trainer.initCustom(this.startConfig);
+            } else {
+                this.trainer.initLevel(this.trainer.currentLevelId);
+            }
+            
+            this.elements.resultsScreen.style.display = "none";
+            this.elements.gameScreen.style.display = "block";
+            this.loadNextQuestion();
+        }
+
+        nextLevel() {
+          const nextLevel = this.trainer.config.nextLevel;
+          if (nextLevel && nextLevel !== "win") {
+            this.trainer.initLevel(nextLevel);
+            this.elements.resultsScreen.style.display = "none";
+            this.elements.gameScreen.style.display = "block";
+            this.loadNextQuestion();
+          } else {
+            this.finishGame();
+          }
+        }
+
+        finishGame() {
+          // Return to start screen
+          this.elements.resultsScreen.style.display = "none";
+          this.elements.startScreen.style.display = "block";
+        }
+
+        showError(message) {
+          alert(`Ошибка: ${message}`);
         }
       }
 
-      finishGame() {
-        // Return to start screen
-        this.elements.resultsScreen.style.display = 'none';
-        this.elements.startScreen.style.display = 'block';
-      }
-
-      showError(message) {
-        alert(`Error: ${message}`);
-      }
-    }
-
-    // Initialize when DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-      window.mixedTrainer = new MixedTensesUI();
-    });
-  </script>
-  <script src="../assets/js/common-nav.js"></script>
-</body>
+      // Initialize when DOM is ready
+      document.addEventListener("DOMContentLoaded", () => {
+        window.mixedTrainer = new MixedTensesUI();
+      });
+    </script>
+  </body>
 </html>

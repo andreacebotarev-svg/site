@@ -8,14 +8,34 @@ import { LEVELS, TENSES, TASK_TYPES } from '../generators/mixed/strategies.js';
 import { generateMixedQuestion } from '../generators/mixed/index.js';
 
 export default class MixedTrainer extends Trainer {
-    constructor(startLevel = 1) {
+    constructor(startLevelOrConfig = 1) {
         super({
             name: 'Mixed Tenses Trainer',
             maxLives: 3,
             streakBonus: 10
         });
 
-        this.initLevel(startLevel);
+        if (typeof startLevelOrConfig === 'object' && startLevelOrConfig.custom) {
+            // Custom mode — config built from checkbox UI
+            this.initCustom(startLevelOrConfig);
+        } else {
+            this.initLevel(startLevelOrConfig);
+        }
+    }
+
+    initCustom(customConfig) {
+        this.currentLevelId = 'custom';
+        this.config = {
+            id: 'custom',
+            title: customConfig.title || 'Custom Workout',
+            description: customConfig.description || 'Your personal tense mix',
+            quota: { ...customConfig.quota },
+            allowedTypes: customConfig.allowedTypes || ['affirmative', 'negative', 'question'],
+            allowedTasks: customConfig.allowedTasks || [TASK_TYPES.GAP, TASK_TYPES.CHOICE, TASK_TYPES.FIND_ERROR],
+            nextLevel: 'win'
+        };
+        this.quota = { ...this.config.quota };
+        console.log('[MixedTrainer] Custom mode started', this.quota);
     }
 
     initLevel(levelId) {

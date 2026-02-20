@@ -336,8 +336,8 @@ class EnglishAssistant {
                     }
                 });
             }, {
-                threshold: 0.1, // Trigger when 10% of the target is visible
-                rootMargin: '0px 0px -100px 0px' 
+                threshold: 0, // Trigger as soon as even 1 pixel is visible
+                rootMargin: '0px 0px 200px 0px'  // Expanded root margin to reliably trigger on mobile browser toolbars
             });
             observer.observe(observerTarget);
         }

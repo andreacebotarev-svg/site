@@ -1,0 +1,96 @@
+{
+  "id": "present-simple",
+  "meta": {
+    "title": "Present Simple",
+    "subtitle": "Настоящее Простое",
+    "badge": "База",
+    "color": "var(--present-color, #10b981)",
+    "difficulty": 1
+  },
+  "sections": [
+    {
+      "type": "header",
+      "content": {
+        "formula_preview": "S + V1 (s/es)",
+        "summary": "Регулярные действия, факты и расписания."
+      }
+    },
+    {
+      "type": "usage",
+      "title": "Когда используем?",
+      "items": [
+        {
+          "icon": "🔄",
+          "title": "Регулярность",
+          "desc": "Действия, которые происходят обычно, часто, редко или никогда.",
+          "example": "I drink coffee every morning."
+        },
+        {
+          "icon": "facts",
+          "title": "Факты и истины",
+          "desc": "То, что верно всегда или в настоящее время.",
+          "example": "The Earth goes around the Sun."
+        },
+        {
+          "icon": "📅",
+          "title": "Расписания",
+          "desc": "Будущее действие по расписанию (поезда, уроки, кино).",
+          "example": "The train leaves at 5 PM."
+        }
+      ]
+    },
+    {
+      "type": "formula",
+      "title": "Конструктор Форм",
+      "forms": {
+        "positive": [
+          { "role": "subject", "text": "I / You / We / They" },
+          { "role": "verb", "text": "work" },
+          { "break": true },
+          { "role": "subject", "text": "He / She / It" },
+          { "role": "verb", "text": "work" },
+          { "role": "ending", "text": "s" }
+        ],
+        "negative": [
+          { "role": "subject", "text": "I / You / We / They" },
+          { "role": "aux", "text": "don't" },
+          { "role": "verb", "text": "work" },
+          { "break": true },
+          { "role": "subject", "text": "He / She / It" },
+          { "role": "aux", "text": "doesn't" },
+          { "role": "verb", "text": "work" }
+        ],
+        "question": [
+          { "role": "aux", "text": "Do" },
+          { "role": "subject", "text": "you" },
+          { "role": "verb", "text": "work?" },
+          { "break": true },
+          { "role": "aux", "text": "Does" },
+          { "role": "subject", "text": "he" },
+          { "role": "verb", "text": "work?" }
+        ]
+      }
+    },
+    {
+      "type": "markers",
+      "title": "Маркеры времени (Signal Words)",
+      "words": ["always", "usually", "often", "sometimes", "rarely", "never", "every day", "on Mondays"]
+    },
+    {
+      "type": "traps",
+      "title": "Типичные ошибки",
+      "items": [
+        { "wrong": "He work in a bank.", "correct": "He works in a bank.", "note": "Забыли -s" },
+        { "wrong": "Does she works?", "correct": "Does she work?", "note": "Лишнее -s в вопросе (Does забрал его)" },
+        { "wrong": "I am not play.", "correct": "I don't play.", "note": "Глагол to be (am) не нужен здесь" }
+      ]
+    }
+  ],
+  "practice_config": {
+    "custom": true,
+    "title": "Тренировка Present Simple",
+    "quota": { "present-simple": 10 },
+    "allowedTypes": ["affirmative", "negative", "question"],
+    "allowedTasks": ["gap", "choice", "find_error"]
+  }
+}
