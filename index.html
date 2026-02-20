@@ -131,12 +131,6 @@
           <span class="small">English tutor</span>
         </a>
 
-        <button class="nav-toggle" aria-label="Открыть меню">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
         <nav class="nav-links" aria-label="Навигация">
           <a href="#about">Почему я</a>
           <a href="#method">Методика</a>
@@ -147,6 +141,13 @@
         </nav>
       </div>
     </header>
+
+    <!-- Mobile Toggle Burger Button (Sticky on mobile) -->
+    <button class="nav-toggle" aria-label="Открыть меню">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
     <!-- Mobile Menu Overlay (outside header for proper z-index stacking) -->
     <div class="mobile-menu" id="mobile-menu">
@@ -1708,30 +1709,12 @@
               e.preventDefault();
               closeMobileMenu(false);
               window.scrollTo({ top: 0, behavior: 'smooth' });
-              ensureBurgerVisible();
               return;
             }
             // For other anchors, close without restoring old position
             closeMobileMenu(false);
-            ensureBurgerVisible();
           });
         });
-
-        // Force burger button to be visible after 3 seconds
-        // Fixes iOS/mobile bug where the button disappears after navigation
-        function ensureBurgerVisible() {
-          setTimeout(() => {
-            if (navToggle) {
-              navToggle.style.display = 'none';
-              navToggle.offsetHeight; // force reflow
-              navToggle.style.display = '';
-              // Ensure it's visible by forcing styles
-              navToggle.style.opacity = '1';
-              navToggle.style.visibility = 'visible';
-              navToggle.style.pointerEvents = 'auto';
-            }
-          }, 3000);
-        }
 
         // Close on escape key
         document.addEventListener('keydown', (e) => {
