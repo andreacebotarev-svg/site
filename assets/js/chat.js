@@ -14,7 +14,7 @@ class EnglishAssistant {
 2. ПРОМОКОД: "2026" дает скидку 15% на первые 3 месяца обучения! 🎟️💸
 3. НЕ УЧИ БЕСПЛАТНО: Если просят правило — скажи, что у нас есть крутой Бот-Репетитор для этого, а ты здесь, чтобы записать на полноценный урок, где Андрей объяснит всё лично.
 4. ЭКОСИСТЕМА: Пиарь Smart Reader и Reading Trainer. 🪄💻
-5. ЗАКРЫВАЙ СДЕЛКУ: Каждый ответ должен заканчиваться призывом к записи на бесплатный пробный урок! ✨`,
+5. КАК ЗАПИСАТЬ: Если клиент хочет записаться, ПРОСТО ПОПРОСИ ЕГО НАПИСАТЬ СВОЙ НОМЕР ТЕЛЕФОНА ИЛИ TELEGRAM ПРЯМО ТУТ В ЧАТЕ. НИКОГДА не генерируй заглушки ссылок типа [Запишитесь](ссылка) или формы, просто скажи: "Напиши свой номер телефона или ник в Telegram, и мы свяжемся с тобой!". Система чата сама распознает его ответ. ✨`,
     };
 
     this.suggestions = {
@@ -470,6 +470,44 @@ class EnglishAssistant {
 
     this.addMessage(text, "user");
     this.detectTopic(text);
+
+    // Auto-detect phone or telegram
+    const cleanedPhone = text.replace(/[^0-9]/g, '');
+    const isPhoneNumber = cleanedPhone.length >= 10 && cleanedPhone.length <= 15 && (text.includes('+') || cleanedPhone.startsWith('7') || cleanedPhone.startsWith('8') || cleanedPhone.startsWith('9'));
+    const isTelegram = /@[\w]{4,}/.test(text) || /t\.me\/[\w]{4,}/.test(text);
+
+    if (isPhoneNumber || isTelegram) {
+        this.addMessage("✅ Контакт распознан! Передаю Андрею...", "ai");
+        this.elements.typing.style.display = "block";
+        
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+                access_key: "702470cb-beb9-4faa-93e7-595495a5f4da",
+                subject: "⚡ Авто-Сбор Контакта из AI-чата englishlessons",
+                from_name: "AI Assistant",
+                name: "Лид из чата",
+                contact: text,
+                source: "AI Chat Auto-detect"
+            })
+        })
+        .then(async (response) => {
+            this.elements.typing.style.display = "none";
+            if (response.status == 200) {
+                this.addMessage("🎉 **Отлично!** Контакты успешно переданы. Андрей скоро свяжется с тобой для записи на бесплатный урок!", "ai");
+                if (typeof ym !== 'undefined') { try { ym(106683416, 'reachGoal', 'form_sent'); } catch (e) {} }
+            } else { throw new Error("Failed"); }
+        })
+        .catch(err => {
+             this.elements.typing.style.display = "none";
+             this.addMessage("Ой, произошла техническая ошибка. Пожалуйста, воспользуйся кнопкой 'Оставить заявку' выше.", "ai");
+        });
+        
+        this.messages.push({ role: "user", content: text });
+        this.messages.push({ role: "assistant", content: "Контакты переданы." });
+        return;
+    }
 
     const history = [
       { role: "system", content: this.config.systemPrompt },
