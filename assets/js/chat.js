@@ -322,25 +322,36 @@ class EnglishAssistant {
             }
         }, 3000);
 
-        // Fix: Observe the footer so the badge stays active at the very bottom of the page
-        const observerTarget = document.querySelector("footer.footer") || document.getElementById("lead");
-        if (observerTarget) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !this.elements.window.classList.contains("active")) {
+        // Fix: Use scroll event instead of IntersectionObserver for native mobile reliability 
+        let scrollRAF;
+        window.addEventListener('scroll', () => {
+            if (scrollRAF) cancelAnimationFrame(scrollRAF);
+            scrollRAF = requestAnimationFrame(() => {
+                if (this.elements.window.classList.contains("active")) return;
+                
+                // Calculate distance to bottom
+                const docScroll = document.documentElement.scrollTop || document.body.scrollTop;
+                const docHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+                const winHeight = window.innerHeight;
+                
+                const scrollBottom = docHeight - winHeight - docScroll;
+                
+                // Show badge when user is within 1500px of the bottom of the page
+                if (scrollBottom < 1500) {
+                    if (this.elements.badge.textContent !== "Я могу помочь тебе отправить заявку! 🔥") {
                         this.elements.badge.textContent = "Я могу помочь тебе отправить заявку! 🔥";
+                    }
+                    if (!this.elements.badge.classList.contains("is-visible")) {
                         this.elements.badge.classList.add("is-visible");
-                    } else {
-                        // Hide it if they scroll away
+                    }
+                } else {
+                    // Hide when scrolling back up smoothly
+                    if (this.elements.badge.classList.contains("is-visible")) {
                         this.elements.badge.classList.remove("is-visible");
                     }
-                });
-            }, {
-                threshold: 0, 
-                rootMargin: '100px 0px 500px 0px'  // Fire it well before reaching bottom, and keep active deep past it
+                }
             });
-            observer.observe(observerTarget);
-        }
+        }, { passive: true });
     }
   }
 
