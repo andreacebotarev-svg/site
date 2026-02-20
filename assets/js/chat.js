@@ -19,7 +19,7 @@ class EnglishAssistant {
 
     this.suggestions = {
       initial: [
-        "Сколько стоит? 💳",
+        "Узнать цену 💳",
         "Как проходит пробный урок? 🎓",
         "Промокод на скидку? 🎁",
         "Хочу записаться! ✍️",
@@ -257,14 +257,7 @@ class EnglishAssistant {
 
     if (this.elements.btnLeaveRequest) {
         this.elements.btnLeaveRequest.addEventListener("click", () => {
-             this.toggleChat(false);
-             // Wait for chat close and scroll restore, then scroll to form
-             setTimeout(() => {
-                 const leadForm = document.getElementById('lead');
-                 if(leadForm) {
-                     leadForm.scrollIntoView({ behavior: 'smooth' });
-                 }
-             }, 100);
+             this.showInlineForm();
         });
     }
 
@@ -356,10 +349,21 @@ class EnglishAssistant {
 
   renderSuggestions(list) {
     this.elements.suggestions.innerHTML = "";
-    const shuffled = [...list].sort(() => 0.5 - Math.random()).slice(0, 4);
-    shuffled.forEach((text) => {
+    
+    let selected = [...list];
+    if (list.includes("Узнать цену 💳")) {
+       selected = selected.filter(t => t !== "Узнать цену 💳").sort(() => 0.5 - Math.random()).slice(0, 3);
+       selected.unshift("Узнать цену 💳");
+    } else {
+       selected = selected.sort(() => 0.5 - Math.random()).slice(0, 4);
+    }
+
+    selected.forEach((text) => {
       const btn = document.createElement("button");
       btn.className = "suggestion-btn";
+      if (text.includes("цену") || text.includes("Скидка")) {
+          btn.classList.add("glow-sun");
+      }
       btn.textContent = text;
       btn.onclick = (e) => {
         e.preventDefault();
@@ -367,6 +371,81 @@ class EnglishAssistant {
         this.sendMessage(text);
       };
       this.elements.suggestions.appendChild(btn);
+    });
+  }
+
+  showInlineForm() {
+    this.elements.suggestions.innerHTML = "";
+    this.addMessage("Оставь свой контакт (имя и телефон/телеграм), и мы свяжемся с тобой для записи на бесплатный пробный урок! 👇", "ai");
+    
+    // Create inline form DOM block
+    const formDiv = document.createElement("div");
+    formDiv.className = "message ai inline-form-message";
+    formDiv.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+            <input type="text" id="chatLeadName" placeholder="Ваше имя" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.2); color:white; width:calc(100% - 22px); outline:none;">
+            <input type="text" id="chatLeadContact" placeholder="Телефон или Telegram" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.2); color:white; width:calc(100% - 22px); outline:none;">
+            <button id="chatLeadSubmit" style="padding:10px; border-radius:8px; border:none; background:linear-gradient(135deg, var(--ai-secondary), var(--ai-primary)); color:white; cursor:pointer; font-weight:bold; width:100%;">Отправить заявку 🚀</button>
+            <div id="chatLeadStatus" style="font-size:12px; display:none; text-align:center; margin-top:5px;"></div>
+        </div>
+    `;
+    
+    this.elements.messages.appendChild(formDiv);
+    this.elements.messages.scrollTop = this.elements.messages.scrollHeight;
+
+    const btnSubmit = formDiv.querySelector("#chatLeadSubmit");
+    const nameInput = formDiv.querySelector("#chatLeadName");
+    const contactInput = formDiv.querySelector("#chatLeadContact");
+    const statusMsg = formDiv.querySelector("#chatLeadStatus");
+
+    btnSubmit.addEventListener("click", () => {
+        const name = nameInput.value.trim();
+        const contact = contactInput.value.trim();
+
+        if (!name || !contact) {
+            statusMsg.style.display = "block";
+            statusMsg.style.color = "#ffeba1";
+            statusMsg.textContent = "Пожалуйста, заполните оба поля.";
+            return;
+        }
+
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = "Отправка...";
+        statusMsg.style.display = "none";
+
+        // Call Web3Forms directly
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                access_key: "702470cb-beb9-4faa-93e7-595495a5f4da",
+                subject: "⚡ Новая заявка из AI-чата englishlessons",
+                from_name: "AI Assistant",
+                name: name,
+                contact: contact,
+                source: "AI Inline Form"
+            })
+        })
+        .then(async (response) => {
+            if (response.status == 200) {
+                formDiv.innerHTML = `<div style="text-align:center; color:#22c55e; font-weight:bold;">✅ Заявка успешно отправлена! Я передал твои контакты Андрею. Скоро он свяжется с тобой! 🎉</div>`;
+                if (typeof ym !== 'undefined') {
+                    try { ym(106683416, 'reachGoal', 'form_sent'); } catch (e) {}
+                }
+            } else {
+                throw new Error("Failed");
+            }
+        })
+        .catch(err => {
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = "Отправить заявку 🚀";
+            statusMsg.style.display = "block";
+            statusMsg.style.color = "#ef4444";
+            statusMsg.textContent = "Произошла ошибка. Попробуйте снова.";
+        });
     });
   }
 

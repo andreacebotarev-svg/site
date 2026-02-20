@@ -153,11 +153,40 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    animation: sunGlow 1.5s infinite alternate;
 }
 
 .btn-header-action:hover {
     background: var(--ai-primary);
     border-color: var(--ai-primary);
+    animation: none;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+}
+
+@keyframes sunGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 180, 0, 0.4);
+        border-color: rgba(255, 180, 0, 0.3);
+        color: #fff;
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 180, 0, 0.9);
+        border-color: rgba(255, 180, 0, 0.8);
+        color: #ffeba1;
+    }
+}
+
+.suggestion-btn.glow-sun {
+    animation: sunGlow 1.5s infinite alternate;
+    background: rgba(255, 180, 0, 0.1);
+}
+
+.suggestion-btn.glow-sun:hover {
+    background: var(--ai-primary);
+    border-color: var(--ai-primary);
+    animation: none;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+    color: white;
 }
 
 /* --- Chat Area --- */
