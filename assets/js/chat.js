@@ -310,6 +310,38 @@ class EnglishAssistant {
         }, 300);
       }
     });
+
+    // --- Badge Logic ---
+    if (this.elements.badge) {
+        // Initial delayed show
+        setTimeout(() => {
+            if (!this.elements.window.classList.contains("active")) {
+                this.elements.badge.textContent = "Задай мне вопрос!";
+                this.elements.badge.classList.add("is-visible");
+                setTimeout(() => this.elements.badge.classList.remove("is-visible"), 5000);
+            }
+        }, 3000);
+
+        // Observer for bottom of the page
+        const observerTarget = document.getElementById("lead") || document.querySelector("footer") || document.querySelector("main");
+        if (observerTarget) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !this.elements.window.classList.contains("active")) {
+                        this.elements.badge.textContent = "Я могу помочь тебе отправить заявку! 🔥";
+                        this.elements.badge.classList.add("is-visible");
+                    } else {
+                        // Optionally hide it if they scroll away (or keep it)
+                        this.elements.badge.classList.remove("is-visible");
+                    }
+                });
+            }, {
+                threshold: 0.1, // Trigger when 10% of the target is visible
+                rootMargin: '0px 0px -100px 0px' 
+            });
+            observer.observe(observerTarget);
+        }
+    }
   }
 
   toggleChat(forceState = null) {
