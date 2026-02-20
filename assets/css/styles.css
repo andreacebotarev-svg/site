@@ -1529,6 +1529,23 @@ a:hover {
   border-radius: var(--r-md);
   overflow: hidden;
   user-select: auto !important; /* Allow interaction in iframe */
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .platform-modal-content::before {
+    content: '';
+    position: absolute;
+    top: 8px; /* Move inside to avoid being clipped by overflow:hidden */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.2); /* Darkish gray to show up on white */
+    border-radius: 4px;
+    z-index: 9999;
+    pointer-events: none;
+  }
 }
 
 @media (min-width: 768px) {
