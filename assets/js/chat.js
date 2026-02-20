@@ -322,8 +322,8 @@ class EnglishAssistant {
             }
         }, 3000);
 
-        // Observer for bottom of the page
-        const observerTarget = document.getElementById("lead") || document.querySelector("footer") || document.querySelector("main");
+        // Fix: Observe the footer so the badge stays active at the very bottom of the page
+        const observerTarget = document.querySelector("footer.footer") || document.getElementById("lead");
         if (observerTarget) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -331,13 +331,13 @@ class EnglishAssistant {
                         this.elements.badge.textContent = "Я могу помочь тебе отправить заявку! 🔥";
                         this.elements.badge.classList.add("is-visible");
                     } else {
-                        // Optionally hide it if they scroll away (or keep it)
+                        // Hide it if they scroll away
                         this.elements.badge.classList.remove("is-visible");
                     }
                 });
             }, {
-                threshold: 0, // Trigger as soon as even 1 pixel is visible
-                rootMargin: '0px 0px 200px 0px'  // Expanded root margin to reliably trigger on mobile browser toolbars
+                threshold: 0, 
+                rootMargin: '100px 0px 500px 0px'  // Fire it well before reaching bottom, and keep active deep past it
             });
             observer.observe(observerTarget);
         }
