@@ -460,7 +460,8 @@ export class LibraryView {
     const format = book.format ? book.format.toUpperCase() : 'TXT';
 
     return `
-      <div class="book-card card-interactive" data-book-id="${book.id}" tabindex="0" role="button" aria-label="Читать ${this.escapeHtml(book.title)}" style="--card-index: ${index}">
+      <div class="book-card card-interactive ${book.source === 'server' ? 'server-book' : ''}" data-book-id="${book.id}" tabindex="0" role="button" aria-label="Читать ${this.escapeHtml(book.title)}" style="--card-index: ${index}">
+        ${book.source === 'server' ? '<div class="server-badge">Учебник</div>' : ''}
         <div class="book-cover">${cover}</div>
         <div class="book-card-header">
           <h3 class="book-title" title="${this.escapeHtml(book.title)}">${this.escapeHtml(book.title || 'Без названия')}</h3>
