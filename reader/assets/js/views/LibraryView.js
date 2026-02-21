@@ -53,6 +53,31 @@ export class LibraryView {
               </div>
             </div>
 
+            <!-- Demo Features Grid -->
+            <div class="demo-features-grid">
+              <div class="demo-feature-card">
+                <div class="demo-feature-icon">✨</div>
+                <div class="demo-feature-content">
+                  <h3>Умный контекст</h3>
+                  <p>Нажми на любое слово для перевода с учетом окружающего текста</p>
+                </div>
+              </div>
+              <div class="demo-feature-card">
+                <div class="demo-feature-icon">🎴</div>
+                <div class="demo-feature-content">
+                  <h3>Быстрое заучивание</h3>
+                  <p>Сохраняй новые слова в один клик и тренируй их с помощью флеш-карточек</p>
+                </div>
+              </div>
+              <div class="demo-feature-card">
+                <div class="demo-feature-icon">📚</div>
+                <div class="demo-feature-content">
+                  <h3>Свои книги</h3>
+                  <p>Загружай книги в форматах FB2, EPUB и TXT и читай их в удобной читалке</p>
+                </div>
+              </div>
+            </div>
+
             <!-- Floating Action Button -->
             <button class="fab-main" id="fab-main" title="Быстрое действие">
               <span class="fab-icon">⚡</span>
