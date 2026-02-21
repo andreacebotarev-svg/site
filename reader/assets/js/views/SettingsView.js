@@ -30,8 +30,8 @@ export class SettingsView {
       this.container.innerHTML = `
         <main class="settings-container ios-settings">
           <header class="settings-header">
-            <h1 class="settings-title ios-title">Settings</h1>
-            <p class="settings-subtitle ios-subtitle">Customize your reading experience</p>
+            <h1 class="settings-title ios-title">Настройки</h1>
+            <p class="settings-subtitle ios-subtitle">Настрой приложение под себя</p>
           </header>
 
           <div class="settings-content ios-content">
@@ -42,7 +42,7 @@ export class SettingsView {
 
           <div class="settings-actions ios-actions">
             <button class="btn btn-secondary ios-btn-secondary" id="reset-settings-btn">
-              Reset to Defaults
+              Сбросить к заводским
             </button>
           </div>
         </main>
@@ -121,13 +121,13 @@ export class SettingsView {
   renderAdvancedSection() {
     return `
       <section class="settings-section ios-section">
-        <h2 class="settings-section-title ios-section-title">Advanced</h2>
+        <h2 class="settings-section-title ios-section-title">Дополнительно</h2>
 
         <div class="setting-item ios-setting-item" data-setting="fullCacheReset">
           <div class="setting-info ios-setting-info">
-            <label class="setting-label ios-setting-label">Full cache reset</label>
+            <label class="setting-label ios-setting-label">Полный сброс кэша</label>
             <p class="setting-description ios-setting-description">
-              Enter 000 to wipe all local caches and data.
+              Введите 000, чтобы удалить все локальные данные.
             </p>
           </div>
 
@@ -137,11 +137,11 @@ export class SettingsView {
               <input class="pin-digit ios-pin-digit" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Digit 2" placeholder="0">
               <input class="pin-digit ios-pin-digit" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Digit 3" placeholder="0">
               <button class="btn btn-danger ios-btn-danger" id="full-cache-reset-btn" disabled>
-                🗑️ Clear cache
+                🗑️ Очистить кэш
               </button>
             </div>
             <p class="danger-note ios-danger-note">
-              Warning: this will delete books, progress, vocabulary and settings on this device.
+              Внимание: это удалит все книги, прогресс, словарь и настройки на этом устройстве.
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ export class SettingsView {
     const resetBtn = this.container.querySelector('#reset-settings-btn');
     if (resetBtn) {
       resetBtn.addEventListener('click', async () => {
-        if (confirm('Reset all settings to defaults?')) {
+        if (confirm('Сбросить все настройки к заводским?')) {
           await this.resetAllSettings();
         }
       });
@@ -189,12 +189,12 @@ export class SettingsView {
       const success = await settingsManager.set(key, value);
       if (success) {
         this.settings[key] = value;
-        toastManager.success(`Updated ${SettingsConfig.settings[key].label}`);
+        toastManager.success(`Обновлено: ${SettingsConfig.settings[key].label}`);
       } else {
-        toastManager.error('Update failed');
+        toastManager.error('Ошибка обновления');
       }
     } catch (error) {
-      toastManager.error('Update failed');
+      toastManager.error('Ошибка обновления');
       this.logger.error('Failed to update setting', error);
     }
   }
@@ -203,13 +203,13 @@ export class SettingsView {
     try {
       const success = await settingsManager.resetAll();
       if (success) {
-        toastManager.success('All settings reset');
+        toastManager.success('Настройки сброшены');
         await this.render();
       } else {
-        toastManager.error('Reset failed');
+        toastManager.error('Ошибка сброса');
       }
     } catch (error) {
-      toastManager.error('Reset failed');
+      toastManager.error('Ошибка сброса');
     }
   }
 

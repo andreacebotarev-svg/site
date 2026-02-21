@@ -17,7 +17,7 @@ export class LibraryView {
     this.books = [];
     this.dropzone = null;
   }
-  
+
   async render() {
     // 1. Render Hero Section + Content
     this.container.innerHTML = `
@@ -32,31 +32,31 @@ export class LibraryView {
           <div class="hero-content">
             <div class="hero-glass-card">
               <h1 class="hero-title">
-                <span class="hero-title-main">Your Digital</span>
-                <span class="hero-title-accent">Library</span>
+                <span class="hero-title-main">Твоя цифровая</span>
+                <span class="hero-title-accent">библиотека</span>
               </h1>
-              <p class="hero-subtitle">Discover, read, and collect amazing books in your personal oasis</p>
+              <p class="hero-subtitle">Открывай, читай и собирай любимые книги в своем уютном пространстве</p>
 
               <div class="hero-stats">
                 <div class="stat-item">
                   <span class="stat-number" id="book-count">0</span>
-                  <span class="stat-label">Books</span>
+                  <span class="stat-label">Книги</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-number" id="reading-hours">0</span>
-                  <span class="stat-label">Hours Read</span>
+                  <span class="stat-label">Часы чтения</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-number" id="completed-books">0</span>
-                  <span class="stat-label">Completed</span>
+                  <span class="stat-label">Прочитано</span>
                 </div>
               </div>
             </div>
 
             <!-- Floating Action Button -->
-            <button class="fab-main" id="fab-main" title="Quick actions">
+            <button class="fab-main" id="fab-main" title="Быстрое действие">
               <span class="fab-icon">⚡</span>
-              <span class="fab-label">Quick Add</span>
+              <span class="fab-label">Добавить</span>
             </button>
           </div>
         </section>
@@ -67,14 +67,14 @@ export class LibraryView {
             <!-- Search & Filter Bar -->
             <div class="search-bar-glass">
               <div class="search-input-wrapper">
-                <input type="text" class="search-input" id="search-input" placeholder="Search your library...">
+                <input type="text" class="search-input" id="search-input" placeholder="Поиск по библиотеке...">
                 <div class="search-icon">🔍</div>
               </div>
 
               <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="reading">Reading</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn active" data-filter="all">Все</button>
+                <button class="filter-btn" data-filter="reading">Читаю</button>
+                <button class="filter-btn" data-filter="completed">Прочитано</button>
                 <button class="filter-btn" data-filter="favorites">⭐</button>
               </div>
             </div>
@@ -134,11 +134,11 @@ export class LibraryView {
   setupIntersectionObserver() {
     const observerOptions = {
       threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      rootMargin: '0px 0px -50px 0px',
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('animate-in');
         }
@@ -148,7 +148,7 @@ export class LibraryView {
     // Observe book cards for staggered animations
     setTimeout(() => {
       const bookCards = this.container.querySelectorAll('.book-card');
-      bookCards.forEach(card => observer.observe(card));
+      bookCards.forEach((card) => observer.observe(card));
     }, 100);
   }
 
@@ -167,10 +167,10 @@ export class LibraryView {
 
   setupFilters() {
     const filterButtons = this.container.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
+    filterButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
         // Remove active class from all buttons
-        filterButtons.forEach(b => b.classList.remove('active'));
+        filterButtons.forEach((b) => b.classList.remove('active'));
         // Add active class to clicked button
         btn.classList.add('active');
 
@@ -205,13 +205,13 @@ export class LibraryView {
       onUpload: (file, index, total) => this.handleFileUpload(file, index, total),
       onError: (errors) => {
         toastManager.error(errors[0], {
-            title: 'Upload Error',
-            actions: [{ label: 'Dismiss', onClick: () => {} }]
+          title: 'Upload Error',
+          actions: [{ label: 'Dismiss', onClick: () => {} }],
         });
-      }
+      },
     });
   }
-  
+
   async loadBooks() {
     try {
       // ✅ ADDED: Ensure server books are ingested into IndexedDB before rendering
@@ -272,7 +272,7 @@ export class LibraryView {
               description: content.metadata.description || serverBook.description,
               // Important: Mark source as server to distinguish from user uploads
               source: 'server',
-              addedAt: Date.now()
+              addedAt: Date.now(),
             };
 
             // 6. Persist to IndexedDB
@@ -282,11 +282,11 @@ export class LibraryView {
             // Optional: Handle images if the parser extracted them (see handleFileUpload)
             const imagesToSave = content.images || bookService.epubParser.imageBlobs;
             if (imagesToSave && imagesToSave.size > 0) {
-               const { imageStorage } = await import('../services/image-storage.js');
-               const savePromises = Array.from(imagesToSave.entries()).map(
-                 ([path, imgBlob]) => imageStorage.saveImage(newBook.id, path, imgBlob)
-               );
-               await Promise.all(savePromises);
+              const { imageStorage } = await import('../services/image-storage.js');
+              const savePromises = Array.from(imagesToSave.entries()).map(([path, imgBlob]) =>
+                imageStorage.saveImage(newBook.id, path, imgBlob)
+              );
+              await Promise.all(savePromises);
             }
 
             booksAdded++;
@@ -300,7 +300,6 @@ export class LibraryView {
         libLogger.info(`Successfully initialized ${booksAdded} server books`);
         // Toast is optional here, usually silent init is better for UX
       }
-
     } catch (error) {
       libLogger.error('Failed to load metadata pipeline', error);
     }
@@ -308,7 +307,7 @@ export class LibraryView {
 
   updateStats() {
     const bookCount = this.books.length;
-    const completedBooks = this.books.filter(book => book.progress === 100).length;
+    const completedBooks = this.books.filter((book) => book.progress === 100).length;
     const totalReadingTime = this.books.reduce((sum, book) => sum + (book.readingTime || 0), 0);
 
     // Update hero stats
@@ -328,7 +327,7 @@ export class LibraryView {
     const cards = booksContainer.querySelectorAll('.book-card');
     const lowerQuery = query.toLowerCase();
 
-    cards.forEach(card => {
+    cards.forEach((card) => {
       const title = card.querySelector('.book-title')?.textContent.toLowerCase() || '';
       const author = card.querySelector('.book-author')?.textContent.toLowerCase() || '';
 
@@ -343,8 +342,8 @@ export class LibraryView {
 
     const cards = booksContainer.querySelectorAll('.book-card');
 
-    cards.forEach(card => {
-      const bookData = this.books.find(b => b.id === card.dataset.bookId);
+    cards.forEach((card) => {
+      const bookData = this.books.find((b) => b.id === card.dataset.bookId);
       if (!bookData) return;
 
       let show = true;
@@ -378,7 +377,16 @@ export class LibraryView {
     // Update stats
     if (statsElement) {
       const bookCount = this.books.length;
-      statsElement.textContent = `${bookCount} ${bookCount === 1 ? 'book' : 'books'}`;
+
+      const lastDigit = bookCount % 10;
+      const lastTwoDigits = bookCount % 100;
+      let word = 'книг';
+      if (lastTwoDigits < 11 || lastTwoDigits > 14) {
+        if (lastDigit === 1) word = 'книга';
+        else if (lastDigit >= 2 && lastDigit <= 4) word = 'книги';
+      }
+
+      statsElement.textContent = `${bookCount} ${word}`;
     }
 
     if (this.books.length === 0) {
@@ -386,19 +394,19 @@ export class LibraryView {
       return;
     }
 
-    booksContainer.innerHTML = this.books.map((book, index) =>
-      this.renderBookCard(book, index)
-    ).join('');
+    booksContainer.innerHTML = this.books
+      .map((book, index) => this.renderBookCard(book, index))
+      .join('');
 
     // Add click and keyboard handlers
-    booksContainer.querySelectorAll('.book-card').forEach(card => {
+    booksContainer.querySelectorAll('.book-card').forEach((card) => {
       // Click handler
       card.addEventListener('click', (e) => {
         // Prevent click if clicking delete button (if we add one)
         if (e.target.closest('.btn-delete')) return;
 
         const bookId = card.dataset.bookId;
-        const book = this.books.find(b => b.id === bookId);
+        const book = this.books.find((b) => b.id === bookId);
         if (book) {
           this.handleBookClick(book);
         }
@@ -409,7 +417,7 @@ export class LibraryView {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           const bookId = card.dataset.bookId;
-          const book = this.books.find(b => b.id === bookId);
+          const book = this.books.find((b) => b.id === bookId);
           if (book) {
             this.handleBookClick(book);
           }
@@ -419,10 +427,10 @@ export class LibraryView {
       // Context menu or delete button could be added here
       const deleteBtn = card.querySelector('.btn-delete');
       if (deleteBtn) {
-          deleteBtn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              this.handleDeleteBook(card.dataset.bookId);
-          });
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.handleDeleteBook(card.dataset.bookId);
+        });
       }
     });
   }
@@ -431,40 +439,40 @@ export class LibraryView {
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">📚</div>
-        <h3 class="empty-state-title">Your library awaits</h3>
-        <p class="empty-state-text">Start building your digital collection by adding your first book</p>
+        <h3 class="empty-state-title">Ваша библиотека пуста</h3>
+        <p class="empty-state-text">Начните собирать свою цифровую коллекцию, добавив первую книгу</p>
 
         <div class="empty-state-actions">
           <a href="#/settings" class="empty-state-action">
-            <span>⚙️</span> Customize Settings
+            <span>⚙️</span> Настройки
           </a>
           <button class="empty-state-action" onclick="document.querySelector('#fab-main').click()">
-            <span>📖</span> Add Your First Book
+            <span>📖</span> Добавьте первую книгу
           </button>
         </div>
       </div>
     `;
   }
-  
+
   renderBookCard(book, index = 0) {
     const cover = this.getBookCover(book);
     const wordCount = book.wordCount ? this.formatNumber(book.wordCount) : 'Unknown';
     const format = book.format ? book.format.toUpperCase() : 'TXT';
 
     return `
-      <div class="book-card card-interactive" data-book-id="${book.id}" tabindex="0" role="button" aria-label="Read ${this.escapeHtml(book.title)}" style="--card-index: ${index}">
+      <div class="book-card card-interactive" data-book-id="${book.id}" tabindex="0" role="button" aria-label="Читать ${this.escapeHtml(book.title)}" style="--card-index: ${index}">
         <div class="book-cover">${cover}</div>
         <div class="book-card-header">
-          <h3 class="book-title" title="${this.escapeHtml(book.title)}">${this.escapeHtml(book.title || 'Untitled')}</h3>
-          <button class="btn-delete" aria-label="Delete book" title="Delete book">
+          <h3 class="book-title" title="${this.escapeHtml(book.title)}">${this.escapeHtml(book.title || 'Без названия')}</h3>
+          <button class="btn-delete" aria-label="Удалить книгу" title="Удалить книгу">
             <span>🗑️</span>
           </button>
         </div>
-        <p class="book-author">${this.escapeHtml(book.author || 'Unknown Author')}</p>
+        <p class="book-author">${this.escapeHtml(book.author || 'Неизвестный автор')}</p>
         ${book.description ? `<p class="book-description">${this.escapeHtml(book.description.substring(0, 120))}${book.description.length > 120 ? '...' : ''}</p>` : ''}
         <div class="book-meta">
           <div class="book-meta-info">
-            <span class="book-word-count">${wordCount} words</span>
+            <span class="book-word-count">${wordCount} слов</span>
           </div>
           <span class="book-format">${format}</span>
         </div>
@@ -487,7 +495,11 @@ export class LibraryView {
     // If cover is a URL or path
     if (typeof book.cover === 'string') {
       // Check if it's a valid image URL
-      if (book.cover.startsWith('http') || book.cover.startsWith('./') || book.cover.startsWith('../')) {
+      if (
+        book.cover.startsWith('http') ||
+        book.cover.startsWith('./') ||
+        book.cover.startsWith('../')
+      ) {
         return `<img src="${this.escapeHtml(book.cover)}" alt="Book cover" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
                  <span style="display: none;">📖</span>`;
       }
@@ -536,8 +548,8 @@ export class LibraryView {
         // Import imageStorage and save all extracted images
         const { imageStorage } = await import('../services/image-storage.js');
 
-        const savePromises = Array.from(imagesToSave.entries()).map(
-          ([imagePath, blob]) => imageStorage.saveImage(bookId, imagePath, blob)
+        const savePromises = Array.from(imagesToSave.entries()).map(([imagePath, blob]) =>
+          imageStorage.saveImage(bookId, imagePath, blob)
         );
 
         await Promise.all(savePromises);
@@ -547,7 +559,7 @@ export class LibraryView {
       // 2. Create book object
       const book = {
         id: bookId,
-        title: content.metadata.title || file.name.replace(/\.[^/.]+$/, ""),
+        title: content.metadata.title || file.name.replace(/\.[^/.]+$/, ''),
         author: content.metadata.author || 'Unknown',
         description: content.metadata.description || '',
         file: file, // Store the Blob
@@ -555,27 +567,26 @@ export class LibraryView {
         source: 'upload',
         uploadedAt: Date.now(),
         size: file.size,
-        wordCount: content.wordCount || 0
+        wordCount: content.wordCount || 0,
       };
 
       // 3. Add to library
       await bookService.addBook(book);
-      
+
       // 4. Cache content (optional, but good for performance)
       // Save book content to IndexedDB for offline access
       // Use the proper service method that formats data correctly
       await bookService.saveBookContent(book.id, content);
-      
+
       // 5. Update UI
       // If it's the last file, reload the list
       if (index === total - 1) {
-         toastManager.success(`Imported ${total} book${total > 1 ? 's' : ''}`);
-         await this.loadBooks();
+        toastManager.success(`Imported ${total} book${total > 1 ? 's' : ''}`);
+        await this.loadBooks();
       }
-      
+
       libLogger.info('Book uploaded', { id: book.id, title: book.title });
       return book;
-      
     } catch (error) {
       libLogger.error('Upload failed', error);
       throw error; // DropZone catches this
@@ -585,26 +596,26 @@ export class LibraryView {
   handleBookClick(book) {
     window.location.hash = `#/reader/${book.id}`;
   }
-  
+
   async handleDeleteBook(bookId) {
-    const book = this.books.find(b => b.id === bookId);
+    const book = this.books.find((b) => b.id === bookId);
     if (!book) return;
 
     // Show confirmation modal
     modalManager.show({
-      title: 'Delete Book',
+      title: 'Удалить книгу',
       content: `
-        <p>Are you sure you want to delete "<strong>${this.escapeHtml(book.title)}</strong>"?</p>
-        <p class="text-muted">This action cannot be undone.</p>
+        <p>Вы уверены, что хотите удалить "<strong>${this.escapeHtml(book.title)}</strong>"?</p>
+        <p class="text-muted">Это действие нельзя отменить.</p>
       `,
       actions: [
         {
-          label: 'Cancel',
+          label: 'Отмена',
           type: 'secondary',
-          onClick: () => modalManager.close()
+          onClick: () => modalManager.close(),
         },
         {
-          label: 'Delete',
+          label: 'Удалить',
           type: 'danger',
           onClick: async () => {
             try {
@@ -618,7 +629,7 @@ export class LibraryView {
 
               if (success) {
                 // Remove from local books array
-                this.books = this.books.filter(b => b.id !== bookId);
+                this.books = this.books.filter((b) => b.id !== bookId);
 
                 // Re-render the books list
                 this.renderBooks();
@@ -626,7 +637,7 @@ export class LibraryView {
                 // Show success message
                 toastManager.success(`"${book.title}" has been deleted`, {
                   title: 'Book Deleted',
-                  duration: 3000
+                  duration: 3000,
                 });
 
                 libLogger.info('Book deleted', { bookId, title: book.title });
@@ -637,20 +648,25 @@ export class LibraryView {
               libLogger.error('Failed to delete book', error, { bookId });
               toastManager.error('Failed to delete book. Please try again.', {
                 title: 'Delete Failed',
-                actions: [{
-                  label: 'Retry',
-                  onClick: () => this.handleDeleteBook(bookId)
-                }]
+                actions: [
+                  {
+                    label: 'Retry',
+                    onClick: () => this.handleDeleteBook(bookId),
+                  },
+                ],
               });
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
   }
 
   generateBookId(filename) {
-    const base = filename.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const base = filename
+      .replace(/\.[^.]+$/, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-');
     return `${base}-${Date.now()}`;
   }
 
@@ -667,7 +683,7 @@ export class LibraryView {
 
   destroy() {
     if (this.dropzone) {
-        this.dropzone.destroy();
+      this.dropzone.destroy();
     }
     // Remove event listeners if any global ones
   }

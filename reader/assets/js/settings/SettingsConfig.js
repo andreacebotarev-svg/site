@@ -7,30 +7,30 @@ export const SettingsConfig = {
   groups: [
     {
       id: 'general',
-      title: 'General',
+      title: 'Общие',
       settings: ['language']
     },
     {
       id: 'flashcards',
-      title: 'Flashcards',
+      title: 'Карточки',
       settings: ['autoPlayAudio', 'cardOrder']
     },
     {
       id: 'appearance',
-      title: 'Appearance',
+      title: 'Внешний вид',
       settings: ['theme', 'eyeComfort', 'blueLightFilter']
     },
     {
       id: 'reading',
-      title: 'Reading Comfort',
+      title: 'Комфортное чтение',
       settings: ['readingWidth', 'fontFamily', 'fontSmoothing']
     }
   ],
 
   settings: {
     language: {
-      label: 'Language',
-      description: 'Interface language',
+      label: 'Язык',
+      description: 'Язык интерфейса',
       type: 'select',
       defaultValue: 'en',
       options: {
@@ -42,31 +42,31 @@ export const SettingsConfig = {
       }
     },
     autoPlayAudio: {
-      label: 'Auto-play Audio',
-      description: 'Automatically play pronunciation audio',
+      label: 'Автовоспроизведение аудио',
+      description: 'Автоматически проигрывать произношение',
       type: 'toggle',
       defaultValue: false
     },
     cardOrder: {
-      label: 'Flashcard Order',
-      description: 'How flashcards are presented',
+      label: 'Порядок карточек',
+      description: 'Очередность показа карточек',
       type: 'select',
       defaultValue: 'random',
       options: {
-        'random': 'Random',
-        'due-date': 'By Due Date',
-        'alphabetical': 'Alphabetical'
+        'random': 'Случайно',
+        'due-date': 'По дате повторения',
+        'alphabetical': 'По алфавиту'
       }
     },
     theme: {
-      label: 'Theme',
-      description: 'Application appearance',
+      label: 'Тема',
+      description: 'Внешний вид приложения',
       type: 'select',
       defaultValue: 'auto',
       options: {
-        light: 'Light',
-        dark: 'Dark',
-        auto: 'Auto (System)'
+        light: 'Светлая',
+        dark: 'Темная',
+        auto: 'Авто (как в системе)'
       }
     },
     eyeComfort: {

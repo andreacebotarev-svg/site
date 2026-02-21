@@ -23,7 +23,7 @@ export class DropZone {
     const formats = this.options.accept.map(ext => ext.replace('.', '')).join(', ');
     
     this.container.innerHTML = `
-      <div class="dropzone" role="button" tabindex="0" aria-label="Upload books">
+      <div class="dropzone" role="button" tabindex="0" aria-label="Загрузить книги">
         <input 
           type="file" 
           class="dropzone-input" 
@@ -35,8 +35,8 @@ export class DropZone {
         
         <div class="dropzone-content">
           <div class="dropzone-icon">📚</div>
-          <div class="dropzone-title">Drop books here</div>
-          <div class="dropzone-subtitle">or click to browse</div>
+          <div class="dropzone-title">Перетащите книги сюда</div>
+          <div class="dropzone-subtitle">или нажмите, чтобы выбрать</div>
           <div class="dropzone-formats">
             ${this.options.accept.map(ext => 
               `<span class="dropzone-format">${ext.replace('.', '')}</span>`
@@ -118,14 +118,14 @@ export class DropZone {
       // Check extension
       const ext = `.${file.name.split('.').pop().toLowerCase()}`;
       if (!this.options.accept.includes(ext)) {
-        errors.push(`${file.name}: Invalid format. Supported: ${this.options.accept.join(', ')}`);
+        errors.push(`${file.name}: Неверный формат. Поддерживаются: ${this.options.accept.join(', ')}`);
         continue;
       }
 
       // Check size
       if (file.size > this.options.maxSize) {
         const maxSizeMB = (this.options.maxSize / (1024 * 1024)).toFixed(0);
-        errors.push(`${file.name}: File too large. Max ${maxSizeMB}MB`);
+        errors.push(`${file.name}: Файл слишком большой. Макс. ${maxSizeMB}МБ`);
         continue;
       }
 
@@ -147,12 +147,12 @@ export class DropZone {
 
   async uploadFiles(files) {
     this.setState('uploading');
-    this.showProgress(`Uploading ${files.length} file(s)...`);
+    this.showProgress(`Загрузка ${files.length} файлов...`);
 
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        this.updateProgress(`Processing ${file.name}...`, i + 1, files.length);
+        this.updateProgress(`Обработка ${file.name}...`, i + 1, files.length);
         
         await this.options.onUpload?.(file, i, files.length);
       }
@@ -161,7 +161,7 @@ export class DropZone {
       this.render(); // Reset view
       this.attachEvents();
     } catch (error) {
-      this.showError(`Upload failed: ${error.message}`);
+      this.showError(`Ошибка загрузки: ${error.message}`);
       this.options.onError?.([error.message]);
       
       // Reset after 3 seconds
@@ -190,7 +190,7 @@ export class DropZone {
         <div class="dropzone-spinner"></div>
         <div class="dropzone-progress-text">${this.escapeHtml(message)}</div>
         ${current && total ? `
-          <div class="dropzone-progress-detail">${current} of ${total}</div>
+          <div class="dropzone-progress-detail">${current} из ${total}</div>
         ` : ''}
       </div>
     `;
@@ -209,7 +209,7 @@ export class DropZone {
     
     if (textEl) textEl.textContent = message;
     if (detailEl && current && total) {
-      detailEl.textContent = `${current} of ${total}`;
+      detailEl.textContent = `${current} из ${total}`;
     }
   }
 
