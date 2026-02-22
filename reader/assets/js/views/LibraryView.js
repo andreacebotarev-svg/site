@@ -258,8 +258,9 @@ export class LibraryView {
   // Add this method to the LibraryView class
   async loadMetadata() {
     try {
-      // 1. Fetch the server manifest
-      const response = await fetch('books/metadata.json');
+      // 1. Fetch the server manifest with cache-busting to bypass SW cache
+      const cacheBuster = Date.now();
+      const response = await fetch(`books/metadata.json?v=${cacheBuster}`);
       if (!response.ok) {
         libLogger.warn('metadata.json not found, skipping server books');
         return;
@@ -279,8 +280,8 @@ export class LibraryView {
           libLogger.info(`Downloading new server book: ${serverBook.title}`);
 
           try {
-            // 3. Fetch the actual EPUB file as a Blob
-            const bookResponse = await fetch(`books/${serverBook.file}`);
+            // 3. Fetch the actual EPUB file as a Blob with cache-busting
+            const bookResponse = await fetch(`books/${serverBook.file}?v=${cacheBuster}`);
             if (!bookResponse.ok) throw new Error(`Failed to fetch ${serverBook.file}`);
 
             const blob = await bookResponse.blob();
@@ -315,8 +316,16 @@ export class LibraryView {
             }
 
             booksAdded++;
+            toastManager.success(`Добавлена базовая книга: ${serverBook.title}`);
+            
+            // Reload books instantly so the grid updates without refresh
+            this.books = await bookService.getAllBooks();
+            this.updateStats();
+            this.renderBooks();
+
           } catch (err) {
             libLogger.error(`Failed to ingest server book ${serverBook.id}`, err);
+            toastManager.error(`Не удалось загрузить книгу: ${serverBook.title}`);
           }
         }
       }
