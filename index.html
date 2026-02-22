@@ -1697,16 +1697,15 @@
             Остаться на сайте
           </button>
           
-          <a 
-            id="profiConfirmLink"
-            href="#" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            style="color: var(--muted); text-decoration: underline; font-size: 0.85rem;"
-            onclick="document.getElementById('profiWarningModal').style.display='none'"
+          <button 
+            id="profiConfirmBtn"
+            type="button"
+            class="btn" 
+            style="color: var(--muted); text-decoration: underline; font-size: 0.85rem; background: transparent; border: none; cursor: pointer;"
+            onclick="const url = this.getAttribute('data-url'); document.getElementById('profiWarningModal').style.display='none'; openSpokePreview(url, 'Профиль на Profi.ru');"
           >
-            Всё равно перейти на Profi.ru
-          </a>
+            Всё равно открыть в окне
+          </button>
         </div>
       </div>
     </div>
@@ -1956,7 +1955,7 @@
           
           e.preventDefault();
           const targetUrl = this.getAttribute('href');
-          document.getElementById('profiConfirmLink').setAttribute('href', targetUrl);
+          document.getElementById('profiConfirmBtn').setAttribute('data-url', targetUrl);
           document.getElementById('profiWarningModal').style.display = 'flex';
         });
       });
