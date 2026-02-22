@@ -1,0 +1,305 @@
+/* Light E-Commerce Theme (Odnoklassniki/Classic Store Style) */
+
+:root {
+  /* Odnoklassniki / Classic Store Colors */
+  --bg: #f5f5f5; /* Light grey background for the body */
+  --card-bg: #ffffff; /* White cards */
+  
+  --text: #333333; /* Dark text for readability */
+  --muted: #666666;
+  
+  --primary: #f2720c; /* OK Orange / Classic store CTA */
+  --primary-hover: #e06000;
+  
+  /* Link Color */
+  --link-color: #0056b3;
+  --link-hover: #003d82;
+
+  --border: #e0e0e0;
+  --header-bg: #ffffff;
+  
+  /* Good/Price */
+  --good: #2E8B57; /* SeaGreen for prices and checkmarks */
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  --radius: 8px; /* Classic slightly rounded corners */
+}
+
+/* Base Overrides */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body::before {
+  display: none !important; /* Remove dark mesh gradient */
+}
+
+.mesh-bg {
+  display: none !important;
+}
+
+/* Header Overrides */
+.header {
+  background: var(--header-bg) !important;
+  border-bottom: 2px solid var(--primary);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: none;
+}
+
+.logo span {
+  color: var(--primary) !important;
+}
+
+.nav-links {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.nav-links a {
+  color: var(--link-color) !important;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: var(--link-hover) !important;
+  text-decoration: underline;
+}
+
+/* Typography Overrides */
+.h1, .h2, .h3, .h4 {
+  color: var(--text) !important;
+  text-shadow: none !important;
+}
+
+.h1 {
+  font-weight: 700;
+  color: #000 !important;
+}
+
+.p {
+  color: var(--text) !important;
+  font-size: 1.1rem; /* Larger text for 40+ */
+  line-height: 1.6;
+}
+
+.kicker {
+  color: var(--primary) !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Glass & Card Overrides -> Solid White Classic Cards */
+.glass, .card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm) !important;
+  backdrop-filter: none !important;
+  color: var(--text);
+}
+
+.glass::before, .glass::after {
+  display: none !important; /* Remove glare and pseudo-elements */
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--primary) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 4px; /* Classic square-ish button */
+  box-shadow: 0 2px 4px rgba(242, 114, 12, 0.3) !important;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover) !important;
+  transform: translateY(-1px);
+}
+
+.btn-primary::before, .btn-primary::after {
+  display: none !important; /* Remove glow effects */
+}
+
+.btn-ghost {
+  border: 2px solid var(--link-color) !important;
+  color: var(--link-color) !important;
+  background: transparent !important;
+  border-radius: 4px;
+}
+
+.btn-ghost:hover {
+  background: rgba(0, 86, 179, 0.05) !important;
+}
+
+/* Icons & Specifics */
+span[style*="color: var(--primary)"] {
+  color: var(--primary) !important;
+}
+
+/* Store / Catalog Specific Styles */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  background-color: #eee;
+  border-radius: var(--radius) var(--radius) 0 0;
+  margin: -1.5rem -1.5rem 1rem -1.5rem;
+  width: calc(100% + 3rem);
+  object-fit: cover;
+}
+
+.product-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--good);
+  margin: 1rem 0;
+}
+
+.product-old-price {
+  font-size: 1rem;
+  text-decoration: line-through;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 0.5rem;
+}
+
+/* Cart / Buy Button */
+.btn-buy {
+  background-color: var(--primary) !important;
+  color: white !important;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  padding: 12px;
+  margin-top: auto;
+}
+
+/* Simple List (Checkmarks) */
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.benefits-list li svg {
+  color: var(--good);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* Reviews (Social Media Style) */
+.ok-review {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.ok-review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.ok-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.ok-name {
+  font-weight: bold;
+  color: var(--link-color);
+  font-size: 1.1rem;
+}
+
+.ok-date {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ok-rating {
+  color: #ff9900; /* Amazon Yellow */
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.divider {
+  background: var(--border);
+}
+
+/* Form inputs */
+.input {
+  background: #fff !important;
+  color: var(--text) !important;
+  border: 1px solid #ccc !important;
+}
+
+.input:focus {
+  border-color: var(--primary) !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(242, 114, 12, 0.2) !important;
+}
+
+.label {
+  color: var(--text) !important;
+  font-weight: 600;
+}
+
+/* Contact Info Header */
+.contact-header-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.contact-phone-large {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .contact-phone-large {
+    display: none;
+  }
+}
