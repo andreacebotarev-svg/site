@@ -3,8 +3,8 @@
  * Provides offline support, caching strategies, and background sync
  */
 
-const CACHE_NAME = 'reader-v2.3.4-parsing-fixes';
-const RUNTIME_CACHE = 'reader-runtime-v2';
+const CACHE_NAME = 'reader-v2.3.5-features';
+const RUNTIME_CACHE = 'reader-runtime-v3';
 
 // Assets to cache on install
 const PRECACHE_ASSETS = [

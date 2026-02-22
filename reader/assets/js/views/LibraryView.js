@@ -107,6 +107,20 @@ export class LibraryView {
             <!-- Books Grid -->
             <div class="books-masonry">
               <div id="dropzone-container" class="dropzone-wrapper"></div>
+              
+              <!-- Demo Feature Card -->
+              <div class="book-card card-interactive" onclick="window.location.hash='#/flashcards'" style="border-color: var(--primary); box-shadow: 0 4px 20px rgba(0, 122, 255, 0.15);">
+                <div class="server-badge" style="background: var(--primary)">Фича</div>
+                <div class="book-cover" style="background: rgba(0, 122, 255, 0.1); font-size: 3rem; color: var(--primary);">🧠</div>
+                <div class="book-card-header">
+                  <h3 class="book-title" style="color: var(--primary);">Умный контекст</h3>
+                </div>
+                <p class="book-description">Кликай по незнакомым словам во время чтения для контекстного перевода и добавляй их во встроенные флеш-карточки для быстрого заучивания!</p>
+                <div class="book-meta" style="margin-top: 10px;">
+                  <span class="book-format" style="color: var(--primary); background: rgba(0, 122, 255, 0.1);">ПОПРОБОВАТЬ &rarr;</span>
+                </div>
+              </div>
+
               <div id="books-container" class="books-section">
                 ${Skeleton.bookGrid(6)}
               </div>
