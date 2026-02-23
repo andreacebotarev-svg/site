@@ -1,7 +1,7 @@
 /**
  * Spoke Preview Modal (Universal)
- * Desktop: iframe modal
- * Mobile: open in new tab
+ * Uses a transparent touch overlay to capture swipe gestures on mobile,
+ * since iframes consume all touch events.
  */
 
 const MOBILE_BREAKPOINT = 768;
@@ -13,7 +13,6 @@ function isMobile() {
 function openSpokePreview(url, title = 'Пример') {
   if (!url) return;
 
-  // Desktop/Mobile: modal iframe
   const modal = document.getElementById('platformModal');
   const iframe = document.getElementById('platformIframe');
   const content = modal.querySelector('.platform-modal-content');
@@ -23,108 +22,21 @@ function openSpokePreview(url, title = 'Пример') {
     return;
   }
 
+  // Update title
+  const titleEl = document.getElementById('platformModalTitle');
+  if (titleEl) titleEl.textContent = title;
+
   // Reset any previous transformations
   if (content) {
-      content.style.transform = '';
-      content.style.transition = '';
+    content.style.transform = '';
+    content.style.transition = '';
   }
+  modal.style.opacity = '';
 
   iframe.src = url;
   iframe.setAttribute('title', title);
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
-
-  // Inject cross-document swipe-to-close listener for Mobile
-  iframe.onload = () => {
-      try {
-          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-          if (!iframeDoc) return;
-
-          let startY = 0;
-          let currentY = 0;
-          let isDragging = false;
-          let isAtTop = false;
-          let isAtBottom = false;
-
-          iframeDoc.addEventListener('touchstart', (e) => {
-              if (window.innerWidth > 768) return;
-              
-              const touch = e.touches[0];
-              startY = touch.clientY;
-              
-              let target = e.target;
-              isAtTop = true;
-              isAtBottom = true;
-              
-              while (target && target !== iframeDoc.body && target !== iframeDoc.documentElement) {
-                  const overflowY = window.getComputedStyle(target).overflowY;
-                  if (overflowY === 'auto' || overflowY === 'scroll') {
-                      if (target.scrollTop > 5) isAtTop = false;
-                      const scrollBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
-                      if (scrollBottom > 5) isAtBottom = false;
-                      break;
-                  }
-                  target = target.parentElement;
-              }
-
-              const docScrollTop = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
-              const docScrollHeight = iframeDoc.documentElement.scrollHeight || iframeDoc.body.scrollHeight;
-              const docClientHeight = iframeDoc.documentElement.clientHeight || window.innerHeight;
-
-              if (docScrollTop > 5) isAtTop = false;
-              if (docScrollHeight - docScrollTop - docClientHeight > 5) isAtBottom = false;
-
-              isDragging = isAtTop || isAtBottom;
-          }, { passive: true });
-
-          iframeDoc.addEventListener('touchmove', (e) => {
-              if (!isDragging) return;
-              currentY = e.touches[0].clientY;
-              const diff = currentY - startY;
-
-              if ((diff > 0 && isAtTop) || (diff < 0 && isAtBottom)) {
-                  // Prevent native scroll inside the iframe to avoid jitter
-                  if (Math.abs(diff) > 10 && e.cancelable) e.preventDefault();
-
-                  if (content) {
-                      content.style.transition = 'none';
-                      if (modal) modal.style.transition = 'none';
-                      
-                      content.style.transform = `translateY(${diff}px)`;
-                      const opacity = 1 - (Math.abs(diff) / (window.innerHeight * 0.8));
-                      if (modal) modal.style.opacity = Math.max(0, opacity);
-                  }
-              }
-          }, { passive: false });
-
-          iframeDoc.addEventListener('touchend', (e) => {
-              if (!isDragging) return;
-              isDragging = false;
-              
-              const diff = currentY - startY;
-              
-              if (content) {
-                  content.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
-                  if (modal) modal.style.transition = 'opacity 0.3s ease-out';
-                  
-                  if (diff > 120 && isAtTop) {
-                      content.style.transform = 'translateY(100vh)';
-                      if (modal) modal.style.opacity = '0';
-                      setTimeout(() => closePlatformPreview(), 300);
-                  } else if (diff < -120 && isAtBottom) {
-                      content.style.transform = 'translateY(-100vh)';
-                      if (modal) modal.style.opacity = '0';
-                      setTimeout(() => closePlatformPreview(), 300);
-                  } else {
-                      content.style.transform = 'translateY(0)';
-                      if (modal) modal.style.opacity = '1';
-                  }
-              }
-          });
-      } catch (err) {
-          console.warn('Cannot inject swipe listener into iframe:', err);
-      }
-  };
 }
 
 function closePlatformPreview() {
@@ -138,30 +50,29 @@ function closePlatformPreview() {
   document.body.style.overflow = '';
   modal.style.opacity = '';
   if (content) {
-      content.style.transform = '';
-      content.style.transition = '';
+    content.style.transform = '';
+    content.style.transition = '';
   }
 }
 
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && !isMobile()) closePlatformPreview();
+  if (e.key === 'Escape') closePlatformPreview();
 });
 
 window.addEventListener('DOMContentLoaded', function () {
   const modal = document.getElementById('platformModal');
-  if (modal) {
-    modal.addEventListener('click', function (e) {
-      if (e.target === modal) closePlatformPreview();
-    });
-  }
-  
+  if (!modal) return;
+
+  // Close on overlay click
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) closePlatformPreview();
+  });
+
   // Delegate clicks for elements with .js-spoke class
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.js-spoke');
     if (!btn) return;
-    // prevent default if it's a link behaving as a button, though usually we use buttons
-    if (btn.tagName === 'A') e.preventDefault(); 
-    
+    if (btn.tagName === 'A') e.preventDefault();
     openSpokePreview(btn.dataset.url, btn.dataset.title);
   });
 
@@ -169,4 +80,137 @@ window.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('message', (e) => {
     if (e.data === 'closeModal') closePlatformPreview();
   });
+
+  // ── Mobile Swipe-to-Close via touch overlay ──
+  // The iframe eats ALL touch events. We place a transparent overlay
+  // on top of the iframe that activates on first vertical swipe,
+  // then moves the whole modal content down.
+
+  const content = modal.querySelector('.platform-modal-content');
+  const header = modal.querySelector('.ok-modal-header');
+  if (!content || !header) return;
+
+  // Create a transparent overlay that covers the iframe area
+  const overlay = document.createElement('div');
+  overlay.id = 'platformSwipeOverlay';
+  overlay.style.cssText = `
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 10;
+    display: none;
+    touch-action: none;
+  `;
+  content.style.position = 'relative';
+  content.appendChild(overlay);
+
+  let startY = 0;
+  let currentY = 0;
+  let isDragging = false;
+  let overlayActive = false;
+
+  // Header drag: always works
+  header.addEventListener('touchstart', (e) => {
+    if (window.innerWidth > MOBILE_BREAKPOINT) return;
+    startY = e.touches[0].clientY;
+    isDragging = false;
+  }, { passive: true });
+
+  header.addEventListener('touchmove', (e) => {
+    if (window.innerWidth > MOBILE_BREAKPOINT) return;
+    currentY = e.touches[0].clientY;
+    const diff = currentY - startY;
+
+    if (diff > 10) {
+      isDragging = true;
+      if (e.cancelable) e.preventDefault();
+
+      // Activate overlay to block iframe touches
+      overlay.style.display = 'block';
+      overlayActive = true;
+
+      content.style.transition = 'none';
+      modal.style.transition = 'none';
+      content.style.transform = `translateY(${diff}px)`;
+      const opacity = 1 - (diff / (window.innerHeight * 0.8));
+      modal.style.opacity = Math.max(0, opacity);
+    }
+  }, { passive: false });
+
+  header.addEventListener('touchend', handleTouchEnd);
+
+  // Overlay drag: catches gestures once activated, and also
+  // allows starting a swipe from anywhere on the overlay
+  overlay.addEventListener('touchstart', (e) => {
+    startY = e.touches[0].clientY;
+    isDragging = false;
+  }, { passive: true });
+
+  overlay.addEventListener('touchmove', (e) => {
+    currentY = e.touches[0].clientY;
+    const diff = currentY - startY;
+
+    if (diff > 5) {
+      isDragging = true;
+      if (e.cancelable) e.preventDefault();
+
+      content.style.transition = 'none';
+      modal.style.transition = 'none';
+      content.style.transform = `translateY(${diff}px)`;
+      const opacity = 1 - (diff / (window.innerHeight * 0.8));
+      modal.style.opacity = Math.max(0, opacity);
+    }
+  }, { passive: false });
+
+  overlay.addEventListener('touchend', handleTouchEnd);
+
+  function handleTouchEnd() {
+    if (!isDragging) {
+      // Hide overlay if no drag happened (allow iframe interaction)
+      if (overlayActive) {
+        overlay.style.display = 'none';
+        overlayActive = false;
+      }
+      return;
+    }
+    isDragging = false;
+
+    const diff = currentY - startY;
+    const threshold = 100;
+
+    content.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+    modal.style.transition = 'opacity 0.3s ease-out';
+
+    if (diff > threshold) {
+      content.style.transform = 'translateY(100vh)';
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        closePlatformPreview();
+        overlay.style.display = 'none';
+        overlayActive = false;
+      }, 300);
+    } else {
+      content.style.transform = 'translateY(0)';
+      modal.style.opacity = '1';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        overlayActive = false;
+      }, 300);
+    }
+  }
+
+  // Also allow the modal body (outside iframe) to trigger swipe
+  const modalBody = modal.querySelector('.ok-modal-body');
+  if (modalBody) {
+    modalBody.addEventListener('touchstart', (e) => {
+      if (window.innerWidth > MOBILE_BREAKPOINT) return;
+      // If the touch target is the modal body itself (not the iframe),
+      // activate the overlay for swiping
+      if (e.target === modalBody || e.target === overlay) {
+        startY = e.touches[0].clientY;
+        isDragging = false;
+        overlay.style.display = 'block';
+        overlayActive = true;
+      }
+    }, { passive: true });
+  }
 });
