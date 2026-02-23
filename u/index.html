@@ -562,6 +562,10 @@
           const data = await res.json();
           if (data.success) {
             showStatus('✅ Заявка отправлена! Свяжусь с вами в ближайшее время.', true);
+            // Отправка цели в Яндекс.Метрику
+            if (typeof ym !== 'undefined') {
+              ym(106963440, 'reachGoal', 'LEAD_SUCCESS');
+            }
             form.reset();
           } else {
             showStatus('Ошибка отправки. Попробуйте позже или напишите в Telegram.', false);
