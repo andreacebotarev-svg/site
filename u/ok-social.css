@@ -724,6 +724,7 @@ strong { font-weight: 600; }
   font-size: 0.85rem;
   color: var(--muted);
   border-top: 1px solid var(--border);
+  padding-bottom: calc(1.5rem + 70px + env(safe-area-inset-bottom, 0px));
 }
 .ok-footer a { color: var(--ok); }
 
