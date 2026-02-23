@@ -986,8 +986,28 @@ strong { font-weight: 600; }
   .ok-cover__content { flex-direction: column; text-align: center; }
   .ok-cover__stats { justify-content: center; }
   .ok-cover__cta { width: 100%; }
-  .ok-certs-row { flex-direction: column; }
-  .ok-cert-thumb { width: 100%; }
+  .ok-certs-row {
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 10px;
+    padding-bottom: 6px;
+  }
+  .ok-cert-thumb {
+    width: auto;
+    height: 120px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    border: 2px solid rgba(238, 130, 8, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(238, 130, 8, 0.2);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .ok-cert-thumb:active {
+    border-color: var(--ok);
+    box-shadow: 0 0 20px rgba(238, 130, 8, 0.5);
+  }
 }
 
 @media (min-width: 901px) and (max-width: 1100px) {

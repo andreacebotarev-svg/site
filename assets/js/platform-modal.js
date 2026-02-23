@@ -125,59 +125,6 @@ function openSpokePreview(url, title = 'Пример') {
           console.warn('Cannot inject swipe listener into iframe:', err);
       }
   };
-
-  // Add same listeners to the content wrapper itself (for margins/borders)
-  if (content) {
-      let outerStartY = 0;
-      let outerCurrentY = 0;
-      let outerDragging = false;
-
-      content.addEventListener('touchstart', (e) => {
-          if (window.innerWidth > 768) return;
-          outerStartY = e.touches[0].clientY;
-          outerDragging = true;
-      }, { passive: true });
-
-      content.addEventListener('touchmove', (e) => {
-          if (!outerDragging) return;
-          outerCurrentY = e.touches[0].clientY;
-          const diff = outerCurrentY - outerStartY;
-
-          if (diff !== 0) {
-              // Prevent default scroll if moving elements
-              if (Math.abs(diff) > 10 && e.cancelable) e.preventDefault();
-              
-              content.style.transition = 'none';
-              if (modal) modal.style.transition = 'none';
-              
-              content.style.transform = `translateY(${diff}px)`;
-              const opacity = 1 - (Math.abs(diff) / (window.innerHeight * 0.8));
-              if (modal) modal.style.opacity = Math.max(0, opacity);
-          }
-      }, { passive: false });
-
-      content.addEventListener('touchend', (e) => {
-          if (!outerDragging) return;
-          outerDragging = false;
-          const diff = outerCurrentY - outerStartY;
-
-          content.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
-          if (modal) modal.style.transition = 'opacity 0.3s ease-out';
-          
-          if (diff > 120) {
-              content.style.transform = 'translateY(100vh)';
-              if (modal) modal.style.opacity = '0';
-              setTimeout(() => closePlatformPreview(), 300);
-          } else if (diff < -120) {
-              content.style.transform = 'translateY(-100vh)';
-              if (modal) modal.style.opacity = '0';
-              setTimeout(() => closePlatformPreview(), 300);
-          } else {
-              content.style.transform = 'translateY(0)';
-              if (modal) modal.style.opacity = '1';
-          }
-      });
-  }
 }
 
 function closePlatformPreview() {
