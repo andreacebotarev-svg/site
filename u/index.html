@@ -601,24 +601,33 @@
         let touchCurrentY = 0;
         let isSwipeDragging = false;
 
-        // Ensure we only listen on the modal wrapper, not preventing inner scroll easily if needed
+        let isAtTop = true;
+
         content.addEventListener('touchstart', (e) => {
-          // If the user is scrolling inside an element, ignore swipe-to-close
-          if (e.target.closest('.ok-modal-body')) return;
+          isAtTop = true;
+          const bodyEl = e.target.closest('.ok-modal-body');
+          if (bodyEl) {
+            if (bodyEl.scrollTop > 5) {
+              isAtTop = false; // Disable if scrolled down inside
+            }
+          }
 
           touchStartY = e.touches[0].clientY;
           isSwipeDragging = false;
         }, { passive: true });
 
         content.addEventListener('touchmove', (e) => {
-          if (e.target.closest('.ok-modal-body')) return;
+          if (!isAtTop) return; // Ignore if starting from a scrolled down position
           if (modal.style.display === 'none') return;
 
           const touch = e.touches[0];
           touchCurrentY = touch.clientY;
           const diff = touchCurrentY - touchStartY;
+          
+          // Only allow dragging down when at the top (or dragging up slightly if we bounce, but wait, bottom sheets primarily drag down)
+          if (diff < 0) return;
 
-          if (Math.abs(diff) > 10) {
+          if (diff > 10) {
             isSwipeDragging = true;
             // Prevent native scroll
             if(e.cancelable) e.preventDefault();

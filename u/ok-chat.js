@@ -121,12 +121,20 @@ class OKEnglishAssistant {
     let startY = 0;
     let currentY = 0;
     let isDragging = false;
+    let isAtTop = true;
 
     const handleTouchStart = (e) => {
         if (window.innerWidth > 600) return;
-        // Only allow drag starting from the header or swipe area
-        if (!this.elements.header.contains(e.target) && (!this.elements.swipeAreaBottom || !this.elements.swipeAreaBottom.contains(e.target))) {
-            return;
+        
+        // Determine if we are at the top of the scrolling messages container
+        const messagesEl = this.elements.messages;
+        isAtTop = true; // Default to true for header/input
+        
+        // If swiping from the messages area, check scroll position
+        if (messagesEl && messagesEl.contains(e.target)) {
+            if (messagesEl.scrollTop > 5) {
+                isAtTop = false;
+            }
         }
 
         const touch = e.touches[0];
@@ -136,14 +144,16 @@ class OKEnglishAssistant {
 
     const handleTouchMove = (e) => {
         if (window.innerWidth > 600) return;
-        // Proceed only if we started on the header
-        if (!this.elements.header.contains(e.target) && (!this.elements.swipeAreaBottom || !this.elements.swipeAreaBottom.contains(e.target))) {
-            return;
-        }
+        
+        // If we started a swipe from the middle of the scrollable content, abort
+        if (!isAtTop) return;
 
         const touch = e.touches[0];
         currentY = touch.clientY;
         const diff = currentY - startY; 
+
+        // If swiping UP while at the top, let native scroll handle it (bounce or nothing)
+        if (diff < 0) return;
 
         // Allow dragging down
         if (diff > 10) {
