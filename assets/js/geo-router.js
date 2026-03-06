@@ -10,7 +10,7 @@ class GeoRouter {
         
         // Зашифрованные ключи (XOR + Base64 через KeyObfuscator)
         this.keys = {
-            openrouter: "NgVKAxteHmVYEAkXAwNTBHBZX1tfSwsxQRZXEAAGCwNwWlEIXEJYNRdNDRcABQFSdF8EXl9FWWFDRwtLVgQBU3FYBA1ZEl5mRg==",
+            openrouter: "NgVKAxteHmVYFVdABABWBHJeX1xYQAxtQUQKFFNTB1d2XFBVUBJdMkNMVhBQVAEAIV0FCV5BDjVHQVdFB1MAACQNAlRYSllgRw==",
             groq: "Ih0MMxk+ITshEVxEVFsCRQI7KyhaGRhkIjMLC1ADdG8EKxEWWSktZB0XJwhkfUh7FhYVB1ELDyQ="
         };
         

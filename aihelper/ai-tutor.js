@@ -2,7 +2,7 @@ class EnglishAssistant {
     constructor() {
         this.messages = [];
         // Шифрование ключа (Base64)
-        const _k = "c2stb3ItdjEtMjc4ZjQ0NGQ5MWNkNmVlN2JlNDk5YzNmNTBlZGM3ZDY2Zjc5ZjQ3NWQxZjM5Y2I5MTEyYmJkYjYzZWUxOTkxNA==";
+        const _k = "c2stb3ItdjEtYTgyNjBkMjcwODAxM2Q5NDBlZmFjNWEzMjc5OWE1ZjY4OWJiZDM2ZDNiZTcyZmEyNTg3NWMyNmFjZTgxOTE0Mg==";
         this.apiKey = atob(_k); 
         this.currentImage = null;
         
