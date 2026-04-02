@@ -361,72 +361,21 @@ class OKEnglishAssistant {
 
   showInlineForm() {
     this.elements.suggestions.innerHTML = "";
-    this.addMessage("Оставьте свое имя и телефон (или Telegram), и Андрей свяжется с Вами, чтобы ответить на все вопросы и записать ребенка на урок! 👇", "ai");
-    
+    this.addMessage("Оставьте контакты в форме ниже — Андрей свяжется с Вами для обсуждения деталей! 👇", "ai");
+
     const formDiv = document.createElement("div");
     formDiv.className = "message ai inline-form-message";
     formDiv.innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
-            <input type="text" id="chatLeadName" placeholder="Имя / Имя ребенка" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.05); color:var(--text); width:calc(100% - 22px); outline:none;">
-            <input type="text" id="chatLeadContact" placeholder="Телефон или Telegram" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.05); color:var(--text); width:calc(100% - 22px); outline:none;">
-            <button id="chatLeadSubmit" style="padding:10px; border-radius:8px; border:none; background:var(--ai-primary); color:white; cursor:pointer; font-weight:bold; width:100%;">Отправить заявку ✔️</button>
-            <div id="chatLeadStatus" style="font-size:12px; display:none; text-align:center; margin-top:5px;"></div>
+        <div style="display:flex; flex-direction:column; gap:10px; width:100%; text-align:center;">
+            <p style="margin:0; font-size:14px;">Форма для записи находится ниже на странице:</p>
+            <a href="#lead" style="padding:10px 20px; border-radius:8px; background:var(--ai-primary, #EE8208); color:white; font-weight:bold; text-decoration:none; display:inline-block;"
+               onclick="window.okEnglishAssistant && window.okEnglishAssistant.toggleChat(false);"
+            >📝 Перейти к форме записи</a>
         </div>
     `;
-    
+
     this.elements.messages.appendChild(formDiv);
     this.elements.messages.scrollTop = this.elements.messages.scrollHeight;
-
-    const btnSubmit = formDiv.querySelector("#chatLeadSubmit");
-    const nameInput = formDiv.querySelector("#chatLeadName");
-    const contactInput = formDiv.querySelector("#chatLeadContact");
-    const statusMsg = formDiv.querySelector("#chatLeadStatus");
-
-    btnSubmit.addEventListener("click", () => {
-        const name = nameInput.value.trim();
-        const contact = contactInput.value.trim();
-
-        if (!name || !contact) {
-            statusMsg.style.display = "block";
-            statusMsg.style.color = "#EE8208";
-            statusMsg.textContent = "Пожалуйста, заполните оба поля.";
-            return;
-        }
-
-        btnSubmit.disabled = true;
-        btnSubmit.textContent = "Отправка...";
-        statusMsg.style.display = "none";
-
-        fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                access_key: "702470cb-beb9-4faa-93e7-595495a5f4da",
-                subject: "⚡ Новая заявка из AI-чата (Родители) englishlessons",
-                from_name: "Виртуальный помощник",
-                name: name,
-                contact: contact,
-                source: "AI Inline Form Parents"
-            })
-        })
-        .then(async (response) => {
-            if (response.status == 200) {
-                formDiv.innerHTML = `<div style="text-align:center; color:#67A526; font-weight:bold;">✅ Заявка успешно отправлена! Андрей Чеботарев скоро свяжется с Вами. 🎉</div>`;
-            } else {
-                throw new Error("Failed");
-            }
-        })
-        .catch(err => {
-            btnSubmit.disabled = false;
-            btnSubmit.textContent = "Отправить заявку ✔️";
-            statusMsg.style.display = "block";
-            statusMsg.style.color = "#d32f2f";
-            statusMsg.textContent = "Произошла ошибка. Попробуйте снова.";
-        });
-    });
   }
 
   detectTopic(text) {
@@ -456,34 +405,14 @@ class OKEnglishAssistant {
     const isTelegram = /@[\w]{4,}/.test(text) || /t\.me\/[\w]{4,}/.test(text);
 
     if (isPhoneNumber || isTelegram) {
-        this.addMessage("✅ Контакт принят! Передаю данные Андрею...", "ai");
-        this.elements.typing.style.display = "block";
-        
-        fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({
-                access_key: "702470cb-beb9-4faa-93e7-595495a5f4da",
-                subject: "⚡ Авто-Сбор Контакта из AI-чата (Родители)",
-                from_name: "Виртуальный помощник",
-                name: "Родитель из чата",
-                contact: text,
-                source: "AI Chat Auto-detect Parents"
-            })
-        })
-        .then(async (response) => {
-            this.elements.typing.style.display = "none";
-            if (response.status == 200) {
-                this.addMessage("🎉 **Отлично!** Ваши контакты успешно переданы. Андрей скоро свяжется с Вами. Хорошего дня!", "ai");
-            } else { throw new Error("Failed"); }
-        })
-        .catch(err => {
-             this.elements.typing.style.display = "none";
-             this.addMessage("Произошла ошибка соединения. Пожалуйста, воспользуйтесь формой внизу страницы.", "ai");
-        });
-        
+        this.addMessage("✅ Контакт принят! Пожалуйста, заполните форму ниже — так Андрей точно получит Ваши данные! 👇", "ai");
+        this.toggleChat(false);
+        const leadSection = document.getElementById('lead');
+        if (leadSection) {
+            leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
         this.messages.push({ role: "user", content: text });
-        this.messages.push({ role: "assistant", content: "Контакты переданы." });
+        this.messages.push({ role: "assistant", content: "Перенаправили к форме." });
         return;
     }
 

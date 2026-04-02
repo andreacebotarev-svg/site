@@ -419,77 +419,21 @@ class EnglishAssistant {
 
   showInlineForm() {
     this.elements.suggestions.innerHTML = "";
-    this.addMessage("Оставь свой контакт (имя и телефон/телеграм), и мы свяжемся с тобой для записи на бесплатный пробный урок! 👇", "ai");
-    
-    // Create inline form DOM block
+    this.addMessage("Оставь свой контакт в форме ниже — Андрей свяжется с тобой для записи на бесплатный пробный урок! 👇", "ai");
+
     const formDiv = document.createElement("div");
     formDiv.className = "message ai inline-form-message";
     formDiv.innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
-            <input type="text" id="chatLeadName" placeholder="Ваше имя" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.2); color:white; width:calc(100% - 22px); outline:none;">
-            <input type="text" id="chatLeadContact" placeholder="Телефон или Telegram" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.2); color:white; width:calc(100% - 22px); outline:none;">
-            <button id="chatLeadSubmit" style="padding:10px; border-radius:8px; border:none; background:linear-gradient(135deg, var(--ai-secondary), var(--ai-primary)); color:white; cursor:pointer; font-weight:bold; width:100%;">Отправить заявку 🚀</button>
-            <div id="chatLeadStatus" style="font-size:12px; display:none; text-align:center; margin-top:5px;"></div>
+        <div style="display:flex; flex-direction:column; gap:10px; width:100%; text-align:center;">
+            <p style="margin:0; font-size:14px;">Форма откроется прямо на странице:</p>
+            <a href="#lead" style="padding:10px 20px; border-radius:8px; background:linear-gradient(135deg, var(--ai-secondary, #6366f1), var(--ai-primary, #8b5cf6)); color:white; font-weight:bold; text-decoration:none; display:inline-block;"
+               onclick="window.englishAssistant && window.englishAssistant.toggleChat(false);"
+            >📝 Перейти к форме заявки</a>
         </div>
     `;
-    
+
     this.elements.messages.appendChild(formDiv);
     this.elements.messages.scrollTop = this.elements.messages.scrollHeight;
-
-    const btnSubmit = formDiv.querySelector("#chatLeadSubmit");
-    const nameInput = formDiv.querySelector("#chatLeadName");
-    const contactInput = formDiv.querySelector("#chatLeadContact");
-    const statusMsg = formDiv.querySelector("#chatLeadStatus");
-
-    btnSubmit.addEventListener("click", () => {
-        const name = nameInput.value.trim();
-        const contact = contactInput.value.trim();
-
-        if (!name || !contact) {
-            statusMsg.style.display = "block";
-            statusMsg.style.color = "#ffeba1";
-            statusMsg.textContent = "Пожалуйста, заполните оба поля.";
-            return;
-        }
-
-        btnSubmit.disabled = true;
-        btnSubmit.textContent = "Отправка...";
-        statusMsg.style.display = "none";
-
-        // Call Web3Forms directly
-        fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                access_key: "702470cb-beb9-4faa-93e7-595495a5f4da",
-                subject: "⚡ Новая заявка из AI-чата englishlessons",
-                from_name: "AI Assistant",
-                name: name,
-                contact: contact,
-                source: "AI Inline Form"
-            })
-        })
-        .then(async (response) => {
-            if (response.status == 200) {
-                formDiv.innerHTML = `<div style="text-align:center; color:#22c55e; font-weight:bold;">✅ Заявка успешно отправлена! Я передал твои контакты Андрею. Скоро он свяжется с тобой! 🎉</div>`;
-                if (typeof ym !== 'undefined') {
-                    try { ym(106683416, 'reachGoal', 'form_sent'); } catch (e) {}
-                }
-            } else {
-                throw new Error("Failed");
-            }
-        })
-        .catch(err => {
-            btnSubmit.disabled = false;
-            btnSubmit.textContent = "Отправить заявку 🚀";
-            statusMsg.style.display = "block";
-            statusMsg.style.color = "#ef4444";
-            statusMsg.textContent = "Произошла ошибка. Попробуйте снова.";
-        });
-    });
   }
 
   detectTopic(text) {
@@ -520,35 +464,14 @@ class EnglishAssistant {
     const isTelegram = /@[\w]{4,}/.test(text) || /t\.me\/[\w]{4,}/.test(text);
 
     if (isPhoneNumber || isTelegram) {
-        this.addMessage("✅ Контакт распознан! Передаю Андрею...", "ai");
-        this.elements.typing.style.display = "block";
-        
-        fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({
-                access_key: "702470cb-beb9-4faa-93e7-595495a5f4da",
-                subject: "⚡ Авто-Сбор Контакта из AI-чата englishlessons",
-                from_name: "AI Assistant",
-                name: "Лид из чата",
-                contact: text,
-                source: "AI Chat Auto-detect"
-            })
-        })
-        .then(async (response) => {
-            this.elements.typing.style.display = "none";
-            if (response.status == 200) {
-                this.addMessage("🎉 **Отлично!** Контакты успешно переданы. Андрей скоро свяжется с тобой для записи на бесплатный урок!", "ai");
-                if (typeof ym !== 'undefined') { try { ym(106683416, 'reachGoal', 'form_sent'); } catch (e) {} }
-            } else { throw new Error("Failed"); }
-        })
-        .catch(err => {
-             this.elements.typing.style.display = "none";
-             this.addMessage("Ой, произошла техническая ошибка. Пожалуйста, воспользуйся кнопкой 'Оставить заявку' выше.", "ai");
-        });
-        
+        this.addMessage("✅ Контакт записан! Пожалуйста, заполни форму ниже — так Андрей точно получит твои данные! 👇", "ai");
+        this.toggleChat(false);
+        const leadSection = document.getElementById('lead');
+        if (leadSection) {
+            leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
         this.messages.push({ role: "user", content: text });
-        this.messages.push({ role: "assistant", content: "Контакты переданы." });
+        this.messages.push({ role: "assistant", content: "Перенаправили к форме." });
         return;
     }
 

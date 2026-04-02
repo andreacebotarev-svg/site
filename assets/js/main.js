@@ -77,166 +77,19 @@
   }
 
   /* -----------------------------
-     3. Обработка формы
+     3. Отслеживание отправки Яндекс.Формы
   ----------------------------- */
-  /* -----------------------------
-     3. Обработка формы (Frontend Fortress)
-  ----------------------------- */
-  const leadForm = document.getElementById('leadForm');
-  
-  if (leadForm) {
-    // 1. Time Trap: Record load time
-    const loadTime = Date.now();
-    
-    // 2. Math Captcha Logic
-    const mathLabel = document.getElementById('math_label');
-    const mathInput = document.getElementById('math_answer');
-    let mathResult = 0;
-
-    function initMathCaptcha() {
-      const a = Math.floor(Math.random() * 9) + 1; // 1-9
-      const b = Math.floor(Math.random() * 9) + 1; // 1-9
-      mathResult = a + b;
-      if (mathLabel) mathLabel.textContent = `Сколько будет ${a} + ${b}?`;
-      if (mathInput) mathInput.value = '';
+  window.addEventListener('message', function(e) {
+    if (e.data === 'ya-form-submitted' || (e.data && e.data.type === 'ya-form-submitted')) {
+      if (typeof ym !== 'undefined') {
+        try {
+          ym(106683416, 'reachGoal', 'form_sent');
+          console.log('🎯 Метрика: цель form_sent отправлена');
+        } catch (err) { console.error('Error sending goal:', err); }
+      }
     }
+  });
 
-    // Initialize on load
-    initMathCaptcha();
-
-    // 3. Validation & Submission
-    leadForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      const status = document.getElementById('form-status');
-      const btn = leadForm.querySelector('button[type="submit"]');
-      const originalBtnText = btn.innerText;
-
-      // --- SECURITY CHECKS --- //
-
-      // A. Rate Limiting (1 request per hour)
-      const lastSubmit = localStorage.getItem('lastFormSubmit');
-      if (lastSubmit && (Date.now() - parseInt(lastSubmit)) < 3600000) {
-        showError(status, '⏳ Вы уже отправили заявку. Пожалуйста, подождите час.');
-        return;
-      }
-
-      // B. Time Trap (< 3 seconds)
-      if (Date.now() - loadTime < 3000) {
-        showError(status, '🤖 Слишком быстро. Вы робот?');
-        return;
-      }
-
-      // C. Honeypot (Hidden field must be empty)
-      const honeypot = leadForm.querySelector('input[name="website"]');
-      if (honeypot && honeypot.value !== '') {
-        console.log('Bot detected: Honeypot filled');
-        return; // Silent fail
-      }
-
-      // D. Math Captcha
-      if (parseInt(mathInput.value) !== mathResult) {
-        showError(status, '❌ Неверный ответ на пример.');
-        return;
-      }
-
-      // E. Strict Phone Validation (Exactly 11 digits)
-      const contactInput = document.getElementById('contact');
-      // Strip everything except digits
-      const phoneDigits = contactInput.value.replace(/\D/g, ''); 
-      if (phoneDigits.length !== 11) {
-        showError(status, '⚠️ Введите корректный номер телефона (11 цифр).');
-        return;
-      }
-      // Check for repeating digits (e.g. 11111111111)
-      if (/^(\d)\1{10}$/.test(phoneDigits)) {
-         showError(status, '⚠️ Введите реальный номер телефона.');
-         return;
-      }
-
-      // F. Smart Content Filter (Forbidden words)
-      const messageInput = document.getElementById('message');
-      const message = messageInput ? messageInput.value.toLowerCase() : '';
-      const forbidden = ['http', 'www', '.com', 'crypto', 'forex', 'investment', 'seo', 'promotion', 'заработок', 'инвестиции'];
-      if (forbidden.some(word => message.includes(word))) {
-        showError(status, '⛔ Сообщение содержит запрещенные слова или ссылки.');
-        return;
-      }
-      // Check for repeating chars (e.g. AAAAAA)
-      if (/(.)\1{4,}/.test(message)) {
-        showError(status, '⛔ Обнаружен спам-паттерн.');
-        return;
-      }
-
-      // --- SUBMISSION --- //
-      
-      btn.innerText = "Отправка...";
-      btn.disabled = true;
-      btn.style.opacity = "0.7";
-      status.style.display = 'none';
-
-      const formData = new FormData(leadForm);
-      // Remove honeypot & math from data sent to email
-      formData.delete('website');
-      formData.delete('math_answer'); // Assuming we didn't add name="math_answer" but used id, checking index.html... 
-      // Wait, input has id="math_answer" but no name? Ah, index.html didn't have name. Good.
-      
-      const object = Object.fromEntries(formData);
-      const json = JSON.stringify(object);
-
-      fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-          },
-          body: json
-      })
-      .then(async (response) => {
-          let json = await response.json();
-          if (response.status == 200) {
-              // Success
-              status.innerText = "✅ Заявка отправлена! Я свяжусь с вами в ближайшее время.";
-              status.style.color = "#155724";
-              status.style.backgroundColor = "#d4edda";
-              status.style.display = "block";
-              leadForm.reset();
-              initMathCaptcha(); // Reset math
-              localStorage.setItem('lastFormSubmit', Date.now()); // Set rate limit
-
-              // Metrica
-              if (typeof ym !== 'undefined') {
-                try {
-                    ym(106683416, 'reachGoal', 'form_sent'); 
-                    console.log('🎯 Mетрика: цель form_sent отправлена');
-                } catch (e) { console.error('Error sending goal:', e); }
-              }
-
-          } else {
-              showError(status, json.message || "Ошибка отправки.");
-          }
-      })
-      .catch(error => {
-          console.log(error);
-          showError(status, "Произошла ошибка соединения.");
-      })
-      .finally(() => {
-          btn.innerText = originalBtnText;
-          btn.disabled = false;
-          btn.style.opacity = "1";
-          setTimeout(() => {
-            status.style.display = 'none';
-          }, 10000);
-      });
-    });
-
-    function showError(element, message) {
-      element.innerText = message;
-      element.style.color = "#721c24";
-      element.style.backgroundColor = "#f8d7da";
-      element.style.display = "block";
-    }
-  }
 
   /* -----------------------------
      4. Sticky CTA Logic + Back to Top
